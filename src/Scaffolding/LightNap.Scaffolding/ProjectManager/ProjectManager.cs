@@ -57,21 +57,5 @@ namespace LightNap.Scaffolding.ProjectManager
                 Success = true
             };
         }
-
-        /// <summary>
-        /// Adds a file to the project at the specified path.
-        /// </summary>
-        /// <param name="projectPath">The path to the project file.</param>
-        /// <param name="filePath">The path to the file to add.</param>
-        public void AddFileToProject(string projectPath, string filePath)
-        {
-            var projectCollection = new ProjectCollection();
-            var project = projectCollection.LoadProject(projectPath);
-
-            var relativeFilePath = Path.GetRelativePath(Path.GetDirectoryName(projectPath)!, filePath);
-            project.AddItem("Compile", relativeFilePath);
-
-            project.Save();
-        }
     }
 }

@@ -47,15 +47,6 @@ namespace LightNap.Scaffolding.ServiceRunner
 
             var templateItems = new List<TemplateItem>
                 {
-                    new(Path.Combine(executingPath, "Templates/Server/CreateDto.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Create{type.Name}Dto.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/Dto.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Response/{type.Name}Dto.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/Extensions.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Extensions/{type.Name}Extensions.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/Interface.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Interfaces/I{type.Name}Service.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/SearchDto.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Search{type.Name}Dto.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/Service.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Services/{type.Name}Service.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/UpdateDto.cs.txt"), $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Update{type.Name}Dto.cs", parameters.CoreProjectFilePath),
-                    new(Path.Combine(executingPath, "Templates/Server/Controller.cs.txt"), $"{parameters.WebApiProjectPath}/Controllers/{pascalNamePlural}Controller.cs", parameters.WebApiProjectFilePath),
-
                     new(Path.Combine(executingPath, "Templates/Client/routes.ts.txt"), $"{parameters.ClientAppPath}/{kebabNamePlural}/components/pages/routes.ts"),
                     new(Path.Combine(executingPath, "Templates/Client/index.component.html.txt"), $"{parameters.ClientAppPath}/{kebabNamePlural}/components/pages/index/index.component.html"),
                     new(Path.Combine(executingPath, "Templates/Client/index.component.ts.txt"), $"{parameters.ClientAppPath}/{kebabNamePlural}/components/pages/index/index.component.ts"),
@@ -85,11 +76,6 @@ namespace LightNap.Scaffolding.ServiceRunner
             foreach (var template in templateItems)
             {
                 templateManager.ProcessTemplate(template, templateParameters);
-
-                if (template.AddToProjectPath != null)
-                {
-                    projectManager.AddFileToProject(template.AddToProjectPath, template.OutputFile);
-                }
 
                 Console.WriteLine($"Generated {template.OutputFile}");
             }

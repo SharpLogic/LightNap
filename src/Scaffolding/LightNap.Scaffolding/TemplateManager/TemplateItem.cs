@@ -18,9 +18,5 @@ namespace LightNap.Scaffolding.TemplateManager
         /// </summary>
         public required string OutputFile { get; set; } = outputFile;
 
-        /// <summary>
-        /// Gets or sets the optional project path to add the output file to.
-        /// </summary>
-        public string? AddToProjectPath { get; set; } = addToProjectPath;
     }
 }
