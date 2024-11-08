@@ -6,7 +6,7 @@ namespace LightNap.Scaffolding.TemplateManager
     /// Represents a template item with a template file, output file, and an optional project path.
     /// </summary>
     [method: SetsRequiredMembers]
-    public class TemplateItem(string templateFile, string outputFile, string? addToProjectPath = null)
+    public class TemplateItem(string templateFile, string outputFile)
     {
         /// <summary>
         /// Gets or sets the template file path.
