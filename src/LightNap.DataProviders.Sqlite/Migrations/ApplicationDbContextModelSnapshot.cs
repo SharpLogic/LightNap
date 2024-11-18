@@ -15,9 +15,9 @@ namespace LightNap.DataProviders.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
-            modelBuilder.Entity("LightNap.Core.Identity.ApplicationRole", b =>
+            modelBuilder.Entity("LightNap.Core.Data.Entities.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -51,7 +51,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("LightNap.Core.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("LightNap.Core.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -72,8 +72,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT")
-                        .UseCollation("NOCASE");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
@@ -112,8 +111,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT")
-                        .UseCollation("NOCASE");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -127,7 +125,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("LightNap.Core.Identity.RefreshToken", b =>
+            modelBuilder.Entity("LightNap.Core.Data.Entities.RefreshToken", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -266,9 +264,9 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LightNap.Core.Identity.RefreshToken", b =>
+            modelBuilder.Entity("LightNap.Core.Data.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationUser", "User")
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -279,7 +277,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationRole", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -288,7 +286,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationUser", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,7 +295,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationUser", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -306,13 +304,13 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationRole", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LightNap.Core.Identity.ApplicationUser", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -321,14 +319,14 @@ namespace LightNap.DataProviders.Sqlite.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("LightNap.Core.Identity.ApplicationUser", null)
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LightNap.Core.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("LightNap.Core.Data.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

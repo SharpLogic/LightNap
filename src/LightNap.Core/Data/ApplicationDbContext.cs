@@ -43,19 +43,6 @@ namespace LightNap.Core.Data
         {
             base.OnModelCreating(builder);
 
-            if (this.Database.IsSqlite())
-            {
-                // Allow case-insensitive queries for SQLite.
-
-                builder.Entity<ApplicationUser>()
-                    .Property(u => u.UserName)
-                    .UseCollation("NOCASE");
-
-                builder.Entity<ApplicationUser>()
-                    .Property(u => u.Email)
-                    .UseCollation("NOCASE");
-            }
-
             builder.Entity<RefreshToken>()
                 .HasOne(rt => rt.User)
                 .WithMany(u => u.RefreshTokens)

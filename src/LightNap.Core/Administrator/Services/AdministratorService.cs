@@ -40,12 +40,12 @@ namespace LightNap.Core.Administrator.Services
 
             if (!string.IsNullOrWhiteSpace(requestDto.Email))
             {
-                query = query.Where(user => EF.Functions.Like(user.Email!.ToLower(), $"%{requestDto.Email.ToLower()}%"));
+                query = query.Where(user => EF.Functions.Like(user.NormalizedEmail!, $"%{requestDto.Email.ToUpper()}%"));
             }
 
             if (!string.IsNullOrWhiteSpace(requestDto.UserName))
             {
-                query = query.Where(user => EF.Functions.Like(user.UserName!.ToLower(), $"%{requestDto.UserName.ToLower()}%"));
+                query = query.Where(user => EF.Functions.Like(user.NormalizedUserName!, $"%{requestDto.UserName.ToUpper()}%"));
             }
 
             query = requestDto.SortBy switch
