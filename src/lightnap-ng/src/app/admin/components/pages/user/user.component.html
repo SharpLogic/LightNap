@@ -1,4 +1,4 @@
-<api-response [apiResponse]="user$" errorMessage="Error loading user" loadingMessage="Loading user...">
+<api-response [apiResponse]="user$()" errorMessage="Error loading user" loadingMessage="Loading user...">
   <ng-template #success let-user>
     <p-panel>
       <ng-template pTemplate="header">
@@ -40,15 +40,23 @@
             <user-profile [user]="user" />
           </p-tabpanel>
           <p-tabpanel value="roles">
-            <user-roles [userRoles]="(userRoles$ | async)!" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
+            <api-response [apiResponse]="userRoles$()" errorMessage="Error loading user roles" loadingMessage="Loading user roles...">
+              <ng-template #success let-userRoles>
+                <user-roles [userRoles]="userRoles ?? []" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
+              </ng-template>
+            </api-response>
           </p-tabpanel>
           <p-tabpanel value="claims">
-            <user-claims [userClaims]="(userClaims$ | async)!" (addClaim)="addClaim($event)" (removeClaim)="removeClaim($event)" />
+            <api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
+              <ng-template #success let-userClaims>
+                <user-claims [userClaims]="userClaims ?? []" (addClaim)="addClaim($event)" (removeClaim)="removeClaim($event)" />
+              </ng-template>
+            </api-response>
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>
 
-      <error-list [errors]="errors" />
+      <error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
 </api-response>

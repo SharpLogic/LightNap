@@ -1,6 +1,6 @@
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { enableProdMode, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
@@ -25,6 +25,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(Routes, withInMemoryScrolling(), withComponentInputBinding(), withRouterConfig({})),
     importProvidersFrom(BrowserModule),
     InitializationService,
+    provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(InitializationService).initialize()),
     provideAnimations(),
     providePrimeNG({

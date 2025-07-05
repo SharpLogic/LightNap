@@ -4,6 +4,7 @@ import { SuccessApiResponse } from "@core";
 import { of } from "rxjs";
 import { AdminService } from "./admin.service";
 import { DataService } from "./data.service";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("AdminService", () => {
   let service: AdminService;
@@ -25,7 +26,7 @@ describe("AdminService", () => {
     ]);
 
     TestBed.configureTestingModule({
-      providers: [AdminService, { provide: DataService, useValue: spy }],
+      providers: [provideZonelessChangeDetection(), AdminService, { provide: DataService, useValue: spy }],
     });
 
     service = TestBed.inject(AdminService);

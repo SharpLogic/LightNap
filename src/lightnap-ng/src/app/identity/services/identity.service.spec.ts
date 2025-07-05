@@ -6,6 +6,7 @@ import { NewPasswordRequest, RegisterRequest, ResetPasswordRequest, VerifyCodeRe
 import { of } from "rxjs";
 import { DataService } from "./data.service";
 import { IdentityService } from "./identity.service";
+import { provideZonelessChangeDetection } from "@angular/core";
 
 describe("IdentityService", () => {
   let service: IdentityService;
@@ -34,6 +35,7 @@ describe("IdentityService", () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         IdentityService,
         { provide: InitializationService, useValue: initializationSpy },
         { provide: DataService, useValue: dataSpy },

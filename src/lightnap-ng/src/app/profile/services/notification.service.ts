@@ -89,7 +89,11 @@ export class NotificationService {
 
   #loadNotificationItems(notifications: Array<Notification>) {
     if (!notifications.length) return of(new Array<NotificationItem>());
-    return forkJoin(notifications.map(notification => this.#loadNotificationItem(notification)));
+    return forkJoin(notifications.map(notification => this.#loadNotificationItem(notification))).pipe(
+      // Filter out any null items (e.g., if the user was deleted). In the future we may prefer to keep the nulls
+      // and render them to indicate that the notification is no longer valid.
+      map(notificationItems => notificationItems.filter(item => item !== null))
+    );
   }
 
   #loadNotificationItem(notification: Notification) {
@@ -103,6 +107,9 @@ export class NotificationService {
       case "AdministratorNewUserRegistration":
         return this.#adminService.getUser(notification.data.userId).pipe(
           map(user => {
+            // User may have been deleted since the notification was created
+            if (!user) return null;
+
             notificationItem.title = `New user registered: ${user.userName}`;
             notificationItem.description = "A new user registered!";
             notificationItem.icon = "pi pi-user";

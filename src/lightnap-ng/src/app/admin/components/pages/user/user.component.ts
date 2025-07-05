@@ -1,7 +1,7 @@
 import { AdminUser, Role } from "@admin/models";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnChanges } from "@angular/core";
+import { Component, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ConfirmPopupComponent, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
@@ -44,11 +44,11 @@ export class UserComponent implements OnChanges {
 
   userId = input.required<string>();
 
-  errors: string[] = [];
+  errors = signal<Array<string>>([]);
 
-  user$ = new Observable<AdminUser>();
-  userClaims$ = new Observable<Array<Claim>>();
-  userRoles$ = new Observable<Array<Role>>();
+  user$ = signal<Observable<AdminUser>>(new Observable<AdminUser>());
+  userClaims$ = signal<Observable<Array<Claim>>>(new Observable<Array<Claim>>());
+  userRoles$ = signal<Observable<Array<Role>>>(new Observable<Array<Role>>());
 
   ngOnChanges() {
     this.#refreshUser();
@@ -57,19 +57,19 @@ export class UserComponent implements OnChanges {
   }
 
   #refreshUser() {
-    this.user$ = this.adminService.getUser(this.userId());
+    this.user$.set(this.adminService.getUser(this.userId()));
   }
 
   #refreshRoles() {
-    this.userRoles$ = this.adminService.getUserRoles(this.userId());
+    this.userRoles$.set(this.adminService.getUserRoles(this.userId()));
   }
 
   #refreshClaims() {
-    this.userClaims$ = this.adminService.getUserClaims(this.userId());
+    this.userClaims$.set(this.adminService.getUserClaims(this.userId()));
   }
 
   lockUserAccount(event: any) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.#confirmationService.confirm({
       header: "Confirm Lock Account",
@@ -79,14 +79,14 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.lockUserAccount(this.userId()).subscribe({
           next: () => this.#refreshUser(),
-          error: response => (this.errors = response.errorMessages),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });
   }
 
   unlockUserAccount(event: any) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.#confirmationService.confirm({
       header: "Confirm Unlock Account",
@@ -96,14 +96,14 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.unlockUserAccount(this.userId()).subscribe({
           next: () => this.#refreshUser(),
-          error: response => (this.errors = response.errorMessages),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });
   }
 
   deleteUser(event: any) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.#confirmationService.confirm({
       header: "Confirm Delete User",
@@ -116,45 +116,45 @@ export class UserComponent implements OnChanges {
             this.#toast.success("User deleted successfully.");
             this.#routeAlias.navigate("admin-users");
           },
-          error: response => (this.errors = response.errorMessages),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });
   }
 
   removeRole(role: string) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.adminService.removeUserFromRole(this.userId(), role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => (this.errors = response.errorMessages),
+      error: response => this.errors.set(response.errorMessages),
     });
   }
 
   addRole(role: string) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.adminService.addUserToRole(this.userId(), role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => (this.errors = response.errorMessages),
+      error: response => this.errors.set(response.errorMessages),
     });
   }
 
   removeClaim(claim: Claim) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.adminService.removeClaimFromUser(this.userId(), claim).subscribe({
       next: () => this.#refreshClaims(),
-      error: response => (this.errors = response.errorMessages),
+      error: response => this.errors.set(response.errorMessages),
     });
   }
 
   addClaim(claim: Claim) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.adminService.addClaimToUser(this.userId(), claim).subscribe({
       next: () => this.#refreshClaims(),
-      error: response => (this.errors = response.errorMessages),
+      error: response => this.errors.set(response.errorMessages),
     });
   }
 }

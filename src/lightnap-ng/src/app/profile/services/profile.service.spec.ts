@@ -5,6 +5,7 @@ import { ApplicationSettings, ChangePasswordRequest, LayoutConfig, UpdateProfile
 import { of } from 'rxjs';
 import { DataService } from './data.service';
 import { ProfileService } from './profile.service';
+import { provideZonelessChangeDetection } from '@angular/core';
 
 describe('ProfileService', () => {
     let service: ProfileService;
@@ -19,6 +20,7 @@ describe('ProfileService', () => {
 
         TestBed.configureTestingModule({
             providers: [
+                provideZonelessChangeDetection(),
                 ProfileService,
                 { provide: DataService, useValue: dataSpy },
                 { provide: IdentityService, useValue: identitySpy },
