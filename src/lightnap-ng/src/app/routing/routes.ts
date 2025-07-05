@@ -1,5 +1,5 @@
-import { adminGuard } from "@identity/guards/admin.guard";
-import { authGuard } from "@identity/guards/auth.guard";
+import { loggedInGuard } from "@identity/guards/logged-in.guard";
+import { roleGuard } from "@identity/guards/role.guard";
 import { PublicLayoutComponent } from "@layout/components/layouts/public-layout/public-layout.component";
 import { Routes as AdminRoutes } from "../admin/components/pages/routes";
 import { Routes as IdentityRoutes } from "../identity/components/pages/routes";
@@ -14,7 +14,7 @@ export const Routes: AppRoute[] = [
   {
     path: "",
     component: AppLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [loggedInGuard],
     children: [
       { path: "home", data: { breadcrumb: "Home" }, children: UserRoutes },
       { path: "profile", data: { breadcrumb: "Profile" }, children: ProfileRoutes },
@@ -23,7 +23,7 @@ export const Routes: AppRoute[] = [
   {
     path: "admin",
     component: AppLayoutComponent,
-    canActivate: [authGuard, adminGuard],
+    canActivate: [loggedInGuard, roleGuard("Administrator")],
     children: [{ path: "", data: { breadcrumb: "Admin" }, children: AdminRoutes }],
   },
   { path: "identity", data: { breadcrumb: "Identity" }, children: IdentityRoutes },

@@ -4,7 +4,7 @@ import { RouteAliasService } from "@routing";
 import { map, take } from "rxjs";
 import { IdentityService } from "src/app/identity/services/identity.service";
 
-export const authGuard = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const loggedInGuard = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const routeAliasService = inject(RouteAliasService);
   const identityService = inject(IdentityService);
 
