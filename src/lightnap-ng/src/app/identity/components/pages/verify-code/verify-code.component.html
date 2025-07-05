@@ -15,7 +15,7 @@
             <label for="rememberMe">Remember Me</label>
           </div>
 
-          <error-list [errors]="errors" />
+          <error-list [errors]="errors()" />
         </div>
 
         <p-button type="submit" label="Verify" styleClass="w-full" [disabled]="!form.valid" pRipple (onClick)="onVerifyClicked()" />

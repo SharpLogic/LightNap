@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BlockUiService, ErrorListComponent } from "@core";
 import { ProfileService } from "@profile/services/profile.service";
@@ -21,7 +21,7 @@ export class ConfirmEmailChangeComponent implements OnInit {
   readonly newEmail = input.required<string>();
   readonly code = input.required<string>();
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   ngOnInit() {
     this.#blockUi.show({ message: "Confirming email change..." });
@@ -33,7 +33,7 @@ export class ConfirmEmailChangeComponent implements OnInit {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigateWithReplace("profile"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

@@ -1,4 +1,4 @@
-<api-response [apiResponse]="usersForClaim$" errorMessage="Error loading claim" loadingMessage="Loading claim...">
+<api-response [apiResponse]="usersForClaim$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
   <ng-template #success let-usersForClaim>
     <p-panel header="Manage Users With Claim '{{ type() }}: {{ value() }}'">
       <p-table [value]="usersForClaim">
@@ -29,7 +29,7 @@
           </tr>
         </ng-template>
       </p-table>
-      <error-list [errors]="errors" />
+      <error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
 </api-response>

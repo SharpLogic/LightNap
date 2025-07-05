@@ -48,7 +48,7 @@
           <a [routerLink]="'privacy-policy' | route" target="_blank">Privacy Policy</a>
         </div>
 
-        <error-list [errors]="errors" />
+        <error-list [errors]="errors()" />
       </div>
 
       <p-button type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />

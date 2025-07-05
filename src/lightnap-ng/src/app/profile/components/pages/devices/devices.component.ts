@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { ConfirmDialogComponent } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
@@ -18,9 +18,9 @@ export class DevicesComponent {
   readonly #profileService = inject(ProfileService);
   readonly #confirmationService = inject(ConfirmationService);
 
-  devices$ = this.#profileService.getDevices();
+  devices$ = signal(this.#profileService.getDevices());
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   revokeDevice(event: any, deviceId: string) {
     this.#confirmationService.confirm({
@@ -30,8 +30,8 @@ export class DevicesComponent {
       key: deviceId,
       accept: () => {
         this.#profileService.revokeDevice(deviceId).subscribe({
-          next: () => (this.devices$ = this.#profileService.getDevices()),
-          error: response => (this.errors = response.errorMessages),
+          next: () => this.devices$.set(this.#profileService.getDevices()),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });

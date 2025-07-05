@@ -1,7 +1,7 @@
 import { AdminUser, SearchAdminUsersSortBy } from "@admin";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -9,8 +9,8 @@ import { ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorL
 import { RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from "primeng/inputtext";
+import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
@@ -46,7 +46,7 @@ export class UsersComponent {
     userName: this.#fb.control(""),
   });
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
   readonly users$ = this.#lazyLoadEventSubject.pipe(
@@ -56,8 +56,8 @@ export class UsersComponent {
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
-        email: this.form.value.email?.length ?? 0 > 0 ? this.form.value.email! : undefined,
-        userName: this.form.value.userName?.length ?? 0 > 0 ? this.form.value.userName! : undefined,
+        email: (this.form.value.email?.length ?? 0 > 0) ? this.form.value.email! : undefined,
+        userName: (this.form.value.userName?.length ?? 0 > 0) ? this.form.value.userName! : undefined,
       })
     ),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
@@ -94,7 +94,7 @@ export class UsersComponent {
             this.#toast.success("User deleted successfully.");
             this.#lazyLoadEventSubject.next({ first: 0 });
           },
-          error: response => (this.errors = response.errorMessages),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });

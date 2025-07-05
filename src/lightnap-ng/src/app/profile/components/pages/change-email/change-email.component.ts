@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BlockUiService, ErrorListComponent } from "@core";
 import { ProfileService } from "@profile/services/profile.service";
@@ -20,7 +20,7 @@ export class ChangeEmailComponent {
   readonly #routeAlias = inject(RouteAliasService);
   readonly #fb = inject(FormBuilder);
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   form = this.#fb.nonNullable.group(
     {
@@ -37,7 +37,7 @@ export class ChangeEmailComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("change-email-requested"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

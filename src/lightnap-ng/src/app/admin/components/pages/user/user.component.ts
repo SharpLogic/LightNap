@@ -44,7 +44,7 @@ export class UserComponent implements OnChanges {
 
   userId = input.required<string>();
 
-  errors = signal<Array<string>>([]);
+  errors = signal(new Array<string>());
 
   user$ = signal<Observable<AdminUser>>(new Observable<AdminUser>());
   userClaims$ = signal<Observable<Array<Claim>>>(new Observable<Array<Claim>>());

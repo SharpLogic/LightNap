@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
@@ -28,7 +28,7 @@ export class VerifyCodeComponent {
     rememberMe: this.#fb.control(false),
   });
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   onVerifyClicked() {
     const value = this.form.value;
@@ -44,7 +44,7 @@ export class VerifyCodeComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("user-home"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

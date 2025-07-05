@@ -41,7 +41,7 @@ export class LayoutService {
   preset = computed(() => this.layoutConfig().preset);
   menuMode = computed(() => this.layoutConfig().menuMode);
   isOverlay = computed(() => this.layoutConfig().menuMode === "overlay");
-  transitionComplete = signal<boolean>(false);
+  transitionComplete = signal(false);
 
   readonly menuModeOptions = [
     { label: "Static", value: "static" },

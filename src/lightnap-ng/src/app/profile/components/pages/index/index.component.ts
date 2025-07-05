@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { BlockUiService, ErrorListComponent, ToastService } from "@core";
@@ -25,7 +25,7 @@ export class IndexComponent {
   readonly #fb = inject(FormBuilder);
 
   form = this.#fb.group({});
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   readonly profile$ = this.#profileService.getProfile().pipe(
     tap(profile => {
@@ -40,7 +40,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#toast.success("Profile updated successfully."),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 
@@ -51,7 +51,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("landing"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

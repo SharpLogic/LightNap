@@ -1,6 +1,6 @@
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ConfirmPopupComponent } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
@@ -34,20 +34,20 @@ export class RoleComponent implements OnInit {
 
   readonly role = input.required<string>();
 
-  errors: string[] = [];
+  errors = signal(new Array<string>());
 
-  roleWithUsers$ = new Observable<RoleWithAdminUsers>();
+  roleWithUsers$ = signal(new Observable<RoleWithAdminUsers>());
 
   ngOnInit() {
     this.#refreshRole();
   }
 
   #refreshRole() {
-    this.roleWithUsers$ = this.#adminService.getRoleWithUsers(this.role());
+    this.roleWithUsers$.set(this.#adminService.getRoleWithUsers(this.role()));
   }
 
   removeUserFromRole(event: any, userId: string) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.#confirmationService.confirm({
       header: "Confirm Role Removal",
@@ -57,7 +57,7 @@ export class RoleComponent implements OnInit {
       accept: () => {
         this.#adminService.removeUserFromRole(userId, this.role()).subscribe({
           next: () => this.#refreshRole(),
-          error: response => (this.errors = response.errorMessages),
+          error: response => this.errors.set(response.errorMessages),
         });
       },
     });

@@ -1,4 +1,4 @@
-@if (latestNotifications$ | async; as latestNotifications) {
+@if (latestNotifications$(); as latestNotifications) {
   <button type="button" class="layout-topbar-action" (click)="popover.toggle($event)">
     @if (latestNotifications.unreadCount > 0) {
       @if (latestNotifications.unreadCount > 9) {

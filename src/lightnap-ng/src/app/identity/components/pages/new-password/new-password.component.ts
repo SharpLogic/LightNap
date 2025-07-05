@@ -1,4 +1,4 @@
-import { Component, inject, input } from "@angular/core";
+import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService } from "@core";
@@ -26,7 +26,7 @@ export class NewPasswordComponent {
   readonly email = input("");
   readonly token = input("");
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   form = this.#fb.nonNullable.group(
     {
@@ -63,7 +63,7 @@ export class NewPasswordComponent {
               throw new Error(`Unexpected LoginSuccessResult.type: '${result.type}'`);
           }
         },
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

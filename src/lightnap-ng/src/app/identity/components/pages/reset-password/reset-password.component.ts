@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
@@ -25,7 +25,7 @@ export class ResetPasswordComponent {
     email: this.#fb.control("", [Validators.required, Validators.email]),
   });
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   resetPassword() {
     this.#blockUi.show({ message: "Resetting password..." });
@@ -34,7 +34,7 @@ export class ResetPasswordComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("reset-instructions-sent"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

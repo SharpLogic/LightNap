@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { NotificationService } from "@profile/services";
 import { RouteAliasService, RoutePipe } from "@routing";
@@ -8,6 +8,7 @@ import { OverlayBadgeModule } from "primeng/overlaybadge";
 import { ButtonModule } from "primeng/button";
 import { PopoverModule } from "primeng/popover";
 import { NotificationItemComponent } from "../notification-item/notification-item.component";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "notifications-button",
@@ -18,7 +19,7 @@ import { NotificationItemComponent } from "../notification-item/notification-ite
 export class NotificationsButtonComponent {
   readonly #notificationService = inject(NotificationService);
   readonly #routeAlias = inject(RouteAliasService);
-  readonly latestNotifications$ = this.#notificationService.watchLatest$();
+  readonly latestNotifications$ = toSignal(this.#notificationService.watchLatest$());
   readonly endMenuItems = new Array<MenuItem>(
     {
       label: "Mark all as read",

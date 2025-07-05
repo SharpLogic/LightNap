@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
@@ -25,7 +25,7 @@ export class RequestVerificationEmailComponent {
     email: this.#fb.control("", [Validators.required, Validators.email]),
   });
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   resendVerificationEmail() {
     this.#blockUi.show({ message: "Resending verification email..." });
@@ -34,7 +34,7 @@ export class RequestVerificationEmailComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("email-verification-required"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

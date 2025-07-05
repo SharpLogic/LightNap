@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { ApiResponseComponent, EmptyPagedResponse, ErrorListComponent, ToastService } from "@core";
 import { NotificationItem, NotificationItemComponent, NotificationService } from "@profile";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
+import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 
@@ -22,7 +22,7 @@ export class NotificationsComponent {
 
   #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
   notifications$ = this.#lazyLoadEventSubject.pipe(
-    switchMap(event =>
+    switchMap(_ =>
       this.#notificationService.searchNotifications({
         pageSize: this.pageSize,
         pageNumber: this.#currentPage,
@@ -33,11 +33,11 @@ export class NotificationsComponent {
     startWith(new EmptyPagedResponse<NotificationItem>())
   );
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
   #currentPage = 0;
 
   onLazyLoad(event: TableLazyLoadEvent) {
-    this.#currentPage = (event.first ?? 0) / this.pageSize + 1
+    this.#currentPage = (event.first ?? 0) / this.pageSize + 1;
     this.#lazyLoadEventSubject.next(event);
   }
 
@@ -52,7 +52,7 @@ export class NotificationsComponent {
         this.#toast.success("All notifications marked as read.");
         this.#lazyLoadEventSubject.next({ first: 0 });
       },
-      error: response => (this.errors = response.errorMessages),
+      error: response => this.errors.set(response.errorMessages),
     });
   }
 }

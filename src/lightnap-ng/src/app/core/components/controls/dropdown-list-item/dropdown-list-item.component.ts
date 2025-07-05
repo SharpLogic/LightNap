@@ -1,5 +1,5 @@
 
-import { Component, Input } from "@angular/core";
+import { Component, Input, signal } from "@angular/core";
 import { ListItem } from "@core";
 
 @Component({
@@ -9,11 +9,11 @@ import { ListItem } from "@core";
     standalone: true,
 })
 export class DropdownListItemComponent {
-    @Input() label = "";
-    @Input() description?: string;
+    @Input() label = signal("");
+    @Input() description = signal<string | undefined>("");
 
     @Input() set listItem(value: ListItem<any>) {
-        this.label = value.label;
-        this.description = value.description;
+        this.label.set(value.label);
+        this.description.set(value.description);
     }
 }

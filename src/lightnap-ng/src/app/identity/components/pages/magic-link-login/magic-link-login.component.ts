@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit } from "@angular/core";
+import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
@@ -23,7 +23,7 @@ export class MagicLinkLoginComponent implements OnInit {
   readonly email = input("");
   readonly code = input("");
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   ngOnInit() {
     this.#blockUi.show({ message: "Verifying login..." });
@@ -38,7 +38,7 @@ export class MagicLinkLoginComponent implements OnInit {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigateWithReplace("user-home"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

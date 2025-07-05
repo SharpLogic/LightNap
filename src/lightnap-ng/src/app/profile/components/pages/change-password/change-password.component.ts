@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BlockUiService } from "@core";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
@@ -24,7 +24,7 @@ export class ChangePasswordComponent {
   readonly #toast = inject(ToastService);
   readonly #fb = inject(FormBuilder);
 
-  errors = new Array<string>();
+  errors = signal(new Array<string>());
 
   form = this.#fb.nonNullable.group(
     {
@@ -36,7 +36,7 @@ export class ChangePasswordComponent {
   );
 
   changePassword() {
-    this.errors = [];
+    this.errors.set([]);
     this.#blockUi.show({ message: "Changing password..." });
     this.#profileService
       .changePassword({
@@ -50,7 +50,7 @@ export class ChangePasswordComponent {
           this.#toast.success("Password changed successfully.");
           this.form.reset();
         },
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

@@ -1,4 +1,4 @@
-<api-response [apiResponse]="devices$" errorMessage="Error loading devices" loadingMessage="Loading devices...">
+<api-response [apiResponse]="devices$()" errorMessage="Error loading devices" loadingMessage="Loading devices...">
   <ng-template #success let-devices>
     <p-panel header="Manage Your Devices">
       <p-table [value]="devices">
@@ -27,7 +27,7 @@
           </tr>
         </ng-template>
       </p-table>
-      <error-list [errors]="errors" />
+      <error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
 </api-response>

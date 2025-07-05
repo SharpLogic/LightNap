@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterModule } from "@angular/router";
@@ -45,7 +45,7 @@ export class LoginComponent {
 
   showMagicLink = this.#fb.control("", [Validators.email]);
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   constructor() {
     this.form.controls.login.valueChanges.pipe(takeUntilDestroyed()).subscribe({
@@ -82,7 +82,7 @@ export class LoginComponent {
               throw new Error(`Unexpected LoginSuccessResult.type: '${result.type}'`);
           }
         },
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 
@@ -96,7 +96,7 @@ export class LoginComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("magic-link-sent"),
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }

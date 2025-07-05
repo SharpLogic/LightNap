@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService } from "@core";
@@ -46,7 +46,7 @@ export class RegisterComponent {
     { validators: [confirmPasswordValidator("password", "confirmPassword")] }
   );
 
-  errors: Array<string> = [];
+  errors = signal(new Array<string>());
 
   register() {
     this.#blockUi.show({ message: "Registering..." });
@@ -77,7 +77,7 @@ export class RegisterComponent {
               throw new Error(`Unexpected LoginSuccessResult.type: '${loginResult.type}'`);
           }
         },
-        error: response => (this.errors = response.errorMessages),
+        error: response => this.errors.set(response.errorMessages),
       });
   }
 }
