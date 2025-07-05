@@ -96,9 +96,9 @@ The main benefit to using roles on the front-end is to show components available
 
 #### Route Guards
 
-Route guards make it easy to determine whether a user can see a given route based on their role. A reference example for this is at `app/core/guards/admin.guard.ts`. This guard watches for changes in roles and only allows the guarded section to be visible if the user is logged in as an `Administrator`.
+Route guards make it easy to determine whether a user can see a given route based on their role. A reference example for this is at `app/core/guards/role.guard.ts`. This guard watches for changes in roles and only allows the guarded section to be visible if the user is logged in as one of the specified roles.
 
-To protect a route, add the guard to its `canActivate` collection. A reference example for this is in `routing\routes.ts` where the `admin` branch of the route tree is protected by the `adminGuard`.
+To protect a route, add the guard to its `canActivate` collection. A reference example for this is in `routing\routes.ts` where the `admin` branch of the route tree is protected by the `roleGuard`.
 
 {: .important }
 Front-end work to restrict access to functionality is superficial. While it provides a nicer user experience to show or hide components, the key security considerations must be taken care of on the back-end. Never rely on front-end security for anything meaningful because insecure back-end APIs can be easily exploited.

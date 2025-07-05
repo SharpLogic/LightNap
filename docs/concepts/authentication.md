@@ -89,8 +89,10 @@ The front-end provides guards and directives to make it easier to tailor the use
 
 #### Guards
 
-- `authGuard` requires the user be logged in to visit the route.
-- `adminGuard` requires the user be logged in as an `Administrator` to visit the route.
+- `loggedInGuard` requires the user be logged in to visit the route.
+- `roleGuard` requires the user be logged in as a specific role (like `Administrator`) to visit the route.
+- `claimGuard` requires the user be logged in with a specific claim to visit the route.
+- `permissionsGuard` requires the user be logged in is a specific role and/or to have a specific claim to visit the route.
 
 #### Directives
 

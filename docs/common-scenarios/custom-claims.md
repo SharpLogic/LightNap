@@ -140,7 +140,7 @@ All of the above return either a `boolean` (synchronous) or `Observable<boolean>
 
 To implement a check for multiple claims and/or role memberships, calls must be nested or otherwise combined.
 
-These methods can also be used for route guards to restrict access to views based on roles and/or claims.
+These methods can also be used with route guards like `roleGuard`, `claimGuard`, or `permissionsGuard` to restrict access to views based on roles and/or claims.
 
 ## Claims Directives
 
