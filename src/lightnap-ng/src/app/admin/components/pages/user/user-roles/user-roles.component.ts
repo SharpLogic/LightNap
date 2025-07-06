@@ -1,4 +1,4 @@
-import { Role } from "@admin/models";
+import { RoleDto } from "@admin/models";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, output } from "@angular/core";
@@ -33,7 +33,7 @@ export class UserRolesComponent {
   #confirmationService = inject(ConfirmationService);
   #fb = inject(FormBuilder);
 
-  userRoles = input.required<Array<Role>>();
+  userRoles = input.required<Array<RoleDto>>();
   addRole = output<string>();
   removeRole = output<string>();
 

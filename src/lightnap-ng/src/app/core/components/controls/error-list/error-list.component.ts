@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnChanges, SimpleChanges, input, signal } from "@angular/core";
 import { MessageModule } from "primeng/message";
-import { ApiResponse } from "@core";
+import { ApiResponseDto } from "@core";
 
 @Component({
   selector: "error-list",
@@ -12,7 +12,7 @@ import { ApiResponse } from "@core";
 export class ErrorListComponent implements OnChanges {
   readonly error = input<string | undefined>(undefined);
   readonly errors = input<Array<string> | undefined>(undefined);
-  readonly apiResponse = input<ApiResponse<any> | undefined>(undefined);
+  readonly apiResponse = input<ApiResponseDto<any> | undefined>(undefined);
 
   errorList = signal<Array<string>>([]);
 

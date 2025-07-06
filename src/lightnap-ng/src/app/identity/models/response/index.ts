@@ -1,2 +1,2 @@
-export * from "./claim";
-export * from "./login-success-result";
+export * from "./claim-dto";
+export * from "./login-success-result-dto";

@@ -1,11 +1,11 @@
-import { PagedResponse } from "./paged-response";
+import { PagedResponseDto } from "./paged-response-dto";
 
 /**
  * Represents an empty paged response. This is useful when a component requires an initial response to kickstart.
  *
  * @template T - The type of the data items.
  */
-export class EmptyPagedResponse<T> implements PagedResponse<T> {
+export class EmptyPagedResponse<T> implements PagedResponseDto<T> {
     /**
      * The data items in the response.
      *

@@ -1,4 +1,4 @@
-import { AdminUser, SearchAdminUsersSortBy } from "@admin";
+import { AdminUserDto, SearchAdminUsersSortBy } from "@admin";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
@@ -62,7 +62,7 @@ export class UsersComponent {
     ),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
     // so we can avoid a redundant call to the API.
-    startWith(new EmptyPagedResponse<AdminUser>())
+    startWith(new EmptyPagedResponse<AdminUserDto>())
   );
 
   sortBys = [

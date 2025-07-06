@@ -1,10 +1,10 @@
 import { AdminService } from "@admin/services/admin.service";
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ApiResponse, PagedResponse, RequestPollingManager } from "@core";
+import { ApiResponseDto, PagedResponseDto, RequestPollingManager } from "@core";
 import { IdentityService } from "@identity";
-import { LatestNotifications, NotificationItem, SearchNotificationsRequest } from "@profile";
-import { Notification } from "@profile/models/response/notification";
+import { LatestNotifications, NotificationItem, SearchNotificationsRequestDto } from "@profile";
+import { NotificationDto } from "@profile/models/response/notification-dto";
 import { RouteAliasService } from "@routing";
 import { combineLatest, finalize, forkJoin, map, of, ReplaySubject, switchMap, tap } from "rxjs";
 import { DataService } from "./data.service";
@@ -41,11 +41,11 @@ export class NotificationService {
       });
   }
 
-  searchNotifications(searchNotificationsRequest: SearchNotificationsRequest) {
+  searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
     return this.#dataService.searchNotifications(searchNotificationsRequest).pipe(
       tap(results => this.#unreadCountSubject.next(results.unreadCount)),
       switchMap(results =>
-        this.#loadNotificationItems(results.data).pipe(map(notifications => <PagedResponse<NotificationItem>>{ ...results, data: notifications }))
+        this.#loadNotificationItems(results.data).pipe(map(notifications => <PagedResponseDto<NotificationItem>>{ ...results, data: notifications }))
       )
     );
   }
@@ -75,7 +75,7 @@ export class NotificationService {
           this.#notifications = results.data;
           this.#notificationsSubject.next(this.#notifications);
         },
-        error: (response: ApiResponse<any>) => console.error("Unable to refresh unread notifications", response.errorMessages),
+        error: (response: ApiResponseDto<any>) => console.error("Unable to refresh unread notifications", response.errorMessages),
       });
   }
 
@@ -87,7 +87,7 @@ export class NotificationService {
     return this.#dataService.markNotificationAsRead(id).pipe(tap(() => this.#refreshLatestNotifications()));
   }
 
-  #loadNotificationItems(notifications: Array<Notification>) {
+  #loadNotificationItems(notifications: Array<NotificationDto>) {
     if (!notifications.length) return of(new Array<NotificationItem>());
     return forkJoin(notifications.map(notification => this.#loadNotificationItem(notification))).pipe(
       // Filter out any null items (e.g., if the user was deleted). In the future we may prefer to keep the nulls
@@ -96,7 +96,7 @@ export class NotificationService {
     );
   }
 
-  #loadNotificationItem(notification: Notification) {
+  #loadNotificationItem(notification: NotificationDto) {
     var notificationItem = <NotificationItem>{
       id: notification.id,
       timestamp: notification.timestamp,

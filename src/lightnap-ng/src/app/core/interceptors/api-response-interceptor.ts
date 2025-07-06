@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { ApiResponse, HttpErrorApiResponse } from "@core";
+import { ApiResponseDto, HttpErrorApiResponse } from "@core";
 import { RouteAliasService } from "@routing";
 import { Observable, catchError, of, switchMap, throwError } from "rxjs";
 import { IdentityService } from "src/app/identity/services/identity.service";
@@ -24,7 +24,7 @@ export function apiResponseInterceptor(request: HttpRequest<unknown>, next: Http
 
   return next(request).pipe(
     switchMap(httpEvent => {
-      const apiHttpResponse = httpEvent as HttpResponse<ApiResponse<string>>;
+      const apiHttpResponse = httpEvent as HttpResponse<ApiResponseDto<string>>;
       switch (apiHttpResponse.body?.type) {
         case "Error":
         case "UnexpectedError":

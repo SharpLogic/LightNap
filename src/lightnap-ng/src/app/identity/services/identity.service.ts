@@ -4,15 +4,15 @@ import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { InitializationService } from "@core/services/initialization.service";
 import {
-  Claim,
+  ClaimDto,
   LoginRequest,
-  NewPasswordRequest,
-  RegisterRequest,
-  ResetPasswordRequest,
-  SendMagicLinkEmailRequest,
-  SendVerificationEmailRequest,
-  VerifyCodeRequest,
-  VerifyEmailRequest,
+  NewPasswordRequestDto,
+  RegisterRequestDto,
+  ResetPasswordRequestDto,
+  SendMagicLinkEmailRequestDto,
+  SendVerificationEmailRequestDto,
+  VerifyCodeRequestDto,
+  VerifyEmailRequestDto,
 } from "@identity/models";
 import { RouteAliasService } from "@routing";
 import { distinctUntilChanged, filter, finalize, map, of, ReplaySubject, switchMap, take, tap } from "rxjs";
@@ -269,41 +269,41 @@ export class IdentityService {
   /**
    * @method watchUserClaim$
    * @description Watches for changes in the login status and checks if the user has the specified claim.
-   * @param {Claim} allowedClaim - The claim to check for.
+   * @param {ClaimDto} allowedClaim - The claim to check for.
    * @returns {Observable<boolean>} Emits true when the user is logged in with the specified claim, otherwise false.
    */
-  watchUserClaim$(allowedClaim: Claim) {
+  watchUserClaim$(allowedClaim: ClaimDto) {
     return this.watchAnyUserClaim$([allowedClaim]);
   }
   /**
    * @method watchAnyUserClaim$
    * @description Watches for changes in the login status and checks if the user has any of the specified claims.
-   * @param {Array<Claim>} allowedClaims - The claims to check for.
+   * @param {Array<ClaimDto>} allowedClaims - The claims to check for.
    * @returns {Observable<boolean>} Emits true when the user is logged into any of the claims, otherwise false.
    */
-  watchAnyUserClaim$(allowedClaims: Array<Claim>) {
+  watchAnyUserClaim$(allowedClaims: Array<ClaimDto>) {
     return this.#loggedInClaimsSubject$.pipe(map(claims => this.doesUserHaveAnyClaim(allowedClaims)));
   }
 
   /**
    * @method doesUserHaveClaim
    * @description Checks if the user has the specified claim.
-   * @param {Claim} allowedClaim - The claim to check for, represented as a tuple of [claimType, claimValue].
+   * @param {ClaimDto} allowedClaim - The claim to check for, represented as a tuple of [claimType, claimValue].
    * @returns {boolean} True if the user has the claim, false otherwise.
    * @remarks This method is suitable for synchronous scenarios where the user is already known to be logged in (like at a guarded route).
    */
-  doesUserHaveClaim(allowedClaim: Claim) {
+  doesUserHaveClaim(allowedClaim: ClaimDto) {
     return this.doesUserHaveAnyClaim([allowedClaim]);
   }
 
   /**
    * @method doesUserHaveAnyClaim
    * @description Checks if the user has any of the specified claims.
-   * @param {Array<Claim>} allowedClaims - The claims to check for, each represented as a tuple of [claimType, claimValue].
+   * @param {Array<ClaimDto>} allowedClaims - The claims to check for, each represented as a tuple of [claimType, claimValue].
    * @returns {boolean} True if the user has any of the claims, false otherwise.
    * @remarks This method is suitable for synchronous scenarios where the user is already known to be logged in (like at a guarded route).
    */
-  doesUserHaveAnyClaim(allowedClaims: Array<Claim>) {
+  doesUserHaveAnyClaim(allowedClaims: Array<ClaimDto>) {
     return allowedClaims.some(claim => this.#claims?.get(claim.type)?.includes(claim.value));
   }
 
@@ -311,11 +311,11 @@ export class IdentityService {
    * @method watchPermission$
    * @description Watches for changes in the login status and checks if the user has any of the specified roles or claims.
    * @param {Array<string>} allowedRoles - The roles to check for.
-   * @param {Array<Claim>} allowedClaims - The claims to check for.
+   * @param {Array<ClaimDto>} allowedClaims - The claims to check for.
    * @returns {Observable<boolean>} Emits true when the user is logged in with any of the specified roles or claims, otherwise false.
    * @remarks This is an "any" check. To check for "all" (cumulative permissions), use multiple calls.
    */
-  watchUserPermission$(allowedRoles: Array<string>, allowedClaims: Array<Claim>) {
+  watchUserPermission$(allowedRoles: Array<string>, allowedClaims: Array<ClaimDto>) {
     if (!allowedRoles?.length) {
       if (!allowedClaims?.length) {
         return of(false);
@@ -340,11 +340,11 @@ export class IdentityService {
      * @method doesUserHavePermission
      * @description Checks if the user has any of the specified roles or claims.
      * @param {Array<string>} allowedRoles - The roles to check for.
-     * @param {Array<Claim>} allowedClaims - The claims to check for.
+     * @param {Array<ClaimDto>} allowedClaims - The claims to check for.
      * @returns {boolean} True if the user has any of the specified roles or claims, false otherwise.
      * @remarks This is an "any" check. To check for "all" (cumulative permissions), use multiple calls.
      */
-  doesUserHavePermission(allowedRoles: Array<string>, allowedClaims: Array<Claim>) {
+  doesUserHavePermission(allowedRoles: Array<string>, allowedClaims: Array<ClaimDto>) {
     return this.isUserInAnyRole(allowedRoles) || this.doesUserHaveAnyClaim(allowedClaims);
   }
 
@@ -384,10 +384,10 @@ export class IdentityService {
   /**
    * @method register
    * @description Registers a new user.
-   * @param {RegisterRequest} registerRequest - The request object containing registration information.
+   * @param {RegisterRequestDto} registerRequest - The request object containing registration information.
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
-  register(registerRequest: RegisterRequest) {
+  register(registerRequest: RegisterRequestDto) {
     return this.#dataService.register(registerRequest).pipe(tap(result => this.#onTokenReceived(result?.accessToken)));
   }
 
@@ -403,60 +403,60 @@ export class IdentityService {
   /**
    * @method verifyCode
    * @description Verifies a two-factor login code.
-   * @param {VerifyCodeRequest} verifyCodeRequest - The request object containing the code to verify.
+   * @param {VerifyCodeRequestDto} verifyCodeRequest - The request object containing the code to verify.
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
-  verifyCode(verifyCodeRequest: VerifyCodeRequest) {
+  verifyCode(verifyCodeRequest: VerifyCodeRequestDto) {
     return this.#dataService.verifyCode(verifyCodeRequest).pipe(tap(token => this.#onTokenReceived(token)));
   }
 
   /**
    * @method resetPassword
    * @description Resets the user's password.
-   * @param {ResetPasswordRequest} resetPasswordRequest - The request object containing password reset information.
+   * @param {ResetPasswordRequestDto} resetPasswordRequest - The request object containing password reset information.
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
-  resetPassword(resetPasswordRequest: ResetPasswordRequest) {
+  resetPassword(resetPasswordRequest: ResetPasswordRequestDto) {
     return this.#dataService.resetPassword(resetPasswordRequest);
   }
 
   /**
    * @method newPassword
    * @description Sets a new password for the user.
-   * @param {NewPasswordRequest} newPasswordRequest - The request object containing the new password information.
+   * @param {NewPasswordRequestDto} newPasswordRequest - The request object containing the new password information.
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
-  newPassword(newPasswordRequest: NewPasswordRequest) {
+  newPassword(newPasswordRequest: NewPasswordRequestDto) {
     return this.#dataService.newPassword(newPasswordRequest).pipe(tap(result => this.#onTokenReceived(result.accessToken)));
   }
 
   /**
    * @method requestVerificationEmail
    * @description Requests a new verification email.
-   * @param {SendVerificationEmailRequest} sendVerificationEmailRequest - The email address to send the verification email to.
+   * @param {SendVerificationEmailRequestDto} sendVerificationEmailRequest - The email address to send the verification email to.
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
-  requestVerificationEmail(sendVerificationEmailRequest: SendVerificationEmailRequest) {
+  requestVerificationEmail(sendVerificationEmailRequest: SendVerificationEmailRequestDto) {
     return this.#dataService.requestVerificationEmail(sendVerificationEmailRequest);
   }
 
   /**
    * @method verifyEmail
    * @description Verifies an email address.
-   * @param {VerifyEmailRequest} verifyEmailRequest - The request object containing the email and verification code.
+   * @param {VerifyEmailRequestDto} verifyEmailRequest - The request object containing the email and verification code.
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
-  verifyEmail(verifyEmailRequest: VerifyEmailRequest) {
+  verifyEmail(verifyEmailRequest: VerifyEmailRequestDto) {
     return this.#dataService.verifyEmail(verifyEmailRequest);
   }
 
   /**
    * @method requestMagicLinkEmail
    * @description Requests a new magic link email.
-   * @param {SendMagicLinkEmailRequest} sendMagicLinkEmailRequest - The email address to send the magic link email to.
+   * @param {SendMagicLinkEmailRequestDto} sendMagicLinkEmailRequest - The email address to send the magic link email to.
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
-  requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkEmailRequest) {
+  requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkEmailRequestDto) {
     return this.#dataService.requestMagicLinkEmail(sendMagicLinkEmailRequest);
   }
 }

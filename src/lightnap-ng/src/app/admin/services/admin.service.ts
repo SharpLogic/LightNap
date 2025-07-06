@@ -1,9 +1,9 @@
-import { AdminUser, AdminUserWithRoles, Role, RoleWithAdminUsers, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { AdminUserDto, AdminUserWithRoles, RoleDto, RoleWithAdminUsers, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
 import { inject, Injectable } from "@angular/core";
 import { ErrorApiResponse, SuccessApiResponse } from "@core";
 import { forkJoin, map, Observable, of, switchMap, tap, throwError } from "rxjs";
 import { DataService } from "./data.service";
-import { Claim } from "@identity";
+import { ClaimDto } from "@identity";
 
 /**
  * Service for Administrator management of users, roles, and other data.
@@ -13,12 +13,12 @@ import { Claim } from "@identity";
 })
 export class AdminService {
   #dataService = inject(DataService);
-  #rolesResponse?: Array<Role>;
+  #rolesResponse?: Array<RoleDto>;
 
   /**
    * Gets a user by their ID.
    * @param {string} userId - The ID of the user to retrieve.
-   * @returns {Observable<AdminUser>} An observable containing the user data.
+   * @returns {Observable<AdminUserDto>} An observable containing the user data.
    */
   getUser(userId: string) {
     return this.#dataService.getUser(userId);
@@ -27,10 +27,10 @@ export class AdminService {
   /**
    * Updates a user by their ID.
    * @param {string} userId - The ID of the user to update.
-   * @param {UpdateAdminUserRequest} updateAdminUser - The update request object.
-   * @returns {Observable<AdminUser>} An observable with the updated user.
+   * @param {UpdateAdminUserRequestDto} updateAdminUser - The update request object.
+   * @returns {Observable<AdminUserDto>} An observable with the updated user.
    */
-  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequest) {
+  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequestDto) {
     return this.#dataService.updateUser(userId, updateAdminUser);
   }
 
@@ -45,18 +45,18 @@ export class AdminService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {SearchAdminUsersRequest} searchAdminUsers - The search criteria.
-   * @returns {Observable<Array<AdminUser>>} An observable containing the search results.
+   * @param {SearchAdminUsersRequestDto} searchAdminUsers - The search criteria.
+   * @returns {Observable<Array<AdminUserDto>>} An observable containing the search results.
    */
-  searchUsers(searchAdminUsers: SearchAdminUsersRequest) {
+  searchUsers(searchAdminUsers: SearchAdminUsersRequestDto) {
     return this.#dataService.searchUsers(searchAdminUsers);
   }
 
   /**
    * Gets the list of roles.
-   * @returns {Observable<Array<Role>>} An observable containing the roles.
+   * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
-  getRoles(): Observable<Array<Role>> {
+  getRoles(): Observable<Array<RoleDto>> {
     if (this.#rolesResponse) return of(this.#rolesResponse);
     return this.#dataService.getRoles().pipe(tap(roles => (this.#rolesResponse = roles)));
   }
@@ -64,7 +64,7 @@ export class AdminService {
   /**
    * Gets a role by its name.
    * @param {string} roleName - The name of the role to retrieve.
-   * @returns {Observable<Role>} An observable containing the role data.
+   * @returns {Observable<RoleDto>} An observable containing the role data.
    */
   getRole(roleName: string) {
     return this.getRoles().pipe(map(roles => roles.find(role => role.name === roleName)));
@@ -73,7 +73,7 @@ export class AdminService {
   /**
    * Gets the roles a user belongs to.
    * @param {string} userId - The user.
-   * @returns {Observable<Array<Role>>} An observable containing the roles.
+   * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
     return forkJoin([this.getRoles(), this.#dataService.getUserRoles(userId)]).pipe(
@@ -84,7 +84,7 @@ export class AdminService {
   /**
    * Gets users in the specified role.
    * @param {string} role - The role.
-   * @returns {Observable<Array<AdminUser>>} An observable containing the members.
+   * @returns {Observable<Array<AdminUserDto>>} An observable containing the members.
    */
   getUsersInRole(role: string) {
     return this.#dataService.getUsersInRole(role);
@@ -118,7 +118,7 @@ export class AdminService {
    * Removes a user from a role.
    * @param {string} userId - The user to remove from the role.
    * @param {string} role - The role.
-   * @returns {Observable<Role>} An observable with a result of true if successful.
+   * @returns {Observable<RoleDto>} An observable with a result of true if successful.
    */
   removeUserFromRole(userId: string, role: string) {
     return this.#dataService.removeUserFromRole(userId, role);
@@ -127,7 +127,7 @@ export class AdminService {
   /**
    * Gets the claims for a user.
    * @param {string} userId - The user to retrieve claims for.
-   * @returns {Observable<Array<Claim>>} An observable containing the user's claims.
+   * @returns {Observable<Array<ClaimDto>>} An observable containing the user's claims.
    */
   getUserClaims(userId: string) {
     return this.#dataService.getUserClaims(userId);
@@ -135,30 +135,30 @@ export class AdminService {
 
   /**
    * Gets the users for a claim.
-   * @param {Claim} claim - The claim to retrieve users for.
-   * @returns {Observable<Array<AdminUser>>} An observable containing the users with the specified claim.
+   * @param {ClaimDto} claim - The claim to retrieve users for.
+   * @returns {Observable<Array<AdminUserDto>>} An observable containing the users with the specified claim.
    */
-  getUsersForClaim(claim: Claim) {
+  getUsersForClaim(claim: ClaimDto) {
     return this.#dataService.getUsersForClaim(claim);
   }
 
   /**
    * Adds a claim to a user.
    * @param {string} userId - The user to add the claim to.
-   * @param {Claim} claim - The claim to add.
+   * @param {ClaimDto} claim - The claim to add.
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
-  addClaimToUser(userId: string, claim: Claim) {
+  addClaimToUser(userId: string, claim: ClaimDto) {
     return this.#dataService.addClaimToUser(userId, claim);
   }
 
   /**
    * Removes a claim from a user.
    * @param {string} userId - The user to remove the claim from.
-   * @param {Claim} claim - The claim to remove.
+   * @param {ClaimDto} claim - The claim to remove.
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
-  removeClaimFromUser(userId: string, claim: Claim) {
+  removeClaimFromUser(userId: string, claim: ClaimDto) {
     return this.#dataService.removeClaimFromUser(userId, claim);
   }
 

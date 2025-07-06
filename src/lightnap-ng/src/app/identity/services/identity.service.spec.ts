@@ -2,7 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { TimerService } from "@core";
 import { InitializationService } from "@core/services/initialization.service";
-import { NewPasswordRequest, RegisterRequest, ResetPasswordRequest, VerifyCodeRequest } from "@identity";
+import { NewPasswordRequestDto, RegisterRequestDto, ResetPasswordRequestDto, VerifyCodeRequestDto } from "@identity";
 import { of } from "rxjs";
 import { DataService } from "./data.service";
 import { IdentityService } from "./identity.service";
@@ -84,7 +84,7 @@ describe("IdentityService", () => {
   });
 
   it("should register and set token", () => {
-    const registerRequest: RegisterRequest = {} as any;
+    const registerRequest: RegisterRequestDto = {} as any;
     dataServiceSpy.register.and.returnValue(of({ accessToken: token, type: "AccessToken" }));
     service.register(registerRequest).subscribe(() => {
       expect(service.getBearerToken()).toBe(`Bearer ${token}`);
@@ -93,7 +93,7 @@ describe("IdentityService", () => {
   });
 
   it("should verify code and set token", () => {
-    const verifyCodeRequest: VerifyCodeRequest = {} as any;
+    const verifyCodeRequest: VerifyCodeRequestDto = {} as any;
     dataServiceSpy.verifyCode.and.returnValue(of(token));
     service.verifyCode(verifyCodeRequest).subscribe(() => {
       expect(service.getBearerToken()).toBe(`Bearer ${token}`);
@@ -102,14 +102,14 @@ describe("IdentityService", () => {
   });
 
   it("should reset password", () => {
-    const resetPasswordRequest: ResetPasswordRequest = <any>{};
+    const resetPasswordRequest: ResetPasswordRequestDto = <any>{};
     dataServiceSpy.resetPassword.and.returnValue(of({} as any));
     service.resetPassword(resetPasswordRequest).subscribe();
     expect(dataServiceSpy.resetPassword).toHaveBeenCalledWith(resetPasswordRequest);
   });
 
   it("should set new password and set token", () => {
-    const newPasswordRequest: NewPasswordRequest = {} as any;
+    const newPasswordRequest: NewPasswordRequestDto = {} as any;
     dataServiceSpy.newPassword.and.returnValue(of({ accessToken: token, type: "AccessToken" }));
     service.newPassword(newPasswordRequest).subscribe(() => {
       expect(service.getBearerToken()).toBe(`Bearer ${token}`);

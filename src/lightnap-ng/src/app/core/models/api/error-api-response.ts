@@ -1,4 +1,4 @@
-import { ApiResponse } from "./api-response";
+import { ApiResponseDto } from "./api-response-dto";
 import { ApiResponseType } from "./api-response-type";
 
 /**
@@ -7,7 +7,7 @@ import { ApiResponseType } from "./api-response-type";
  *
  * @template T - The type of the result expected from the API response.
  */
-export class ErrorApiResponse<T> implements ApiResponse<T> {
+export class ErrorApiResponse<T> implements ApiResponseDto<T> {
     /**
      * The type of the API response.
      * Always set to "Error" for error responses.

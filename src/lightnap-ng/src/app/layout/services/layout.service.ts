@@ -8,7 +8,7 @@ import { updatePreset, updateSurfacePalette } from "@primeng/themes";
 import Aura from "@primeng/themes/aura";
 import Lara from "@primeng/themes/lara";
 import Nora from "@primeng/themes/nora";
-import { LayoutConfig, ProfileService } from "@profile";
+import { LayoutConfigDto, ProfileService } from "@profile";
 import { Subject } from "rxjs";
 
 @Injectable({
@@ -29,7 +29,7 @@ export class LayoutService {
     menuHoverActive: false,
   };
 
-  layoutConfig = signal<LayoutConfig>(this.#config);
+  layoutConfig = signal<LayoutConfigDto>(this.#config);
   layoutState = signal<LayoutState>(this.#state);
   #overlayOpen = new Subject<any>();
   overlayOpen$ = this.#overlayOpen.asObservable();
@@ -261,7 +261,7 @@ export class LayoutService {
       });
   }
 
-  #handleDarkModeTransition(config: LayoutConfig): void {
+  #handleDarkModeTransition(config: LayoutConfigDto): void {
     if ((document as any).startViewTransition) {
       this.#startViewTransition(config);
     } else {
@@ -270,7 +270,7 @@ export class LayoutService {
     }
   }
 
-  #startViewTransition(config: LayoutConfig): void {
+  #startViewTransition(config: LayoutConfigDto): void {
     const transition = (document as any).startViewTransition(() => {
       this.toggleDarkMode(config);
     });
@@ -278,7 +278,7 @@ export class LayoutService {
     transition.ready.then(() => this.#onTransitionEnd()).catch(() => {});
   }
 
-  toggleDarkMode(config?: LayoutConfig): void {
+  toggleDarkMode(config?: LayoutConfigDto): void {
     const _config = config || this.layoutConfig();
     if (_config.darkTheme) {
       document.documentElement.classList.add("app-dark");

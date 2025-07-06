@@ -2,12 +2,12 @@ import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { IdentityService } from "@identity";
 import {
-  ApplicationSettings,
-  ChangeEmailRequest,
-  ChangePasswordRequest,
-  ConfirmChangeEmailRequest,
-  LayoutConfig,
-  UpdateProfileRequest,
+  ApplicationSettingsDto,
+  ChangeEmailRequestDto,
+  ChangePasswordRequestDto,
+  ConfirmChangeEmailRequestDto,
+  LayoutConfigDto,
+  UpdateProfileRequestDto,
 } from "@profile";
 import { filter, of, switchMap, tap } from "rxjs";
 import { DataService } from "./data.service";
@@ -27,7 +27,7 @@ export class ProfileService {
   #identityService = inject(IdentityService);
 
   // This should be kept in sync with the server-side BrowserSettings class.
-  #defaultApplicationSettings: ApplicationSettings = {
+  #defaultApplicationSettings: ApplicationSettingsDto = {
     style: {
       preset: "Aura",
       primary: "emerald",
@@ -40,7 +40,7 @@ export class ProfileService {
     preferences: {},
   };
 
-  #settings?: ApplicationSettings;
+  #settings?: ApplicationSettingsDto;
 
   /**
    * Constructs the ProfileService and sets up the subscription to handle user logout.
@@ -69,10 +69,10 @@ export class ProfileService {
   /**
    * @method updateProfile
    * @description Updates the user profile.
-   * @param {UpdateProfileRequest} updateProfileRequest - The request object containing profile update information.
+   * @param {UpdateProfileRequestDto} updateProfileRequest - The request object containing profile update information.
    * @returns {Observable<Profile>} An observable containing the updated profile.
    */
-  updateProfile(updateProfileRequest: UpdateProfileRequest) {
+  updateProfile(updateProfileRequest: UpdateProfileRequestDto) {
     return this.#dataService.updateProfile(updateProfileRequest);
   }
 
@@ -98,37 +98,37 @@ export class ProfileService {
   /**
    * @method changePassword
    * @description Changes the user's password.
-   * @param {ChangePasswordRequest} changePasswordRequest - The request object containing password change information.
+   * @param {ChangePasswordRequestDto} changePasswordRequest - The request object containing password change information.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  changePassword(changePasswordRequest: ChangePasswordRequest) {
+  changePassword(changePasswordRequest: ChangePasswordRequestDto) {
     return this.#dataService.changePassword(changePasswordRequest);
   }
 
   /**
    * @method changeEmail
    * @description Changes the user's email address.
-   * @param {ChangeEmailRequest} changeEmailRequest - The request object containing email change information.
+   * @param {ChangeEmailRequestDto} changeEmailRequest - The request object containing email change information.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  changeEmail(changeEmailRequest: ChangeEmailRequest) {
+  changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
     return this.#dataService.changeEmail(changeEmailRequest);
   }
 
   /**
    * @method confirmEmailChange
    * @description Confirms the user's email change.
-   * @param {ConfirmChangeEmailRequest} confirmChangeEmailRequest - The request object containing email change confirmation information.
+   * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequest) {
+  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
     return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
   }
 
   /**
    * @method getSettings
    * @description Fetches the application settings. If settings are already loaded, returns them from memory.
-   * @returns {Observable<ApplicationSettings>} An observable containing the application settings.
+   * @returns {Observable<ApplicationSettingsDto>} An observable containing the application settings.
    */
   getSettings() {
     if (this.#settings) return of(this.#settings);
@@ -143,10 +143,10 @@ export class ProfileService {
   /**
    * @method updateSettings
    * @description Updates the application settings.
-   * @param {ApplicationSettings} browserSettings - The new application settings to be updated.
+   * @param {ApplicationSettingsDto} browserSettings - The new application settings to be updated.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  updateSettings(browserSettings: ApplicationSettings) {
+  updateSettings(browserSettings: ApplicationSettingsDto) {
     if (this.#settings) {
       this.#settings = browserSettings;
     }
@@ -156,10 +156,10 @@ export class ProfileService {
   /**
    * @method updateStyleSettings
    * @description Updates the style settings of the application.
-   * @param {LayoutConfig} styleSettings - The new style settings to be updated.
+   * @param {LayoutConfigDto} styleSettings - The new style settings to be updated.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  updateStyleSettings(styleSettings: LayoutConfig) {
+  updateStyleSettings(styleSettings: LayoutConfigDto) {
     return this.getSettings().pipe(
       switchMap(response => {
         if (!response || JSON.stringify(response.style) === JSON.stringify(styleSettings)) return of(response);
@@ -171,10 +171,10 @@ export class ProfileService {
   /**
    * @method getDefaultStyleSettings
    * @description Retrieves the default style settings.
-   * @returns {LayoutConfig} The default style settings.
+   * @returns {LayoutConfigDto} The default style settings.
    */
   getDefaultStyleSettings() {
-    return JSON.parse(JSON.stringify(this.#defaultApplicationSettings.style)) as LayoutConfig;
+    return JSON.parse(JSON.stringify(this.#defaultApplicationSettings.style)) as LayoutConfigDto;
   }
 
   /**

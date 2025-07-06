@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { ApiResponse } from "./api-response";
+import { ApiResponseDto } from "./api-response-dto";
 import { ApiResponseType } from "./api-response-type";
 import { environment } from "src/environments/environment";
 
@@ -8,7 +8,7 @@ import { environment } from "src/environments/environment";
  *
  * @template T - The type of the result expected from the API response.
  */
-export class HttpErrorApiResponse<T> implements ApiResponse<T> {
+export class HttpErrorApiResponse<T> implements ApiResponseDto<T> {
   /**
    * The result of the API response, if any.
    */

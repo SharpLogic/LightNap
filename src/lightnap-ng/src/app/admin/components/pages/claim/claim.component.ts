@@ -11,7 +11,7 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from "primeng/table";
 import { Observable, tap } from "rxjs";
-import { AdminUser, RoleWithAdminUsers } from "@admin/models";
+import { AdminUserDto, RoleWithAdminUsers } from "@admin/models";
 
 @Component({
   standalone: true,
@@ -37,7 +37,7 @@ export class ClaimComponent implements OnInit {
 
   errors = signal(new Array<string>());
 
-  usersForClaim$ = signal(new Observable<Array<AdminUser>>());
+  usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
 
   ngOnInit() {
     this.#refreshUsers();

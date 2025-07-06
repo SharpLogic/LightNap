@@ -1,4 +1,4 @@
-import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { AdminUserDto, RoleDto, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
 import { TestBed } from "@angular/core/testing";
 import { SuccessApiResponse } from "@core";
 import { of } from "rxjs";
@@ -48,7 +48,7 @@ describe("AdminService", () => {
 
   it("should update user", () => {
     const userId = "user-id";
-    const updateRequest: UpdateAdminUserRequest = {};
+    const updateRequest: UpdateAdminUserRequestDto = {};
     dataServiceSpy.updateUser.and.returnValue(of({} as any));
 
     service.updateUser(userId, updateRequest).subscribe();
@@ -66,7 +66,7 @@ describe("AdminService", () => {
   });
 
   it("should search users", () => {
-    const searchRequest: SearchAdminUsersRequest = { sortBy: "userName", reverseSort: false };
+    const searchRequest: SearchAdminUsersRequestDto = { sortBy: "userName", reverseSort: false };
     dataServiceSpy.searchUsers.and.returnValue(of({} as any));
 
     service.searchUsers(searchRequest).subscribe();
@@ -93,7 +93,7 @@ describe("AdminService", () => {
   it("should get user roles", () => {
     const role = "Administrator";
     const userId = "user-id";
-    const rolesResponse = new Array<Role>({ name: role } as Role);
+    const rolesResponse = new Array<RoleDto>({ name: role } as RoleDto);
     const userRolesResponse = new Array<string>(role);
     dataServiceSpy.getRoles.and.returnValue(of(rolesResponse));
     dataServiceSpy.getUserRoles.and.returnValue(of(userRolesResponse));
@@ -153,8 +153,8 @@ describe("AdminService", () => {
 
   it("should get user with roles", () => {
     const userId = "user-id";
-    const userResponse = { id: userId, userName: "testUser" } as AdminUser;
-    const rolesResponse = [{ name: "admin" } as Role];
+    const userResponse = { id: userId, userName: "testUser" } as AdminUserDto;
+    const rolesResponse = [{ name: "admin" } as RoleDto];
     const userRolesResponse = ["admin"];
 
     dataServiceSpy.getUser.and.returnValue(of(userResponse));

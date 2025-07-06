@@ -1,6 +1,6 @@
 import { DestroyRef, Directive, ElementRef, inject, Input, Renderer2, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Claim, IdentityService } from "@identity";
+import { ClaimDto, IdentityService } from "@identity";
 import { Subscription } from "rxjs";
 
 @Directive({
@@ -15,7 +15,7 @@ export class ShowByPermissionsDirective {
   #subscription?: Subscription;
   #originalDisplay = this.#el.nativeElement.style.display;
 
-  @Input() claims?: Array<Claim> | Claim;
+  @Input() claims?: Array<ClaimDto> | ClaimDto;
   @Input() roles?: Array<string> | string;
 
   ngOnChanges(changes: SimpleChanges) {

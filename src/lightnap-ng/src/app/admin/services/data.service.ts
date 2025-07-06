@@ -1,8 +1,8 @@
-import { AdminUser, Role, SearchAdminUsersRequest, UpdateAdminUserRequest } from "@admin/models";
+import { AdminUserDto, RoleDto, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { API_URL_ROOT, ApiResponse, PagedResponse } from "@core";
-import { Claim } from "@identity";
+import { API_URL_ROOT, ApiResponseDto, PagedResponseDto } from "@core";
+import { ClaimDto } from "@identity";
 
 @Injectable({
   providedIn: "root",
@@ -12,23 +12,23 @@ export class DataService {
   #apiUrlRoot = `${inject(API_URL_ROOT)}administrator/`;
 
   getUser(userId: string) {
-    return this.#http.get<AdminUser>(`${this.#apiUrlRoot}users/${userId}`);
+    return this.#http.get<AdminUserDto>(`${this.#apiUrlRoot}users/${userId}`);
   }
 
-  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequest) {
-    return this.#http.put<AdminUser>(`${this.#apiUrlRoot}users/${userId}`, updateAdminUser);
+  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequestDto) {
+    return this.#http.put<AdminUserDto>(`${this.#apiUrlRoot}users/${userId}`, updateAdminUser);
   }
 
   deleteUser(userId: string) {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}users/${userId}`);
   }
 
-  searchUsers(searchAdminUsers: SearchAdminUsersRequest) {
-    return this.#http.post<PagedResponse<AdminUser>>(`${this.#apiUrlRoot}users/search`, searchAdminUsers);
+  searchUsers(searchAdminUsers: SearchAdminUsersRequestDto) {
+    return this.#http.post<PagedResponseDto<AdminUserDto>>(`${this.#apiUrlRoot}users/search`, searchAdminUsers);
   }
 
   getRoles() {
-    return this.#http.get<Array<Role>>(`${this.#apiUrlRoot}roles`);
+    return this.#http.get<Array<RoleDto>>(`${this.#apiUrlRoot}roles`);
   }
 
   getUserRoles(userId: string) {
@@ -36,7 +36,7 @@ export class DataService {
   }
 
   getUsersInRole(role: string) {
-    return this.#http.get<Array<AdminUser>>(`${this.#apiUrlRoot}roles/${role}`);
+    return this.#http.get<Array<AdminUserDto>>(`${this.#apiUrlRoot}roles/${role}`);
   }
 
   addUserToRole(userId: string, role: string) {
@@ -48,18 +48,18 @@ export class DataService {
   }
 
   getUserClaims(userId: string) {
-    return this.#http.get<Array<Claim>>(`${this.#apiUrlRoot}users/${userId}/claims`);
+    return this.#http.get<Array<ClaimDto>>(`${this.#apiUrlRoot}users/${userId}/claims`);
   }
 
-  getUsersForClaim(claim: Claim) {
-    return this.#http.get<Array<AdminUser>>(`${this.#apiUrlRoot}claims/${claim.type}/${claim.value}`);
+  getUsersForClaim(claim: ClaimDto) {
+    return this.#http.get<Array<AdminUserDto>>(`${this.#apiUrlRoot}claims/${claim.type}/${claim.value}`);
   }
 
-  addClaimToUser(userId: string, claim: Claim) {
+  addClaimToUser(userId: string, claim: ClaimDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}users/${userId}/claims/${claim.type}/${claim.value}`, null);
   }
 
-  removeClaimFromUser(userId: string, claim: Claim) {
+  removeClaimFromUser(userId: string, claim: ClaimDto) {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}users/${userId}/claims/${claim.type}/${claim.value}`);
   }
 

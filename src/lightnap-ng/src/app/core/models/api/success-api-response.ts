@@ -1,4 +1,4 @@
-import { ApiResponse } from "./api-response";
+import { ApiResponseDto } from "./api-response-dto";
 import { ApiResponseType } from "./api-response-type";
 
 /**
@@ -6,7 +6,7 @@ import { ApiResponseType } from "./api-response-type";
  * such as when the final result of an operation is not the result of the API call itself.
  * @template T - The type of the result.
  */
-export class SuccessApiResponse<T> implements ApiResponse<T> {
+export class SuccessApiResponse<T> implements ApiResponseDto<T> {
     /**
      * The type of the API response.
      * @default "Success"

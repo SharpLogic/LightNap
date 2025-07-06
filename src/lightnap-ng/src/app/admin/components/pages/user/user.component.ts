@@ -1,4 +1,4 @@
-import { AdminUser, Role } from "@admin/models";
+import { AdminUserDto, RoleDto } from "@admin/models";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnChanges, signal } from "@angular/core";
@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ConfirmPopupComponent, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
-import { Claim } from "@identity";
+import { ClaimDto } from "@identity";
 import { RouteAliasService } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -46,9 +46,9 @@ export class UserComponent implements OnChanges {
 
   errors = signal(new Array<string>());
 
-  user$ = signal<Observable<AdminUser>>(new Observable<AdminUser>());
-  userClaims$ = signal<Observable<Array<Claim>>>(new Observable<Array<Claim>>());
-  userRoles$ = signal<Observable<Array<Role>>>(new Observable<Array<Role>>());
+  user$ = signal<Observable<AdminUserDto>>(new Observable<AdminUserDto>());
+  userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
+  userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
 
   ngOnChanges() {
     this.#refreshUser();
@@ -140,7 +140,7 @@ export class UserComponent implements OnChanges {
     });
   }
 
-  removeClaim(claim: Claim) {
+  removeClaim(claim: ClaimDto) {
     this.errors.set([]);
 
     this.adminService.removeClaimFromUser(this.userId(), claim).subscribe({
@@ -149,7 +149,7 @@ export class UserComponent implements OnChanges {
     });
   }
 
-  addClaim(claim: Claim) {
+  addClaim(claim: ClaimDto) {
     this.errors.set([]);
 
     this.adminService.addClaimToUser(this.userId(), claim).subscribe({

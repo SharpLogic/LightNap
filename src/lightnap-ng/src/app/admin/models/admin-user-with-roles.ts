@@ -1,4 +1,4 @@
-import { AdminUser, Role } from "./response";
+import { AdminUserDto, RoleDto } from "./response";
 
 /**
  * Interface representing a user with full details including roles for an administrative context.
@@ -6,13 +6,13 @@ import { AdminUser, Role } from "./response";
 export interface AdminUserWithRoles {
     /**
      * The timestamp when the user was last modified.
-     * @type {AdminUser}
+     * @type {AdminUserDto}
      */
-    user: AdminUser;
+    user: AdminUserDto;
 
     /**
      * The timestamp when the user was created.
-     * @type {Array<Role>}
+     * @type {Array<RoleDto>}
      */
-    roles: Array<Role>;
+    roles: Array<RoleDto>;
 }

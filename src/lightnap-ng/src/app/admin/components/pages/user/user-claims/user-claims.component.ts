@@ -3,7 +3,7 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ConfirmPopupComponent } from "@core";
-import { Claim } from "@identity";
+import { ClaimDto } from "@identity";
 import { RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -26,11 +26,11 @@ export class UserClaimsComponent {
     value: this.#fb.control("", [Validators.required]),
   });
 
-  userClaims = input.required<Array<Claim>>();
-  addClaim = output<Claim>();
-  removeClaim = output<Claim>();
+  userClaims = input.required<Array<ClaimDto>>();
+  addClaim = output<ClaimDto>();
+  removeClaim = output<ClaimDto>();
 
-  removeClaimClicked(event: any, claim: Claim) {
+  removeClaimClicked(event: any, claim: ClaimDto) {
     this.#confirmationService.confirm({
       header: "Confirm Claim Removal",
       message: `Are you sure that you want to remove this claim?`,
@@ -43,7 +43,7 @@ export class UserClaimsComponent {
   addClaimClicked() {
     if (!this.addUserClaimForm.valid) return;
 
-    this.addClaim.emit(this.addUserClaimForm.value as Claim);
+    this.addClaim.emit(this.addUserClaimForm.value as ClaimDto);
     this.addUserClaimForm.reset();
   }
 }

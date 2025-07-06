@@ -1,3 +1,3 @@
-export * from "./admin-device";
-export * from "./admin-user";
-export * from "./role";
+export * from "./admin-device-dto";
+export * from "./admin-user-dto";
+export * from "./role-dto";

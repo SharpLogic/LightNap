@@ -2,15 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core";
 import {
-    ApplicationSettings,
-    ChangeEmailRequest,
-    ChangePasswordRequest,
-    ConfirmChangeEmailRequest,
-    Device,
-    NotificationSearchResults,
-    Profile,
-    SearchNotificationsRequest,
-    UpdateProfileRequest,
+    ApplicationSettingsDto,
+    ChangeEmailRequestDto,
+    ChangePasswordRequestDto,
+    ConfirmChangeEmailRequestDto,
+    DeviceDto,
+    NotificationSearchResultsDto,
+    ProfileDto,
+    SearchNotificationsRequestDto,
+    UpdateProfileRequestDto,
 } from "@profile";
 import { DeviceHelper } from "@profile/helpers/device.helper";
 import { NotificationHelper } from "@profile/helpers/notification.helper";
@@ -23,29 +23,29 @@ export class DataService {
   #http = inject(HttpClient);
   #apiUrlRoot = `${inject(API_URL_ROOT)}profile/`;
 
-  changePassword(changePasswordRequest: ChangePasswordRequest) {
+  changePassword(changePasswordRequest: ChangePasswordRequestDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}change-password`, changePasswordRequest);
   }
 
-  changeEmail(changeEmailRequest: ChangeEmailRequest) {
+  changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}change-email`, changeEmailRequest);
   }
 
-  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequest) {
+  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}confirm-email-change`, confirmChangeEmailRequest);
   }
 
   getProfile() {
-    return this.#http.get<Profile>(`${this.#apiUrlRoot}`);
+    return this.#http.get<ProfileDto>(`${this.#apiUrlRoot}`);
   }
 
-  updateProfile(updateProfile: UpdateProfileRequest) {
-    return this.#http.put<Profile>(`${this.#apiUrlRoot}`, updateProfile);
+  updateProfile(updateProfile: UpdateProfileRequestDto) {
+    return this.#http.put<ProfileDto>(`${this.#apiUrlRoot}`, updateProfile);
   }
 
   getDevices() {
     return this.#http
-      .get<Array<Device>>(`${this.#apiUrlRoot}devices`)
+      .get<Array<DeviceDto>>(`${this.#apiUrlRoot}devices`)
       .pipe(tap(devices => devices.forEach(device => DeviceHelper.rehydrate(device))));
   }
 
@@ -54,16 +54,16 @@ export class DataService {
   }
 
   getSettings() {
-    return this.#http.get<ApplicationSettings>(`${this.#apiUrlRoot}settings`);
+    return this.#http.get<ApplicationSettingsDto>(`${this.#apiUrlRoot}settings`);
   }
 
-  updateSettings(browserSettings: ApplicationSettings) {
+  updateSettings(browserSettings: ApplicationSettingsDto) {
     return this.#http.put<boolean>(`${this.#apiUrlRoot}settings`, browserSettings);
   }
 
-  searchNotifications(searchNotificationsRequest: SearchNotificationsRequest) {
+  searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
     return this.#http
-      .post<NotificationSearchResults>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest)
+      .post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest)
       .pipe(tap(results => results.data.forEach(NotificationHelper.rehydrate)));
   }
 

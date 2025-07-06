@@ -1,7 +1,7 @@
-import { Device } from "@profile/models";
+import { DeviceDto } from "@profile/models";
 
 export class DeviceHelper {
-    public static rehydrate(device: Device) {
+    public static rehydrate(device: DeviceDto) {
         if (device?.lastSeen) {
             device.lastSeen = new Date(device.lastSeen);
         }

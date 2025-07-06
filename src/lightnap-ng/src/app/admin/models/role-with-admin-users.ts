@@ -1,6 +1,6 @@
-import { AdminUser, Role } from "./response";
+import { AdminUserDto, RoleDto } from "./response";
 
 export interface RoleWithAdminUsers {
-    role: Role;
-    users: Array<AdminUser>;
+    role: RoleDto;
+    users: Array<AdminUserDto>;
 }

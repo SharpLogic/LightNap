@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SuccessApiResponse, TimerService } from '@core';
 import { IdentityService } from '@identity';
-import { ApplicationSettings, ChangePasswordRequest, LayoutConfig, UpdateProfileRequest } from '@profile';
+import { ApplicationSettingsDto, ChangePasswordRequestDto, LayoutConfigDto, UpdateProfileRequestDto } from '@profile';
 import { of } from 'rxjs';
 import { DataService } from './data.service';
 import { ProfileService } from './profile.service';
@@ -51,7 +51,7 @@ describe('ProfileService', () => {
     });
 
     it('should update profile', () => {
-        const updateProfileRequest: UpdateProfileRequest = {} as any;
+        const updateProfileRequest: UpdateProfileRequestDto = {} as any;
         dataServiceSpy.updateProfile.and.returnValue(of({} as any));
 
         service.updateProfile(updateProfileRequest).subscribe();
@@ -77,7 +77,7 @@ describe('ProfileService', () => {
     });
 
     it('should change password', () => {
-        const changePasswordRequest: ChangePasswordRequest = {} as any;
+        const changePasswordRequest: ChangePasswordRequestDto = {} as any;
         dataServiceSpy.changePassword.and.returnValue(of({} as any));
 
         service.changePassword(changePasswordRequest).subscribe();
@@ -95,7 +95,7 @@ describe('ProfileService', () => {
     });
 
     it('should update settings', () => {
-        const browserSettings: ApplicationSettings = { } as any;
+        const browserSettings: ApplicationSettingsDto = { } as any;
         dataServiceSpy.updateSettings.and.returnValue(of({} as any));
 
         service.updateSettings(browserSettings).subscribe();
@@ -104,8 +104,8 @@ describe('ProfileService', () => {
     });
 
     it('should update style settings', () => {
-        const styleSettings: LayoutConfig = {} as any;
-        const expectedSettings: ApplicationSettings = {} as any;
+        const styleSettings: LayoutConfigDto = {} as any;
+        const expectedSettings: ApplicationSettingsDto = {} as any;
         dataServiceSpy.getSettings.and.returnValue(of(expectedSettings));
         dataServiceSpy.updateSettings.and.returnValue(of({} as any));
 
