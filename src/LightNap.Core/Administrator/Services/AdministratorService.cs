@@ -265,6 +265,8 @@ namespace LightNap.Core.Administrator.Services
 
             var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
 
+            if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { throw new UserFriendlyApiException("You may not lock an Administrator account."); }
+
             user.LockoutEnd = DateTimeOffset.MaxValue;
 
             await db.SaveChangesAsync();
