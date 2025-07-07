@@ -7,4 +7,5 @@ export const Routes: AppRoute[] = [
   { path: "roles", title: "Admin | Roles", data: { alias: "admin-roles" }, loadComponent: () => import("./roles/roles.component").then(m => m.RolesComponent) },
   { path: "roles/:role", title: "Admin | Role", data: { alias: "admin-role" }, loadComponent: () => import("./role/role.component").then(m => m.RoleComponent) },
   { path: "claims/:type/:value", title: "Admin | Claim", data: { alias: "admin-claim" }, loadComponent: () => import("./claim/claim.component").then(m => m.ClaimComponent) },
+
 ];

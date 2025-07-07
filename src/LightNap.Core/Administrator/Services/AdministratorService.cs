@@ -194,32 +194,46 @@ namespace LightNap.Core.Administrator.Services
         }
 
         /// <summary>
-        /// Retrieves the claims for a user.
+        /// Searches claims.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
-        /// <returns>The list of claims for the user.</returns>
-        public async Task<IList<ClaimDto>> GetClaimsForUserAsync(string userId)
+        /// <param name="requestDto">The search parameters.</param>
+        /// <returns>The paginated list of claims.</returns>
+        public async Task<PagedResponse<AdminClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
         {
             this.AssertUserIsAdministrator();
 
-            var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
+            var query = db.UserClaims.AsQueryable();
 
-            var claims = await userManager.GetClaimsAsync(user);
+            if (!string.IsNullOrWhiteSpace(requestDto.UserId))
+            {
+                query = query.Where(claim => claim.UserId == requestDto.UserId);
+            }
 
-            return claims.ToDtoList();
-        }
+            if (!string.IsNullOrWhiteSpace(requestDto.Type))
+            {
+                query = query.Where(claim => claim.ClaimType == requestDto.Type);
+            }
 
-        /// <summary>
-        /// Retrieves the users with a specific claim.
-        /// </summary>
-        /// <param name="claim">The claim to search for.</param>
-        /// <returns>The list of users with the specified claim.</returns>
-        public async Task<IList<AdminUserDto>> GetUsersForClaimAsync(ClaimDto claim)
-        {
-            this.AssertUserIsAdministrator();
+            if (!string.IsNullOrWhiteSpace(requestDto.Value))
+            {
+                query = query.Where(claim => EF.Functions.Like(claim.ClaimValue, $"%{requestDto.Value}%"));
+            }
 
-            var users = await userManager.GetUsersForClaimAsync(claim.ToClaim());
-            return users.ToAdminUserDtoList();
+            int totalCount = await query.CountAsync();
+
+            if (requestDto.PageNumber > 1)
+            {
+                query = query.Skip((requestDto.PageNumber - 1) * requestDto.PageSize);
+            }
+
+
+            var claims = await query
+                .OrderBy(claim => claim.UserId)
+                .ThenBy(claim => claim.ClaimType)
+                .ThenBy(claim => claim.ClaimValue)
+                .ToListAsync();
+
+            return new PagedResponse<AdminClaimDto>(claims.ToDtoList(), requestDto.PageNumber, requestDto.PageSize, totalCount);
         }
 
         /// <summary>

@@ -3,7 +3,7 @@ import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ConfirmPopupComponent, ToastService } from "@core";
+import { ConfirmPopupComponent, PagedResponseDto, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { ClaimDto } from "@identity";

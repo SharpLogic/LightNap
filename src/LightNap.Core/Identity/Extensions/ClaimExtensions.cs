@@ -18,7 +18,7 @@ namespace LightNap.Core.Identity.Extensions
             return new ClaimDto()
             {
                 Type = claim.Type,
-                Value = claim.Value
+                Value = claim.Value,
             };
         }
 

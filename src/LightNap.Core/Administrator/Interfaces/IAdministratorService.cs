@@ -76,18 +76,11 @@ namespace LightNap.Core.Administrator.Interfaces
         Task RemoveUserFromRoleAsync(string role, string userId);
 
         /// <summary>
-        /// Retrieves the claims for a user.
+        /// Searches claims.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
-        /// <returns>The list of claims for the user.</returns>
-        Task<IList<ClaimDto>> GetClaimsForUserAsync(string userId);
-
-        /// <summary>
-        /// Retrieves the users with a specific claim.
-        /// </summary>
-        /// <param name="claim">The claim to search for.</param>
-        /// <returns>The list of users with the specified claim.</returns>
-        Task<IList<AdminUserDto>> GetUsersForClaimAsync(ClaimDto claim);
+        /// <param name="requestDto">The search parameters.</param>
+        /// <returns>The paginated list of claims.</returns>
+        Task<PagedResponse<AdminClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto);
 
         /// <summary>
         /// Adds a claim to the specified user asynchronously.

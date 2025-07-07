@@ -1,25 +1,29 @@
+import { AdminUserDto } from "@admin/models";
 import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit, signal } from "@angular/core";
+import { Component, inject, input, signal } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { ConfirmPopupComponent } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
-import { RoutePipe } from "@routing";
+import { RouteAliasService, RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
+import { InputTextModule } from "primeng/inputtext";
+import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
-import { Observable, tap } from "rxjs";
-import { AdminUserDto, RoleWithAdminUsers } from "@admin/models";
+import { Observable } from "rxjs";
 
 @Component({
   standalone: true,
   templateUrl: "./claim.component.html",
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     PanelModule,
     TableModule,
+    InputTextModule,
     ButtonModule,
     RouterLink,
     RoutePipe,
@@ -28,23 +32,34 @@ import { AdminUserDto, RoleWithAdminUsers } from "@admin/models";
     ConfirmPopupComponent,
   ],
 })
-export class ClaimComponent implements OnInit {
+export class ClaimComponent {
   readonly #adminService = inject(AdminService);
   readonly #confirmationService = inject(ConfirmationService);
+  readonly #routeAlias = inject(RouteAliasService);
 
   readonly type = input.required<string>();
   readonly value = input.required<string>();
 
+  readonly #fb = inject(FormBuilder);
+
+  readonly form = this.#fb.group({
+    type: this.#fb.control("", [Validators.required]),
+    value: this.#fb.control("", [Validators.required]),
+  });
   errors = signal(new Array<string>());
 
   usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
 
-  ngOnInit() {
+  ngOnChanges() {
     this.#refreshUsers();
+    this.form.setValue({
+      type: this.type(),
+      value: this.value(),
+    });
   }
 
   #refreshUsers() {
-    this.usersForClaim$.set(this.#adminService.getUsersForClaim({ type: this.type(), value: this.value() }));
+    this.usersForClaim$.set(this.#adminService.getUsersWithClaim({ type: this.type(), value: this.value() }));
   }
 
   removeUserClaim(event: any, userId: string) {
@@ -62,5 +77,9 @@ export class ClaimComponent implements OnInit {
         });
       },
     });
+  }
+
+  updateClaim() {
+    this.#routeAlias.navigate("admin-claim", [this.form.value.type, this.form.value.value]);
   }
 }

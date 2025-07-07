@@ -1,9 +1,17 @@
-import { AdminUserDto, AdminUserWithRoles, RoleDto, RoleWithAdminUsers, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
+import {
+  AdminUserDto,
+  AdminUserWithRoles,
+  RoleDto,
+  RoleWithAdminUsers,
+  SearchAdminClaimsRequestDto,
+  SearchAdminUsersRequestDto,
+  UpdateAdminUserRequestDto,
+} from "@admin/models";
 import { inject, Injectable } from "@angular/core";
-import { ErrorApiResponse, SuccessApiResponse } from "@core";
+import { ErrorApiResponse } from "@core";
+import { ClaimDto } from "@identity";
 import { forkJoin, map, Observable, of, switchMap, tap, throwError } from "rxjs";
 import { DataService } from "./data.service";
-import { ClaimDto } from "@identity";
 
 /**
  * Service for Administrator management of users, roles, and other data.
@@ -125,21 +133,28 @@ export class AdminService {
   }
 
   /**
-   * Gets the claims for a user.
-   * @param {string} userId - The user to retrieve claims for.
-   * @returns {Observable<Array<ClaimDto>>} An observable containing the user's claims.
+   * Searches for claims based on the search criteria.
+   * @param {SearchAdminClaimsRequestDto} searchAdminClaims - The search criteria.
+   * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   getUserClaims(userId: string) {
-    return this.#dataService.getUserClaims(userId);
+    return this.#dataService.searchClaims({ userId }).pipe(map(response => response.data || new Array<ClaimDto>()));
   }
 
   /**
-   * Gets the users for a claim.
-   * @param {ClaimDto} claim - The claim to retrieve users for.
-   * @returns {Observable<Array<AdminUserDto>>} An observable containing the users with the specified claim.
+   * Searches for claims based on the search criteria.
+   * @param {SearchAdminClaimsRequestDto} searchAdminClaims - The search criteria.
+   * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
-  getUsersForClaim(claim: ClaimDto) {
-    return this.#dataService.getUsersForClaim(claim);
+  getUsersWithClaim(claim: ClaimDto) {
+    return this.#dataService.searchClaims({ type: claim.type, value: claim.value }).pipe(
+      switchMap(response => {
+        if (!response.data || response.data.length === 0) {
+          return of(new Array<AdminUserDto>());
+        }
+        return forkJoin(response.data.map(item => this.#dataService.getUser(item.userId)));
+      })
+    );
   }
 
   /**

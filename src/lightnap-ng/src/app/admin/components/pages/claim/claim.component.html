@@ -1,11 +1,26 @@
 <api-response [apiResponse]="usersForClaim$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
   <ng-template #success let-usersForClaim>
-    <p-panel header="Manage Users With Claim '{{ type() }}: {{ value() }}'">
+    <p-panel header="Manage Claim">
+      <form [formGroup]="form" class="my-2" (ngSubmit)="updateClaim()">
+        <div class="flex items-center gap-1">
+          <div class="flex flex-col">
+            <input pInputText placeholder="Claim Type" formControlName="type" />
+          </div>
+          <div class="flex flex-col">
+            <input pInputText placeholder="Claim Value" formControlName="value" />
+          </div>
+          <div>
+            <div class="flex flex-col justify-end h-full">
+              <p-button type="submit" label="Search Claim" icon="pi pi-search" [disabled]="!form.valid" />
+            </div>
+          </div>
+        </div>
+      </form>
       <p-table [value]="usersForClaim">
         <ng-template pTemplate="header">
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th>User Name</th>
+            <th class="whitespace-nowrap">User Name</th>
             <th width="100%">Email</th>
           </tr>
         </ng-template>

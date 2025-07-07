@@ -147,65 +147,49 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Retrieves the claims for a user.
+        /// Searches claims.
         /// </summary>
-        /// <param name="userId">The ID of the user.</param>
-        /// <returns>The list of claims for the user.</returns>
+        /// <param name="requestDto">The search parameters.</param>
+        /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
-        [HttpGet("users/{userId}/claims")]
-        [ProducesResponseType(typeof(ApiResponseDto<IList<ClaimDto>>), 200)]
-        public async Task<ApiResponseDto<IList<ClaimDto>>> GetClaimsForUser(string userId)
+        [HttpPost("claims/search")]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<AdminClaimDto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponse<AdminClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
         {
-            return new ApiResponseDto<IList<ClaimDto>>(await administratorService.GetClaimsForUserAsync(userId));
-        }
-
-        /// <summary>
-        /// Retrieves the users for a specific claim.
-        /// </summary>
-        /// <param name="claimType">The claim type.</param>
-        /// <param name="claimValue">The claim value.</param>
-        /// <returns>The list of users in the specified claim.</returns>
-        /// <response code="200">Returns the list of users.</response>
-        [HttpGet("claims/{claimType}/{claimValue}")]
-        [ProducesResponseType(typeof(ApiResponseDto<IList<AdminUserDto>>), 200)]
-        public async Task<ApiResponseDto<IList<AdminUserDto>>> GetUsersForClaimAsync(string claimType, string claimValue)
-        {
-            return new ApiResponseDto<IList<AdminUserDto>>(await administratorService.GetUsersForClaimAsync(new ClaimDto { Type = claimType, Value = claimValue }));
+            return new ApiResponseDto<PagedResponse<AdminClaimDto>>(await administratorService.SearchClaimsAsync(requestDto));
         }
 
         /// <summary>
         /// Adds a claim to a user.
         /// </summary>
-        /// <param name="claimType">The claim type.</param>
-        /// <param name="claimValue">The claim value.</param>
+        /// <param name="dto">The claim.</param>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>True if the claim was successfully added to the user.</returns>
         /// <response code="200">Claim successfully added to the user.</response>
         /// <response code="400">If there was an error adding the claim to the user.</response>
-        [HttpPost("users/{userId}/claims/{claimType}/{claimValue}")]
+        [HttpPost("users/{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, string claimType, string claimValue)
+        public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto dto)
         {
-            await administratorService.AddClaimToUserAsync(userId, new ClaimDto() { Type = claimType, Value = claimValue });
+            await administratorService.AddClaimToUserAsync(userId, dto);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Removes a claim from a user.
         /// </summary>
-        /// <param name="claimType">The claim type.</param>
-        /// <param name="claimValue">The claim value.</param>
+        /// <param name="dto">The claim.</param>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>True if the claim was successfully removed from the user.</returns>
         /// <response code="200">Claim successfully removed from the user.</response>
         /// <response code="400">If there was an error removing the claim from the user.</response>
-        [HttpDelete("users/{userId}/claims/{claimType}/{claimValue}")]
+        [HttpDelete("users/{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, string claimType, string claimValue)
+        public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto dto)
         {
-            await administratorService.RemoveClaimFromUserAsync(userId, new ClaimDto() { Type = claimType, Value = claimValue });
+            await administratorService.RemoveClaimFromUserAsync(userId, dto);
             return new ApiResponseDto<bool>(true);
         }
 

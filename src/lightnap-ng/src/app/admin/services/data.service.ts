@@ -1,4 +1,5 @@
-import { AdminUserDto, RoleDto, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
+import { AdminClaimDto, AdminUserDto, RoleDto, SearchAdminUsersRequestDto, UpdateAdminUserRequestDto } from "@admin/models";
+import { SearchAdminClaimsRequestDto } from "@admin/models/request/search-admin-claims-request-dto";
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT, ApiResponseDto, PagedResponseDto } from "@core";
@@ -47,20 +48,16 @@ export class DataService {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}roles/${role}/${userId}`);
   }
 
-  getUserClaims(userId: string) {
-    return this.#http.get<Array<ClaimDto>>(`${this.#apiUrlRoot}users/${userId}/claims`);
-  }
-
-  getUsersForClaim(claim: ClaimDto) {
-    return this.#http.get<Array<AdminUserDto>>(`${this.#apiUrlRoot}claims/${claim.type}/${claim.value}`);
+  searchClaims(searchAdminClaimsRequestDto: SearchAdminClaimsRequestDto) {
+    return this.#http.post<PagedResponseDto<AdminClaimDto>>(`${this.#apiUrlRoot}claims/search`, searchAdminClaimsRequestDto);
   }
 
   addClaimToUser(userId: string, claim: ClaimDto) {
-    return this.#http.post<boolean>(`${this.#apiUrlRoot}users/${userId}/claims/${claim.type}/${claim.value}`, null);
+    return this.#http.post<boolean>(`${this.#apiUrlRoot}users/${userId}/claims`, claim);
   }
 
   removeClaimFromUser(userId: string, claim: ClaimDto) {
-    return this.#http.delete<boolean>(`${this.#apiUrlRoot}users/${userId}/claims/${claim.type}/${claim.value}`);
+    return this.#http.request<boolean>('delete', `${this.#apiUrlRoot}users/${userId}/claims`, { body: claim });
   }
 
   lockUserAccount(userId: string) {
