@@ -3,7 +3,7 @@ import { LoginType as LoginTypeDto } from "./login-type";
 /**
  * Represents a request to log in to the application.
  */
-export interface LoginRequest {
+export interface LoginRequestDto {
     /**
      * The type of login field used in the request.
      */

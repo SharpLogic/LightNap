@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core";
-import { LoginRequest, LoginSuccessResultDto, NewPasswordRequestDto, RegisterRequestDto, ResetPasswordRequestDto, SendMagicLinkEmailRequestDto, SendVerificationEmailRequestDto, VerifyCodeRequestDto, VerifyEmailRequestDto } from "@identity";
+import { LoginRequestDto, LoginSuccessResultDto, NewPasswordRequestDto, RegisterRequestDto, ResetPasswordRequestDto, SendMagicLinkEmailRequestDto, SendVerificationEmailRequestDto, VerifyCodeRequestDto, VerifyEmailRequestDto } from "@identity";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +14,7 @@ export class DataService {
     return this.#http.get<string>(`${this.#identityApiUrlRoot}access-token`);
   }
 
-  logIn(loginRequest: LoginRequest) {
+  logIn(loginRequest: LoginRequestDto) {
     return this.#http.post<LoginSuccessResultDto>(`${this.#identityApiUrlRoot}login`, loginRequest);
   }
 

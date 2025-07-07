@@ -5,7 +5,7 @@ import { JwtHelperService } from "@auth0/angular-jwt";
 import { InitializationService } from "@core/services/initialization.service";
 import {
   ClaimDto,
-  LoginRequest,
+  LoginRequestDto,
   NewPasswordRequestDto,
   RegisterRequestDto,
   ResetPasswordRequestDto,
@@ -374,10 +374,10 @@ export class IdentityService {
   /**
    * @method logIn
    * @description Logs the user in.
-   * @param {LoginRequest} loginRequest - The request object containing login information.
+   * @param {LoginRequestDto} loginRequest - The request object containing login information.
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
-  logIn(loginRequest: LoginRequest) {
+  logIn(loginRequest: LoginRequestDto) {
     return this.#dataService.logIn(loginRequest).pipe(tap(result => this.#onTokenReceived(result.accessToken)));
   }
 
