@@ -205,7 +205,7 @@ namespace LightNap.Core.Identity.Services
                 await this.SendVerificationEmailAsync(user);
             }
 
-            await notificationService.CreateRoleNotificationAsync(ApplicationRoles.Administrator.Name!,
+            await notificationService.CreateSystemNotificationForRoleAsync(ApplicationRoles.Administrator.Name!,
                 new CreateNotificationDto()
                 {
                     Type = NotificationType.AdministratorNewUserRegistration,

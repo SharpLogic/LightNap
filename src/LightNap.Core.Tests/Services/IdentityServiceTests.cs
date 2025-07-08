@@ -63,7 +63,7 @@ namespace LightNap.Core.Tests.Services
             this._emailServiceMock = new Mock<IEmailService>();
 
             this._notificationServiceMock = new Mock<INotificationService>();
-            this._notificationServiceMock.Setup(ns => ns.CreateUserNotificationAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationDto>()));
+            this._notificationServiceMock.Setup(ns => ns.CreateSystemNotificationForUserAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationDto>()));
 
             var applicationSettings = Options.Create(
                 new ApplicationSettings

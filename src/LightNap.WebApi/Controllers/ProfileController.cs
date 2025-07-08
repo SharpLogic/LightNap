@@ -1,6 +1,7 @@
 using LightNap.Core.Api;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
+using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Interfaces;
@@ -12,7 +13,7 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    public class ProfileController(IProfileService profileService) : ControllerBase
+    public class ProfileController(IProfileService profileService, INotificationService notificationService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -189,7 +190,7 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("notifications")]
         public async Task<ApiResponseDto<NotificationSearchResultsDto>> SearchMyNotifications(SearchNotificationsDto requestDto)
         {
-            return new ApiResponseDto<NotificationSearchResultsDto>(await profileService.SearchNotificationsAsync(requestDto));
+            return new ApiResponseDto<NotificationSearchResultsDto>(await notificationService.SearchMyNotificationsAsync(requestDto));
         }
 
         /// <summary>
@@ -203,7 +204,7 @@ namespace LightNap.WebApi.Controllers
         [HttpPut("notifications/mark-all-as-read")]
         public async Task<ApiResponseDto<bool>> MarkAllNotificationsAsRead()
         {
-            await profileService.MarkAllNotificationsAsReadAsync();
+            await notificationService.MarkAllMyNotificationsAsReadAsync();
             return new ApiResponseDto<bool>(true);
         }
 
@@ -219,7 +220,7 @@ namespace LightNap.WebApi.Controllers
         [HttpPut("notifications/{id}/mark-as-read")]
         public async Task<ApiResponseDto<bool>> MarkNotificationAsRead(int id)
         {
-            await profileService.MarkNotificationAsReadAsync(id);
+            await notificationService.MarkMyNotificationAsReadAsync(id);
             return new ApiResponseDto<bool>(true);
         }
     }

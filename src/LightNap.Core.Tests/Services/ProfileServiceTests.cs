@@ -36,7 +36,6 @@ namespace LightNap.Core.Tests.Services
         private ProfileService _profileService;
         private IServiceProvider _serviceProvider;
         private Mock<IEmailService> _emailServiceMock;
-        private Mock<INotificationService> _notificationServiceMock;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -66,9 +65,8 @@ namespace LightNap.Core.Tests.Services
             this._userContext = userContextMock.Object;
 
             this._emailServiceMock = new Mock<IEmailService>();
-            this._notificationServiceMock = new Mock<INotificationService>();
 
-            this._profileService = new ProfileService(logger, this._dbContext, this._userManager, this._userContext, this._emailServiceMock.Object, this._notificationServiceMock.Object);
+            this._profileService = new ProfileService(logger, this._dbContext, this._userManager, this._userContext, this._emailServiceMock.Object);
         }
 
         [TestCleanup]
@@ -135,7 +133,7 @@ namespace LightNap.Core.Tests.Services
             tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
             var emailServiceMock = new Mock<IEmailService>();
             var notificationServiceMock = new Mock<INotificationService>();
-            notificationServiceMock.Setup(ns => ns.CreateRoleNotificationAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationDto>()));
+            notificationServiceMock.Setup(ns => ns.CreateSystemNotificationForRoleAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationDto>()));
             var signInManager = this._serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
             var logger = this._serviceProvider.GetRequiredService<ILogger<IdentityService>>();
             var applicationSettings = Options.Create(

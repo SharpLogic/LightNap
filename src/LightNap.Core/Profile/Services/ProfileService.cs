@@ -4,9 +4,6 @@ using LightNap.Core.Data.Entities;
 using LightNap.Core.Data.Extensions;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Interfaces;
-using LightNap.Core.Notifications.Dto.Request;
-using LightNap.Core.Notifications.Dto.Response;
-using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Interfaces;
@@ -20,7 +17,7 @@ namespace LightNap.Core.Profile.Services
     /// Service for managing user profiles.  
     /// </summary>  
     public class ProfileService(ILogger<ProfileService> logger, ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext,
-        IEmailService emailService, INotificationService notificationService) : IProfileService
+        IEmailService emailService) : IProfileService
     {
         /// <summary>  
         /// Changes the password for the specified user.  
@@ -160,37 +157,6 @@ namespace LightNap.Core.Profile.Services
 
             token.IsRevoked = true;
             await db.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// Searches for notifications of the logged-in user based on the specified criteria.
-        /// </summary>
-        /// <param name="requestDto">The data transfer object containing the search criteria.</param>
-        /// <returns>A task that represents the asynchronous operation. The task result contains the search results.</returns>
-        public async Task<NotificationSearchResultsDto> SearchNotificationsAsync(SearchNotificationsDto requestDto)
-        {
-            return await notificationService.SearchNotificationsAsync(userContext.GetUserId(), requestDto);
-        }
-
-        /// <summary>
-        /// Marks all notifications as read for the logged-in user.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task MarkAllNotificationsAsReadAsync()
-        {
-            await notificationService.MarkAllAsReadAsync(userContext.GetUserId());
-        }
-
-        /// <summary>
-        /// Marks a specific notification as read for the logged-in user.
-        /// </summary>
-        /// <param name="id">The ID of the notification to be marked as read.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        /// <exception cref="UserFriendlyApiException">Thrown when the notification is not found.</exception>
-        public async Task MarkNotificationAsReadAsync(int id)
-        {
-            Notification notification = await db.Notifications.FirstOrDefaultAsync(n => n.Id == id && n.UserId == userContext.GetUserId()) ?? throw new UserFriendlyApiException("Notification not found.");
-            await notificationService.MarkAsReadAsync(id);
         }
     }
 }
