@@ -44,7 +44,7 @@ namespace LightNap.Core.Users.Services
 
             if (!string.IsNullOrWhiteSpace(requestDto.Value))
             {
-                query = query.Where(claim => EF.Functions.Like(claim.ClaimValue, $"%{requestDto.Value}%"));
+                query = query.Where(claim => claim.ClaimValue == requestDto.Value);
             }
 
             int totalCount = await query.CountAsync();
