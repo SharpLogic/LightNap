@@ -21,7 +21,7 @@ import { tap } from "rxjs";
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}profile/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}users/me/`;
 
   changePassword(changePasswordRequest: ChangePasswordRequestDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}change-password`, changePasswordRequest);
@@ -36,11 +36,11 @@ export class DataService {
   }
 
   getProfile() {
-    return this.#http.get<ProfileDto>(`${this.#apiUrlRoot}`);
+    return this.#http.get<ProfileDto>(`${this.#apiUrlRoot}profile`);
   }
 
   updateProfile(updateProfile: UpdateProfileRequestDto) {
-    return this.#http.put<ProfileDto>(`${this.#apiUrlRoot}`, updateProfile);
+    return this.#http.put<ProfileDto>(`${this.#apiUrlRoot}profile`, updateProfile);
   }
 
   getDevices() {

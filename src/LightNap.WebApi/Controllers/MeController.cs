@@ -12,8 +12,8 @@ namespace LightNap.WebApi.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/[controller]")]
-    public class ProfileController(IProfileService profileService, INotificationService notificationService) : ControllerBase
+    [Route("api/users/me")]
+    public class MeController(IProfileService profileService, INotificationService notificationService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -23,7 +23,7 @@ namespace LightNap.WebApi.Controllers
         /// </returns>
         /// <response code="200">Returns the profile of the current user.</response>
         /// <response code="401">If the user is not authenticated.</response>
-        [HttpGet]
+        [HttpGet("profile")]
         [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
         [ProducesResponseType(401)]
         public async Task<ApiResponseDto<ProfileDto>> GetProfile()
@@ -41,7 +41,7 @@ namespace LightNap.WebApi.Controllers
         /// <response code="200">Returns the updated profile of the current user.</response>
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="400">If the request is invalid.</response>
-        [HttpPut]
+        [HttpPut("profile")]
         [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
