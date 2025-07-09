@@ -1,18 +1,18 @@
-using LightNap.Core.Administrator.Dto.Request;
-using LightNap.Core.Administrator.Services;
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Tests.Utilities;
+using LightNap.Core.Users.Dto.Request;
+using LightNap.Core.Users.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LightNap.Core.Tests.Services
 {
     [TestClass]
-    public class AdministratorServiceTests
+    public class UsersServiceTests
     {
         // These will be initialized during TestInitialize.
 #pragma warning disable CS8618
@@ -20,7 +20,7 @@ namespace LightNap.Core.Tests.Services
         private UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _dbContext;
         private TestUserContext _userContext;
-        private AdministratorService _administratorService;
+        private UsersService _administratorService;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -39,7 +39,7 @@ namespace LightNap.Core.Tests.Services
             this._roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             this._userContext = new TestUserContext();
             this._userContext.Roles.Add(Constants.Roles.Administrator); // Set the user context to be an administrator for testing purposes.
-            this._administratorService = new AdministratorService(this._userManager, this._dbContext, this._userContext);
+            this._administratorService = new UsersService(this._userManager, this._dbContext, this._userContext);
         }
 
         [TestCleanup]
@@ -82,7 +82,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             var userId = "test-user-id";
-            UpdateAdminUserDto updateDto = new();
+            AdminUpdateUserDto updateDto = new();
             await TestHelper.CreateTestUserAsync(this._userManager, userId);
 
             // Act
@@ -98,7 +98,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             var userId = "non-existent-user-id";
-            var updateDto = new UpdateAdminUserDto();
+            var updateDto = new AdminUpdateUserDto();
 
             // Act
             await this._administratorService.UpdateUserAsync(userId, updateDto);
@@ -155,13 +155,13 @@ namespace LightNap.Core.Tests.Services
         public async Task SearchUsersAsync_ValidRequest_ReturnsPagedResponse()
         {
             // Arrange
-            var requestDto = new SearchAdminUsersRequestDto { Email = "example" };
+            var searchDto = new AdminSearchUsersRequestDto { Email = "example" };
             await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id1", "testuser1", "test1@example.com");
             await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id2", "testuser2", "test2@exNOTample.com");
             await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id3", "testuser3", "test3@example.com");
 
             // Act
-            var result = await this._administratorService.SearchUsersAsync(requestDto);
+            var result = await this._administratorService.SearchUsersAsync(searchDto);
 
             // Assert
             Assert.AreEqual(2, result.TotalCount);

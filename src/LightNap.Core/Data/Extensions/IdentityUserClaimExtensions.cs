@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Administrator.Dto.Response;
+﻿using LightNap.Core.Users.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 
 namespace LightNap.Core.Data.Extensions
@@ -10,9 +10,9 @@ namespace LightNap.Core.Data.Extensions
         /// </summary>
         /// <param name="userClaim">The user claim to convert.</param>
         /// <returns>A UserClaimDto representing the user claim.</returns>
-        public static AdminClaimDto ToDto(this IdentityUserClaim<string> userClaim)
+        public static UserClaimDto ToDto(this IdentityUserClaim<string> userClaim)
         {
-            return new AdminClaimDto
+            return new UserClaimDto
             {
                 Type = userClaim.ClaimType!,
                 Value = userClaim.ClaimValue!,
@@ -25,7 +25,7 @@ namespace LightNap.Core.Data.Extensions
         /// </summary>
         /// <param name="claims">The collection of IdentityUserClaim objects to convert.</param>
         /// <returns>The list of converted ClaimDto objects.</returns>
-        public static List<AdminClaimDto> ToDtoList(this IEnumerable<IdentityUserClaim<string>> claims)
+        public static List<UserClaimDto> ToDtoList(this IEnumerable<IdentityUserClaim<string>> claims)
         {
             return claims.Select(token => token.ToDto()).ToList();
         }

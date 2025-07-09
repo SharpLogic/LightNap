@@ -1,8 +1,4 @@
-﻿using LightNap.Core.Administrator.Dto.Request;
-using LightNap.Core.Administrator.Dto.Response;
-using LightNap.Core.Administrator.Interfaces;
-using LightNap.Core.Administrator.Models;
-using LightNap.Core.Api;
+﻿using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
@@ -10,15 +6,19 @@ using LightNap.Core.Data.Extensions;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
+using LightNap.Core.Users.Dto.Request;
+using LightNap.Core.Users.Dto.Response;
+using LightNap.Core.Users.Interfaces;
+using LightNap.Core.Users.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace LightNap.Core.Administrator.Services
+namespace LightNap.Core.Users.Services
 {
     /// <summary>
     /// Service for managing administrator-related operations.
     /// </summary>
-    public class AdministratorService(UserManager<ApplicationUser> userManager, ApplicationDbContext db, IUserContext userContext) : IAdministratorService
+    public class UsersService(UserManager<ApplicationUser> userManager, ApplicationDbContext db, IUserContext userContext) : IUsersService
     {
         /// <summary>
         /// Throws if the user is not an administrator.
@@ -37,53 +37,85 @@ namespace LightNap.Core.Administrator.Services
         /// </summary>
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user details or null if not found.</returns>
-        public async Task<AdminUserDto?> GetUserAsync(string userId)
+        public async Task<PublicUserDto?> GetUserAsync(string userId)
         {
-            this.AssertUserIsAdministrator();
+            bool isAdministrator = userContext.IsAdministrator;
+            bool isPrivileged = userContext.IsAuthenticated;
 
             var user = await db.Users.FindAsync(userId);
-            return user?.ToAdminUserDto();
+
+            if (isAdministrator)
+            {
+                return user?.ToAdminUserDto();
+            }
+
+            if (isPrivileged)
+            {
+                return user?.ToPrivilegedUserDto();
+            }
+
+            return user?.ToPublicUserDto();
         }
 
         /// <summary>
         /// Searches for users based on the specified criteria.
         /// </summary>
-        /// <param name="requestDto">The search criteria.</param>
+        /// <param name="searchDto">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
-        public async Task<PagedResponse<AdminUserDto>> SearchUsersAsync(SearchAdminUsersRequestDto requestDto)
+        public async Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto searchDto)
         {
-            this.AssertUserIsAdministrator();
+            bool isAdministrator = userContext.IsAdministrator;
+            bool isPrivileged = userContext.IsAuthenticated;
 
             IQueryable<ApplicationUser> query = db.Users.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(requestDto.Email))
+            // Query for provided public parameters.
+            PublicSearchUsersRequestDto publicParameters = searchDto;
+            if (!string.IsNullOrWhiteSpace(publicParameters.Email))
             {
-                query = query.Where(user => EF.Functions.Like(user.NormalizedEmail!, $"%{requestDto.Email.ToUpper()}%"));
+                query = query.Where(user => EF.Functions.Like(user.NormalizedEmail!, $"%{publicParameters.Email.ToUpper()}%"));
+            }
+            if (!string.IsNullOrWhiteSpace(publicParameters.UserName))
+            {
+                query = query.Where(user => EF.Functions.Like(user.NormalizedUserName!, $"%{publicParameters.UserName.ToUpper()}%"));
             }
 
-            if (!string.IsNullOrWhiteSpace(requestDto.UserName))
+            if (isPrivileged)
             {
-                query = query.Where(user => EF.Functions.Like(user.NormalizedUserName!, $"%{requestDto.UserName.ToUpper()}%"));
+                PrivilegedSearchUsersRequestDto privilegedParameters = searchDto;
+                // Query for provided privileged parameters.
             }
 
-            query = requestDto.SortBy switch
+            if (isAdministrator)
             {
-                ApplicationUserSortBy.Email => requestDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email),
-                ApplicationUserSortBy.UserName => requestDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName),
-                ApplicationUserSortBy.CreatedDate => requestDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate),
-                ApplicationUserSortBy.LastModifiedDate => requestDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate),
-                _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", requestDto.SortBy.ToString()),
+                // Query for provided admin parameters.
+            }
+
+            query = searchDto.SortBy switch
+            {
+                ApplicationUserSortBy.Email => searchDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email),
+                ApplicationUserSortBy.UserName => searchDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName),
+                ApplicationUserSortBy.CreatedDate => searchDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate),
+                ApplicationUserSortBy.LastModifiedDate => searchDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate),
+                _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", searchDto.SortBy.ToString()),
             };
             int totalCount = await query.CountAsync();
 
-            if (requestDto.PageNumber > 1)
+            if (searchDto.PageNumber > 1)
             {
-                query = query.Skip((requestDto.PageNumber - 1) * requestDto.PageSize);
+                query = query.Skip((searchDto.PageNumber - 1) * searchDto.PageSize);
             }
 
-            var users = await query.Take(requestDto.PageSize).Select(user => user.ToAdminUserDto()).ToListAsync();
+            var users = await query.Take(searchDto.PageSize).ToListAsync();
 
-            return new PagedResponse<AdminUserDto>(users, requestDto.PageNumber, requestDto.PageSize, totalCount);
+            if (isAdministrator)
+            {
+                // Cast FullUserDto list to PublicUserDto list for return type compatibility
+                var fullUserDtos = users.ToAdminUserDtoList().Cast<PublicUserDto>().ToList();
+                return new PagedResponse<PublicUserDto>(fullUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
+            }
+
+            return new PagedResponse<PublicUserDto>(users.ToPublicUserDtoList(), searchDto.PageNumber, searchDto.PageSize, totalCount);
         }
 
         /// <summary>
@@ -92,7 +124,7 @@ namespace LightNap.Core.Administrator.Services
         /// <param name="userId">The ID of the user to update.</param>
         /// <param name="requestDto">The updated user information.</param>
         /// <returns>The updated user details.</returns>
-        public async Task<AdminUserDto> UpdateUserAsync(string userId, UpdateAdminUserDto requestDto)
+        public async Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserDto requestDto)
         {
             this.AssertUserIsAdministrator();
 
@@ -198,7 +230,7 @@ namespace LightNap.Core.Administrator.Services
         /// </summary>
         /// <param name="requestDto">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        public async Task<PagedResponse<AdminClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
+        public async Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
         {
             this.AssertUserIsAdministrator();
 
@@ -233,7 +265,7 @@ namespace LightNap.Core.Administrator.Services
                 .ThenBy(claim => claim.ClaimValue)
                 .ToListAsync();
 
-            return new PagedResponse<AdminClaimDto>(claims.ToDtoList(), requestDto.PageNumber, requestDto.PageSize, totalCount);
+            return new PagedResponse<UserClaimDto>(claims.ToDtoList(), requestDto.PageNumber, requestDto.PageSize, totalCount);
         }
 
         /// <summary>

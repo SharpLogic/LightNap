@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Administrator.Models
+﻿namespace LightNap.Core.Users.Models
 {
     /// <summary>
     /// Supported user sorting options.

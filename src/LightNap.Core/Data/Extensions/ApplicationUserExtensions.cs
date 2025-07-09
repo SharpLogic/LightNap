@@ -1,9 +1,9 @@
-﻿using LightNap.Core.Administrator.Dto.Request;
-using LightNap.Core.Administrator.Dto.Response;
-using LightNap.Core.Data.Entities;
+﻿using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
+using LightNap.Core.Users.Dto.Request;
+using LightNap.Core.Users.Dto.Response;
 
 namespace LightNap.Core.Data.Extensions
 {
@@ -91,6 +91,61 @@ namespace LightNap.Core.Data.Extensions
         }
 
         /// <summary>
+        /// Converts an ApplicationUser object to an PrivilegedUserDto object.
+        /// </summary>
+        /// <param name="user">The ApplicationUser object to convert.</param>
+        /// <returns>An PrivilegedUserDto object representing the ApplicationUser object.</returns>
+        public static PrivilegedUserDto ToPrivilegedUserDto(this ApplicationUser user)
+        {
+            long? lockoutEnd = user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) < DateTimeOffset.UtcNow ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
+
+            return new PrivilegedUserDto()
+            {
+                CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
+                Email = user.Email!,
+                Id = user.Id,
+                UserName = user.UserName!
+            };
+        }
+
+        /// <summary>
+        /// Converts a collection of ApplicationUser objects to a list of PrivilegedUserDto objects.
+        /// </summary>
+        /// <param name="users">The collection of ApplicationUser objects to convert.</param>
+        /// <returns>A list of PrivilegedUserDto objects representing the ApplicationUser objects.</returns>
+        public static List<PrivilegedUserDto> ToPrivilegedUserDtoList(this IEnumerable<ApplicationUser> users)
+        {
+            return users.Select(user => user.ToPrivilegedUserDto()).ToList();
+        }
+
+        /// <summary>
+        /// Converts an ApplicationUser object to an PublicUserDto object.
+        /// </summary>
+        /// <param name="user">The ApplicationUser object to convert.</param>
+        /// <returns>An PublicUserDto object representing the ApplicationUser object.</returns>
+        public static PublicUserDto ToPublicUserDto(this ApplicationUser user)
+        {
+            long? lockoutEnd = user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) < DateTimeOffset.UtcNow ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
+
+            return new PublicUserDto()
+            {
+                CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
+                Id = user.Id,
+                UserName = user.UserName!
+            };
+        }
+
+        /// <summary>
+        /// Converts a collection of ApplicationUser objects to a list of PublicUserDto objects.
+        /// </summary>
+        /// <param name="users">The collection of ApplicationUser objects to convert.</param>
+        /// <returns>A list of PublicUserDto objects representing the ApplicationUser objects.</returns>
+        public static List<PublicUserDto> ToPublicUserDtoList(this IEnumerable<ApplicationUser> users)
+        {
+            return users.Select(user => user.ToPublicUserDto()).ToList();
+        }
+
+        /// <summary>
         /// Updates the ApplicationUser object with the values from the UpdateAdminUserDto object.
         /// </summary>
         /// <param name="user">The ApplicationUser object to update.</param>
@@ -98,7 +153,7 @@ namespace LightNap.Core.Data.Extensions
         public static void UpdateAdminUserDto(this ApplicationUser user,
             // Suppress IDE0060 warning for unused parameter 'dto'. Remove this if actually using the parameter.
 #pragma warning disable IDE0060
-            UpdateAdminUserDto dto)
+            AdminUpdateUserDto dto)
 #pragma warning restore IDE0060
 
         {

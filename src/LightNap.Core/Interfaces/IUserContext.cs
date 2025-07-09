@@ -11,6 +11,11 @@ namespace LightNap.Core.Interfaces
         bool IsAdministrator { get; }
 
         /// <summary>
+        /// True if the user is logged in; otherwise, false.
+        /// </summary>
+        bool IsAuthenticated { get; }
+
+        /// <summary>
         /// Gets the user ID associated with the current request.
         /// </summary>
         /// <returns>The user ID.</returns>

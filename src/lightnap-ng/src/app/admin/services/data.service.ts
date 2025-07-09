@@ -10,7 +10,7 @@ import { ClaimDto } from "@identity";
 })
 export class DataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}administrator/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}users/`;
 
   getUser(userId: string) {
     return this.#http.get<AdminUserDto>(`${this.#apiUrlRoot}users/${userId}`);

@@ -1,28 +1,28 @@
-using LightNap.Core.Administrator.Dto.Request;
-using LightNap.Core.Administrator.Dto.Response;
 using LightNap.Core.Api;
 using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Users.Dto.Request;
+using LightNap.Core.Users.Dto.Response;
 
-namespace LightNap.Core.Administrator.Interfaces
+namespace LightNap.Core.Users.Interfaces
 {
     /// <summary>  
-    /// Interface for administrator services.  
+    /// Interface for managing users.
     /// </summary>  
-    public interface IAdministratorService
+    public interface IUsersService
     {
         /// <summary>  
         /// Gets a user asynchronously by user ID.  
         /// </summary>  
         /// <param name="userId">The user ID.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the user data.</returns>  
-        Task<AdminUserDto?> GetUserAsync(string userId);
+        Task<PublicUserDto?> GetUserAsync(string userId);
 
         /// <summary>  
         /// Searches users asynchronously based on the specified request DTO.  
         /// </summary>  
         /// <param name="requestDto">The request DTO containing search parameters.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the paged user data.</returns>  
-        Task<PagedResponse<AdminUserDto>> SearchUsersAsync(SearchAdminUsersRequestDto requestDto);
+        Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto requestDto);
 
         /// <summary>  
         /// Updates a user asynchronously by user ID.  
@@ -30,7 +30,7 @@ namespace LightNap.Core.Administrator.Interfaces
         /// <param name="userId">The user ID.</param>  
         /// <param name="requestDto">The request DTO containing update information.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the updated user data.</returns>  
-        Task<AdminUserDto> UpdateUserAsync(string userId, UpdateAdminUserDto requestDto);
+        Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserDto requestDto);
 
         /// <summary>  
         /// Deletes a user asynchronously by user ID.  
@@ -80,7 +80,7 @@ namespace LightNap.Core.Administrator.Interfaces
         /// </summary>
         /// <param name="requestDto">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        Task<PagedResponse<AdminClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto);
+        Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto);
 
         /// <summary>
         /// Adds a claim to the specified user asynchronously.

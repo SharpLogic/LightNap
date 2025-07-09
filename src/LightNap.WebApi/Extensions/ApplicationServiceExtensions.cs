@@ -1,6 +1,4 @@
-﻿using LightNap.Core.Administrator.Interfaces;
-using LightNap.Core.Administrator.Services;
-using LightNap.Core.Data;
+﻿using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Email.Services;
@@ -17,6 +15,8 @@ using LightNap.Core.Public.Services;
 using LightNap.Core.Services;
 using LightNap.Core.User.Interfaces;
 using LightNap.Core.User.Services;
+using LightNap.Core.Users.Interfaces;
+using LightNap.Core.Users.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
@@ -49,7 +49,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<ICookieManager, WebCookieManager>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IIdentityService, IdentityService>();
-            services.AddScoped<IAdministratorService, AdministratorService>();
+            services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
             services.AddScoped<IUserService, UserService>();

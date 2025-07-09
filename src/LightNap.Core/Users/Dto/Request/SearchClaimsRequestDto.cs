@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Api;
 
-namespace LightNap.Core.Administrator.Dto.Request
+namespace LightNap.Core.Users.Dto.Request
 {
     /// <summary>
     /// Represents a request to search claims.

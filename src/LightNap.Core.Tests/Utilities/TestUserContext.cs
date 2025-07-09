@@ -14,6 +14,11 @@ namespace LightNap.Core.Tests.Utilities
         public bool IsAdministrator => this.IsInRole(Constants.Roles.Administrator);
 
         /// <summary>
+        /// True if the user is logged in; otherwise, false.
+        /// </summary>
+        public bool IsAuthenticated => this.UserId is not null;
+
+        /// <summary>
         /// Gets or sets the IP address of the user.
         /// </summary>
         public string? IpAddress { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Administrator.Dto.Response
+﻿namespace LightNap.Core.Users.Dto.Response
 {
     /// <summary>
     /// Represents a complete device/refresh token DTO intended for use by Administrator accounts.
