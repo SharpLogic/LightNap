@@ -1,4 +1,5 @@
 export * from "./login-request-dto";
+export * from "./login-type";
 export * from "./new-password-request-dto";
 export * from "./register-request-dto";
 export * from "./reset-password-request-dto";

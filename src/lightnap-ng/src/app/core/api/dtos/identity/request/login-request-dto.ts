@@ -1,4 +1,4 @@
-import { LoginType as LoginTypeDto } from "../../../login-type";
+import { LoginType } from "./login-type";
 
 /**
  * Represents a request to log in to the application.
@@ -7,7 +7,7 @@ export interface LoginRequestDto {
     /**
      * The type of login field used in the request.
      */
-    type?: LoginTypeDto;
+    type?: LoginType;
 
     /**
      * The login field for the user attempting to log in.

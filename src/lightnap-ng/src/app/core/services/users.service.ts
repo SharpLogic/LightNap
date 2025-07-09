@@ -1,11 +1,12 @@
 import { Injectable, inject } from "@angular/core";
 import { AdminUserWithRoles, ErrorApiResponse, RoleWithAdminUsers } from "@core/api";
-import { RoleDto, UpdateAdminUserRequestDto, SearchAdminUsersRequestDto, ClaimDto, AdminUserDto } from "@core/api/dtos";
+import { RoleDto, UpdateAdminUserRequestDto, AdminSearchUsersRequestDto, ClaimDto, AdminUserDto } from "@core/api/dtos";
 import { UsersDataService } from "@core/api/services/users-data.service";
 import { Observable, of, tap, map, forkJoin, switchMap, throwError } from "rxjs";
 
 /**
- * Service for Administrator management of users, roles, and other data.
+ * Service for managing users and roles in the application. Note that this service should not be used directly, but rather accessed
+ * via the AdminService, PrivilegedService, PublicService or other services that provide the necessary access control.
  */
 @Injectable({
   providedIn: "root",
@@ -44,11 +45,21 @@ export class UsersService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {SearchAdminUsersRequestDto} searchAdminUsers - The search criteria.
+   * @param {AdminSearchUsersRequestDto} searchAdminUsers - The search criteria.
    * @returns {Observable<Array<AdminUserDto>>} An observable containing the search results.
    */
-  searchUsers(searchAdminUsers: SearchAdminUsersRequestDto) {
+  searchUsers(searchAdminUsers: AdminSearchUsersRequestDto) {
     return this.#dataService.searchUsers(searchAdminUsers);
+  }
+
+  /**
+   * Gets users by their IDs.
+   * @param {Array<string>} userIds - The IDs of the users to retrieve.
+   * @returns {Observable<Array<AdminUserDto>>} An observable containing the users.
+   */
+  getUsersById(userIds: Array<string>): Observable<Array<AdminUserDto>> {
+    if (!userIds || userIds.length === 0) return of([]);
+    return this.#dataService.getUsersById(userIds);
   }
 
   /**

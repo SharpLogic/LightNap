@@ -1,7 +1,16 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core/helpers";
-import { AdminUserDto, UpdateAdminUserRequestDto, SearchAdminUsersRequestDto, PagedResponseDto, RoleDto, SearchAdminClaimsRequestDto, UserClaimDto, ClaimDto } from "../dtos";
+import {
+  AdminUserDto,
+  UpdateAdminUserRequestDto,
+  AdminSearchUsersRequestDto,
+  PagedResponseDto,
+  RoleDto,
+  SearchAdminClaimsRequestDto,
+  UserClaimDto,
+  ClaimDto,
+} from "../dtos";
 
 @Injectable({
   providedIn: "root",
@@ -14,6 +23,10 @@ export class UsersDataService {
     return this.#http.get<AdminUserDto>(`${this.#apiUrlRoot}${userId}`);
   }
 
+  getUsersById(userIds: Array<string>) {
+    return this.#http.post<Array<AdminUserDto>>(`${this.#apiUrlRoot}get-by-ids`, userIds);
+  }
+
   updateUser(userId: string, updateAdminUser: UpdateAdminUserRequestDto) {
     return this.#http.put<AdminUserDto>(`${this.#apiUrlRoot}${userId}`, updateAdminUser);
   }
@@ -22,7 +35,7 @@ export class UsersDataService {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}${userId}`);
   }
 
-  searchUsers(searchAdminUsers: SearchAdminUsersRequestDto) {
+  searchUsers(searchAdminUsers: AdminSearchUsersRequestDto) {
     return this.#http.post<PagedResponseDto<AdminUserDto>>(`${this.#apiUrlRoot}search`, searchAdminUsers);
   }
 
@@ -55,7 +68,7 @@ export class UsersDataService {
   }
 
   removeClaimFromUser(userId: string, claim: ClaimDto) {
-    return this.#http.request<boolean>('delete', `${this.#apiUrlRoot}${userId}/claims`, { body: claim });
+    return this.#http.request<boolean>("delete", `${this.#apiUrlRoot}${userId}/claims`, { body: claim });
   }
 
   lockUserAccount(userId: string) {

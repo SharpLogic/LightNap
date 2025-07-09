@@ -1,10 +1,10 @@
-import { UsersService } from "@core/services/users.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { AdminUserDto, ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorListComponent, ListItem, SearchAdminUsersSortBy, ToastService } from "@core";
+import { AdminUserDto, ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorListComponent, ListItem, SearchUsersSortBy, ToastService } from "@core";
+import { UsersService } from "@core/services/users.service";
 import { RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -51,7 +51,7 @@ export class UsersComponent {
   readonly users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: (event.sortField as SearchAdminUsersSortBy) ?? "userName",
+        sortBy: (event.sortField as SearchUsersSortBy) ?? "userName",
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
@@ -65,10 +65,10 @@ export class UsersComponent {
   );
 
   sortBys = [
-    new ListItem<SearchAdminUsersSortBy>("userName", "User Name", "Sort by user name."),
-    new ListItem<SearchAdminUsersSortBy>("email", "Email", "Sort by email."),
-    new ListItem<SearchAdminUsersSortBy>("createdDate", "Created", "Sort by created date."),
-    new ListItem<SearchAdminUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
+    new ListItem<SearchUsersSortBy>("userName", "User Name", "Sort by user name."),
+    new ListItem<SearchUsersSortBy>("email", "Email", "Sort by email."),
+    new ListItem<SearchUsersSortBy>("createdDate", "Created", "Sort by created date."),
+    new ListItem<SearchUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
   ];
 
   constructor() {

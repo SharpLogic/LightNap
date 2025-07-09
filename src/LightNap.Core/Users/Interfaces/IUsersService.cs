@@ -1,5 +1,4 @@
 using LightNap.Core.Api;
-using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
 
@@ -23,6 +22,13 @@ namespace LightNap.Core.Users.Interfaces
         /// <param name="requestDto">The request DTO containing search parameters.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the paged user data.</returns>  
         Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto requestDto);
+
+        /// <summary>  
+        /// Gets a list of users asynchronously by their IDs.  
+        /// </summary>  
+        /// <param name="userIds">The collection of user IDs.</param>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains the list of user data.</returns>  
+        Task<IList<PublicUserDto>> GetUsersByIdsAsync(IEnumerable<string> userIds);
 
         /// <summary>  
         /// Updates a user asynchronously by user ID.  

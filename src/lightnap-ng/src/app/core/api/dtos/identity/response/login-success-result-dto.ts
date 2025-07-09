@@ -1,4 +1,4 @@
-import { LoginSuccessType } from "../../../login-success-type";
+import { LoginSuccessType } from "./login-success-type";
 
 /**
  * Represents the result of a login attempt.

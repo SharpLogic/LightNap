@@ -4,8 +4,6 @@ using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Data.Extensions;
 using LightNap.Core.Extensions;
-using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
@@ -99,12 +97,42 @@ namespace LightNap.Core.Users.Services
 
             if (isAdministrator)
             {
-                // Cast FullUserDto list to PublicUserDto list for return type compatibility
-                var fullUserDtos = users.ToAdminUserDtoList().Cast<PublicUserDto>().ToList();
-                return new PagedResponse<PublicUserDto>(fullUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
+                var adminUserDtos = users.ToAdminUserDtoList().Cast<PublicUserDto>().ToList();
+                return new PagedResponse<PublicUserDto>(adminUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
+            }
+
+            if (isPrivileged)
+            {
+                var privilegedUserDtos = users.ToPrivilegedUserDtoList().Cast<PublicUserDto>().ToList();
+                return new PagedResponse<PublicUserDto>(privilegedUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
             }
 
             return new PagedResponse<PublicUserDto>(users.ToPublicUserDtoList(), searchDto.PageNumber, searchDto.PageSize, totalCount);
+        }
+
+        /// <summary>  
+        /// Gets a list of users asynchronously by their IDs.  
+        /// </summary>  
+        /// <param name="userIds">The collection of user IDs.</param>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains the list of user data.</returns>  
+        public async Task<IList<PublicUserDto>> GetUsersByIdsAsync(IEnumerable<string> userIds)
+        {
+            bool isAdministrator = userContext.IsAdministrator;
+            bool isPrivileged = userContext.IsAuthenticated;
+
+            var users = await db.Users.Where(user => userIds.Contains(user.Id)).ToListAsync();
+
+            if (isAdministrator)
+            {
+                return [.. users.ToAdminUserDtoList().Cast<PublicUserDto>()];
+            }
+
+            if (isPrivileged)
+            {
+                return [.. users.ToPrivilegedUserDtoList().Cast<PublicUserDto>()];
+            }
+
+            return [.. users.ToPublicUserDtoList().Cast<PublicUserDto>()];
         }
 
         /// <summary>

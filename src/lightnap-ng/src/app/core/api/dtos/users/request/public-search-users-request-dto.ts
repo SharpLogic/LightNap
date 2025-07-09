@@ -1,17 +1,11 @@
-import { SearchAdminUsersSortBy } from "@core/api/search-admin-users-sort-by";
 import { PagedRequestDto } from "../../paged-request-dto";
+import { SearchUsersSortBy } from "./search-users-sort-by";
 
 /**
  * Interface representing a request to search for admin users.
  * Extends the PaginationRequest interface to include pagination properties.
  */
-export interface SearchAdminUsersRequestDto extends PagedRequestDto {
-    /**
-     * The email address substring to search for.
-     * @type {string}
-     */
-    email?: string;
-
+export interface PublicSearchUsersRequestDto extends PagedRequestDto {
     /**
      * The username substring to search for.
      * @type {string}
@@ -20,9 +14,9 @@ export interface SearchAdminUsersRequestDto extends PagedRequestDto {
 
     /**
      * The field to sort the results by.
-     * @type {SearchAdminUsersSortBy}
+     * @type {SearchUsersSortBy}
      */
-    sortBy: SearchAdminUsersSortBy;
+    sortBy: SearchUsersSortBy;
 
     /**
      * Whether to reverse the sort order.

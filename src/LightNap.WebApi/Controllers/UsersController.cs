@@ -42,6 +42,21 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
+        /// Retrieves a list of users by their IDs.
+        /// </summary>
+        /// <param name="userIds">The collection of user IDs.</param>
+        /// <returns>The list of users matching the provided IDs.</returns>
+        /// <response code="200">Returns the list of users.</response>
+        [HttpPost("get-by-ids")]
+        [ProducesResponseType(typeof(ApiResponseDto<IList<PublicUserDto>>), 200)]
+        [ProducesResponseType(400)]
+        public async Task<ApiResponseDto<IList<PublicUserDto>>> GetUsersByIds([FromBody] IEnumerable<string> userIds)
+        {
+            var users = await usersService.GetUsersByIdsAsync(userIds);
+            return new ApiResponseDto<IList<PublicUserDto>>(users);
+        }
+
+        /// <summary>
         /// Updates a user.
         /// </summary>
         /// <param name="userId">The ID of the user to update.</param>
@@ -221,5 +236,6 @@ namespace LightNap.WebApi.Controllers
             await usersService.UnlockUserAccountAsync(userId);
             return new ApiResponseDto<bool>(true);
         }
+
     }
 }
