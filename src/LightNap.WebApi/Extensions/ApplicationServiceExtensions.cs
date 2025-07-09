@@ -53,6 +53,8 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IClaimsService, ClaimsService>();
+            services.AddScoped<IRolesService, RolesService>();
 
             return services;
         }

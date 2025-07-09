@@ -127,31 +127,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task AddUserToRoleAsync_UserAndRoleExist_AddsUserToRole()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            var role = "test-role";
-            await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
-
-            // Act
-            await this._administratorService.AddUserToRoleAsync(role, userId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
-        public async Task AddUserToRoleAsync_UserDoesNotExist_ThrowsError()
-        {
-            // Arrange
-            var userId = "non-existent-user-id";
-            var role = "test-role";
-
-            // Act
-            await this._administratorService.AddUserToRoleAsync(role, userId);
-        }
-
-        [TestMethod]
         public async Task SearchUsersAsync_ValidRequest_ReturnsPagedResponse()
         {
             // Arrange
@@ -165,84 +140,6 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.AreEqual(2, result.TotalCount);
-        }
-
-        [TestMethod]
-        public void GetRoles_ReturnsRoles()
-        {
-            // Arrange
-            var allRoles = ApplicationRoles.All;
-
-            // Act
-            var roles = this._administratorService.GetRoles();
-
-            // Assert
-            Assert.AreEqual(allRoles.Count, roles.Count);
-
-            for (int i = 0; i < allRoles.Count; i++)
-            {
-                Assert.AreEqual(allRoles[i].Name, roles[i].Name);
-                Assert.AreEqual(allRoles[i].DisplayName, roles[i].DisplayName);
-                Assert.AreEqual(allRoles[i].Description, roles[i].Description);
-            }
-        }
-
-        [TestMethod]
-        public async Task GetRolesForUserAsync_UserExists_ReturnsRoles()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            List<string> roles = ["Admin", "User"];
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-
-            await TestHelper.CreateTestRoleAsync(this._roleManager, roles[0]);
-            await TestHelper.CreateTestRoleAsync(this._roleManager, roles[1]);
-            await this._userManager.AddToRolesAsync(user, roles);
-
-            // Act
-            var result = await this._administratorService.GetRolesForUserAsync(userId);
-
-            // Assert
-            Assert.AreEqual(2, result.Count);
-        }
-
-        [TestMethod]
-        public async Task GetUsersInRoleAsync_RoleExists_ReturnsUsers()
-        {
-            // Arrange
-            var role = "test-role";
-            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
-            var user1 = await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id-1");
-            var user2 = await TestHelper.CreateTestUserAsync(this._userManager, "test-user-id-2");
-            await this._userManager.AddToRoleAsync(user1, role);
-            await this._userManager.AddToRoleAsync(user2, role);
-
-            // Act
-            var users = await this._administratorService.GetUsersInRoleAsync(role);
-
-            // Assert
-            Assert.AreEqual(2, users.Count);
-        }
-
-        [TestMethod]
-        public async Task RemoveUserFromRoleAsync_UserAndRoleExist_RemovesUserFromRole()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            var role = "test-role";
-            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            await this._userManager.AddToRoleAsync(user, role);
-            var roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(1, roles.Count);
-            this._userContext.UserId = user.Id;
-
-            // Act
-            await this._administratorService.RemoveUserFromRoleAsync(role, userId);
-
-            // Assert
-            roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(0, roles.Count);
         }
 
         [TestMethod]

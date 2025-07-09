@@ -1,0 +1,99 @@
+﻿using LightNap.Core.Api;
+using LightNap.Core.Configuration;
+using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
+using LightNap.Core.Data.Extensions;
+using LightNap.Core.Extensions;
+using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Identity.Extensions;
+using LightNap.Core.Interfaces;
+using LightNap.Core.Users.Dto.Request;
+using LightNap.Core.Users.Dto.Response;
+using LightNap.Core.Users.Interfaces;
+using LightNap.Core.Users.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace LightNap.Core.Users.Services
+{
+    /// <summary>
+    /// Service for managing administrator-related operations.
+    /// </summary>
+    public class ClaimsService(UserManager<ApplicationUser> userManager, ApplicationDbContext db, IUserContext userContext) : IClaimsService
+    {
+        /// <summary>
+        /// Searches claims.
+        /// </summary>
+        /// <param name="requestDto">The search parameters.</param>
+        /// <returns>The paginated list of claims.</returns>
+        public async Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
+        {
+            userContext.AssertAdministrator();
+
+            var query = db.UserClaims.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(requestDto.UserId))
+            {
+                query = query.Where(claim => claim.UserId == requestDto.UserId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestDto.Type))
+            {
+                query = query.Where(claim => claim.ClaimType == requestDto.Type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestDto.Value))
+            {
+                query = query.Where(claim => EF.Functions.Like(claim.ClaimValue, $"%{requestDto.Value}%"));
+            }
+
+            int totalCount = await query.CountAsync();
+
+            if (requestDto.PageNumber > 1)
+            {
+                query = query.Skip((requestDto.PageNumber - 1) * requestDto.PageSize);
+            }
+
+            var claims = await query
+                .OrderBy(claim => claim.UserId)
+                .ThenBy(claim => claim.ClaimType)
+                .ThenBy(claim => claim.ClaimValue)
+                .ToListAsync();
+
+            return new PagedResponse<UserClaimDto>(claims.ToDtoList(), requestDto.PageNumber, requestDto.PageSize, totalCount);
+        }
+
+        /// <summary>
+        /// Adds a claim to the specified user asynchronously.
+        /// </summary>
+        /// <remarks>This method associates the provided claim with the specified user. Ensure that the
+        /// user exists and that the claim is valid before calling this method. The operation is performed
+        /// asynchronously.</remarks>
+        /// <param name="userId">The unique identifier of the user to whom the claim will be added. Cannot be null or empty.</param>
+        /// <param name="claim">The claim to add to the user. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task AddClaimToUserAsync(string userId, ClaimDto claim)
+        {
+            userContext.AssertAdministrator();
+            var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
+            var result = await userManager.AddClaimAsync(user, claim.ToClaim());
+            if (!result.Succeeded) { throw new UserFriendlyApiException(result.Errors.Select(error => error.Description)); }
+        }
+
+        /// <summary>
+        /// Removes a specific claim from the specified user.
+        /// </summary>
+        /// <remarks>This method removes the specified claim from the user's claim collection.  If the
+        /// user does not have the specified claim, the operation will complete without making changes.</remarks>
+        /// <param name="userId">The unique identifier of the user from whom the claim will be removed. Cannot be null or empty.</param>
+        /// <param name="claim">The claim to be removed from the user. Cannot be null.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task RemoveClaimFromUserAsync(string userId, ClaimDto claim)
+        {
+            userContext.AssertAdministrator();
+            var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
+            var result = await userManager.RemoveClaimAsync(user, claim.ToClaim());
+            if (!result.Succeeded) { throw new UserFriendlyApiException(result.Errors.Select(error => error.Description)); }
+        }
+    }
+}

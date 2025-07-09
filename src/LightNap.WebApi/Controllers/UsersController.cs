@@ -12,7 +12,7 @@ namespace LightNap.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(IUsersService usersService) : ControllerBase
+    public class UsersController(IUsersService usersService, IRolesService rolesService, IClaimsService claimsService) : ControllerBase
     {
         /// <summary>
         /// Retrieves a user by ID.
@@ -80,7 +80,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<IList<RoleDto>>), 200)]
         public ApiResponseDto<IList<RoleDto>> GetRoles()
         {
-            return new ApiResponseDto<IList<RoleDto>>(usersService.GetRoles());
+            return new ApiResponseDto<IList<RoleDto>>(rolesService.GetRoles());
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<IList<string>>), 200)]
         public async Task<ApiResponseDto<IList<string>>> GetRolesForUser(string userId)
         {
-            return new ApiResponseDto<IList<string>>(await usersService.GetRolesForUserAsync(userId));
+            return new ApiResponseDto<IList<string>>(await rolesService.GetRolesForUserAsync(userId));
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<IList<AdminUserDto>>), 200)]
         public async Task<ApiResponseDto<IList<AdminUserDto>>> GetUsersInRole(string role)
         {
-            return new ApiResponseDto<IList<AdminUserDto>>(await usersService.GetUsersInRoleAsync(role));
+            return new ApiResponseDto<IList<AdminUserDto>>(await rolesService.GetUsersInRoleAsync(role));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> AddUserToRole(string role, string userId)
         {
-            await usersService.AddUserToRoleAsync(role, userId);
+            await rolesService.AddUserToRoleAsync(role, userId);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -139,7 +139,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RemoveUserFromRole(string role, string userId)
         {
-            await usersService.RemoveUserFromRoleAsync(role, userId);
+            await rolesService.RemoveUserFromRoleAsync(role, userId);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -153,7 +153,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<UserClaimDto>>), 200)]
         public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
         {
-            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await usersService.SearchClaimsAsync(requestDto));
+            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchClaimsAsync(requestDto));
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto dto)
         {
-            await usersService.AddClaimToUserAsync(userId, dto);
+            await claimsService.AddClaimToUserAsync(userId, dto);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -186,7 +186,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto dto)
         {
-            await usersService.RemoveClaimFromUserAsync(userId, dto);
+            await claimsService.RemoveClaimFromUserAsync(userId, dto);
             return new ApiResponseDto<bool>(true);
         }
 
