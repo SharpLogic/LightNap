@@ -20,7 +20,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user details.</returns>
         /// <response code="200">Returns the user details.</response>
-        [HttpGet("users/{userId}")]
+        [HttpGet("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<PublicUserDto?>), 200)]
         public async Task<ApiResponseDto<PublicUserDto?>> GetUser(string userId)
         {
@@ -33,7 +33,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="requestDto">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
         /// <response code="200">Returns the list of users.</response>
-        [HttpPost("users/search")]
+        [HttpPost("search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<PublicUserDto>>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<PagedResponse<PublicUserDto>>> SearchUsers(AdminSearchUsersRequestDto requestDto)
@@ -48,7 +48,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="requestDto">The updated user information.</param>
         /// <returns>The updated user details.</returns>
         /// <response code="200">Returns the updated user details.</response>
-        [HttpPut("users/{userId}")]
+        [HttpPut("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<AdminUserDto>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<AdminUserDto>> UpdateUser(string userId, AdminUpdateUserDto requestDto)
@@ -63,7 +63,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user was successfully deleted.</returns>
         /// <response code="200">User successfully deleted.</response>
         /// <response code="400">If the user is an administrator and cannot be deleted.</response>
-        [HttpDelete("users/{userId}")]
+        [HttpDelete("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         public async Task<ApiResponseDto<bool>> DeleteUser(string userId)
         {
@@ -89,7 +89,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userId">The ID of the user.</param>
         /// <returns>The list of roles for the user.</returns>
         /// <response code="200">Returns the list of roles.</response>
-        [HttpGet("users/{userId}/roles")]
+        [HttpGet("{userId}/roles")]
         [ProducesResponseType(typeof(ApiResponseDto<IList<string>>), 200)]
         public async Task<ApiResponseDto<IList<string>>> GetRolesForUser(string userId)
         {
@@ -164,7 +164,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the claim was successfully added to the user.</returns>
         /// <response code="200">Claim successfully added to the user.</response>
         /// <response code="400">If there was an error adding the claim to the user.</response>
-        [HttpPost("users/{userId}/claims")]
+        [HttpPost("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto dto)
@@ -181,7 +181,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the claim was successfully removed from the user.</returns>
         /// <response code="200">Claim successfully removed from the user.</response>
         /// <response code="400">If there was an error removing the claim from the user.</response>
-        [HttpDelete("users/{userId}/claims")]
+        [HttpDelete("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto dto)
@@ -197,7 +197,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user account was successfully locked.</returns>
         /// <response code="200">User account successfully locked.</response>
         /// <response code="400">If there was an error locking the user account.</response>
-        [HttpPost("users/{userId}/lock")]
+        [HttpPost("{userId}/lock")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> LockUserAccount(string userId)
@@ -213,7 +213,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user account was successfully unlocked.</returns>
         /// <response code="200">User account successfully unlocked.</response>
         /// <response code="400">If there was an error unlocking the user account.</response>
-        [HttpPost("users/{userId}/unlock")]
+        [HttpPost("{userId}/unlock")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> UnlockUserAccount(string userId)
