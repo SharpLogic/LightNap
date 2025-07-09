@@ -5,7 +5,7 @@ import { ErrorApiResponse, ToastService } from "@core";
 import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({

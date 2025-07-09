@@ -1,4 +1,4 @@
-import { AdminService } from "@admin/services/admin.service";
+import { UsersService } from "@core/services/users.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
@@ -13,7 +13,7 @@ import { TableModule } from "primeng/table";
   imports: [CommonModule, PanelModule, RouterLink, RoutePipe, ApiResponseComponent, TableModule],
 })
 export class RolesComponent {
-  readonly #adminService = inject(AdminService);
+  readonly #adminService = inject(UsersService);
 
   readonly roles$ = this.#adminService.getRoles();
 }

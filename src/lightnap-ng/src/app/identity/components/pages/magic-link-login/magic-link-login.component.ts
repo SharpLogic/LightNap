@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { IdentityService } from "@identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 
 @Component({
   standalone: true,

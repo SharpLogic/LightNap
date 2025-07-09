@@ -1,5 +1,5 @@
-import { loggedInGuard } from "@identity/guards/logged-in.guard";
-import { roleGuard } from "@identity/guards/role.guard";
+import { loggedInGuard } from "@core/guards/logged-in.guard";
+import { roleGuard } from "@core/guards/role.guard";
 import { PublicLayoutComponent } from "@layout/components/layouts/public-layout/public-layout.component";
 import { Routes as AdminRoutes } from "../admin/components/pages/routes";
 import { Routes as IdentityRoutes } from "../identity/components/pages/routes";

@@ -1,7 +1,7 @@
-import { AdminUserDto } from "@admin/models";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnChanges, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { AdminUserDto } from "@core";
 import { ButtonModule } from "primeng/button";
 
 @Component({

@@ -3,7 +3,7 @@ import { inject } from "@angular/core";
 import { ApiResponseDto, HttpErrorApiResponse } from "@core";
 import { RouteAliasService } from "@routing";
 import { Observable, catchError, of, switchMap, throwError } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 import { environment } from "src/environments/environment";
 
 /**

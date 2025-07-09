@@ -5,7 +5,7 @@ import { BlockUiService } from "@core";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { ToastService } from "@core/services/toast.service";
-import { ProfileService } from "@profile/services/profile.service";
+import { ProfileService } from "@core/services/profile.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
 import { InputGroupModule } from "primeng/inputgroup";

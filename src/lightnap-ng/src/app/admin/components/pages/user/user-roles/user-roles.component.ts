@@ -1,10 +1,9 @@
-import { RoleDto } from "@admin/models";
-import { AdminService } from "@admin/services/admin.service";
+import { UsersService } from "@core/services/users.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ConfirmPopupComponent } from "@core";
+import { ConfirmPopupComponent, RoleDto } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
@@ -29,7 +28,7 @@ import { TableModule } from "primeng/table";
   ],
 })
 export class UserRolesComponent {
-  #adminService = inject(AdminService);
+  #adminService = inject(UsersService);
   #confirmationService = inject(ConfirmationService);
   #fb = inject(FormBuilder);
 

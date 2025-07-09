@@ -1,14 +1,12 @@
-import { computed, effect, inject, Injectable, signal } from "@angular/core";
+import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { APP_NAME } from "@core";
-import { IdentityService } from "@identity";
+import { APP_NAME, IdentityService, LayoutConfigDto, ProfileService } from "@core";
 import { ColorPalette } from "@layout/models/color-palette";
 import { LayoutState } from "@layout/models/layout-state";
 import { updatePreset, updateSurfacePalette } from "@primeng/themes";
 import Aura from "@primeng/themes/aura";
 import Lara from "@primeng/themes/lara";
 import Nora from "@primeng/themes/nora";
-import { LayoutConfigDto, ProfileService } from "@profile";
 import { Subject } from "rxjs";
 
 @Injectable({

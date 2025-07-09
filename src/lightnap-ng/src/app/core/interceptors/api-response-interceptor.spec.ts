@@ -4,7 +4,7 @@ import { TestBed } from "@angular/core/testing";
 import { HttpErrorApiResponse } from "@core";
 import { RouteAliasService } from "@routing";
 import { of, throwError } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 import { environment } from "src/environments/environment";
 import { apiResponseInterceptor } from "./api-response-interceptor";
 

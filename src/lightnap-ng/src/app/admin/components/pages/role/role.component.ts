@@ -1,17 +1,16 @@
-import { AdminService } from "@admin/services/admin.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ConfirmPopupComponent } from "@core";
+import { ConfirmPopupComponent, RoleWithAdminUsers } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { UsersService } from "@core/services/users.service";
 import { RoutePipe } from "@routing";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from "primeng/table";
-import { Observable, tap } from "rxjs";
-import { RoleWithAdminUsers } from "@admin/models";
+import { Observable } from "rxjs";
 
 @Component({
   standalone: true,
@@ -29,7 +28,7 @@ import { RoleWithAdminUsers } from "@admin/models";
   ],
 })
 export class RoleComponent implements OnInit {
-  readonly #adminService = inject(AdminService);
+  readonly #adminService = inject(UsersService);
   readonly #confirmationService = inject(ConfirmationService);
 
   readonly role = input.required<string>();

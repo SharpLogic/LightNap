@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 
 @Component({
   standalone: true,

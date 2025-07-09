@@ -1,10 +1,9 @@
-import { AdminUserDto } from "@admin/models";
-import { AdminService } from "@admin/services/admin.service";
+import { UsersService } from "@core/services/users.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ConfirmPopupComponent } from "@core";
+import { AdminUserDto, ConfirmPopupComponent } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { RouteAliasService, RoutePipe } from "@routing";
@@ -33,7 +32,7 @@ import { Observable } from "rxjs";
   ],
 })
 export class ClaimComponent {
-  readonly #adminService = inject(AdminService);
+  readonly #adminService = inject(UsersService);
   readonly #confirmationService = inject(ConfirmationService);
   readonly #routeAlias = inject(RouteAliasService);
 

@@ -1,14 +1,14 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
-import { NotificationService } from "@profile/services";
 import { RouteAliasService, RoutePipe } from "@routing";
 import { MenuItem } from "primeng/api";
-import { OverlayBadgeModule } from "primeng/overlaybadge";
 import { ButtonModule } from "primeng/button";
+import { OverlayBadgeModule } from "primeng/overlaybadge";
 import { PopoverModule } from "primeng/popover";
 import { NotificationItemComponent } from "../notification-item/notification-item.component";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { NotificationService } from "@core";
 
 @Component({
   selector: "notifications-button",

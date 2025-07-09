@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { ApiResponseComponent, EmptyPagedResponse, ErrorListComponent, ToastService } from "@core";
-import { NotificationItem, NotificationItemComponent, NotificationService } from "@profile";
+import { ApiResponseComponent, EmptyPagedResponse, ErrorListComponent, NotificationItem, NotificationService, ToastService } from "@core";
+import { NotificationItemComponent } from "@profile/components/controls";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";

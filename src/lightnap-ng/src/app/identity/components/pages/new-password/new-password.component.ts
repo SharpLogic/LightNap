@@ -10,7 +10,7 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 
 @Component({
   standalone: true,

@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouteAliasService } from "@routing";
 import { MenuItem } from "primeng/api";
 import { BehaviorSubject, combineLatest, debounceTime, Subject, tap } from "rxjs";
-import { IdentityService } from "src/app/identity/services/identity.service";
+import { IdentityService } from "@core/services/identity.service";
 import { MenuChangeEvent } from "../models/menu-change-event";
 
 @Injectable({

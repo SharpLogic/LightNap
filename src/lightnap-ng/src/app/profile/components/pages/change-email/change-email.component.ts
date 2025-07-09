@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BlockUiService, ErrorListComponent } from "@core";
-import { ProfileService } from "@profile/services/profile.service";
+import { ProfileService } from "@core/services/profile.service";
 import { RouteAliasService } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
