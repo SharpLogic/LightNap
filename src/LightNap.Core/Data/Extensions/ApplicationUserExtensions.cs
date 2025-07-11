@@ -52,7 +52,7 @@ namespace LightNap.Core.Data.Extensions
         public static void UpdateLoggedInUser(this ApplicationUser user,
             // Suppress IDE0060 warning for unused parameter 'dto'. Remove this if actually using the parameter.
 #pragma warning disable IDE0060
-            UpdateProfileDto dto)
+            UpdateProfileRequestDto dto)
 #pragma warning restore IDE0060
         {
             user.LastModifiedDate = DateTime.UtcNow;
@@ -153,7 +153,7 @@ namespace LightNap.Core.Data.Extensions
         public static void UpdateAdminUserDto(this ApplicationUser user,
             // Suppress IDE0060 warning for unused parameter 'dto'. Remove this if actually using the parameter.
 #pragma warning disable IDE0060
-            AdminUpdateUserDto dto)
+            AdminUpdateUserRequestDto dto)
 #pragma warning restore IDE0060
 
         {

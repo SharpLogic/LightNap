@@ -82,7 +82,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             var userId = "test-user-id";
-            AdminUpdateUserDto updateDto = new();
+            AdminUpdateUserRequestDto updateDto = new();
             await TestHelper.CreateTestUserAsync(this._userManager, userId);
 
             // Act
@@ -98,7 +98,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             var userId = "non-existent-user-id";
-            var updateDto = new AdminUpdateUserDto();
+            var updateDto = new AdminUpdateUserRequestDto();
 
             // Act
             await this._administratorService.UpdateUserAsync(userId, updateDto);

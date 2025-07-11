@@ -2,8 +2,7 @@ import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { API_URL_ROOT } from "@core";
-import { IdentityService } from "@identity";
+import { API_URL_ROOT, IdentityService } from "@core";
 import { tokenInterceptor } from "./token-interceptor";
 
 describe("TokenInterceptor", () => {

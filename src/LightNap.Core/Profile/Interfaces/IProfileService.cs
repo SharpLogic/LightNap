@@ -20,7 +20,7 @@ namespace LightNap.Core.Profile.Interfaces
         /// </summary>
         /// <param name="requestDto">The data transfer object containing the profile update information.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="ProfileDto"/> with the updated profile.</returns>
-        Task<ProfileDto> UpdateProfileAsync(UpdateProfileDto requestDto);
+        Task<ProfileDto> UpdateProfileAsync(UpdateProfileRequestDto requestDto);
 
         /// <summary>
         /// Changes the password of the requesting user.

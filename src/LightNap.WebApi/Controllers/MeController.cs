@@ -34,7 +34,7 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Updates the profile of the current user.
         /// </summary>
-        /// <param name="requestDto">The updated profile information.</param>
+        /// <param name="updateProfileRequest">The updated profile information.</param>
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> containing the updated profile of the current user.
         /// </returns>
@@ -45,15 +45,15 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<ProfileDto>> UpdateProfile(UpdateProfileDto requestDto)
+        public async Task<ApiResponseDto<ProfileDto>> UpdateProfile(UpdateProfileRequestDto updateProfileRequest)
         {
-            return new ApiResponseDto<ProfileDto>(await profileService.UpdateProfileAsync(requestDto));
+            return new ApiResponseDto<ProfileDto>(await profileService.UpdateProfileAsync(updateProfileRequest));
         }
 
         /// <summary>
         /// Changes the password of the current user.
         /// </summary>
-        /// <param name="requestDto">The password change request.</param>
+        /// <param name="changePasswordRequest">The password change request.</param>
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> indicating whether the password was changed successfully.
         /// </returns>
@@ -64,9 +64,9 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ChangePassword(ChangePasswordRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> ChangePassword(ChangePasswordRequestDto changePasswordRequest)
         {
-            await profileService.ChangePasswordAsync(requestDto);
+            await profileService.ChangePasswordAsync(changePasswordRequest);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -89,7 +89,7 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Updates the settings of the current user.
         /// </summary>
-        /// <param name="requestDto">The updated settings information.</param>
+        /// <param name="browserSettings">The updated settings information.</param>
         /// <returns>
         /// A <see cref="ApiResponseDto{T}"/> containing true if the update succeeded.
         /// </returns>
@@ -100,9 +100,9 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> UpdateSettings(BrowserSettingsDto requestDto)
+        public async Task<ApiResponseDto<bool>> UpdateSettings(BrowserSettingsDto browserSettings)
         {
-            await profileService.UpdateSettingsAsync(requestDto);
+            await profileService.UpdateSettingsAsync(browserSettings);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -141,7 +141,7 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Changes the email of the current user.
         /// </summary>
-        /// <param name="requestDto">The email change request.</param>
+        /// <param name="changeEmailRequest">The email change request.</param>
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> indicating whether the email was changed successfully.
         /// </returns>
@@ -152,16 +152,16 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ChangeEmail(ChangeEmailRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> ChangeEmail(ChangeEmailRequestDto changeEmailRequest)
         {
-            await profileService.ChangeEmailAsync(requestDto);
+            await profileService.ChangeEmailAsync(changeEmailRequest);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Confirms the email change of the current user.
         /// </summary>
-        /// <param name="requestDto">The email change confirmation details.</param>
+        /// <param name="confirmEmailChangeRequest">The email change confirmation details.</param>
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> indicating whether the email change was confirmed successfully.
         /// </returns>
@@ -172,25 +172,25 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ConfirmEmailChange(ConfirmEmailChangeRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> ConfirmEmailChange(ConfirmEmailChangeRequestDto confirmEmailChangeRequest)
         {
-            await profileService.ConfirmEmailChangeAsync(requestDto);
+            await profileService.ConfirmEmailChangeAsync(confirmEmailChangeRequest);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Searches the notifications of the current user.
         /// </summary>
-        /// <param name="requestDto">The search criteria for notifications.</param>
+        /// <param name="searchNotificationsRequest">The search criteria for notifications.</param>
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> containing a paginated list of notifications.
         /// </returns>
         /// <response code="200">Returns the list of notifications.</response>
         /// <response code="401">If the user is not authenticated.</response>
         [HttpPost("notifications")]
-        public async Task<ApiResponseDto<NotificationSearchResultsDto>> SearchMyNotifications(SearchNotificationsDto requestDto)
+        public async Task<ApiResponseDto<NotificationSearchResultsDto>> SearchMyNotifications(SearchNotificationsRequestDto searchNotificationsRequest)
         {
-            return new ApiResponseDto<NotificationSearchResultsDto>(await notificationService.SearchMyNotificationsAsync(requestDto));
+            return new ApiResponseDto<NotificationSearchResultsDto>(await notificationService.SearchMyNotificationsAsync(searchNotificationsRequest));
         }
 
         /// <summary>

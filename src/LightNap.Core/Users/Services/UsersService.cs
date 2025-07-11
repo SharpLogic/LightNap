@@ -47,9 +47,9 @@ namespace LightNap.Core.Users.Services
         /// <summary>
         /// Searches for users based on the specified criteria.
         /// </summary>
-        /// <param name="searchDto">The search criteria.</param>
+        /// <param name="adminSearchUsersRequest">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
-        public async Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto searchDto)
+        public async Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest)
         {
             bool isAdministrator = userContext.IsAdministrator;
             bool isPrivileged = userContext.IsAuthenticated;
@@ -57,7 +57,7 @@ namespace LightNap.Core.Users.Services
             IQueryable<ApplicationUser> query = db.Users.AsQueryable();
 
             // Query for provided public parameters.
-            PublicSearchUsersRequestDto publicParameters = searchDto;
+            PublicSearchUsersRequestDto publicParameters = adminSearchUsersRequest;
             if (!string.IsNullOrWhiteSpace(publicParameters.Email))
             {
                 query = query.Where(user => EF.Functions.Like(user.NormalizedEmail!, $"%{publicParameters.Email.ToUpper()}%"));
@@ -69,7 +69,7 @@ namespace LightNap.Core.Users.Services
 
             if (isPrivileged)
             {
-                PrivilegedSearchUsersRequestDto privilegedParameters = searchDto;
+                PrivilegedSearchUsersRequestDto privilegedParameters = adminSearchUsersRequest;
                 // Query for provided privileged parameters.
             }
 
@@ -78,36 +78,36 @@ namespace LightNap.Core.Users.Services
                 // Query for provided admin parameters.
             }
 
-            query = searchDto.SortBy switch
+            query = adminSearchUsersRequest.SortBy switch
             {
-                ApplicationUserSortBy.Email => searchDto.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email),
-                ApplicationUserSortBy.UserName => searchDto.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName),
-                ApplicationUserSortBy.CreatedDate => searchDto.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate),
-                ApplicationUserSortBy.LastModifiedDate => searchDto.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate),
-                _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", searchDto.SortBy.ToString()),
+                ApplicationUserSortBy.Email => adminSearchUsersRequest.ReverseSort ? query.OrderByDescending(user => user.Email) : query.OrderBy(user => user.Email),
+                ApplicationUserSortBy.UserName => adminSearchUsersRequest.ReverseSort ? query.OrderByDescending(user => user.UserName) : query.OrderBy(user => user.UserName),
+                ApplicationUserSortBy.CreatedDate => adminSearchUsersRequest.ReverseSort ? query.OrderByDescending(user => user.CreatedDate) : query.OrderBy(user => user.CreatedDate),
+                ApplicationUserSortBy.LastModifiedDate => adminSearchUsersRequest.ReverseSort ? query.OrderByDescending(user => user.LastModifiedDate) : query.OrderBy(user => user.LastModifiedDate),
+                _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", adminSearchUsersRequest.SortBy.ToString()),
             };
             int totalCount = await query.CountAsync();
 
-            if (searchDto.PageNumber > 1)
+            if (adminSearchUsersRequest.PageNumber > 1)
             {
-                query = query.Skip((searchDto.PageNumber - 1) * searchDto.PageSize);
+                query = query.Skip((adminSearchUsersRequest.PageNumber - 1) * adminSearchUsersRequest.PageSize);
             }
 
-            var users = await query.Take(searchDto.PageSize).ToListAsync();
+            var users = await query.Take(adminSearchUsersRequest.PageSize).ToListAsync();
 
             if (isAdministrator)
             {
                 var adminUserDtos = users.ToAdminUserDtoList().Cast<PublicUserDto>().ToList();
-                return new PagedResponse<PublicUserDto>(adminUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
+                return new PagedResponse<PublicUserDto>(adminUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
             }
 
             if (isPrivileged)
             {
                 var privilegedUserDtos = users.ToPrivilegedUserDtoList().Cast<PublicUserDto>().ToList();
-                return new PagedResponse<PublicUserDto>(privilegedUserDtos, searchDto.PageNumber, searchDto.PageSize, totalCount);
+                return new PagedResponse<PublicUserDto>(privilegedUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
             }
 
-            return new PagedResponse<PublicUserDto>(users.ToPublicUserDtoList(), searchDto.PageNumber, searchDto.PageSize, totalCount);
+            return new PagedResponse<PublicUserDto>(users.ToPublicUserDtoList(), adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
         }
 
         /// <summary>  
@@ -139,15 +139,15 @@ namespace LightNap.Core.Users.Services
         /// Updates a user.
         /// </summary>
         /// <param name="userId">The ID of the user to update.</param>
-        /// <param name="requestDto">The updated user information.</param>
+        /// <param name="adminUpdateUserRequest">The updated user information.</param>
         /// <returns>The updated user details.</returns>
-        public async Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserDto requestDto)
+        public async Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserRequestDto adminUpdateUserRequest)
         {
             userContext.AssertAdministrator();
 
             var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
 
-            user.UpdateAdminUserDto(requestDto);
+            user.UpdateAdminUserDto(adminUpdateUserRequest);
 
             await db.SaveChangesAsync();
 

@@ -1,5 +1,4 @@
 ﻿using LightNap.Core.Api;
-using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Data.Extensions;
@@ -10,7 +9,6 @@ using LightNap.Core.Interfaces;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
 using LightNap.Core.Users.Interfaces;
-using LightNap.Core.Users.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,34 +22,34 @@ namespace LightNap.Core.Users.Services
         /// <summary>
         /// Searches claims.
         /// </summary>
-        /// <param name="requestDto">The search parameters.</param>
+        /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        public async Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
+        public async Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
             userContext.AssertAdministrator();
 
             var query = db.UserClaims.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(requestDto.UserId))
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.UserId))
             {
-                query = query.Where(claim => claim.UserId == requestDto.UserId);
+                query = query.Where(claim => claim.UserId == searchClaimsRequest.UserId);
             }
 
-            if (!string.IsNullOrWhiteSpace(requestDto.Type))
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.Type))
             {
-                query = query.Where(claim => claim.ClaimType == requestDto.Type);
+                query = query.Where(claim => claim.ClaimType == searchClaimsRequest.Type);
             }
 
-            if (!string.IsNullOrWhiteSpace(requestDto.Value))
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.Value))
             {
-                query = query.Where(claim => claim.ClaimValue == requestDto.Value);
+                query = query.Where(claim => claim.ClaimValue == searchClaimsRequest.Value);
             }
 
             int totalCount = await query.CountAsync();
 
-            if (requestDto.PageNumber > 1)
+            if (searchClaimsRequest.PageNumber > 1)
             {
-                query = query.Skip((requestDto.PageNumber - 1) * requestDto.PageSize);
+                query = query.Skip((searchClaimsRequest.PageNumber - 1) * searchClaimsRequest.PageSize);
             }
 
             var claims = await query
@@ -60,7 +58,7 @@ namespace LightNap.Core.Users.Services
                 .ThenBy(claim => claim.ClaimValue)
                 .ToListAsync();
 
-            return new PagedResponse<UserClaimDto>(claims.ToDtoList(), requestDto.PageNumber, requestDto.PageSize, totalCount);
+            return new PagedResponse<UserClaimDto>(claims.ToDtoList(), searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
         }
 
         /// <summary>

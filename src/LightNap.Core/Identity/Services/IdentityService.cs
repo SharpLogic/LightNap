@@ -206,7 +206,7 @@ namespace LightNap.Core.Identity.Services
             }
 
             await notificationService.CreateSystemNotificationForRoleAsync(ApplicationRoles.Administrator.Name!,
-                new CreateNotificationDto()
+                new CreateNotificationRequestDto()
                 {
                     Type = NotificationType.AdministratorNewUserRegistration,
                     Data = new Dictionary<string, object>()

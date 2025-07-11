@@ -19,9 +19,9 @@ namespace LightNap.Core.Users.Interfaces
         /// <summary>  
         /// Searches users asynchronously based on the specified request DTO.  
         /// </summary>  
-        /// <param name="requestDto">The request DTO containing search parameters.</param>  
+        /// <param name="adminSearchUsersRequest">The request DTO containing search parameters.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the paged user data.</returns>  
-        Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto requestDto);
+        Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest);
 
         /// <summary>  
         /// Gets a list of users asynchronously by their IDs.  
@@ -34,9 +34,9 @@ namespace LightNap.Core.Users.Interfaces
         /// Updates a user asynchronously by user ID.  
         /// </summary>  
         /// <param name="userId">The user ID.</param>  
-        /// <param name="requestDto">The request DTO containing update information.</param>  
+        /// <param name="adminUpdateUserRequest">The request DTO containing update information.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the updated user data.</returns>  
-        Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserDto requestDto);
+        Task<AdminUserDto> UpdateUserAsync(string userId, AdminUpdateUserRequestDto adminUpdateUserRequest);
 
         /// <summary>  
         /// Deletes a user asynchronously by user ID.  

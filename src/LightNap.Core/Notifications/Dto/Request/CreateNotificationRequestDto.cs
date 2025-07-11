@@ -5,7 +5,7 @@ namespace LightNap.Core.Notifications.Dto.Request
     /// <summary>
     /// Data Transfer Object for creating a notification.
     /// </summary>
-    public class CreateNotificationDto
+    public class CreateNotificationRequestDto
     {
         /// <summary>
         /// The type of the notification.

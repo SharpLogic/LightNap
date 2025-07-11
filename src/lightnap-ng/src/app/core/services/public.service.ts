@@ -33,11 +33,11 @@ export class PublicService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {PublicSearchUsersRequestDto} publicSearchUsers - The search criteria.
+   * @param {PublicSearchUsersRequestDto} publicSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<PublicUserDto>>} An observable containing the search results.
    */
-  searchUsers(publicSearchUsers: PublicSearchUsersRequestDto) {
-    return this.#usersService.searchUsers(publicSearchUsers) as Observable<PagedResponseDto<PublicUserDto>>;
+  searchUsers(publicSearchUsersRequest: PublicSearchUsersRequestDto) {
+    return this.#usersService.searchUsers(publicSearchUsersRequest) as Observable<PagedResponseDto<PublicUserDto>>;
   }
 
   /**

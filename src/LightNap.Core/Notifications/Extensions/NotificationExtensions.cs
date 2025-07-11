@@ -15,7 +15,7 @@ namespace LightNap.Core.Notifications.Extensions
         /// <param name="dto">The CreateNotificationDto to convert.</param>
         /// <param name="userId">The ID of the user associated with the notification.</param>
         /// <returns>A new Notification entity.</returns>
-        public static Notification ToCreate(this CreateNotificationDto dto, string userId)
+        public static Notification ToCreate(this CreateNotificationRequestDto dto, string userId)
         {
             return new Notification()
             {

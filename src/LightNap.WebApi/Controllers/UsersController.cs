@@ -30,15 +30,15 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Searches for users based on the specified criteria.
         /// </summary>
-        /// <param name="requestDto">The search criteria.</param>
+        /// <param name="adminSearchUsersRequest">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
         /// <response code="200">Returns the list of users.</response>
         [HttpPost("search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<PublicUserDto>>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<PagedResponse<PublicUserDto>>> SearchUsers(AdminSearchUsersRequestDto requestDto)
+        public async Task<ApiResponseDto<PagedResponse<PublicUserDto>>> SearchUsers(AdminSearchUsersRequestDto adminSearchUsersRequest)
         {
-            return new ApiResponseDto<PagedResponse<PublicUserDto>>(await usersService.SearchUsersAsync(requestDto));
+            return new ApiResponseDto<PagedResponse<PublicUserDto>>(await usersService.SearchUsersAsync(adminSearchUsersRequest));
         }
 
         /// <summary>
@@ -60,15 +60,15 @@ namespace LightNap.WebApi.Controllers
         /// Updates a user.
         /// </summary>
         /// <param name="userId">The ID of the user to update.</param>
-        /// <param name="requestDto">The updated user information.</param>
+        /// <param name="adminUpdateUserRequest">The updated user information.</param>
         /// <returns>The updated user details.</returns>
         /// <response code="200">Returns the updated user details.</response>
         [HttpPut("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<AdminUserDto>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<AdminUserDto>> UpdateUser(string userId, AdminUpdateUserDto requestDto)
+        public async Task<ApiResponseDto<AdminUserDto>> UpdateUser(string userId, AdminUpdateUserRequestDto adminUpdateUserRequest)
         {
-            return new ApiResponseDto<AdminUserDto>(await usersService.UpdateUserAsync(userId, requestDto));
+            return new ApiResponseDto<AdminUserDto>(await usersService.UpdateUserAsync(userId, adminUpdateUserRequest));
         }
 
         /// <summary>
@@ -161,20 +161,20 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Searches claims.
         /// </summary>
-        /// <param name="requestDto">The search parameters.</param>
+        /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
         [HttpPost("claims/search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<UserClaimDto>>), 200)]
-        public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto requestDto)
+        public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
-            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchClaimsAsync(requestDto));
+            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchClaimsAsync(searchClaimsRequest));
         }
 
         /// <summary>
         /// Adds a claim to a user.
         /// </summary>
-        /// <param name="dto">The claim.</param>
+        /// <param name="claim">The claim.</param>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>True if the claim was successfully added to the user.</returns>
         /// <response code="200">Claim successfully added to the user.</response>
@@ -182,16 +182,16 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto dto)
+        public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto claim)
         {
-            await claimsService.AddClaimToUserAsync(userId, dto);
+            await claimsService.AddClaimToUserAsync(userId, claim);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Removes a claim from a user.
         /// </summary>
-        /// <param name="dto">The claim.</param>
+        /// <param name="claim">The claim.</param>
         /// <param name="userId">The ID of the user.</param>
         /// <returns>True if the claim was successfully removed from the user.</returns>
         /// <response code="200">Claim successfully removed from the user.</response>
@@ -199,9 +199,9 @@ namespace LightNap.WebApi.Controllers
         [HttpDelete("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto dto)
+        public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto claim)
         {
-            await claimsService.RemoveClaimFromUserAsync(userId, dto);
+            await claimsService.RemoveClaimFromUserAsync(userId, claim);
             return new ApiResponseDto<bool>(true);
         }
 

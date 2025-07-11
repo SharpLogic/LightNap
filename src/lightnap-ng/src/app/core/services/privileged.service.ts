@@ -24,11 +24,11 @@ export class PrivilegedService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {PrivilegedSearchUsersRequestDto} privilegedSearchUsers - The search criteria.
+   * @param {PrivilegedSearchUsersRequestDto} privilegedSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<PrivilegedUserDto>>} An observable containing the search results.
    */
-  searchUsers(privilegedSearchUsers: PrivilegedSearchUsersRequestDto) {
-    return this.#usersService.searchUsers(privilegedSearchUsers);
+  searchUsers(privilegedSearchUsersRequest: PrivilegedSearchUsersRequestDto) {
+    return this.#usersService.searchUsers(privilegedSearchUsersRequest);
   }
 
   /**

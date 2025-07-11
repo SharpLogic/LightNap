@@ -23,7 +23,7 @@ namespace LightNap.Core.Notifications.Services
         /// </summary>
         /// <param name="userId">The ID of the user to notify.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        internal async Task CreateUserNotificationAsync(string userId, CreateNotificationDto requestDto)
+        internal async Task CreateUserNotificationAsync(string userId, CreateNotificationRequestDto requestDto)
         {
             // TODO: Confirm the user wants this kind of notification (if implemented).
 
@@ -39,7 +39,7 @@ namespace LightNap.Core.Notifications.Services
         /// </summary>
         /// <param name="userId">The ID of the user to notify.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        public async Task CreateSystemNotificationForUserAsync(string userId, CreateNotificationDto requestDto)
+        public async Task CreateSystemNotificationForUserAsync(string userId, CreateNotificationRequestDto requestDto)
         {
             await this.CreateUserNotificationAsync(userId, requestDto);
         }
@@ -49,7 +49,7 @@ namespace LightNap.Core.Notifications.Services
         /// </summary>
         /// <param name="role">The role for which to create notifications.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        public async Task CreateSystemNotificationForRoleAsync(string role, CreateNotificationDto requestDto)
+        public async Task CreateSystemNotificationForRoleAsync(string role, CreateNotificationRequestDto requestDto)
         {
             foreach (var user in await userManager.GetUsersInRoleAsync(role))
             {
@@ -62,7 +62,7 @@ namespace LightNap.Core.Notifications.Services
         /// </summary>
         /// <param name="claim">The claim to identify users for the notification.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        public async Task CreateSystemNotificationForClaimAsync(ClaimDto claim, CreateNotificationDto requestDto)
+        public async Task CreateSystemNotificationForClaimAsync(ClaimDto claim, CreateNotificationRequestDto requestDto)
         {
             foreach (var user in await userManager.GetUsersForClaimAsync(claim.ToClaim()))
             {
@@ -112,7 +112,7 @@ namespace LightNap.Core.Notifications.Services
         /// <param name="userId">The ID of the user whose notifications to search.</param>
         /// <param name="requestDto">The search criteria for the notifications.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the search results data transfer object.</returns>
-        public async Task<NotificationSearchResultsDto> SearchNotificationsAsync(string userId, SearchNotificationsDto requestDto)
+        public async Task<NotificationSearchResultsDto> SearchNotificationsAsync(string userId, SearchNotificationsRequestDto requestDto)
         {
             IQueryable<Notification> baseQuery = db.Notifications.Where(n => n.UserId == userId);
 
@@ -162,7 +162,7 @@ namespace LightNap.Core.Notifications.Services
         /// </summary>
         /// <param name="requestDto">The data transfer object containing the search criteria.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the search results.</returns>
-        public async Task<NotificationSearchResultsDto> SearchMyNotificationsAsync(SearchNotificationsDto requestDto)
+        public async Task<NotificationSearchResultsDto> SearchMyNotificationsAsync(SearchNotificationsRequestDto requestDto)
         {
             return await this.SearchNotificationsAsync(userContext.GetUserId(), requestDto);
         }

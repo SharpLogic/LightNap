@@ -98,7 +98,7 @@ namespace LightNap.Core.Profile.Services
         /// </summary>  
         /// <param name="requestDto">The data transfer object containing the updated profile information.</param>  
         /// <returns>A <see cref="ProfileDto"/> with the updated profile.</returns>  
-        public async Task<ProfileDto> UpdateProfileAsync(UpdateProfileDto requestDto)
+        public async Task<ProfileDto> UpdateProfileAsync(UpdateProfileRequestDto requestDto)
         {
             var user = await db.Users.FindAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to update profile.");
 

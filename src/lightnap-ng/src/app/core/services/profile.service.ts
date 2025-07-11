@@ -136,27 +136,27 @@ export class ProfileService {
   /**
    * @method updateSettings
    * @description Updates the application settings.
-   * @param {ApplicationSettingsDto} browserSettings - The new application settings to be updated.
+   * @param {ApplicationSettingsDto} applicationSettings - The new application settings to be updated.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  updateSettings(browserSettings: ApplicationSettingsDto) {
+  updateSettings(applicationSettings: ApplicationSettingsDto) {
     if (this.#settings) {
-      this.#settings = browserSettings;
+      this.#settings = applicationSettings;
     }
-    return this.#dataService.updateSettings(browserSettings);
+    return this.#dataService.updateSettings(applicationSettings);
   }
 
   /**
    * @method updateStyleSettings
    * @description Updates the style settings of the application.
-   * @param {LayoutConfigDto} styleSettings - The new style settings to be updated.
+   * @param {LayoutConfigDto} layoutConfig - The new style settings to be updated.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  updateStyleSettings(styleSettings: LayoutConfigDto) {
+  updateStyleSettings(layoutConfig: LayoutConfigDto) {
     return this.getSettings().pipe(
       switchMap(response => {
-        if (!response || JSON.stringify(response.style) === JSON.stringify(styleSettings)) return of(response);
-        return this.updateSettings({ ...response, style: styleSettings });
+        if (!response || JSON.stringify(response.style) === JSON.stringify(layoutConfig)) return of(response);
+        return this.updateSettings({ ...response, style: layoutConfig });
       })
     );
   }

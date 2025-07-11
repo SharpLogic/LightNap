@@ -19,28 +19,28 @@ namespace LightNap.Core.Notifications.Interfaces
         /// <param name="userId">The ID of the user.</param>
         /// <param name="requestDto">The search criteria.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the search results DTO.</returns>
-        Task<NotificationSearchResultsDto> SearchNotificationsAsync(string userId, SearchNotificationsDto requestDto);
+        Task<NotificationSearchResultsDto> SearchNotificationsAsync(string userId, SearchNotificationsRequestDto requestDto);
 
         /// <summary>
         /// Creates a notification for a specific user. Only use this method if you have authorized the workflow.
         /// </summary>
         /// <param name="userId">The ID of the user to notify.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        Task CreateSystemNotificationForUserAsync(string userId, CreateNotificationDto requestDto);
+        Task CreateSystemNotificationForUserAsync(string userId, CreateNotificationRequestDto requestDto);
 
         /// <summary>
         /// Creates a notification for all users in a specified role. Only use this method if you have authorized the workflow.
         /// </summary>
         /// <param name="role">The role for which to create notifications.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        Task CreateSystemNotificationForRoleAsync(string role, CreateNotificationDto requestDto);
+        Task CreateSystemNotificationForRoleAsync(string role, CreateNotificationRequestDto requestDto);
 
         /// <summary>
         /// Creates a notification for all users with a specified claim. Only use this method if you have authorized the workflow.
         /// </summary>
         /// <param name="claim">The claim to identify users for the notification.</param>
         /// <param name="requestDto">The notification data transfer object containing the notification details.</param>
-        Task CreateSystemNotificationForClaimAsync(ClaimDto claim, CreateNotificationDto requestDto);
+        Task CreateSystemNotificationForClaimAsync(ClaimDto claim, CreateNotificationRequestDto requestDto);
 
         /// <summary>
         /// Marks a notification as read by its ID.
@@ -61,7 +61,7 @@ namespace LightNap.Core.Notifications.Interfaces
         /// </summary>
         /// <param name="requestDto">The data transfer object containing the search criteria.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a <see cref="NotificationSearchResultsDto"/> with the search results.</returns>
-        Task<NotificationSearchResultsDto> SearchMyNotificationsAsync(SearchNotificationsDto requestDto);
+        Task<NotificationSearchResultsDto> SearchMyNotificationsAsync(SearchNotificationsRequestDto requestDto);
 
         /// <summary>
         /// Marks all notifications as read for the requesting user.

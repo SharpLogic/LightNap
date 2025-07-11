@@ -100,7 +100,7 @@ namespace LightNap.Core.Tests.Services
         public async Task UpdateProfile_ShouldUpdateUserProfile()
         {
             // Arrange
-            var updateProfileDto = new UpdateProfileDto
+            var updateProfileDto = new UpdateProfileRequestDto
             {
                 // Set properties to update
             };
@@ -133,7 +133,7 @@ namespace LightNap.Core.Tests.Services
             tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
             var emailServiceMock = new Mock<IEmailService>();
             var notificationServiceMock = new Mock<INotificationService>();
-            notificationServiceMock.Setup(ns => ns.CreateSystemNotificationForRoleAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationDto>()));
+            notificationServiceMock.Setup(ns => ns.CreateSystemNotificationForRoleAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationRequestDto>()));
             var signInManager = this._serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
             var logger = this._serviceProvider.GetRequiredService<ILogger<IdentityService>>();
             var applicationSettings = Options.Create(

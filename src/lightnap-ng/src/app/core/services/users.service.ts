@@ -27,11 +27,11 @@ export class UsersService {
   /**
    * Updates a user by their ID.
    * @param {string} userId - The ID of the user to update.
-   * @param {UpdateAdminUserRequestDto} updateAdminUser - The update request object.
+   * @param {UpdateAdminUserRequestDto} updateAdminUserRequest - The update request object.
    * @returns {Observable<AdminUserDto>} An observable with the updated user.
    */
-  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequestDto) {
-    return this.#dataService.updateUser(userId, updateAdminUser);
+  updateUser(userId: string, updateAdminUserRequest: UpdateAdminUserRequestDto) {
+    return this.#dataService.updateUser(userId, updateAdminUserRequest);
   }
 
   /**
@@ -45,11 +45,11 @@ export class UsersService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {AdminSearchUsersRequestDto} searchAdminUsers - The search criteria.
+   * @param {AdminSearchUsersRequestDto} adminSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<AdminUserDto>>} An observable containing the search results.
    */
-  searchUsers(searchAdminUsers: AdminSearchUsersRequestDto) {
-    return this.#dataService.searchUsers(searchAdminUsers);
+  searchUsers(adminSearchUsersRequest: AdminSearchUsersRequestDto) {
+    return this.#dataService.searchUsers(adminSearchUsersRequest);
   }
 
   /**
