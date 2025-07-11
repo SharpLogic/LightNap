@@ -1,9 +1,9 @@
 import { loggedInGuard } from "@core/guards/logged-in.guard";
 import { roleGuard } from "@core/guards/role.guard";
-import { PublicLayoutComponent } from "@layout/components/layouts/public-layout/public-layout.component";
+import { PublicLayoutComponent } from "@core/layout/components/layouts/public-layout/public-layout.component";
 import { Routes as AdminRoutes } from "../admin/components/pages/routes";
 import { Routes as IdentityRoutes } from "../identity/components/pages/routes";
-import { AppLayoutComponent } from "../layout/components/layouts/app-layout/app-layout.component";
+import { AppLayoutComponent } from "@core/layout/components/layouts/app-layout/app-layout.component";
 import { Routes as ProfileRoutes } from "../profile/components/pages/routes";
 import { Routes as PublicRoutes } from "../public/components/pages/routes";
 import { Routes as UserRoutes } from "../user/components/pages/routes";

@@ -3,11 +3,11 @@ import { CommonModule } from "@angular/common";
 import { Component, HostBinding, inject, Input, input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { LayoutService } from "@core/layout/services/layout.service";
+import { MenuService } from "@core/layout/services/menu.service";
 import { MenuItem } from "primeng/api";
 import { RippleModule } from "primeng/ripple";
 import { filter } from "rxjs/operators";
-import { LayoutService } from "src/app/layout/services/layout.service";
-import { MenuService } from "src/app/layout/services/menu.service";
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

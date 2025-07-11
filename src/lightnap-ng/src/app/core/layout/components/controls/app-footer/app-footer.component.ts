@@ -1,5 +1,4 @@
-import { Component, inject } from "@angular/core";
-import { LayoutService } from "src/app/layout/services/layout.service";
+import { Component } from "@angular/core";
 
 @Component({
   selector: "app-footer",

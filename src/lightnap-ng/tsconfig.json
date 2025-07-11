@@ -18,22 +18,10 @@
         "target": "ES2022",
         "module": "ES2022",
         "paths": {
-            "@admin": ["src/app/admin"],
-            "@admin/*": ["src/app/admin/*"],
             "@core": ["src/app/core"],
             "@core/*": ["src/app/core/*"],
-            "@identity": ["src/app/identity"],
-            "@identity/*": ["src/app/identity/*"],
-            "@layout": ["src/app/layout"],
-            "@layout/*": ["src/app/layout/*"],
-            "@profile": ["src/app/profile"],
-            "@profile/*": ["src/app/profile/*"],
-            "@public": ["src/app/public"],
-            "@public/*": ["src/app/public/*"],
             "@routing": ["src/app/routing"],
             "@routing/*": ["src/app/routing/*"],
-            "@user": ["src/app/user"],
-            "@user/*": ["src/app/user/*"]
         }
     },
     "angularCompilerOptions": {

@@ -2,13 +2,13 @@ import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
-import { IdentityCardComponent } from "@identity/components/controls/identity-card/identity-card.component";
 import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputOtpModule } from "primeng/inputotp";
 import { finalize } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
+import { IdentityCardComponent } from "../../controls/identity-card/identity-card.component";
 
 @Component({
   standalone: true,

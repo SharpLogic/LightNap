@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, PLATFORM_ID, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { LayoutService } from "@layout/services/layout.service";
+import { LayoutService } from "@core/layout/services/layout.service";
 import { SelectButtonModule } from "primeng/selectbutton";
 
 @Component({

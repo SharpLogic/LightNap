@@ -3,12 +3,12 @@ import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { IdentityService } from "@core";
+import { LayoutService } from "@core/layout/services/layout.service";
 import { RoutePipe } from "@routing";
 import { SharedModule } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
-import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   standalone: true,

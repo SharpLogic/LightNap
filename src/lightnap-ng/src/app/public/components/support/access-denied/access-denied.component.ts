@@ -2,11 +2,11 @@ import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ErrorApiResponse, ToastService } from "@core";
+import { LayoutService } from "@core/layout/services/layout.service";
+import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService, RoutePipe } from "@routing";
 import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
-import { LayoutService } from "src/app/layout/services/layout.service";
 
 @Component({
   standalone: true,
