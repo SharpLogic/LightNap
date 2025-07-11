@@ -4,7 +4,7 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { ConfirmPopupComponent, RoleDto } from "@core";
-import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { RoutePipe } from "@pages";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";

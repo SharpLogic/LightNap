@@ -5,7 +5,7 @@ import { API_URL_ROOT } from "@core";
 @Injectable({
   providedIn: "root",
 })
-export class DataService {
+export class UserDataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}service/`;
+  #apiUrlRoot = `${inject(API_URL_ROOT)}user/`;
 }

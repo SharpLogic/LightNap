@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, Output, forwardRef, inject, signal } from "@angular/core";
-import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { AdminUserDto, PublicSearchUsersRequestDto } from "@core/api/dtos";
+import { Component, forwardRef, inject, Input, Output, EventEmitter, signal } from "@angular/core";
+import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
+import { AdminUserDto, PublicSearchUsersRequestDto } from "@core/backend-api";
 import { UsersService } from "@core/services/users.service";
 import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplete";
 import { finalize } from "rxjs";

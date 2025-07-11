@@ -2,12 +2,12 @@ import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto } from "@core/api/dtos";
-import { IdentityDataService } from "@core/api/services/identity-data.service";
+import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
 import { RouteAliasService } from "@pages";
-import { ReplaySubject, filter, take, finalize, distinctUntilChanged, map, of, switchMap, tap } from "rxjs";
+import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
+import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto } from "@core/backend-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.
@@ -326,14 +326,14 @@ export class IdentityService {
     );
   }
 
-    /**
-     * @method doesUserHavePermission
-     * @description Checks if the user has any of the specified roles or claims.
-     * @param {Array<string>} allowedRoles - The roles to check for.
-     * @param {Array<ClaimDto>} allowedClaims - The claims to check for.
-     * @returns {boolean} True if the user has any of the specified roles or claims, false otherwise.
-     * @remarks This is an "any" check. To check for "all" (cumulative permissions), use multiple calls.
-     */
+  /**
+   * @method doesUserHavePermission
+   * @description Checks if the user has any of the specified roles or claims.
+   * @param {Array<string>} allowedRoles - The roles to check for.
+   * @param {Array<ClaimDto>} allowedClaims - The claims to check for.
+   * @returns {boolean} True if the user has any of the specified roles or claims, false otherwise.
+   * @remarks This is an "any" check. To check for "all" (cumulative permissions), use multiple calls.
+   */
   doesUserHavePermission(allowedRoles: Array<string>, allowedClaims: Array<ClaimDto>) {
     return this.isUserInAnyRole(allowedRoles) || this.doesUserHaveAnyClaim(allowedClaims);
   }

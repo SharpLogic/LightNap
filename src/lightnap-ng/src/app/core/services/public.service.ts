@@ -1,16 +1,6 @@
 import { Injectable, inject } from "@angular/core";
-import { AdminUserWithRoles, ErrorApiResponse, RoleWithAdminUsers } from "@core/api";
-import {
-  RoleDto,
-  AdminUpdateUserRequestDto,
-  AdminSearchUsersRequestDto,
-  ClaimDto,
-  PublicUserDto,
-  PublicSearchUsersRequestDto,
-  PagedResponseDto,
-} from "@core/api/dtos";
-import { UsersDataService } from "@core/api/services/users-data.service";
-import { Observable, of, tap, map, forkJoin, switchMap, throwError } from "rxjs";
+import { PublicUserDto, PublicSearchUsersRequestDto, PagedResponseDto } from "@core/backend-api";
+import { Observable, of } from "rxjs";
 import { UsersService } from "./users.service";
 
 /**

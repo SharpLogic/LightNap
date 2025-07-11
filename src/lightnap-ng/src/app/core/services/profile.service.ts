@@ -1,9 +1,9 @@
 import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ApplicationSettingsDto, UpdateProfileRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmChangeEmailRequestDto, LayoutConfigDto } from "@core/api";
-import { ProfileDataService } from "@core/api/services/profile-data.service";
 import { filter, of, tap, switchMap } from "rxjs";
 import { IdentityService } from "./identity.service";
+import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
+import { ApplicationSettingsDto, UpdateProfileRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmChangeEmailRequestDto, LayoutConfigDto } from "@core/backend-api";
 
 @Injectable({
   providedIn: "root",

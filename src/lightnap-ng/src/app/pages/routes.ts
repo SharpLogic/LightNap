@@ -7,7 +7,7 @@ import { AppRoute } from "./api/models/app-route";
 import { Routes as IdentityRoutes } from "./identity/routes";
 import { Routes as ProfileRoutes } from "./profile/routes";
 import { Routes as PublicRoutes } from "./public/routes";
-import { Routes as UserRoutes } from "./user/routes";
+import { Routes as HomeRoutes } from "./home/routes";
 
 export const Routes: AppRoute[] = [
   { path: "", component: PublicLayoutComponent, children: PublicRoutes },
@@ -16,7 +16,7 @@ export const Routes: AppRoute[] = [
     component: AppLayoutComponent,
     canActivate: [loggedInGuard],
     children: [
-      { path: "home", data: { breadcrumb: "Home" }, children: UserRoutes },
+      { path: "home", data: { breadcrumb: "Home" }, children: HomeRoutes },
       { path: "profile", data: { breadcrumb: "Profile" }, children: ProfileRoutes },
     ],
   },

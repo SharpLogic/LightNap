@@ -1,4 +1,4 @@
-export * from "./api";
+export * from "./backend-api";
 export * from "./components";
 export * from "./directives";
 export * from "./helpers";

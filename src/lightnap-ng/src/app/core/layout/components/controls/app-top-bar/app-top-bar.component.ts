@@ -6,7 +6,7 @@ import { RoutePipe } from "@pages";
 import { MenuItem } from "primeng/api";
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfiguratorComponent } from "../app-configurator/app-configurator.component";
-import { NotificationsButtonComponent } from "@core/components/controls/notifications-button/notifications-button.component";
+import { NotificationsButtonComponent } from "@core/components/notifications-button/notifications-button.component";
 
 @Component({
   selector: "app-top-bar",

@@ -2,7 +2,7 @@ import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService } from "@core";
-import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { RouteAliasService, RoutePipe } from "@pages";
 import { ButtonModule } from "primeng/button";
