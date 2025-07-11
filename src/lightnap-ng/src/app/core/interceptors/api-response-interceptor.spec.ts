@@ -95,6 +95,7 @@ describe("apiResponseInterceptor", () => {
     TestBed.runInInjectionContext(() => {
       apiResponseInterceptor(request, next).subscribe({
         error: (event: HttpErrorApiResponse<any>) => {
+          expect(event).toBeInstanceOf(HttpErrorApiResponse);
           done();
         },
       });
