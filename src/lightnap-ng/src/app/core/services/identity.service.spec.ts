@@ -1,12 +1,12 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { NewPasswordRequestDto, RegisterRequestDto, ResetPasswordRequestDto, VerifyCodeRequestDto } from "@core/api/dtos";
-import { IdentityDataService } from "@core/api/services/identity-data.service";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
+import { RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto } from "@core/backend-api";
+import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
 
 describe("IdentityService", () => {
   let service: IdentityService;

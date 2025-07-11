@@ -1,11 +1,11 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { ApplicationSettingsDto, ChangePasswordRequestDto, LayoutConfigDto, UpdateProfileRequestDto } from "@core/api/dtos";
-import { ProfileDataService } from "@core/api/services/profile-data.service";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { ProfileService } from "./profile.service";
 import { TimerService } from "./timer.service";
+import { UpdateProfileRequestDto, ChangePasswordRequestDto, ApplicationSettingsDto, LayoutConfigDto } from "@core/backend-api";
+import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 
 describe("ProfileService", () => {
   let service: ProfileService;

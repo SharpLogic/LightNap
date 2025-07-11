@@ -1,9 +1,9 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { AdminSearchUsersRequestDto, AdminUpdateUserRequestDto, AdminUserDto, RoleDto } from "@core/api/dtos";
-import { UsersDataService } from "@core/api/services/users-data.service";
 import { of } from "rxjs";
 import { UsersService } from "./users.service";
+import { AdminUpdateUserRequestDto, AdminSearchUsersRequestDto, RoleDto, AdminUserDto } from "@core/backend-api";
+import { UsersDataService } from "@core/backend-api/services/users-data.service";
 
 describe("UsersService", () => {
   let service: UsersService;
