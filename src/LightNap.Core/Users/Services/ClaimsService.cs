@@ -70,7 +70,7 @@ namespace LightNap.Core.Users.Services
         /// <param name="userId">The unique identifier of the user to whom the claim will be added. Cannot be null or empty.</param>
         /// <param name="claim">The claim to add to the user. Cannot be null.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task AddClaimToUserAsync(string userId, ClaimDto claim)
+        public async Task AddUserClaimAsync(string userId, ClaimDto claim)
         {
             userContext.AssertAdministrator();
             var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
@@ -86,7 +86,7 @@ namespace LightNap.Core.Users.Services
         /// <param name="userId">The unique identifier of the user from whom the claim will be removed. Cannot be null or empty.</param>
         /// <param name="claim">The claim to be removed from the user. Cannot be null.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task RemoveClaimFromUserAsync(string userId, ClaimDto claim)
+        public async Task RemoveUserClaimAsync(string userId, ClaimDto claim)
         {
             userContext.AssertAdministrator();
             var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");

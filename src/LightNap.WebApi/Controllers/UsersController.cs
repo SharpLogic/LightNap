@@ -182,9 +182,9 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> AddClaimToUser(string userId, ClaimDto claim)
+        public async Task<ApiResponseDto<bool>> AddUserClaim(string userId, ClaimDto claim)
         {
-            await claimsService.AddClaimToUserAsync(userId, claim);
+            await claimsService.AddUserClaimAsync(userId, claim);
             return new ApiResponseDto<bool>(true);
         }
 
@@ -199,9 +199,9 @@ namespace LightNap.WebApi.Controllers
         [HttpDelete("{userId}/claims")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> RemoveClaimFromUser(string userId, ClaimDto claim)
+        public async Task<ApiResponseDto<bool>> RemoveUserClaim(string userId, ClaimDto claim)
         {
-            await claimsService.RemoveClaimFromUserAsync(userId, claim);
+            await claimsService.RemoveUserClaimAsync(userId, claim);
             return new ApiResponseDto<bool>(true);
         }
 

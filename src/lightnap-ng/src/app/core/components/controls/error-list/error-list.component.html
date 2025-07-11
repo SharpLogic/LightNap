@@ -1,7 +1,7 @@
 @if (errorList().length) {
   <div>
     @for (error of errorList(); track error) {
-      <p-message severity="error" closable>{{ error }}</p-message>
+      <p-message severity="error" closable (onClose)="onClose(error)">{{ error }}</p-message>
     }
   </div>
 }

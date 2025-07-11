@@ -16,7 +16,7 @@ export class ErrorListComponent implements OnChanges {
 
   errorList = signal<Array<string>>([]);
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges) {
     const error = this.error();
     const errors = this.errors();
     const apiResponse = this.apiResponse();
@@ -29,5 +29,9 @@ export class ErrorListComponent implements OnChanges {
     } else {
       this.errorList.set([]);
     }
+  }
+
+  onClose(error: string) {
+    this.errorList.set(this.errorList().filter(e => e !== error));
   }
 }

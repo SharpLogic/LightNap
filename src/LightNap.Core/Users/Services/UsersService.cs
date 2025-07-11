@@ -56,7 +56,8 @@ namespace LightNap.Core.Users.Services
 
             IQueryable<ApplicationUser> query = db.Users.AsQueryable();
 
-            // Query for provided public parameters.
+            // Query for provided public parameters. The provided request potentially has all fields, so casting it down to the public request
+            // type makes it easier to limit querying done in this block to just the search fields supported by this privilege level.
             PublicSearchUsersRequestDto publicParameters = adminSearchUsersRequest;
             if (!string.IsNullOrWhiteSpace(publicParameters.Email))
             {

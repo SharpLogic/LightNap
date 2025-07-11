@@ -26,7 +26,7 @@ namespace LightNap.Core.Users.Interfaces
         /// <param name="userId">The unique identifier of the user to whom the claim will be added. Cannot be null or empty.</param>
         /// <param name="claim">The claim to add to the user. Cannot be null.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task AddClaimToUserAsync(string userId, ClaimDto claim);
+        Task AddUserClaimAsync(string userId, ClaimDto claim);
 
         /// <summary>
         /// Removes a specific claim from the specified user.
@@ -36,6 +36,6 @@ namespace LightNap.Core.Users.Interfaces
         /// <param name="userId">The unique identifier of the user from whom the claim will be removed. Cannot be null or empty.</param>
         /// <param name="claim">The claim to be removed from the user. Cannot be null.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task RemoveClaimFromUserAsync(string userId, ClaimDto claim);
+        Task RemoveUserClaimAsync(string userId, ClaimDto claim);
     }
 }

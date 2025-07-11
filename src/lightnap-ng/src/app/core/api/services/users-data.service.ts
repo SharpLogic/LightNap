@@ -63,11 +63,11 @@ export class UsersDataService {
     return this.#http.post<PagedResponseDto<UserClaimDto>>(`${this.#apiUrlRoot}claims/search`, searchAdminClaimsRequestDto);
   }
 
-  addClaimToUser(userId: string, claim: ClaimDto) {
+  addUserClaim(userId: string, claim: ClaimDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}${userId}/claims`, claim);
   }
 
-  removeClaimFromUser(userId: string, claim: ClaimDto) {
+  removeUserClaim(userId: string, claim: ClaimDto) {
     return this.#http.request<boolean>("delete", `${this.#apiUrlRoot}${userId}/claims`, { body: claim });
   }
 

@@ -16,6 +16,7 @@
           </div>
         </div>
       </form>
+      
       <p-table [value]="usersForClaim">
         <ng-template pTemplate="header">
           <tr>
@@ -44,6 +45,12 @@
           </tr>
         </ng-template>
       </p-table>
+
+      <form [formGroup]="addUserForm" class="flex gap-2 my-3" (ngSubmit)="addUserClaim()">
+        <people-picker formControlName="userId" />
+        <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!addUserForm.valid" />
+      </form>
+
       <error-list [errors]="errors()" />
     </p-panel>
   </ng-template>

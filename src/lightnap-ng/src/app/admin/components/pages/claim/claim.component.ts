@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, ConfirmPopupComponent } from "@core";
+import { AdminUserDto, ConfirmPopupComponent, PeoplePickerComponent } from "@core";
 import { ApiResponseComponent } from "@core/components/controls/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/controls/error-list/error-list.component";
 import { RouteAliasService, RoutePipe } from "@routing";
@@ -29,6 +29,7 @@ import { Observable } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
+    PeoplePickerComponent
   ],
 })
 export class ClaimComponent {
@@ -45,6 +46,11 @@ export class ClaimComponent {
     type: this.#fb.control("", [Validators.required]),
     value: this.#fb.control("", [Validators.required]),
   });
+
+  readonly addUserForm = this.#fb.group({
+    userId: this.#fb.control<string | null>(null, [Validators.required]),
+  });
+
   errors = signal(new Array<string>());
 
   usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
@@ -61,6 +67,16 @@ export class ClaimComponent {
     this.usersForClaim$.set(this.#adminService.getUsersWithClaim({ type: this.type(), value: this.value() }));
   }
 
+  addUserClaim() {
+    this.#adminService.addUserClaim(this.addUserForm.value.userId!, { type: this.type(), value: this.value() }).subscribe({
+      next: () => {
+        this.addUserForm.reset();
+        this.#refreshUsers();
+      },
+      error: response => this.errors.set(response.errorMessages),
+    });
+  }
+
   removeUserClaim(event: any, userId: string) {
     this.errors.set([]);
 
@@ -70,7 +86,7 @@ export class ClaimComponent {
       target: event.target,
       key: userId,
       accept: () => {
-        this.#adminService.removeClaimFromUser(userId, { type: this.type(), value: this.value() }).subscribe({
+        this.#adminService.removeUserClaim(userId, { type: this.type(), value: this.value() }).subscribe({
           next: () => this.#refreshUsers(),
           error: response => this.errors.set(response.errorMessages),
         });

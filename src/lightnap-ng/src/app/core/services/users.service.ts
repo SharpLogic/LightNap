@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { AdminUserWithRoles, ErrorApiResponse, RoleWithAdminUsers } from "@core/api";
-import { RoleDto, UpdateAdminUserRequestDto, AdminSearchUsersRequestDto, ClaimDto, AdminUserDto } from "@core/api/dtos";
+import { AdminSearchUsersRequestDto, AdminUserDto, ClaimDto, RoleDto, UpdateAdminUserRequestDto } from "@core/api/dtos";
 import { UsersDataService } from "@core/api/services/users-data.service";
-import { Observable, of, tap, map, forkJoin, switchMap, throwError } from "rxjs";
+import { Observable, forkJoin, map, of, switchMap, tap, throwError } from "rxjs";
 
 /**
  * Service for managing users and roles in the application. Note that this service should not be used directly, but rather accessed
@@ -165,8 +165,8 @@ export class UsersService {
    * @param {ClaimDto} claim - The claim to add.
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
-  addClaimToUser(userId: string, claim: ClaimDto) {
-    return this.#dataService.addClaimToUser(userId, claim);
+  addUserClaim(userId: string, claim: ClaimDto) {
+    return this.#dataService.addUserClaim(userId, claim);
   }
 
   /**
@@ -175,8 +175,8 @@ export class UsersService {
    * @param {ClaimDto} claim - The claim to remove.
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
-  removeClaimFromUser(userId: string, claim: ClaimDto) {
-    return this.#dataService.removeClaimFromUser(userId, claim);
+  removeUserClaim(userId: string, claim: ClaimDto) {
+    return this.#dataService.removeUserClaim(userId, claim);
   }
 
   /**

@@ -141,7 +141,7 @@ export class UserComponent implements OnChanges {
   removeClaim(claim: ClaimDto) {
     this.errors.set([]);
 
-    this.adminService.removeClaimFromUser(this.userId(), claim).subscribe({
+    this.adminService.removeUserClaim(this.userId(), claim).subscribe({
       next: () => this.#refreshClaims(),
       error: response => this.errors.set(response.errorMessages),
     });
@@ -150,7 +150,7 @@ export class UserComponent implements OnChanges {
   addClaim(claim: ClaimDto) {
     this.errors.set([]);
 
-    this.adminService.addClaimToUser(this.userId(), claim).subscribe({
+    this.adminService.addUserClaim(this.userId(), claim).subscribe({
       next: () => this.#refreshClaims(),
       error: response => this.errors.set(response.errorMessages),
     });

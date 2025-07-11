@@ -5,7 +5,7 @@
         <ng-template pTemplate="header">
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th>User Name</th>
+            <th class="whitespace-nowrap">User Name</th>
             <th width="100%">Email</th>
           </tr>
         </ng-template>
@@ -29,6 +29,12 @@
           </tr>
         </ng-template>
       </p-table>
+
+      <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserToRole()" >
+        <people-picker formControlName="userId" />
+        <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!form.valid" />
+      </form>
+
       <error-list [errors]="errors()" />
     </p-panel>
   </ng-template>

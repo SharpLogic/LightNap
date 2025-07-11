@@ -7,12 +7,9 @@ using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
-using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
 using LightNap.Core.Users.Interfaces;
-using LightNap.Core.Users.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace LightNap.Core.Users.Services
 {
@@ -58,7 +55,7 @@ namespace LightNap.Core.Users.Services
             userContext.AssertAdministrator();
 
             var users = await userManager.GetUsersInRoleAsync(role);
-            return users.ToAdminUserDtoList();
+            return users.OrderBy(user => user.UserName).ToAdminUserDtoList();
         }
 
         /// <summary>
