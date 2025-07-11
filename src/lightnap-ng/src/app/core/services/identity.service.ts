@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto } from "@core/api/dtos";
 import { IdentityDataService } from "@core/api/services/identity-data.service";
-import { RouteAliasService } from "@routing";
+import { RouteAliasService } from "@pages";
 import { ReplaySubject, filter, take, finalize, distinctUntilChanged, map, of, switchMap, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";

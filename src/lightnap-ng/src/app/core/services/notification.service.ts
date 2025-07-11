@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NotificationItem, SearchNotificationsRequestDto, PagedResponseDto, LatestNotifications, ApiResponseDto, NotificationDto } from "@core/api";
 import { ProfileDataService } from "@core/api/services/profile-data.service";
 import { RequestPollingManager } from "@core/helpers";
-import { RouteAliasService } from "@routing";
+import { RouteAliasService } from "@pages";
 import { ReplaySubject, tap, switchMap, map, combineLatest, finalize, of, forkJoin } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { UsersService } from "./users.service";

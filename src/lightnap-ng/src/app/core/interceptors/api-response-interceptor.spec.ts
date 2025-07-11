@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse 
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { HttpErrorApiResponse } from "@core";
-import { RouteAliasService } from "@routing";
+import { RouteAliasService } from "@pages";
 import { of, throwError } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
 import { environment } from "src/environments/environment";

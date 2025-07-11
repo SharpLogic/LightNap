@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
-import { RouteAliasService, RoutePipe } from "@routing";
+import { RouteAliasService, RoutePipe } from "@pages";
 import { MenuItem } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { OverlayBadgeModule } from "primeng/overlaybadge";

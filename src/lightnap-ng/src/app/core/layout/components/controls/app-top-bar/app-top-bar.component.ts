@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { LayoutService } from "@core/layout/services/layout.service";
-import { RoutePipe } from "@routing";
+import { RoutePipe } from "@pages";
 import { MenuItem } from "primeng/api";
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfiguratorComponent } from "../app-configurator/app-configurator.component";

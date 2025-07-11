@@ -9,12 +9,12 @@ import { apiResponseInterceptor } from "@core/interceptors/api-response-intercep
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { InitializationService } from "@core/services/initialization.service";
 import { PrependNameTitleStrategy } from "@core/strategies/prepend-name-title.strategy";
-import { Routes } from "@routing/routes";
-import { ConfirmationService, MessageService } from "primeng/api";
-import { AppComponent } from "./app/app.component";
-import { environment } from "./environments/environment";
-import { providePrimeNG } from "primeng/config";
 import Aura from "@primeng/themes/aura";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { providePrimeNG } from "primeng/config";
+import { AppComponent } from "./app/app.component";
+import { Routes } from "./app/pages/routes";
+import { environment } from "./environments/environment";
 
 if (environment.production) {
   enableProdMode();

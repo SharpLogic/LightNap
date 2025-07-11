@@ -20,8 +20,8 @@
         "paths": {
             "@core": ["src/app/core"],
             "@core/*": ["src/app/core/*"],
-            "@routing": ["src/app/routing"],
-            "@routing/*": ["src/app/routing/*"],
+            "@pages": ["src/app/pages"],
+            "@pages/*": ["src/app/pages/*"],
         }
     },
     "angularCompilerOptions": {
