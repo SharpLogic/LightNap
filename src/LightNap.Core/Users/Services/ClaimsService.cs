@@ -24,7 +24,50 @@ namespace LightNap.Core.Users.Services
         /// </summary>
         /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        public async Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
+        public async Task<PagedResponse<ClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
+        {
+            userContext.AssertAdministrator();
+
+            var query = db.UserClaims.AsQueryable()
+                .Select(claim => new ClaimDto
+                {
+                    Type = claim.ClaimType!,
+                    Value = claim.ClaimValue!
+                })
+                .Distinct();
+
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.Type))
+            {
+                query = query.Where(claim => claim.Type == searchClaimsRequest.Type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.Value))
+            {
+                query = query.Where(claim => claim.Value == searchClaimsRequest.Value);
+            }
+
+            int totalCount = await query.CountAsync();
+
+            if (searchClaimsRequest.PageNumber > 1)
+            {
+                query = query.Skip((searchClaimsRequest.PageNumber - 1) * searchClaimsRequest.PageSize);
+            }
+
+            var claims = await query
+                .OrderBy(claim => claim.Type)
+                .ThenBy(claim => claim.Value)
+                .Take(searchClaimsRequest.PageSize)
+                .ToListAsync();
+
+            return new PagedResponse<ClaimDto>(claims, searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
+        }
+
+        /// <summary>
+        /// Searches claims.
+        /// </summary>
+        /// <param name="searchClaimsRequest">The search parameters.</param>
+        /// <returns>The paginated list of claims.</returns>
+        public async Task<PagedResponse<UserClaimDto>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchClaimsRequest)
         {
             userContext.AssertAdministrator();
 
@@ -56,9 +99,10 @@ namespace LightNap.Core.Users.Services
                 .OrderBy(claim => claim.UserId)
                 .ThenBy(claim => claim.ClaimType)
                 .ThenBy(claim => claim.ClaimValue)
+                .Take(searchClaimsRequest.PageSize)
                 .ToListAsync();
 
-            return new PagedResponse<UserClaimDto>(claims.ToDtoList(), searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
+            return new PagedResponse<UserClaimDto>(claims.ToUserClaimDtoList(), searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
         }
 
         /// <summary>
@@ -73,6 +117,12 @@ namespace LightNap.Core.Users.Services
         public async Task AddUserClaimAsync(string userId, ClaimDto claim)
         {
             userContext.AssertAdministrator();
+
+            if (await db.UserClaims.AnyAsync(c => c.UserId == userId && c.ClaimType == claim.Type && c.ClaimValue == claim.Value))
+            {
+                throw new UserFriendlyApiException("This user already has this claim.");
+            }
+
             var user = await db.Users.FindAsync(userId) ?? throw new UserFriendlyApiException("The specified user was not found.");
             var result = await userManager.AddClaimAsync(user, claim.ToClaim());
             if (!result.Succeeded) { throw new UserFriendlyApiException(result.Errors.Select(error => error.Description)); }

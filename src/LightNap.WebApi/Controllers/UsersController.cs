@@ -165,10 +165,23 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
         [HttpPost("claims/search")]
-        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<UserClaimDto>>), 200)]
-        public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<ClaimDto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponse<ClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
-            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchClaimsAsync(searchClaimsRequest));
+            return new ApiResponseDto<PagedResponse<ClaimDto>>(await claimsService.SearchClaimsAsync(searchClaimsRequest));
+        }
+
+        /// <summary>
+        /// Searches claims.
+        /// </summary>
+        /// <param name="searchUserClaimsRequest">The search parameters.</param>
+        /// <returns>The list of matching claims.</returns>
+        /// <response code="200">Returns the list of claims.</response>
+        [HttpPost("user-claims/search")]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<UserClaimDto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchUserClaimsRequest)
+        {
+            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchUserClaimsAsync(searchUserClaimsRequest));
         }
 
         /// <summary>

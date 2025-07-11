@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { AdminUserWithRoles, ErrorApiResponse, RoleWithAdminUsers } from "@core/api";
 import {
   RoleDto,
-  UpdateAdminUserRequestDto,
+  AdminUpdateUserRequestDto,
   AdminSearchUsersRequestDto,
   ClaimDto,
   PublicUserDto,

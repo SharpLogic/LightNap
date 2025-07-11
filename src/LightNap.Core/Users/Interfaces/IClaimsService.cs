@@ -15,7 +15,14 @@ namespace LightNap.Core.Users.Interfaces
         /// </summary>
         /// <param name="searchRequest">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        Task<PagedResponse<UserClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchRequest);
+        Task<PagedResponse<ClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchRequest);
+
+        /// <summary>
+        /// Searches user claims.
+        /// </summary>
+        /// <param name="searchRequest">The search parameters.</param>
+        /// <returns>The paginated list of claims.</returns>
+        Task<PagedResponse<UserClaimDto>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchRequest);
 
         /// <summary>
         /// Adds a claim to the specified user asynchronously.

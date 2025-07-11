@@ -1,6 +1,6 @@
 import { Injectable, inject } from "@angular/core";
 import { AdminUserWithRoles, ErrorApiResponse, RoleWithAdminUsers } from "@core/api";
-import { AdminSearchUsersRequestDto, AdminUserDto, ClaimDto, RoleDto, UpdateAdminUserRequestDto } from "@core/api/dtos";
+import { AdminSearchUsersRequestDto, AdminUserDto, ClaimDto, RoleDto, AdminUpdateUserRequestDto, SearchClaimsRequestDto } from "@core/api/dtos";
 import { UsersDataService } from "@core/api/services/users-data.service";
 import { Observable, forkJoin, map, of, switchMap, tap, throwError } from "rxjs";
 
@@ -27,10 +27,10 @@ export class UsersService {
   /**
    * Updates a user by their ID.
    * @param {string} userId - The ID of the user to update.
-   * @param {UpdateAdminUserRequestDto} updateAdminUserRequest - The update request object.
+   * @param {AdminUpdateUserRequestDto} updateAdminUserRequest - The update request object.
    * @returns {Observable<AdminUserDto>} An observable with the updated user.
    */
-  updateUser(userId: string, updateAdminUserRequest: UpdateAdminUserRequestDto) {
+  updateUser(userId: string, updateAdminUserRequest: AdminUpdateUserRequestDto) {
     return this.#dataService.updateUser(userId, updateAdminUserRequest);
   }
 
@@ -136,11 +136,20 @@ export class UsersService {
 
   /**
    * Searches for claims based on the search criteria.
+   * @param {SearchClaimsRequestDto} searchClaims - The search criteria.
+   * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
+   */
+  searchClaims(searchClaims: SearchClaimsRequestDto) {
+    return this.#dataService.searchClaims(searchClaims);
+  }
+
+  /**
+   * Searches for claims based on the search criteria.
    * @param {SearchAdminClaimsRequestDto} searchAdminClaims - The search criteria.
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   getUserClaims(userId: string) {
-    return this.#dataService.searchClaims({ userId }).pipe(map(response => response.data || new Array<ClaimDto>()));
+    return this.#dataService.searchUserClaims({ userId }).pipe(map(response => response.data || new Array<ClaimDto>()));
   }
 
   /**
@@ -149,7 +158,7 @@ export class UsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   getUsersWithClaim(claim: ClaimDto) {
-    return this.#dataService.searchClaims({ type: claim.type, value: claim.value }).pipe(
+    return this.#dataService.searchUserClaims({ type: claim.type, value: claim.value }).pipe(
       switchMap(response => {
         if (!response.data || response.data.length === 0) {
           return of(new Array<AdminUserDto>());

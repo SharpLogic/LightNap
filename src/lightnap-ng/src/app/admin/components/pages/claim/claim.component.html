@@ -1,22 +1,17 @@
 <api-response [apiResponse]="usersForClaim$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
   <ng-template #success let-usersForClaim>
     <p-panel header="Manage Claim">
-      <form [formGroup]="form" class="my-2" (ngSubmit)="updateClaim()">
-        <div class="flex items-center gap-1">
-          <div class="flex flex-col">
-            <input pInputText placeholder="Claim Type" formControlName="type" />
-          </div>
-          <div class="flex flex-col">
-            <input pInputText placeholder="Claim Value" formControlName="value" />
-          </div>
-          <div>
-            <div class="flex flex-col justify-end h-full">
-              <p-button type="submit" label="Search Claim" icon="pi pi-search" [disabled]="!form.valid" />
-            </div>
-          </div>
+      <div class="flex gap-8">
+        <div class="flex flex-col">
+          <span>Claim Type</span>
+          <span class="font-semibold">{{ type() }}</span>
         </div>
-      </form>
-      
+        <div class="flex flex-col">
+          <span>Claim Value</span>
+          <span class="font-semibold">{{ value() }}</span>
+        </div>
+      </div>
+
       <p-table [value]="usersForClaim">
         <ng-template pTemplate="header">
           <tr>
@@ -46,9 +41,9 @@
         </ng-template>
       </p-table>
 
-      <form [formGroup]="addUserForm" class="flex gap-2 my-3" (ngSubmit)="addUserClaim()">
+      <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserClaim()">
         <people-picker formControlName="userId" />
-        <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!addUserForm.valid" />
+        <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!form.valid" />
       </form>
 
       <error-list [errors]="errors()" />

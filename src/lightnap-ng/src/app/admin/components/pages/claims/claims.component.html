@@ -1,0 +1,47 @@
+<api-response [apiResponse]="claims$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
+  <ng-template #success let-results>
+    <p-panel header="Search Claims">
+      <form [formGroup]="form" class="my-2" (ngSubmit)="search()">
+        <div class="flex items-center gap-1">
+          <div class="flex flex-col">
+            <input pInputText placeholder="Claim Type" formControlName="type" />
+          </div>
+          <div class="flex flex-col">
+            <input pInputText placeholder="Claim Value" formControlName="value" />
+          </div>
+          <div>
+            <div class="flex flex-col justify-end h-full">
+              <p-button type="submit" label="Search Claim" icon="pi pi-search" [disabled]="!form.valid" />
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <p-table [value]="results.data">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="whitespace-nowrap">Claim Type</th>
+            <th width="100%">Claim Value</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-claim>
+          <tr>
+            <td>
+              <a [routerLink]="'admin-claim' | route: [claim.type, claim.value]"> {{ claim.type }}</a>
+            </td>
+            <td>
+              {{ claim.value }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="100%">There are no claims.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</api-response>

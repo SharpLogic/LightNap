@@ -2,14 +2,15 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core/helpers";
 import {
-  AdminUserDto,
-  UpdateAdminUserRequestDto,
-  AdminSearchUsersRequestDto,
-  PagedResponseDto,
-  RoleDto,
-  SearchAdminClaimsRequestDto,
-  UserClaimDto,
-  ClaimDto,
+    AdminSearchUsersRequestDto,
+    AdminUpdateUserRequestDto,
+    AdminUserDto,
+    ClaimDto,
+    PagedResponseDto,
+    RoleDto,
+    SearchClaimsRequestDto,
+    SearchUserClaimsRequestDto,
+    UserClaimDto,
 } from "../dtos";
 
 @Injectable({
@@ -27,7 +28,7 @@ export class UsersDataService {
     return this.#http.post<Array<AdminUserDto>>(`${this.#apiUrlRoot}get-by-ids`, userIds);
   }
 
-  updateUser(userId: string, updateAdminUser: UpdateAdminUserRequestDto) {
+  updateUser(userId: string, updateAdminUser: AdminUpdateUserRequestDto) {
     return this.#http.put<AdminUserDto>(`${this.#apiUrlRoot}${userId}`, updateAdminUser);
   }
 
@@ -59,8 +60,12 @@ export class UsersDataService {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}roles/${role}/${userId}`);
   }
 
-  searchClaims(searchAdminClaimsRequestDto: SearchAdminClaimsRequestDto) {
-    return this.#http.post<PagedResponseDto<UserClaimDto>>(`${this.#apiUrlRoot}claims/search`, searchAdminClaimsRequestDto);
+  searchClaims(searchClaimsRequestDto: SearchClaimsRequestDto) {
+    return this.#http.post<PagedResponseDto<ClaimDto>>(`${this.#apiUrlRoot}claims/search`, searchClaimsRequestDto);
+  }
+
+  searchUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
+    return this.#http.post<PagedResponseDto<UserClaimDto>>(`${this.#apiUrlRoot}user-claims/search`, searchUserClaimsRequestDto);
   }
 
   addUserClaim(userId: string, claim: ClaimDto) {

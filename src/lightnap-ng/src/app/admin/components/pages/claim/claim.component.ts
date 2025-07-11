@@ -29,13 +29,12 @@ import { Observable } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    PeoplePickerComponent
+    PeoplePickerComponent,
   ],
 })
 export class ClaimComponent {
   readonly #adminService = inject(UsersService);
   readonly #confirmationService = inject(ConfirmationService);
-  readonly #routeAlias = inject(RouteAliasService);
 
   readonly type = input.required<string>();
   readonly value = input.required<string>();
@@ -43,11 +42,6 @@ export class ClaimComponent {
   readonly #fb = inject(FormBuilder);
 
   readonly form = this.#fb.group({
-    type: this.#fb.control("", [Validators.required]),
-    value: this.#fb.control("", [Validators.required]),
-  });
-
-  readonly addUserForm = this.#fb.group({
     userId: this.#fb.control<string | null>(null, [Validators.required]),
   });
 
@@ -57,10 +51,6 @@ export class ClaimComponent {
 
   ngOnChanges() {
     this.#refreshUsers();
-    this.form.setValue({
-      type: this.type(),
-      value: this.value(),
-    });
   }
 
   #refreshUsers() {
@@ -68,9 +58,11 @@ export class ClaimComponent {
   }
 
   addUserClaim() {
-    this.#adminService.addUserClaim(this.addUserForm.value.userId!, { type: this.type(), value: this.value() }).subscribe({
+    this.errors.set([]);
+
+    this.#adminService.addUserClaim(this.form.value.userId!, { type: this.type(), value: this.value() }).subscribe({
       next: () => {
-        this.addUserForm.reset();
+        this.form.reset();
         this.#refreshUsers();
       },
       error: response => this.errors.set(response.errorMessages),
@@ -92,9 +84,5 @@ export class ClaimComponent {
         });
       },
     });
-  }
-
-  updateClaim() {
-    this.#routeAlias.navigate("admin-claim", [this.form.value.type, this.form.value.value]);
   }
 }

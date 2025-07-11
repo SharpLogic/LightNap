@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { AdminUserDto, RoleDto, AdminSearchUsersRequestDto, UpdateAdminUserRequestDto } from "@core/api/dtos";
+import { AdminUserDto, RoleDto, AdminSearchUsersRequestDto, AdminUpdateUserRequestDto } from "@core/api/dtos";
 import { UsersDataService } from "@core/api/services/users-data.service";
 import { DataService } from "@user/services/data.service";
 import { of } from "rxjs";
@@ -48,7 +48,7 @@ describe("UsersService", () => {
 
   it("should update user", () => {
     const userId = "user-id";
-    const updateRequest: UpdateAdminUserRequestDto = {};
+    const updateRequest: AdminUpdateUserRequestDto = {};
     dataServiceSpy.updateUser.and.returnValue(of({} as any));
 
     service.updateUser(userId, updateRequest).subscribe();

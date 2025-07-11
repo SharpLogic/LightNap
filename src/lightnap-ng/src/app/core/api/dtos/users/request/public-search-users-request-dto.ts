@@ -2,7 +2,7 @@ import { PagedRequestDto } from "../../paged-request-dto";
 import { SearchUsersSortBy } from "./search-users-sort-by";
 
 /**
- * Interface representing a request to search for admin users.
+ * Interface representing a request to search for users.
  * Extends the PaginationRequest interface to include pagination properties.
  */
 export interface PublicSearchUsersRequestDto extends PagedRequestDto {

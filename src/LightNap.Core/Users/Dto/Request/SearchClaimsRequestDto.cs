@@ -8,11 +8,6 @@ namespace LightNap.Core.Users.Dto.Request
     public class SearchClaimsRequestDto : PaginationRequestDtoBase
     {
         /// <summary>
-        /// Filter by user.
-        /// </summary>
-        public string? UserId { get; set; }
-
-        /// <summary>
         /// Filter by claim type.
         /// </summary>
         public string? Type { get; set; }
