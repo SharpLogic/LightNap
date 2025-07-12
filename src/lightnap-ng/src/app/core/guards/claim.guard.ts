@@ -1,9 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
-import { ClaimDto } from "@identity/models";
-import { RouteAliasService } from "@pages";
+import { ClaimDto, IdentityService, RouteAliasService } from "@core";
 import { map, take } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
 
 export function claimGuard(claims: ClaimDto | Array<ClaimDto>, guardOptions?: { redirectTo?: Array<object> }) {
   return (next: ActivatedRouteSnapshot) => {

@@ -1,4 +1,4 @@
-import { AppRoute } from "../api/models/app-route";
+import { AppRoute } from "@core";
 
 export const Routes: AppRoute[] = [
   { path: "", title: "Admin | Home", data: { alias: "admin-home" }, loadComponent: () => import("./index/index.component").then(m => m.IndexComponent) },

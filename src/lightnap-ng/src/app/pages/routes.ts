@@ -3,7 +3,7 @@ import { roleGuard } from "@core/guards/role.guard";
 import { AppLayoutComponent } from "@core/layout/components/layouts/app-layout/app-layout.component";
 import { PublicLayoutComponent } from "@core/layout/components/layouts/public-layout/public-layout.component";
 import { Routes as AdminRoutes } from "./admin/routes";
-import { AppRoute } from "./api/models/app-route";
+import { AppRoute } from "../core/routing/models/app-route";
 import { Routes as IdentityRoutes } from "./identity/routes";
 import { Routes as ProfileRoutes } from "./profile/routes";
 import { Routes as PublicRoutes } from "./public/routes";

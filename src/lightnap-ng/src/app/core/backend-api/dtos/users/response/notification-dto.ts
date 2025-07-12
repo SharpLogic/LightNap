@@ -1,5 +1,5 @@
-import { NotificationStatus } from "../../../entities/notifications/notification-status";
-import { NotificationType } from "../../../entities/notifications/notification-type";
+import { NotificationStatus } from "../../../../notifications/entities/notification-status";
+import { NotificationType } from "../../../../notifications/entities/notification-type";
 
 /**
  * Represents an application notification.

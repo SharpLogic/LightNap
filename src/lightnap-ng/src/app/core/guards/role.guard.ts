@@ -1,8 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
 import { RoleNames } from "@core/backend-api";
-import { IdentityService } from "@core/services";
-import { RouteAliasService } from "@pages";
+import { IdentityService, RouteAliasService } from "@core";
 import { take, map } from "rxjs";
 
 export function roleGuard(roles: RoleNames | Array<RoleNames>, guardOptions?: { redirectTo?: Array<object> }) {

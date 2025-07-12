@@ -1,13 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, signal } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Component, inject, signal } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, ClaimDto, ConfirmPopupComponent, PagedResponseDto } from "@core";
+import { AdminUsersService, ClaimDto, PagedResponseDto, RoutePipe } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { UsersService } from "@core/services/users.service";
-import { RouteAliasService, RoutePipe } from "@pages";
-import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
@@ -31,7 +28,7 @@ import { Observable } from "rxjs";
   ],
 })
 export class ClaimsComponent {
-  readonly #adminService = inject(UsersService);
+  readonly #adminService = inject(AdminUsersService);
 
   readonly #fb = inject(FormBuilder);
 

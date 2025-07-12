@@ -4,8 +4,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { AdminUserDto, ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorListComponent, ListItem, SearchUsersSortBy, ToastService } from "@core";
-import { UsersService } from "@core/services/users.service";
-import { RoutePipe } from "@pages";
+import { AdminUsersService } from "@core";
+import { RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
@@ -35,7 +35,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 export class UsersComponent {
   readonly pageSize = 25;
 
-  readonly #adminService = inject(UsersService);
+  readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
   readonly #toast = inject(ToastService);
   readonly #fb = inject(FormBuilder);

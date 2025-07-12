@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
 import { IdentityService } from "@core/services/identity.service";
-import { RouteAliasService, RoutePipe } from "@pages";
+import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputGroupModule } from "primeng/inputgroup";
@@ -12,7 +12,7 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityCardComponent } from "../../controls/identity-card/identity-card.component";
+import { IdentityCardComponent } from "@core";
 
 @Component({
   standalone: true,

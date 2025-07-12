@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { RouteAliasService } from "@pages";
+import { RouteAliasService } from "@core";
 import { MenuItem } from "primeng/api";
 import { BehaviorSubject, combineLatest, debounceTime, Subject, tap } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";

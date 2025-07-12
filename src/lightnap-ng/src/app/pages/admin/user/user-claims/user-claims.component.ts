@@ -3,7 +3,7 @@ import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { ClaimDto, ConfirmPopupComponent } from "@core";
-import { RoutePipe } from "@pages";
+import { RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";

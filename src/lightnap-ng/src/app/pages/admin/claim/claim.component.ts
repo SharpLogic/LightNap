@@ -1,12 +1,10 @@
-import { UsersService } from "@core/services/users.service";
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, ConfirmPopupComponent, PeoplePickerComponent } from "@core";
+import { AdminUserDto, AdminUsersService, ConfirmPopupComponent, PeoplePickerComponent, RoutePipe } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { RouteAliasService, RoutePipe } from "@pages";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
@@ -33,7 +31,7 @@ import { Observable } from "rxjs";
   ],
 })
 export class ClaimComponent {
-  readonly #adminService = inject(UsersService);
+  readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
 
   readonly type = input.required<string>();

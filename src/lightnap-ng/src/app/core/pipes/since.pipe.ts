@@ -1,6 +1,6 @@
 import { DestroyRef, Pipe, PipeTransform, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { TimerService } from "@core";
+import { TimerService } from "@core/services/timer.service";
 import { map, of, startWith } from "rxjs";
 
 @Pipe({

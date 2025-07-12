@@ -3,7 +3,7 @@ import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { BlockUiService, ErrorListComponent } from "@core";
 import { ProfileService } from "@core/services/profile.service";
-import { RouteAliasService } from "@pages";
+import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from "primeng/inputtext";

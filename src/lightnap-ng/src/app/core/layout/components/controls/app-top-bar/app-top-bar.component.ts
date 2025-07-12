@@ -2,11 +2,10 @@ import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { LayoutService } from "@core/layout/services/layout.service";
-import { RoutePipe } from "@pages";
+import { NotificationsButtonComponent, RoutePipe } from "@core";
 import { MenuItem } from "primeng/api";
 import { StyleClassModule } from "primeng/styleclass";
 import { AppConfiguratorComponent } from "../app-configurator/app-configurator.component";
-import { NotificationsButtonComponent } from "@core/components/notifications-button/notifications-button.component";
 
 @Component({
   selector: "app-top-bar",

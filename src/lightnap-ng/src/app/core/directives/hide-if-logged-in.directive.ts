@@ -1,6 +1,6 @@
 import { Directive, OnInit, inject, ElementRef, DestroyRef, Renderer2 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { IdentityService } from "@core/services";
+import { IdentityService } from "@core";
 
 @Directive({
   selector: "[hideIfLoggedIn]",

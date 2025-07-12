@@ -1,7 +1,6 @@
 export * from "./api-response-type";
 export * from "./dtos";
 export * from "./empty-paged-response";
-export * from "./entities";
 export * from "./error-api-response";
 export * from "./http-error-api-response";
 export * from "./option-dto";

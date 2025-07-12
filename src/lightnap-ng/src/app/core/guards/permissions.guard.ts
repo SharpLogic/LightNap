@@ -1,7 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
 import { ClaimDto, RoleNames } from "@identity/models";
-import { RouteAliasService } from "@pages";
+import { RouteAliasService } from "@core";
 import { map, take } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
 

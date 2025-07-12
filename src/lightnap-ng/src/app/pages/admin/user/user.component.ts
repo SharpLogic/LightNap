@@ -1,11 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { AdminUserDto, ClaimDto, ConfirmPopupComponent, RoleDto, ToastService } from "@core";
+import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { UsersService } from "@core/services/users.service";
-import { RouteAliasService } from "@pages";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -35,7 +33,7 @@ import { UserRolesComponent } from "./user-roles/user-roles.component";
   ],
 })
 export class UserComponent implements OnChanges {
-  adminService = inject(UsersService);
+  adminService = inject(AdminUsersService);
   #confirmationService = inject(ConfirmationService);
   #toast = inject(ToastService);
   #routeAlias = inject(RouteAliasService);

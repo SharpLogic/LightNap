@@ -2,11 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { ConfirmPopupComponent, PeoplePickerComponent, RoleWithAdminUsers } from "@core";
-import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { UsersService } from "@core/services/users.service";
-import { RoutePipe } from "@pages";
+import { AdminUsersService, ApiResponseComponent, ConfirmPopupComponent, ErrorListComponent, PeoplePickerComponent, RoleWithAdminUsers, RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -31,7 +27,7 @@ import { Observable } from "rxjs";
   ],
 })
 export class RoleComponent implements OnInit {
-  readonly #adminService = inject(UsersService);
+  readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
   readonly #fb = inject(FormBuilder);
 

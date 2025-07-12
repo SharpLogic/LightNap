@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
-import { RouteAliasService } from "@pages";
+import { RouteAliasService } from "@core";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";

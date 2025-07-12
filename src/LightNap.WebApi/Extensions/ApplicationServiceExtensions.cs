@@ -13,8 +13,6 @@ using LightNap.Core.Profile.Services;
 using LightNap.Core.Public.Interfaces;
 using LightNap.Core.Public.Services;
 using LightNap.Core.Services;
-using LightNap.Core.User.Interfaces;
-using LightNap.Core.User.Services;
 using LightNap.Core.Users.Interfaces;
 using LightNap.Core.Users.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
@@ -52,7 +50,6 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IRolesService, RolesService>();
 

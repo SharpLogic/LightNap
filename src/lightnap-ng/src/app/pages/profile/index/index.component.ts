@@ -2,14 +2,14 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { BlockUiService, ErrorListComponent, ToastService } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ProfileService } from "@core/services/profile.service";
-import { RouteAliasService, RoutePipe } from "@pages";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { finalize, tap } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
+import { ErrorListComponent, RoutePipe } from "@core";
+import { RouteAliasService, BlockUiService, ToastService } from "@core";
 
 @Component({
   standalone: true,

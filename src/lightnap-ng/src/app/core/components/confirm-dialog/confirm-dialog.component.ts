@@ -1,7 +1,6 @@
 import { Component, ElementRef, TemplateRef, input } from "@angular/core";
-import { ButtonSeverity } from "@core/models";
 import { PrimeIcons } from "primeng/api";
-import { ButtonModule } from "primeng/button";
+import { ButtonModule, ButtonSeverity } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @Component({

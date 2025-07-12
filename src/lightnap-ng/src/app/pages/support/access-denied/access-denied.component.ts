@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ErrorApiResponse, ToastService } from "@core";
+import { RoutePipe, ErrorApiResponse } from "@core";
 import { LayoutService } from "@core/layout/services/layout.service";
+import { RouteAliasService, ToastService } from "@core";
 import { IdentityService } from "@core/services/identity.service";
-import { RouteAliasService, RoutePipe } from "@pages";
 import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
 

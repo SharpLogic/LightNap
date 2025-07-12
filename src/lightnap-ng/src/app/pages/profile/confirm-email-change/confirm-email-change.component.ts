@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { ErrorListComponent } from "@core";
+import { BlockUiService, RouteAliasService } from "@core";
 import { ProfileService } from "@core/services/profile.service";
-import { RouteAliasService } from "@pages";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from "primeng/inputtext";
+import { PanelModule } from "primeng/panel";
 import { finalize } from "rxjs";
 
 @Component({
@@ -32,7 +32,7 @@ export class ConfirmEmailChangeComponent implements OnInit {
       })
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
-        next: () => this.#routeAlias.navigateWithReplace("profile"),
+        next: () => this.#routeAlias.navigateWithExtras("profile", undefined, { replaceUrl: true }),
         error: response => this.errors.set(response.errorMessages),
       });
   }

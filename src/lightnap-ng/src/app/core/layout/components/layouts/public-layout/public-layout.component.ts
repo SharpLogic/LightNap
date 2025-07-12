@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router, RouterLink, RouterOutlet } from "@angular/router";
 import { IdentityService } from "@core";
 import { LayoutService } from "@core/layout/services/layout.service";
-import { RoutePipe } from "@pages";
+import { RoutePipe } from "@core";
 import { SharedModule } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { RippleModule } from "primeng/ripple";

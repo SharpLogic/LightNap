@@ -3,12 +3,12 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { BlockUiService, ErrorListComponent } from "@core";
 import { IdentityService } from "@core/services/identity.service";
-import { RouteAliasService } from "@pages";
+import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { IdentityCardComponent } from "../../controls/identity-card/identity-card.component";
+import { IdentityCardComponent } from "@core";
 
 @Component({
   standalone: true,
@@ -34,7 +34,7 @@ export class ConfirmEmailComponent implements OnInit {
       })
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
-        next: () => this.#routeAlias.navigateWithReplace("user-home"),
+        next: () => this.#routeAlias.navigateWithExtras("user-home", undefined, { replaceUrl: true }),
         error: response => this.errors.set(response.errorMessages),
       });
   }
