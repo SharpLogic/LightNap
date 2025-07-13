@@ -172,7 +172,7 @@ export class AdminUsersService {
         if (!response.data || response.data.length === 0) {
           return of(new Array<AdminUserDto>());
         }
-        return forkJoin(response.data.map(item => this.#dataService.getUser(item.userId)));
+        return this.#dataService.getUsersById(response.data.map(user => user.userId));
       })
     );
   }

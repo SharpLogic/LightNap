@@ -41,9 +41,19 @@ namespace LightNap.Core.Users.Services
                 query = query.Where(claim => claim.Type == searchClaimsRequest.Type);
             }
 
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.TypeContains))
+            {
+                query = query.Where(claim => EF.Functions.Like(claim.Type.ToUpper(), $"%{searchClaimsRequest.TypeContains.ToUpper()}%"));
+            }
+
             if (!string.IsNullOrWhiteSpace(searchClaimsRequest.Value))
             {
                 query = query.Where(claim => claim.Value == searchClaimsRequest.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchClaimsRequest.ValueContains))
+            {
+                query = query.Where(claim => EF.Functions.Like(claim.Value.ToUpper(), $"%{searchClaimsRequest.ValueContains.ToUpper()}%"));
             }
 
             int totalCount = await query.CountAsync();

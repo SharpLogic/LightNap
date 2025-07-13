@@ -1,23 +1,33 @@
-<api-response [apiResponse]="claims$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
+<api-response [apiResponse]="claims$" errorMessage="Error loading claim" loadingMessage="Loading claim...">
   <ng-template #success let-results>
     <p-panel header="Search Claims">
-      <form [formGroup]="form" class="my-2" (ngSubmit)="search()">
-        <div class="flex items-center gap-1">
+      <form [formGroup]="form" class="my-2">
+        <div class="flex gap-1">
           <div class="flex flex-col">
-            <input pInputText placeholder="Claim Type" formControlName="type" />
+            <input pInputText placeholder="Type" formControlName="type" />
+            <div class="flex items-end">
+              <p-checkBox inputId="typeExact" formControlName="typeExact" [binary]="true" class="mt-2" />
+              <label for="typeExact" class="ml-2">Exact match</label>
+            </div>
           </div>
           <div class="flex flex-col">
-            <input pInputText placeholder="Claim Value" formControlName="value" />
-          </div>
-          <div>
-            <div class="flex flex-col justify-end h-full">
-              <p-button type="submit" label="Search Claim" icon="pi pi-search" [disabled]="!form.valid" />
+            <input pInputText placeholder="Value" formControlName="value" />
+            <div class="flex items-end">
+              <p-checkBox inputId="valueExact" formControlName="valueExact" [binary]="true" class="mt-2" />
+              <label for="valueExact" class="ml-2">Exact match</label>
             </div>
           </div>
         </div>
       </form>
 
-      <p-table [value]="results.data">
+      <p-table
+        [value]="results.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="results.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadUsersLazy($event)"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th class="whitespace-nowrap">Claim Type</th>
