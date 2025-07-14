@@ -1,5 +1,5 @@
 <p-confirmpopup #confirmPopup [key]="key()">
-  <ng-template pTemplate="headless" let-message>
+  <ng-template #headless let-message>
     <div class="rounded-border p-4">
       <span>{{ message.message }}</span>
       <div class="flex items-center gap-2 mt-4">

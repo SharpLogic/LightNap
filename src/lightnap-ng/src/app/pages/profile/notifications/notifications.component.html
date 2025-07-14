@@ -15,7 +15,7 @@
         [lazy]="true"
         (onLazyLoad)="onLazyLoad($event)"
       >
-        <ng-template pTemplate="body" let-notification>
+        <ng-template #body let-notification>
           <tr>
             <td>
               <div class="w-96">
@@ -24,7 +24,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td>You have no notifications.</td>
           </tr>

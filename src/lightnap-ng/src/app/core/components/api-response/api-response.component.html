@@ -9,7 +9,7 @@
     <ng-container *ngTemplateOutlet="errorTemplateRef() || defaultErrorTemplate; context: { $implicit: response }" />
   }
 } @else {
-  <ng-container *ngTemplateOutlet="loadingTemplateRef() || defaultLoadingTemplate"> </ng-container>
+  <ng-container *ngTemplateOutlet="loadingTemplateRef() || defaultLoadingTemplate" />
 }
 
 <ng-template #defaultErrorTemplate let-response>

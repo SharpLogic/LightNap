@@ -28,13 +28,13 @@
         [lazy]="true"
         (onLazyLoad)="loadUsersLazy($event)"
       >
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th class="whitespace-nowrap">Claim Type</th>
             <th width="100%">Claim Value</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-claim>
+        <ng-template #body let-claim>
           <tr>
             <td>
               <a [routerLink]="'admin-claim' | route: [claim.type, claim.value]"> {{ claim.type }}</a>
@@ -44,7 +44,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">There are no claims.</td>
           </tr>

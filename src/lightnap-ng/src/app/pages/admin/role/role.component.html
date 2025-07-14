@@ -2,14 +2,14 @@
   <ng-template #success let-roleWithUsers>
     <p-panel header="Manage Users In Role: {{ roleWithUsers.role.displayName }}">
       <p-table [value]="roleWithUsers.users">
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
             <th class="whitespace-nowrap">User Name</th>
             <th width="100%">Email</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-user>
+        <ng-template #body let-user>
           <tr>
             <td>
               <confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
@@ -23,7 +23,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">Role does not have any members.</td>
           </tr>

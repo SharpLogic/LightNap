@@ -2,7 +2,7 @@
   <ng-template #success let-devices>
     <p-panel header="Manage Your Devices">
       <p-table [value]="devices">
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
             <th>Last Seen</th>
@@ -10,7 +10,7 @@
             <th>IP Address</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-device>
+        <ng-template #body let-device>
           <tr>
             <td>
               <confirm-dialog [key]="device.id" />
@@ -21,7 +21,7 @@
             <td>{{ device.ipAddress }}</td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">There are no logged in devices.</td>
           </tr>

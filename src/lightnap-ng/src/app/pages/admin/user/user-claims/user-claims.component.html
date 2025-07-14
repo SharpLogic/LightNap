@@ -1,13 +1,13 @@
 <div class="flex flex-col gap-1">
   <p-table [value]="userClaims()">
-    <ng-template pTemplate="header">
+    <ng-template #header>
       <tr>
         <th><i class="pi pi-trash"></i></th>
         <th>Claim Type</th>
         <th>Claim Value</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-claim>
+    <ng-template #body let-claim>
       <tr>
         <td>
           <confirm-popup [key]="claim.type + ':' + claim.value" />
@@ -23,7 +23,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="emptymessage">
+    <ng-template #emptymessage>
       <tr>
         <td colspan="100%">User is not a member of any claims.</td>
       </tr>

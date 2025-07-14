@@ -2,14 +2,14 @@
   <ng-template #success let-roles>
     <p-panel header="Manage Roles">
       <p-table [value]="roles">
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th>Role</th>
             <th>Name</th>
             <th>Description</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-role>
+        <ng-template #body let-role>
           <tr>
             <td>
               <a [routerLink]="'admin-role' | route: role.name"> {{ role.displayName }}</a>
@@ -20,7 +20,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">There are no roles.</td>
           </tr>

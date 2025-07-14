@@ -3,7 +3,17 @@ import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { AdminUserDto, ApiResponseComponent, ConfirmPopupComponent, EmptyPagedResponse, ErrorListComponent, ListItem, SearchUsersSortBy, ToastService } from "@core";
+import {
+  AdminUserDto,
+  ApiResponseComponent,
+  ConfirmPopupComponent,
+  EmptyPagedResponse,
+  ErrorListComponent,
+  ListItem,
+  PagedResponseDto,
+  SearchUsersSortBy,
+  ToastService,
+} from "@core";
 import { AdminUsersService } from "@core";
 import { RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
@@ -61,7 +71,7 @@ export class UsersComponent {
     ),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
     // so we can avoid a redundant call to the API.
-    startWith(new EmptyPagedResponse<AdminUserDto>())
+    startWith(new EmptyPagedResponse<AdminUserDto>() as PagedResponseDto<AdminUserDto>)
   );
 
   sortBys = [
@@ -75,6 +85,10 @@ export class UsersComponent {
     this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe(() => {
       this.#lazyLoadEventSubject.next({ first: 0 });
     });
+  }
+
+  asPagedResults($implicit: any) {
+    return $implicit as PagedResponseDto<AdminUserDto>;
   }
 
   loadUsersLazy(event: TableLazyLoadEvent) {

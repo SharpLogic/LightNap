@@ -1,5 +1,6 @@
 <api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
-  <ng-template #success let-users>
+  <ng-template #success let-implicit>
+    @let results = asPagedResults(implicit);
     <p-panel header="Manage Users">
       <div [formGroup]="form" class="my-2">
         <div class="flex items-center gap-1">
@@ -12,14 +13,14 @@
         </div>
       </div>
       <p-table
-        [value]="users.data"
+        [value]="results.data"
         [paginator]="true"
         [rows]="pageSize"
-        [totalRecords]="users.totalCount"
+        [totalRecords]="results.totalCount"
         [lazy]="true"
         (onLazyLoad)="loadUsersLazy($event)"
       >
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
             <th pSortableColumn="userName">User Name <p-sortIcon field="userName"></p-sortIcon></th>
@@ -28,7 +29,7 @@
             <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate"></p-sortIcon></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-user>
+        <ng-template #body let-user>
           <tr>
             <td>
               <confirm-popup [key]="user.id" />
@@ -47,7 +48,7 @@
             <td>{{ user.lastModifiedDate | date: "short" }}</td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">No users match the filters.</td>
           </tr>

@@ -17,7 +17,7 @@
 
         <div class="flex flex-col gap-2">
           <label for="password" class="text-xl">Password</label>
-          <p-password formControlName="password" styleClass="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
+          <p-password formControlName="password" class="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
         </div>
 
         <div class="flex flex-col gap-2">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <p-checkbox name="checkbox" formControlName="agreedToTerms" styleClass="mr-2" [binary]="true" />
+          <p-checkbox inputId="agreedToTerms" formControlName="agreedToTerms" class="mr-2" [binary]="true" />
           <label for="agreedToTerms">I agree to the</label>
           <a [routerLink]="'terms-and-conditions' | route" target="_blank">Terms and Conditions</a>
           <span>and</span>

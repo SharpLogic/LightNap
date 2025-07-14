@@ -13,14 +13,14 @@
       </div>
 
       <p-table [value]="usersForClaim">
-        <ng-template pTemplate="header">
+        <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
             <th class="whitespace-nowrap">User Name</th>
             <th width="100%">Email</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-user>
+        <ng-template #body let-user>
           <tr>
             <td>
               <confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
@@ -34,7 +34,7 @@
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="emptymessage">
+        <ng-template #emptymessage>
           <tr>
             <td colspan="100%">No users have this claim.</td>
           </tr>
