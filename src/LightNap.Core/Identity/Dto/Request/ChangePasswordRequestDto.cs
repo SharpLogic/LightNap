@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Configuration;
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Profile.Dto.Request
+namespace LightNap.Core.Identity.Dto.Request
 {
     /// <summary>
     /// Data transfer object for requesting a password change.

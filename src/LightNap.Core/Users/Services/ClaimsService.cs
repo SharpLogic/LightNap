@@ -1,10 +1,8 @@
 ﻿using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Data.Extensions;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
@@ -15,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LightNap.Core.Users.Services
 {
     /// <summary>
-    /// Service for managing administrator-related operations.
+    /// Service for managing claims.
     /// </summary>
     public class ClaimsService(UserManager<ApplicationUser> userManager, ApplicationDbContext db, IUserContext userContext) : IClaimsService
     {

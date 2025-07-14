@@ -1,12 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, ErrorListComponent } from "@core";
-import { ProfileService } from "@core/services/profile.service";
-import { RouteAliasService } from "@core";
+import { BlockUiService, ErrorListComponent, IdentityService, RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from "primeng/inputtext";
+import { PanelModule } from 'primeng/panel';
 import { finalize } from "rxjs";
 
 @Component({
@@ -15,7 +13,7 @@ import { finalize } from "rxjs";
   imports: [CommonModule, ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
 })
 export class ChangeEmailComponent {
-  readonly #profileService = inject(ProfileService);
+  readonly #identityService = inject(IdentityService);
   readonly #blockUi = inject(BlockUiService);
   readonly #routeAlias = inject(RouteAliasService);
   readonly #fb = inject(FormBuilder);
@@ -30,7 +28,7 @@ export class ChangeEmailComponent {
 
   changeEmail() {
     this.#blockUi.show({ message: "Changing email..." });
-    this.#profileService
+    this.#identityService
       .changeEmail({
         newEmail: this.form.value.newEmail!,
       })

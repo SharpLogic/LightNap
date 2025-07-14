@@ -2,10 +2,8 @@
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Data.Extensions;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Users.Dto.Response;
 using LightNap.Core.Users.Interfaces;

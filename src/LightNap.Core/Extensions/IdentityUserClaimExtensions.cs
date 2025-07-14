@@ -2,7 +2,7 @@
 using LightNap.Core.Users.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 
-namespace LightNap.Core.Data.Extensions
+namespace LightNap.Core.Extensions
 {
     public static class IdentityUserClaimExtensions
     {

@@ -5,9 +5,10 @@ using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
+using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Identity.Models;
 using LightNap.Core.Identity.Services;
-using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Tests.Utilities;
@@ -26,9 +27,14 @@ namespace LightNap.Core.Tests.Services
         // Hardcoded in Core library. Not great since name might change, but good enough for now.
         private const string _refreshTokenCookieName = "refreshToken";
 
+        const string _userId = "test-user-id";
+        const string _userEmail = "user@test.com";
+        const string _userName = "UserName";
+
         // These will be initialized during TestInitialize.
 #pragma warning disable CS8618
         private UserManager<ApplicationUser> _userManager;
+        private IServiceProvider _serviceProvider;
         private ApplicationDbContext _dbContext;
         private IdentityService _identityService;
         private TestCookieManager _cookieManager;
@@ -50,11 +56,11 @@ namespace LightNap.Core.Tests.Services
             // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
             services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();
 
-            var serviceProvider = services.BuildServiceProvider();
-            this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            this._userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var signInManager = serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
-            var logger = serviceProvider.GetRequiredService<ILogger<IdentityService>>();
+            this._serviceProvider = services.BuildServiceProvider();
+            this._dbContext = this._serviceProvider.GetRequiredService<ApplicationDbContext>();
+            this._userManager = this._serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var signInManager = this._serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
+            var logger = this._serviceProvider.GetRequiredService<ILogger<IdentityService>>();
 
             this._tokenServiceMock = new Mock<ITokenService>();
             this._tokenServiceMock.Setup(ts => ts.GenerateRefreshToken()).Returns("refresh-token");
@@ -79,6 +85,7 @@ namespace LightNap.Core.Tests.Services
 
             TestUserContext userContext = new()
             {
+                UserId = _userId,
                 IpAddress = "127.0.0.1"
             };
 
@@ -488,6 +495,228 @@ namespace LightNap.Core.Tests.Services
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
             Assert.IsNotNull(cookie);
 
+        }
+
+        [TestMethod]
+        public async Task ChangePassword_ShouldChangeUserPassword()
+        {
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            // Arrange
+            var changePasswordDto = new ChangePasswordRequestDto
+            {
+                CurrentPassword = "OldPassword123!",
+                NewPassword = "NewPassword123!",
+                ConfirmNewPassword = "NewPassword123!"
+            };
+
+            var user = await this._userManager.FindByIdAsync(_userId);
+            var identityResult = await this._userManager.AddPasswordAsync(user!, changePasswordDto.CurrentPassword);
+            if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
+
+            // Act
+            await this._identityService.ChangePasswordAsync(changePasswordDto);
+
+            // Assert
+            var loginResult = await this._identityService.LogInAsync(new LoginRequestDto
+            {
+                Login = _userEmail,
+                Password = changePasswordDto.NewPassword,
+                DeviceDetails = "device-details",
+                RememberMe = false
+            });
+
+            Assert.IsNotNull(loginResult.AccessToken);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UserFriendlyApiException))]
+        public async Task ChangePassword_ShouldFailWithWrongCurrentPassword()
+        {
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            // Arrange
+            var changePasswordDto = new ChangePasswordRequestDto
+            {
+                CurrentPassword = "WrongPassword123!",
+                NewPassword = "NewPassword123!",
+                ConfirmNewPassword = "NewPassword123!"
+            };
+
+            var user = await this._userManager.FindByIdAsync(_userId);
+            var identityResult = await this._userManager.AddPasswordAsync(user!, "DifferentP@ssw0rd");
+            if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
+
+            // Act
+            await this._identityService.ChangePasswordAsync(changePasswordDto);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UserFriendlyApiException))]
+        public async Task ChangePassword_ShouldFailWithWrongMistmatchedNewPassword()
+        {
+            // Arrange
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            var changePasswordDto = new ChangePasswordRequestDto
+            {
+                CurrentPassword = "OldPassword123!",
+                NewPassword = "NewPassword123!",
+                ConfirmNewPassword = "NotNewPassword123!"
+            };
+
+            var user = await this._userManager.FindByIdAsync(_userId);
+            var identityResult = await this._userManager.AddPasswordAsync(user!, "OldPassword123!");
+            if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
+
+            // Act
+            await this._identityService.ChangePasswordAsync(changePasswordDto);
+        }
+
+        [TestMethod]
+        public async Task ChangeEmail_ShouldStartEmailChangeProcess()
+        {
+            // Arrange
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            var changeEmailDto = new ChangeEmailRequestDto
+            {
+                NewEmail = "newuser@test.com"
+            };
+
+            this._emailServiceMock
+                .Setup(ts => ts.SendChangeEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await this._identityService.ChangeEmailAsync(changeEmailDto);
+
+            // Assert
+            this._emailServiceMock.Verify(
+               ts => ts.SendChangeEmailAsync(It.IsAny<ApplicationUser>(), changeEmailDto.NewEmail, It.IsAny<string>()),
+               Times.Once);
+        }
+
+        [TestMethod]
+        public async Task ConfirmEmailChange_ShouldConfirmEmailChange()
+        {
+            // Arrange
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            var changeEmailDto = new ChangeEmailRequestDto
+            {
+                NewEmail = "newuser@test.com"
+            };
+
+            string emailChangeToken = string.Empty;
+            this._emailServiceMock
+                .Setup(ts => ts.SendChangeEmailAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Callback<ApplicationUser, string, string>((user, newEmail, token) => emailChangeToken = token)
+                .Returns(Task.CompletedTask);
+            await this._identityService.ChangeEmailAsync(changeEmailDto);
+
+            var confirmEmailChangeDto = new ConfirmEmailChangeRequestDto
+            {
+                NewEmail = "newuser@test.com",
+                Code = emailChangeToken
+            };
+
+            // Act
+            await this._identityService.ConfirmEmailChangeAsync(confirmEmailChangeDto);
+
+            // Assert
+            var updatedUser = await this._userManager.FindByIdAsync(_userId);
+            Assert.AreEqual(confirmEmailChangeDto.NewEmail, updatedUser!.Email);
+        }
+
+        [TestMethod]
+        public async Task GetDevices_ShouldReturnUserDevices()
+        {
+            // Arrange
+            // Note the LastSeen timestamp is descending to match the descending order expected from the API.
+            var expectedDevices = new List<DeviceDto>
+            {
+                new() { Id = "device1", LastSeen = new DateTime(2024, 12, 7), IpAddress = "192.168.1.1", Details = "Device 1" },
+                new() { Id = "device2", LastSeen = new DateTime(2024, 12, 6), IpAddress = "192.168.1.2", Details = "Device 2" }
+            };
+
+            this._dbContext.RefreshTokens.AddRange(expectedDevices.Select(d => new RefreshToken
+            {
+                Id = d.Id,
+                Token = "token",
+                LastSeen = d.LastSeen,
+                IpAddress = d.IpAddress,
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = d.Details,
+                UserId = _userId
+            }));
+            await this._dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await this._identityService.GetDevicesAsync();
+
+            // Assert
+            Assert.AreEqual(expectedDevices.Count, result.Count);
+            expectedDevices.Reverse();
+            for (int i = 0; i < expectedDevices.Count; i++)
+            {
+                Assert.AreEqual(expectedDevices[i].Id, result[i].Id);
+                Assert.AreEqual(expectedDevices[i].IpAddress, result[i].IpAddress);
+                Assert.AreEqual(expectedDevices[i].Details, result[i].Details);
+            }
+        }
+
+        [TestMethod]
+        public async Task RevokeDevice_ShouldRevokeUserDevice()
+        {
+            // Arrange
+            var deviceId = "device1";
+            var refreshToken = new RefreshToken
+            {
+                Id = deviceId,
+                Token = "token",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.1",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = "Device 1",
+                UserId = _userId
+            };
+            this._dbContext.RefreshTokens.Add(refreshToken);
+            await this._dbContext.SaveChangesAsync();
+
+            // Act
+            await this._identityService.RevokeDeviceAsync(deviceId);
+
+            // Assert
+            var revokedToken = await this._dbContext.RefreshTokens.FindAsync(deviceId);
+            Assert.IsNotNull(revokedToken);
+            Assert.IsTrue(revokedToken.IsRevoked);
+        }
+
+        [TestMethod]
+        public async Task RevokeDevice_ShouldNotAllowRevokingOtherUsersDevice()
+        {
+            // Arrange
+            var otherUserId = "otherUserId";
+            var deviceId = "device1";
+            var refreshToken = new RefreshToken
+            {
+                Id = deviceId,
+                Token = "token",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.1",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = "Device 1",
+                UserId = otherUserId
+            };
+            this._dbContext.RefreshTokens.Add(refreshToken);
+            await this._dbContext.SaveChangesAsync();
+
+            // Act
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RevokeDeviceAsync(deviceId));
         }
     }
 }

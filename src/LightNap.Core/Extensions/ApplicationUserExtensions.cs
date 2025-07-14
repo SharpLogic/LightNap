@@ -5,7 +5,7 @@ using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
 
-namespace LightNap.Core.Data.Extensions
+namespace LightNap.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for working with ApplicationUser objects.

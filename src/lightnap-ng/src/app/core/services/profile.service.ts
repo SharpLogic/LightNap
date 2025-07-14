@@ -1,9 +1,9 @@
 import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { filter, of, tap, switchMap } from "rxjs";
-import { IdentityService } from "./identity.service";
+import { ApplicationSettingsDto, LayoutConfigDto, UpdateProfileRequestDto } from "@core/backend-api";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
-import { ApplicationSettingsDto, UpdateProfileRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmChangeEmailRequestDto, LayoutConfigDto } from "@core/backend-api";
+import { filter, of, switchMap, tap } from "rxjs";
+import { IdentityService } from "./identity.service";
 
 @Injectable({
   providedIn: "root",
@@ -11,9 +11,7 @@ import { ApplicationSettingsDto, UpdateProfileRequestDto, ChangePasswordRequestD
 /**
  * @class ProfileService
  * @description
- * The ProfileService class provides methods to manage user profiles, devices, and application settings.
- * It interacts with the DataService and IdentityService to perform various operations such as fetching
- * and updating profiles, managing devices, and handling application settings.
+ * The ProfileService class provides methods to manage user profiles and application settings.
  */
 export class ProfileService {
   #dataService = inject(ProfileDataService);
@@ -67,55 +65,6 @@ export class ProfileService {
    */
   updateProfile(updateProfileRequest: UpdateProfileRequestDto) {
     return this.#dataService.updateProfile(updateProfileRequest);
-  }
-
-  /**
-   * @method getDevices
-   * @description Fetches the list of devices associated with the user.
-   * @returns {Observable<Array<Device>>} An observable containing the list of devices.
-   */
-  getDevices() {
-    return this.#dataService.getDevices();
-  }
-
-  /**
-   * @method revokeDevice
-   * @description Revokes a device by its ID.
-   * @param {string} deviceId - The ID of the device to revoke.
-   * @returns {Observable<boolean>} An observable containing true if successful.
-   */
-  revokeDevice(deviceId: string) {
-    return this.#dataService.revokeDevice(deviceId);
-  }
-
-  /**
-   * @method changePassword
-   * @description Changes the user's password.
-   * @param {ChangePasswordRequestDto} changePasswordRequest - The request object containing password change information.
-   * @returns {Observable<boolean>} An observable containing true if successful.
-   */
-  changePassword(changePasswordRequest: ChangePasswordRequestDto) {
-    return this.#dataService.changePassword(changePasswordRequest);
-  }
-
-  /**
-   * @method changeEmail
-   * @description Changes the user's email address.
-   * @param {ChangeEmailRequestDto} changeEmailRequest - The request object containing email change information.
-   * @returns {Observable<boolean>} An observable containing true if successful.
-   */
-  changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
-    return this.#dataService.changeEmail(changeEmailRequest);
-  }
-
-  /**
-   * @method confirmEmailChange
-   * @description Confirms the user's email change.
-   * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
-   * @returns {Observable<boolean>} An observable containing true if successful.
-   */
-  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
-    return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
   }
 
   /**

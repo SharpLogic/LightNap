@@ -1,15 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService } from "@core";
+import { BlockUiService, IdentityService } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { ToastService } from "@core/services/toast.service";
-import { ProfileService } from "@core/services/profile.service";
 import { ButtonModule } from "primeng/button";
-import { PanelModule } from 'primeng/panel';
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { PanelModule } from 'primeng/panel';
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
@@ -19,7 +18,7 @@ import { finalize } from "rxjs";
   imports: [CommonModule, ButtonModule, ErrorListComponent, PasswordModule, ReactiveFormsModule, PanelModule, InputGroupModule, InputGroupAddonModule],
 })
 export class ChangePasswordComponent {
-  readonly #profileService = inject(ProfileService);
+  readonly #identityService = inject(IdentityService);
   readonly #blockUi = inject(BlockUiService);
   readonly #toast = inject(ToastService);
   readonly #fb = inject(FormBuilder);
@@ -38,7 +37,7 @@ export class ChangePasswordComponent {
   changePassword() {
     this.errors.set([]);
     this.#blockUi.show({ message: "Changing password..." });
-    this.#profileService
+    this.#identityService
       .changePassword({
         confirmNewPassword: this.form.value.confirmNewPassword!,
         currentPassword: this.form.value.currentPassword!,

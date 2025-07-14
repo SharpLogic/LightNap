@@ -51,26 +51,6 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Changes the password of the current user.
-        /// </summary>
-        /// <param name="changePasswordRequest">The password change request.</param>
-        /// <returns>
-        /// An <see cref="ApiResponseDto{T}"/> indicating whether the password was changed successfully.
-        /// </returns>
-        /// <response code="200">If the password was changed successfully.</response>
-        /// <response code="400">If the request is invalid or the current password is incorrect.</response>
-        /// <response code="401">If the user is not authenticated.</response>
-        [HttpPost("change-password")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ChangePassword(ChangePasswordRequestDto changePasswordRequest)
-        {
-            await profileService.ChangePasswordAsync(changePasswordRequest);
-            return new ApiResponseDto<bool>(true);
-        }
-
-        /// <summary>
         /// Retrieves the settings of the current user.
         /// </summary>
         /// <returns>
@@ -103,78 +83,6 @@ namespace LightNap.WebApi.Controllers
         public async Task<ApiResponseDto<bool>> UpdateSettings(BrowserSettingsDto browserSettings)
         {
             await profileService.UpdateSettingsAsync(browserSettings);
-            return new ApiResponseDto<bool>(true);
-        }
-
-        /// <summary>
-        /// Retrieves the list of devices.
-        /// </summary>
-        /// <returns>The list of devices.</returns>
-        /// <response code="200">Returns the list of devices.</response>
-        /// <response code="401">Unauthorized access.</response>
-        [HttpGet("devices")]
-        [ProducesResponseType(typeof(ApiResponseDto<IList<DeviceDto>>), 200)]
-        [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<IList<DeviceDto>>> GetDevices()
-        {
-            return new ApiResponseDto<IList<DeviceDto>>(await profileService.GetDevicesAsync());
-        }
-
-        /// <summary>
-        /// Revokes a device.
-        /// </summary>
-        /// <param name="deviceId">The ID of the device to revoke.</param>
-        /// <returns>A response indicating whether the device was successfully revoked.</returns>
-        /// <response code="200">Device successfully revoked.</response>
-        /// <response code="401">Unauthorized access.</response>
-        /// <response code="404">Device not found.</response>
-        [HttpDelete("devices/{deviceId}")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
-        public async Task<ApiResponseDto<bool>> RevokeDevice(string deviceId)
-        {
-            await profileService.RevokeDeviceAsync(deviceId);
-            return new ApiResponseDto<bool>(true);
-        }
-
-        /// <summary>
-        /// Changes the email of the current user.
-        /// </summary>
-        /// <param name="changeEmailRequest">The email change request.</param>
-        /// <returns>
-        /// An <see cref="ApiResponseDto{T}"/> indicating whether the email was changed successfully.
-        /// </returns>
-        /// <response code="200">If the email was changed successfully.</response>
-        /// <response code="400">If the request is invalid or the current email is incorrect.</response>
-        /// <response code="401">If the user is not authenticated.</response>
-        [HttpPost("change-email")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ChangeEmail(ChangeEmailRequestDto changeEmailRequest)
-        {
-            await profileService.ChangeEmailAsync(changeEmailRequest);
-            return new ApiResponseDto<bool>(true);
-        }
-
-        /// <summary>
-        /// Confirms the email change of the current user.
-        /// </summary>
-        /// <param name="confirmEmailChangeRequest">The email change confirmation details.</param>
-        /// <returns>
-        /// An <see cref="ApiResponseDto{T}"/> indicating whether the email change was confirmed successfully.
-        /// </returns>
-        /// <response code="200">If the email change was confirmed successfully.</response>
-        /// <response code="400">If the token is invalid or expired.</response>
-        /// <response code="401">If the user is not authenticated.</response>
-        [HttpPost("confirm-email-change")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<bool>> ConfirmEmailChange(ConfirmEmailChangeRequestDto confirmEmailChangeRequest)
-        {
-            await profileService.ConfirmEmailChangeAsync(confirmEmailChangeRequest);
             return new ApiResponseDto<bool>(true);
         }
 

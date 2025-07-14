@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Data.Entities;
 
-namespace LightNap.Core.Interfaces
+namespace LightNap.Core.Identity.Interfaces
 {
     /// <summary>
     /// Represents a token service interface.

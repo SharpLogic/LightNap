@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Identity.Dto.Response;
 using System.Security.Claims;
 
-namespace LightNap.Core.Identity.Extensions
+namespace LightNap.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for converting Claim objects to ClaimDto objects.

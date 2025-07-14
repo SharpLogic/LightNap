@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Profile.Dto.Response
+﻿namespace LightNap.Core.Identity.Dto.Response
 {
     /// <summary>
     /// Data transfer object representing a device.

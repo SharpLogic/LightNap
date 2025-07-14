@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Data.Extensions;
+using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

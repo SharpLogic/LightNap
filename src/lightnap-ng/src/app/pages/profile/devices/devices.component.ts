@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
-import { ConfirmDialogComponent } from "@core";
+import { ConfirmDialogComponent, IdentityService } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ProfileService } from "@core/services/profile.service";
@@ -15,10 +15,10 @@ import { TableModule } from "primeng/table";
   imports: [CommonModule, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
 })
 export class DevicesComponent {
-  readonly #profileService = inject(ProfileService);
+  readonly #devicesService = inject(IdentityService);
   readonly #confirmationService = inject(ConfirmationService);
 
-  devices$ = signal(this.#profileService.getDevices());
+  devices$ = signal(this.#devicesService.getDevices());
 
   errors = signal(new Array<string>());
 
@@ -29,8 +29,8 @@ export class DevicesComponent {
       target: event.target,
       key: deviceId,
       accept: () => {
-        this.#profileService.revokeDevice(deviceId).subscribe({
-          next: () => this.devices$.set(this.#profileService.getDevices()),
+        this.#devicesService.revokeDevice(deviceId).subscribe({
+          next: () => this.devices$.set(this.#devicesService.getDevices()),
           error: response => this.errors.set(response.errorMessages),
         });
       },

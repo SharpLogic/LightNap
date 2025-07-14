@@ -7,7 +7,7 @@ import { RouteAliasService } from "@core";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
-import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto } from "@core/backend-api";
+import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto, ChangeEmailRequestDto, ChangePasswordRequestDto, ConfirmChangeEmailRequestDto } from "@core/backend-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.
@@ -449,4 +449,53 @@ export class IdentityService {
   requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkEmailRequestDto) {
     return this.#dataService.requestMagicLinkEmail(sendMagicLinkEmailRequest);
   }
+
+  /**
+     * @method getDevices
+     * @description Fetches the list of devices associated with the user.
+     * @returns {Observable<Array<Device>>} An observable containing the list of devices.
+     */
+    getDevices() {
+      return this.#dataService.getDevices();
+    }
+
+    /**
+     * @method revokeDevice
+     * @description Revokes a device by its ID.
+     * @param {string} deviceId - The ID of the device to revoke.
+     * @returns {Observable<boolean>} An observable containing true if successful.
+     */
+    revokeDevice(deviceId: string) {
+      return this.#dataService.revokeDevice(deviceId);
+    }
+
+    /**
+     * @method changePassword
+     * @description Changes the user's password.
+     * @param {ChangePasswordRequestDto} changePasswordRequest - The request object containing password change information.
+     * @returns {Observable<boolean>} An observable containing true if successful.
+     */
+    changePassword(changePasswordRequest: ChangePasswordRequestDto) {
+      return this.#dataService.changePassword(changePasswordRequest);
+    }
+
+    /**
+     * @method changeEmail
+     * @description Changes the user's email address.
+     * @param {ChangeEmailRequestDto} changeEmailRequest - The request object containing email change information.
+     * @returns {Observable<boolean>} An observable containing true if successful.
+     */
+    changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
+      return this.#dataService.changeEmail(changeEmailRequest);
+    }
+
+    /**
+     * @method confirmEmailChange
+     * @description Confirms the user's email change.
+     * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
+     * @returns {Observable<boolean>} An observable containing true if successful.
+     */
+    confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
+      return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
+    }
 }

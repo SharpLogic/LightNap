@@ -5,7 +5,13 @@ import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
-import { RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto } from "@core/backend-api";
+import {
+  RegisterRequestDto,
+  VerifyCodeRequestDto,
+  ResetPasswordRequestDto,
+  NewPasswordRequestDto,
+  ChangePasswordRequestDto,
+} from "@core/backend-api";
 import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
 
 describe("IdentityService", () => {
@@ -29,6 +35,9 @@ describe("IdentityService", () => {
       "resetPassword",
       "verifyCode",
       "verifyEmail",
+      "getDevices",
+      "revokeDevice",
+      "changePassword",
     ]);
     const timerSpy = jasmine.createSpyObj("TimerService", ["watchTimer$"]);
     const initializationSpy = jasmine.createSpyObj("InitializationService", ["initialized$"]);
@@ -142,5 +151,31 @@ describe("IdentityService", () => {
       expect(result).toBe(true);
     });
     expect(dataServiceSpy.verifyEmail).toHaveBeenCalledWith(verifyEmailRequest);
+  });
+
+  it("should get devices", () => {
+    dataServiceSpy.getDevices.and.returnValue(of({} as any));
+
+    service.getDevices().subscribe();
+
+    expect(dataServiceSpy.getDevices).toHaveBeenCalled();
+  });
+
+  it("should revoke device", () => {
+    const deviceId = "device123";
+    dataServiceSpy.revokeDevice.and.returnValue(of({} as any));
+
+    service.revokeDevice(deviceId).subscribe();
+
+    expect(dataServiceSpy.revokeDevice).toHaveBeenCalledWith(deviceId);
+  });
+
+  it("should change password", () => {
+    const changePasswordRequest: ChangePasswordRequestDto = {} as any;
+    dataServiceSpy.changePassword.and.returnValue(of({} as any));
+
+    service.changePassword(changePasswordRequest).subscribe();
+
+    expect(dataServiceSpy.changePassword).toHaveBeenCalledWith(changePasswordRequest);
   });
 });

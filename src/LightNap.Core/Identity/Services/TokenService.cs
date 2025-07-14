@@ -1,7 +1,7 @@
 ﻿using LightNap.Core.Configuration;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
-using LightNap.Core.Interfaces;
+using LightNap.Core.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;

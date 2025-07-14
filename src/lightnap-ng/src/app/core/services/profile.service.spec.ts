@@ -17,9 +17,6 @@ describe("ProfileService", () => {
     const dataSpy = jasmine.createSpyObj("ProfileDataService", [
       "getProfile",
       "updateProfile",
-      "getDevices",
-      "revokeDevice",
-      "changePassword",
       "getSettings",
       "updateSettings",
     ]);
@@ -65,32 +62,6 @@ describe("ProfileService", () => {
     service.updateProfile(updateProfileRequest).subscribe();
 
     expect(dataServiceSpy.updateProfile).toHaveBeenCalledWith(updateProfileRequest);
-  });
-
-  it("should get devices", () => {
-    dataServiceSpy.getDevices.and.returnValue(of({} as any));
-
-    service.getDevices().subscribe();
-
-    expect(dataServiceSpy.getDevices).toHaveBeenCalled();
-  });
-
-  it("should revoke device", () => {
-    const deviceId = "device123";
-    dataServiceSpy.revokeDevice.and.returnValue(of({} as any));
-
-    service.revokeDevice(deviceId).subscribe();
-
-    expect(dataServiceSpy.revokeDevice).toHaveBeenCalledWith(deviceId);
-  });
-
-  it("should change password", () => {
-    const changePasswordRequest: ChangePasswordRequestDto = {} as any;
-    dataServiceSpy.changePassword.and.returnValue(of({} as any));
-
-    service.changePassword(changePasswordRequest).subscribe();
-
-    expect(dataServiceSpy.changePassword).toHaveBeenCalledWith(changePasswordRequest);
   });
 
   it("should get settings", () => {

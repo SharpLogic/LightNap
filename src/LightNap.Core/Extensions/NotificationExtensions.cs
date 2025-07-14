@@ -2,7 +2,7 @@
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
 
-namespace LightNap.Core.Notifications.Extensions
+namespace LightNap.Core.Extensions
 {
     /// <summary>
     /// Provides extension methods for converting between Notification and related DTOs.

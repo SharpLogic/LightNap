@@ -1,12 +1,11 @@
 using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
+using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
-using LightNap.Core.Identity.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
-using LightNap.Core.Notifications.Extensions;
 using LightNap.Core.Notifications.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
