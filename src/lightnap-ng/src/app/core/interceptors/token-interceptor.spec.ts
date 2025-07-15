@@ -5,7 +5,7 @@ import { TestBed } from "@angular/core/testing";
 import { API_URL_ROOT, IdentityService } from "@core";
 import { tokenInterceptor } from "./token-interceptor";
 
-describe("TokenInterceptor", () => {
+describe("tokenInterceptor", () => {
   let httpMock: HttpTestingController;
   let httpClient: HttpClient;
   let identityService: jasmine.SpyObj<IdentityService>;
