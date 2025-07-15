@@ -2,7 +2,7 @@ import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { of } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
-import { AdminUpdateUserRequestDto, AdminSearchUsersRequestDto, RoleDto, AdminUserDto } from "@core/backend-api";
+import { AdminUpdateUserRequestDto, AdminSearchUsersRequestDto, RoleDto, AdminUserDto, ClaimDto, ApiResponseDto } from "@core/backend-api";
 import { UsersDataService } from "@core/backend-api/services/users-data.service";
 
 describe("UsersService", () => {
@@ -169,5 +169,116 @@ describe("UsersService", () => {
     expect(dataServiceSpy.getUser).toHaveBeenCalledWith(userId);
     expect(dataServiceSpy.getUserRoles).toHaveBeenCalledWith(userId);
     expect(dataServiceSpy.getRoles).toHaveBeenCalled();
+  });
+
+  it("should return empty array when getUsersById is called with empty array", () => {
+    service.getUsersById([]).subscribe(result => {
+      expect(result).toEqual([]);
+    });
+  });
+
+  it("should call getUsersById on dataService when userIds are provided", () => {
+    const userIds = ["1", "2"];
+    dataServiceSpy.getUsersById = jasmine.createSpy().and.returnValue(of([{ id: "1" }, { id: "2" }]));
+    service.getUsersById(userIds).subscribe();
+    expect(dataServiceSpy.getUsersById).toHaveBeenCalledWith(userIds);
+  });
+
+  it("should cache roles after first getRoles call", () => {
+    const rolesResponse = [{ name: "admin" } as RoleDto];
+    dataServiceSpy.getRoles.and.returnValue(of(rolesResponse));
+    service.getRoles().subscribe(roles => {
+      expect(roles).toEqual(rolesResponse);
+      // Call again, should not call dataServiceSpy.getRoles again
+      service.getRoles().subscribe(roles2 => {
+        expect(roles2).toEqual(rolesResponse);
+        expect(dataServiceSpy.getRoles).toHaveBeenCalledTimes(1);
+      });
+    });
+  });
+
+  it("should get role by name", () => {
+    const rolesResponse = [{ name: "admin" } as RoleDto, { name: "user" } as RoleDto];
+    dataServiceSpy.getRoles.and.returnValue(of(rolesResponse));
+    service.getRole("admin").subscribe(role => {
+      expect(role).toEqual(rolesResponse[0]);
+    });
+  });
+
+  it("should return error when getRoleWithUsers is called with non-existent role", done => {
+    dataServiceSpy.getRoles.and.returnValue(of([]));
+    service.getRoleWithUsers("notfound").subscribe({
+      error: (error: ApiResponseDto<Array<RoleDto>>) => {
+        expect(error.errorMessages?.length).toBeGreaterThan(0);
+        done();
+      },
+    });
+  });
+
+  it("should get role with users", () => {
+    const role = { name: "admin" } as RoleDto;
+    const users = [{ id: "1" } as AdminUserDto];
+    dataServiceSpy.getRoles.and.returnValue(of([role]));
+    dataServiceSpy.getUsersInRole.and.returnValue(of(users));
+    service.getRoleWithUsers("admin").subscribe(result => {
+      expect(result.role).toEqual(role);
+      expect(result.users).toEqual(users);
+    });
+  });
+
+  it("should search claims", () => {
+    const searchClaims = { type: "email" };
+    dataServiceSpy.searchClaims = jasmine.createSpy().and.returnValue(of({ data: [] }));
+    service.searchClaims(searchClaims as any).subscribe();
+    expect(dataServiceSpy.searchClaims).toHaveBeenCalledWith(searchClaims);
+  });
+
+  it("should get user claims", () => {
+    const userId = "user-id";
+    const claims = [{ type: "email", value: "test@test.com", userId }];
+    dataServiceSpy.searchUserClaims = jasmine.createSpy().and.returnValue(of({ data: claims }));
+    service.getUserClaims(userId).subscribe(result => {
+      expect(result).toEqual(claims);
+    });
+    expect(dataServiceSpy.searchUserClaims).toHaveBeenCalledWith({ userId });
+  });
+
+  it("should return empty array if getUsersWithClaim finds no users", () => {
+    const claim = { type: "role", value: "admin" } as any;
+    dataServiceSpy.searchUserClaims = jasmine.createSpy().and.returnValue(of({ data: [] }));
+    service.getUsersWithClaim(claim).subscribe(result => {
+      expect(result).toEqual([]);
+    });
+  });
+
+  it("should get users with claim", () => {
+    const claim: ClaimDto = { type: "role", value: "admin" };
+    const userIds = [{ userId: "1" }, { userId: "2" }];
+    const users = new Array<Partial<AdminUserDto>>({ id: "1" }, { id: "2" });
+    dataServiceSpy.searchUserClaims = jasmine.createSpy().and.returnValue(of({ data: userIds }));
+    dataServiceSpy.getUsersById = jasmine.createSpy().and.returnValue(of(users));
+    service.getUsersWithClaim(claim).subscribe(result => {
+      expect(result).toEqual(jasmine.arrayContaining(users));
+    });
+  });
+
+  it("should add user claim", () => {
+    const userId = "user-id";
+    const claim = { type: "role", value: "admin" } as any;
+    dataServiceSpy.addUserClaim = jasmine.createSpy().and.returnValue(of(true));
+    service.addUserClaim(userId, claim).subscribe(result => {
+      expect(result).toBeTrue();
+    });
+    expect(dataServiceSpy.addUserClaim).toHaveBeenCalledWith(userId, claim);
+  });
+
+  it("should remove user claim", () => {
+    const userId = "user-id";
+    const claim = { type: "role", value: "admin" } as any;
+    dataServiceSpy.removeUserClaim = jasmine.createSpy().and.returnValue(of(true));
+    service.removeUserClaim(userId, claim).subscribe(result => {
+      expect(result).toBeTrue();
+    });
+    expect(dataServiceSpy.removeUserClaim).toHaveBeenCalledWith(userId, claim);
   });
 });

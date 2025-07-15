@@ -272,7 +272,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} Emits true when the user is logged into any of the claims, otherwise false.
    */
   watchAnyUserClaim$(allowedClaims: Array<ClaimDto>) {
-    return this.#loggedInClaimsSubject$.pipe(map(claims => this.doesUserHaveAnyClaim(allowedClaims)));
+    return this.#loggedInClaimsSubject$.pipe(map(claims => this.hasAnyUserClaim(allowedClaims)));
   }
 
   /**
@@ -282,8 +282,8 @@ export class IdentityService {
    * @returns {boolean} True if the user has the claim, false otherwise.
    * @remarks This method is suitable for synchronous scenarios where the user is already known to be logged in (like at a guarded route).
    */
-  doesUserHaveClaim(allowedClaim: ClaimDto) {
-    return this.doesUserHaveAnyClaim([allowedClaim]);
+  hasUserClaim(allowedClaim: ClaimDto) {
+    return this.hasAnyUserClaim([allowedClaim]);
   }
 
   /**
@@ -293,7 +293,7 @@ export class IdentityService {
    * @returns {boolean} True if the user has any of the claims, false otherwise.
    * @remarks This method is suitable for synchronous scenarios where the user is already known to be logged in (like at a guarded route).
    */
-  doesUserHaveAnyClaim(allowedClaims: Array<ClaimDto>) {
+  hasAnyUserClaim(allowedClaims: Array<ClaimDto>) {
     return allowedClaims.some(claim => this.#claims?.get(claim.type)?.includes(claim.value));
   }
 
@@ -334,8 +334,8 @@ export class IdentityService {
    * @returns {boolean} True if the user has any of the specified roles or claims, false otherwise.
    * @remarks This is an "any" check. To check for "all" (cumulative permissions), use multiple calls.
    */
-  doesUserHavePermission(allowedRoles: Array<string>, allowedClaims: Array<ClaimDto>) {
-    return this.isUserInAnyRole(allowedRoles) || this.doesUserHaveAnyClaim(allowedClaims);
+  hasAnyPermission(allowedRoles: Array<string>, allowedClaims: Array<ClaimDto>) {
+    return this.isUserInAnyRole(allowedRoles) || this.hasAnyUserClaim(allowedClaims);
   }
 
   /**
@@ -346,6 +346,15 @@ export class IdentityService {
   getBearerToken() {
     if (!this.#token) return undefined;
     return `Bearer ${this.#token}`;
+  }
+
+    /**
+     * @method isTokenExpired
+     * @description Checks if the current token is expired.
+     * @returns {boolean} True if the token is expired, false otherwise.
+     */
+  isTokenExpired() {
+    return this.#expires <= Date.now();
   }
 
   /**

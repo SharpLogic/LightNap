@@ -1,7 +1,7 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
@@ -177,5 +177,83 @@ describe("IdentityService", () => {
     service.changePassword(changePasswordRequest).subscribe();
 
     expect(dataServiceSpy.changePassword).toHaveBeenCalledWith(changePasswordRequest);
+  });
+
+  it("should detect when a token is expired", () => {
+    // Create an expired token
+    const expiredToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkwMjJ9.4Adcj3UFYzPUVaVF43FmMab6RlaQD8A9V8wFzzht-KQ";
+
+    dataServiceSpy.logIn.and.returnValue(of({ accessToken: expiredToken, type: "AccessToken" }));
+    service.logIn({} as any).subscribe();
+
+    // Check if the service correctly identifies it as expired
+    expect(service.isTokenExpired()).toBeTrue();
+  });
+
+  it("should check if user has a specific claim", () => {
+    // Mock JWT with claims
+    const tokenWithClaims =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiY2xhaW1UeXBlIjoiY2xhaW1WYWx1ZSJ9.PepfbmKe5h2OcPlPmwdmIRTMnydCBE7tnLsAIVwx8G4";
+
+    dataServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }));
+    service.logIn({} as any).subscribe();
+
+    // Test claim check
+    const hasClaim = service.hasUserClaim({ type: "claimType", value: "claimValue" });
+    expect(hasClaim).toBeTrue();
+  });
+
+  it("should emit correct values from watchAnyUserClaim$", done => {
+    // Setup token with a claim
+    const tokenWithClaims =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiY2xhaW1UeXBlIjoiY2xhaW1WYWx1ZSJ9.PepfbmKe5h2OcPlPmwdmIRTMnydCBE7tnLsAIVwx8G4";
+
+    // Test the observable
+    const emittedValues = new Array<boolean>();
+    service.watchAnyUserClaim$([{ type: "claimType", value: "claimValue" }]).subscribe(hasAnyClaim => {
+      emittedValues.push(hasAnyClaim);
+      if (emittedValues.length === 2) {
+        expect(emittedValues).toEqual([false, true]);
+        done();
+      }
+    });
+
+    dataServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }));
+    service.logIn({} as any).subscribe();
+  });
+
+  it("should emit correct values from watchAnyUserClaim$", done => {
+    // Setup token with a claim
+    const tokenWithClaims =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiY2xhaW1UeXBlIjoiY2xhaW1WYWx1ZSJ9.PepfbmKe5h2OcPlPmwdmIRTMnydCBE7tnLsAIVwx8G4";
+
+    // Test the observable
+    const emittedValues = new Array<boolean>();
+    service.watchAnyUserClaim$([{ type: "claimType", value: "claimValue" }]).subscribe(hasAnyClaim => {
+      emittedValues.push(hasAnyClaim);
+      if (emittedValues.length === 2) {
+        expect(emittedValues).toEqual([false, true]);
+        done();
+      }
+    });
+
+    dataServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }));
+    service.logIn({} as any).subscribe();
+  });
+
+  it("should handle login errors gracefully", () => {
+    const loginRequest = {} as any;
+    const errorMessage = "Invalid credentials";
+
+    dataServiceSpy.logIn.and.returnValue(throwError(() => new Error(errorMessage)));
+
+    service.logIn(loginRequest).subscribe({
+      next: () => fail("Expected error but got success"),
+      error: error => {
+        expect(error.message).toBe(errorMessage);
+        expect(service.getBearerToken()).toBeUndefined();
+      },
+    });
   });
 });
