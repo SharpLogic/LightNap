@@ -1,17 +1,7 @@
-import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { RoleNames } from "@core/backend-api";
-import { IdentityService, RouteAliasService } from "@core";
-import { take, map } from "rxjs";
+import { permissionsGuard } from "./permissions.guard";
 
 export function roleGuard(roles: RoleNames | Array<RoleNames>, guardOptions?: { redirectTo?: Array<object> }) {
-  return (next: ActivatedRouteSnapshot) => {
-    const identityService = inject(IdentityService);
-    const routeAliasService = inject(RouteAliasService);
-
-    return identityService.watchAnyUserRole$(Array.isArray(roles) ? roles : [roles]).pipe(
-      take(1),
-      map(isInRole => (isInRole ? true : createUrlTreeFromSnapshot(next, guardOptions?.redirectTo ?? routeAliasService.getRoute("access-denied"))))
-    );
-  };
+  return (next: ActivatedRouteSnapshot) => permissionsGuard(roles, [], guardOptions)(next);
 }

@@ -272,7 +272,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} Emits true when the user is logged into any of the claims, otherwise false.
    */
   watchAnyUserClaim$(allowedClaims: Array<ClaimDto>) {
-    return this.#loggedInClaimsSubject$.pipe(map(claims => this.hasAnyUserClaim(allowedClaims)));
+    return this.#loggedInClaimsSubject$.pipe(map(_ => this.hasAnyUserClaim(allowedClaims)));
   }
 
   /**
