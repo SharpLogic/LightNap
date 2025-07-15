@@ -5,7 +5,7 @@ namespace LightNap.Core.Users.Dto.Request
     /// <summary>
     /// Represents a request to search claims.
     /// </summary>
-    public class SearchClaimsRequestDto : PaginationRequestDtoBase
+    public class SearchClaimsRequestDto : PagedRequestDtoBase
     {
         /// <summary>
         /// Filter by exact claim type.

@@ -5,7 +5,7 @@ namespace LightNap.Core.Api
     /// <summary>
     /// Base class for pagination requests.
     /// </summary>
-    public class PaginationRequestDtoBase
+    public class PagedRequestDtoBase
     {
         private const int _maxPageSize = 50;
 
@@ -20,7 +20,7 @@ namespace LightNap.Core.Api
         /// Gets or sets the page size. Must be between 1 and 50.
         /// </summary>
         /// <value>The page size.</value>
-        [Range(1, PaginationRequestDtoBase._maxPageSize, ErrorMessage = "Page size must be between 1 and 50.")]
+        [Range(1, PagedRequestDtoBase._maxPageSize, ErrorMessage = "Page size must be between 1 and 50.")]
         public int PageSize { get; set; } = 10;
     }
 }

@@ -6,7 +6,7 @@ namespace LightNap.Core.Notifications.Dto.Request
     /// <summary>
     /// Data transfer object for searching notifications with pagination support.
     /// </summary>
-    public class SearchNotificationsRequestDto : PaginationRequestDtoBase
+    public class SearchNotificationsRequestDto : PagedRequestDtoBase
     {
         /// <summary>
         /// Gets or sets the ID of the notification to start the search from.
