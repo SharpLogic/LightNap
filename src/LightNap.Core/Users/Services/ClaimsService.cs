@@ -24,9 +24,18 @@ namespace LightNap.Core.Users.Services
         /// <returns>The paginated list of claims.</returns>
         public async Task<PagedResponse<ClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
-            userContext.AssertAdministrator();
+            userContext.AssertAuthenticated();
 
-            var query = db.UserClaims.AsQueryable()
+            var baseQuery = db.UserClaims.AsQueryable();
+
+            // Users should have limited scope of claims they can access. In its simplest form, users can only access their own claims.
+            if (!userContext.IsAdministrator)
+            {
+                var userId = userContext.GetUserId() ?? throw new UserFriendlyApiException("User ID is not available in the context.");
+                baseQuery = baseQuery.Where(claim => claim.UserId == userId);
+            }
+
+            var query = baseQuery
                 .Select(claim => new ClaimDto
                 {
                     Type = claim.ClaimType!,
