@@ -28,9 +28,9 @@ namespace LightNap.Scaffolding.Templates
         /// </summary>
         public override string TransformText()
         {
-            this.Write("\r\nimport { AppRoute } from \"@routing\";\r\n\r\n// TODO: Add this route list to app/rou" +
-                    "ting/routes.ts.\r\n//\r\n// At the top of the file, import the routes:\r\n//\r\n// impor" +
-                    "t { Routes as ");
+            this.Write("\r\nimport { AppRoute } from \"@core\";\r\n\r\n// TODO: Add this route list to app/pages/" +
+                    "routes.ts.\r\n//\r\n// At the top of the file, import the routes:\r\n//\r\n// import { R" +
+                    "outes as ");
             
             #line 13 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Routes.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));

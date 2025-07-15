@@ -18,7 +18,7 @@ namespace LightNap.Scaffolding.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+    #line 1 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class Extensions : LightNap.Scaffolding.Templates.BaseTemplate
     {
@@ -30,70 +30,63 @@ namespace LightNap.Scaffolding.Templates
         {
             this.Write("\r\nusing ");
             
-            #line 7 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 7 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.EntityNamespace));
             
             #line default
             #line hidden
             this.Write(";\r\nusing ");
             
-            #line 8 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 8 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Dto.Request;\r\nusing ");
             
-            #line 9 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 9 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Dto.Response;\r\n\r\nnamespace ");
             
-            #line 11 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
-            
-            #line default
-            #line hidden
-            this.Write(".");
-            
-            #line 11 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Extensions\r\n{\r\n    public static class ");
             
-            #line 13 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 13 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Extensions\r\n    {\r\n        public static ");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write(" ToCreate(this Create");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
@@ -101,76 +94,76 @@ namespace LightNap.Scaffolding.Templates
             this.Write("Dto dto)\r\n        {\r\n            // TODO: Update these fields to match the DTO.\r\n" +
                     "            var item = new ");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("()\r\n            {\r\n");
             
-            #line 20 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 20 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
   if (Parameters.IdProperty.IsRequired) { 
             
             #line default
             #line hidden
             this.Write("\t\t        ");
             
-            #line 21 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 21 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.Name));
             
             #line default
             #line hidden
             this.Write(" = dto.");
             
-            #line 21 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 21 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.Name));
             
             #line default
             #line hidden
             this.Write(",\r\n");
             
-            #line 22 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 22 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
   } 
             
             #line default
             #line hidden
             
-            #line 23 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  foreach (var property in Parameters.SetProperties) { 
             
             #line default
             #line hidden
             this.Write("                ");
             
-            #line 24 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 24 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(" = dto.");
             
-            #line 24 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 24 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(",\r\n");
             
-            #line 25 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 25 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  } 
             
             #line default
             #line hidden
             this.Write("            };  \r\n            return item;\r\n        }\r\n\r\n        public static ");
             
-            #line 30 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 30 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto ToDto(this ");
             
-            #line 30 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 30 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
@@ -178,49 +171,49 @@ namespace LightNap.Scaffolding.Templates
             this.Write(" item)\r\n        {\r\n            // TODO: Update these fields to match the DTO.\r\n  " +
                     "          var dto = new ");
             
-            #line 33 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 33 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto()\r\n            {\r\n                ");
             
-            #line 35 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 35 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.Name));
             
             #line default
             #line hidden
             this.Write(" = item.");
             
-            #line 35 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 35 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.Name));
             
             #line default
             #line hidden
             this.Write(",\r\n");
             
-            #line 36 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 36 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  foreach (var property in Parameters.GetProperties) { 
             
             #line default
             #line hidden
             this.Write("                ");
             
-            #line 37 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 37 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(" = item.");
             
-            #line 37 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 37 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(",\r\n");
             
-            #line 38 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 38 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  } 
             
             #line default
@@ -228,14 +221,14 @@ namespace LightNap.Scaffolding.Templates
             this.Write("            };\r\n            return dto;\r\n        }\r\n\r\n        public static void " +
                     "UpdateFromDto(this ");
             
-            #line 43 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 43 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write(" item, Update");
             
-            #line 43 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 43 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
@@ -243,28 +236,28 @@ namespace LightNap.Scaffolding.Templates
             this.Write("Dto dto)\r\n        {\r\n            // TODO: Update these fields to match the DTO.\r\n" +
                     "");
             
-            #line 46 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 46 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  foreach (var property in Parameters.SetProperties) { 
             
             #line default
             #line hidden
             this.Write("            item.");
             
-            #line 47 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 47 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(" = dto.");
             
-            #line 47 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 47 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 48 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt"
+            #line 48 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Extensions\Extensions.tt"
  } 
             
             #line default

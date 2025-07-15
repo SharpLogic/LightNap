@@ -7,7 +7,7 @@
 using <#= Parameters.CoreNamespace #>.Api;
 using <#= Parameters.CoreNamespace #>.Data;
 using <#= Parameters.EntityNamespace #>;
-using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Extensions;
+using <#= Parameters.CoreNamespace #>.Extensions;
 using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Interfaces;
 using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Dto.Request;
 using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Dto.Response;
@@ -23,7 +23,7 @@ namespace <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Ser
             return item?.ToDto();
         }
 
-        public async Task<PagedResponse<<#= Parameters.PascalName #>Dto>> Search<#= Parameters.PascalNamePlural #>Async(Search<#= Parameters.PascalNamePlural #>Dto dto)
+        public async Task<PagedResponseDto<<#= Parameters.PascalName #>Dto>> Search<#= Parameters.PascalNamePlural #>Async(Search<#= Parameters.PascalNamePlural #>Dto dto)
         {
             var query = db.<#= Parameters.PascalNamePlural #>.AsQueryable();
 
@@ -47,7 +47,7 @@ namespace <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Ser
 
             var items = await query.Take(dto.PageSize).Select(item => item.ToDto()).ToListAsync();
 
-            return new PagedResponse<<#= Parameters.PascalName #>Dto>(items, dto.PageNumber, dto.PageSize, totalCount);
+            return new PagedResponseDto<<#= Parameters.PascalName #>Dto>(items, dto.PageNumber, dto.PageSize, totalCount);
         }
 
         public async Task<<#= Parameters.PascalName #>Dto> Create<#= Parameters.PascalName #>Async(Create<#= Parameters.PascalName #>Dto dto)

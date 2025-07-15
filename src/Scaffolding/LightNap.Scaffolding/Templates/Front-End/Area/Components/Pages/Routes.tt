@@ -4,9 +4,9 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-import { AppRoute } from "@routing";
+import { AppRoute } from "@core";
 
-// TODO: Add this route list to app/routing/routes.ts.
+// TODO: Add this route list to app/pages/routes.ts.
 //
 // At the top of the file, import the routes:
 //

@@ -29,8 +29,8 @@ namespace LightNap.Scaffolding.Templates
         public override string TransformText()
         {
             this.Write("\r\nimport { HttpClient } from \"@angular/common/http\";\r\nimport { Injectable, inject" +
-                    " } from \"@angular/core\";\r\nimport { API_URL_ROOT, PagedResponse } from \"@core\";\r\n" +
-                    "import { tap } from \"rxjs\";\r\nimport {");
+                    " } from \"@angular/core\";\r\nimport { API_URL_ROOT, PagedResponseDto } from \"@core\"" +
+                    ";\r\nimport { tap } from \"rxjs\";\r\nimport {");
             
             #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
@@ -178,7 +178,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("Request) {\r\n    return this.#http.post<PagedResponse<");
+            this.Write("Request) {\r\n    return this.#http.post<PagedResponseDto<");
             
             #line 31 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));

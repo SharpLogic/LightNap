@@ -191,7 +191,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("</label>\r\n        <p-calendar id=\"");
+            this.Write("</label>\r\n        <p-datepicker id=\"");
             
             #line 36 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Create\CreateHtml.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.CamelName));

@@ -6,7 +6,7 @@
 
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { API_URL_ROOT, PagedResponse } from "@core";
+import { API_URL_ROOT, PagedResponseDto } from "@core";
 import { tap } from "rxjs";
 import {<#= Parameters.PascalName #>Helper } from "../helpers/<#= Parameters.KebabName #>.helper";
 import { Create<#= Parameters.PascalName #>Request } from "../models/request/create-<#= Parameters.KebabName #>-request";
@@ -28,7 +28,7 @@ export class DataService {
   }
 
   search<#= Parameters.PascalNamePlural #>(request: Search<#= Parameters.PascalNamePlural #>Request) {
-    return this.#http.post<PagedResponse<<#= Parameters.PascalName #>>>(`${this.#apiUrlRoot}search`, request).pipe(
+    return this.#http.post<PagedResponseDto<<#= Parameters.PascalName #>>>(`${this.#apiUrlRoot}search`, request).pipe(
       tap(results => results.data.forEach(<#= Parameters.PascalName #>Helper.rehydrate))
     );
   }

@@ -8,7 +8,7 @@ using <#= Parameters.EntityNamespace #>;
 using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Dto.Request;
 using <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Dto.Response;
 
-namespace <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Extensions
+namespace <#= Parameters.CoreNamespace #>.Extensions
 {
     public static class <#= Parameters.PascalName #>Extensions
     {

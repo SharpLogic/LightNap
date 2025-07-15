@@ -28,15 +28,15 @@ namespace LightNap.Scaffolding.Templates
         /// </summary>
         public override string TransformText()
         {
-            this.Write("\r\nimport { PaginationRequest } from \"@core\";\r\nexport interface Search");
+            this.Write("\r\nimport { PagedRequestDto } from \"@core\";\r\nexport interface Search");
             
             #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\SearchRequest.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
             
             #line default
             #line hidden
-            this.Write("Request extends PaginationRequest {\r\n\t// TODO: Update these fields to match the s" +
-                    "erver\'s Search");
+            this.Write("Request extends PagedRequestDto {\r\n\t// TODO: Update these fields to match the ser" +
+                    "ver\'s Search");
             
             #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\SearchRequest.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
