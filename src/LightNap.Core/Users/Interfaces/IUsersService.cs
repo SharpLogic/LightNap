@@ -21,7 +21,7 @@ namespace LightNap.Core.Users.Interfaces
         /// </summary>  
         /// <param name="adminSearchUsersRequest">The request DTO containing search parameters.</param>  
         /// <returns>A task that represents the asynchronous operation. The task result contains the paged user data.</returns>  
-        Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest);
+        Task<PagedResponseDto<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest);
 
         /// <summary>  
         /// Gets a list of users asynchronously by their IDs.  

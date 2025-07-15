@@ -34,11 +34,11 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The list of users matching the criteria.</returns>
         /// <response code="200">Returns the list of users.</response>
         [HttpPost("search")]
-        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<PublicUserDto>>), 200)]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<PublicUserDto>>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<PagedResponse<PublicUserDto>>> SearchUsers(AdminSearchUsersRequestDto adminSearchUsersRequest)
+        public async Task<ApiResponseDto<PagedResponseDto<PublicUserDto>>> SearchUsers(AdminSearchUsersRequestDto adminSearchUsersRequest)
         {
-            return new ApiResponseDto<PagedResponse<PublicUserDto>>(await usersService.SearchUsersAsync(adminSearchUsersRequest));
+            return new ApiResponseDto<PagedResponseDto<PublicUserDto>>(await usersService.SearchUsersAsync(adminSearchUsersRequest));
         }
 
         /// <summary>
@@ -165,10 +165,10 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
         [HttpPost("claims/search")]
-        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<ClaimDto>>), 200)]
-        public async Task<ApiResponseDto<PagedResponse<ClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<ClaimDto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<ClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
-            return new ApiResponseDto<PagedResponse<ClaimDto>>(await claimsService.SearchClaimsAsync(searchClaimsRequest));
+            return new ApiResponseDto<PagedResponseDto<ClaimDto>>(await claimsService.SearchClaimsAsync(searchClaimsRequest));
         }
 
         /// <summary>
@@ -178,10 +178,10 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
         [HttpPost("user-claims/search")]
-        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<UserClaimDto>>), 200)]
-        public async Task<ApiResponseDto<PagedResponse<UserClaimDto>>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchUserClaimsRequest)
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<UserClaimDto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<UserClaimDto>>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchUserClaimsRequest)
         {
-            return new ApiResponseDto<PagedResponse<UserClaimDto>>(await claimsService.SearchUserClaimsAsync(searchUserClaimsRequest));
+            return new ApiResponseDto<PagedResponseDto<UserClaimDto>>(await claimsService.SearchUserClaimsAsync(searchUserClaimsRequest));
         }
 
         /// <summary>

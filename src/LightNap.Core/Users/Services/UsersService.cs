@@ -48,7 +48,7 @@ namespace LightNap.Core.Users.Services
         /// </summary>
         /// <param name="adminSearchUsersRequest">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
-        public async Task<PagedResponse<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest)
+        public async Task<PagedResponseDto<PublicUserDto>> SearchUsersAsync(AdminSearchUsersRequestDto adminSearchUsersRequest)
         {
             bool isAdministrator = userContext.IsAdministrator;
             bool isPrivileged = userContext.IsAuthenticated;
@@ -98,16 +98,16 @@ namespace LightNap.Core.Users.Services
             if (isAdministrator)
             {
                 var adminUserDtos = users.ToAdminUserDtoList().Cast<PublicUserDto>().ToList();
-                return new PagedResponse<PublicUserDto>(adminUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
+                return new PagedResponseDto<PublicUserDto>(adminUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
             }
 
             if (isPrivileged)
             {
                 var privilegedUserDtos = users.ToPrivilegedUserDtoList().Cast<PublicUserDto>().ToList();
-                return new PagedResponse<PublicUserDto>(privilegedUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
+                return new PagedResponseDto<PublicUserDto>(privilegedUserDtos, adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
             }
 
-            return new PagedResponse<PublicUserDto>(users.ToPublicUserDtoList(), adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
+            return new PagedResponseDto<PublicUserDto>(users.ToPublicUserDtoList(), adminSearchUsersRequest.PageNumber, adminSearchUsersRequest.PageSize, totalCount);
         }
 
         /// <summary>  

@@ -22,7 +22,7 @@ namespace LightNap.Core.Users.Services
         /// </summary>
         /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        public async Task<PagedResponse<ClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
+        public async Task<PagedResponseDto<ClaimDto>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
         {
             userContext.AssertAuthenticated();
 
@@ -76,7 +76,7 @@ namespace LightNap.Core.Users.Services
                 .Take(searchClaimsRequest.PageSize)
                 .ToListAsync();
 
-            return new PagedResponse<ClaimDto>(claims, searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
+            return new PagedResponseDto<ClaimDto>(claims, searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace LightNap.Core.Users.Services
         /// </summary>
         /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The paginated list of claims.</returns>
-        public async Task<PagedResponse<UserClaimDto>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchClaimsRequest)
+        public async Task<PagedResponseDto<UserClaimDto>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchClaimsRequest)
         {
             userContext.AssertAdministrator();
 
@@ -119,7 +119,7 @@ namespace LightNap.Core.Users.Services
                 .Take(searchClaimsRequest.PageSize)
                 .ToListAsync();
 
-            return new PagedResponse<UserClaimDto>(claims.ToUserClaimDtoList(), searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
+            return new PagedResponseDto<UserClaimDto>(claims.ToUserClaimDtoList(), searchClaimsRequest.PageNumber, searchClaimsRequest.PageSize, totalCount);
         }
 
         /// <summary>
