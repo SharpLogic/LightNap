@@ -43,7 +43,7 @@ export class LoginComponent {
     rememberMe: this.#fb.control(true),
   });
 
-  showMagicLink = this.#fb.control("", [Validators.email]);
+  showMagicLink = this.#fb.control("", [Validators.required, Validators.email]);
 
   errors = signal(new Array<string>());
 
