@@ -46,7 +46,13 @@
         </ng-template>
         <ng-template #emptymessage>
           <tr>
-            <td colspan="100%">There are no claims.</td>
+            <td colspan="100%">
+              <span>There are no matching claims.</span>
+
+              @if (form.value.type && form.value.value) {
+                <span> Add one <a [routerLink]="'admin-claim' | route: [form.value.type, form.value.value]">here</a>.</span>
+              }
+            </td>
           </tr>
         </ng-template>
       </p-table>

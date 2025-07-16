@@ -6,6 +6,6 @@ export class RouteTemplateHelpers {
    * @returns The processed string with parameters replaced
    */
   static processTemplate(template: string, params: any): string {
-    return template.replace(/:([\w\.]+)/g, (_, paramName) => `:${params[paramName] ?? paramName}`);
+    return template.replace(/:([\w\.]+)/g, (_, paramName) => params[paramName] ?? `:${paramName}`);
   }
 }
