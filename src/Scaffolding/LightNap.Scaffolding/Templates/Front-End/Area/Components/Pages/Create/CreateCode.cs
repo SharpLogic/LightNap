@@ -35,7 +35,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from ""@angular/forms"";
 import { ActivatedRoute, Router, RouterLink } from ""@angular/router"";
 import { BlockUiService, ErrorListComponent } from ""@core"";
 import { ButtonModule } from ""primeng/button"";
-import { CalendarModule } from ""primeng/calendar"";
+import { DatePickerModule } from ""primeng/datepicker"";
 import { CardModule } from ""primeng/card"";
 import { CheckboxModule } from ""primeng/checkbox"";
 import { InputNumberModule } from ""primeng/inputnumber"";
@@ -93,7 +93,7 @@ import { Create");
     CardModule,
     ReactiveFormsModule,
     RouterLink,
-    CalendarModule,
+    DatePickerModule,
     ButtonModule,
     InputTextModule,
     InputNumberModule,

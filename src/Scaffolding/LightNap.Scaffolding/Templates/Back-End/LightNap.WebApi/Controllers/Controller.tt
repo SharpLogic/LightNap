@@ -29,10 +29,10 @@ namespace <#= Parameters.WebApiNamespace #>.Controllers
         }
 
         [HttpPost("search")]
-        [ProducesResponseType(typeof(ApiResponseDto<PagedResponse<<#= Parameters.PascalName #>Dto>>), 200)]
-        public async Task<ApiResponseDto<PagedResponse<<#= Parameters.PascalName #>Dto>>> Search<#= Parameters.PascalNamePlural #>([FromBody] Search<#= Parameters.PascalNamePlural #>Dto dto)
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<<#= Parameters.PascalName #>Dto>>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<<#= Parameters.PascalName #>Dto>>> Search<#= Parameters.PascalNamePlural #>([FromBody] Search<#= Parameters.PascalNamePlural #>Dto dto)
         {
-            return new ApiResponseDto<PagedResponse<<#= Parameters.PascalName #>Dto>>(await <#= Parameters.CamelNamePlural #>Service.Search<#= Parameters.PascalNamePlural #>Async(dto));
+            return new ApiResponseDto<PagedResponseDto<<#= Parameters.PascalName #>Dto>>(await <#= Parameters.CamelNamePlural #>Service.Search<#= Parameters.PascalNamePlural #>Async(dto));
         }
 
         [HttpPost]

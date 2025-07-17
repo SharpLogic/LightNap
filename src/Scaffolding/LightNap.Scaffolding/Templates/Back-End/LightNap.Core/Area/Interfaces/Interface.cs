@@ -18,7 +18,7 @@ namespace LightNap.Scaffolding.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+    #line 1 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class Interface : LightNap.Scaffolding.Templates.BaseTemplate
     {
@@ -30,182 +30,182 @@ namespace LightNap.Scaffolding.Templates
         {
             this.Write("\r\nusing ");
             
-            #line 7 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 7 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".Api;\r\nusing ");
             
-            #line 8 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 8 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Dto.Request;\r\nusing ");
             
-            #line 9 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 9 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Dto.Response;\r\n\r\nnamespace ");
             
-            #line 11 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CoreNamespace));
             
             #line default
             #line hidden
             this.Write(".");
             
-            #line 11 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.NameForNamespace));
             
             #line default
             #line hidden
             this.Write(".Interfaces\r\n{\r\n    public interface I");
             
-            #line 13 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 13 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Service\r\n    {\r\n        Task<");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto?> Get");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Async(");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.BackEndType));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 15 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));
             
             #line default
             #line hidden
-            this.Write(");\r\n        Task<PagedResponse<");
+            this.Write(");\r\n        Task<PagedResponseDto<");
             
-            #line 16 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 16 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto>> Search");
             
-            #line 16 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 16 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
             
             #line default
             #line hidden
             this.Write("Async(Search");
             
-            #line 16 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 16 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
             
             #line default
             #line hidden
             this.Write("Dto dto);\r\n        Task<");
             
-            #line 17 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 17 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto> Create");
             
-            #line 17 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 17 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Async(Create");
             
-            #line 17 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 17 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto dto);\r\n        Task<");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto> Update");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Async(");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.BackEndType));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));
             
             #line default
             #line hidden
             this.Write(", Update");
             
-            #line 18 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 18 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto dto);\r\n        Task Delete");
             
-            #line 19 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 19 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Async(");
             
-            #line 19 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 19 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.BackEndType));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 19 "C:\Users\edkai\source\repos\EdKaim\CodeFleetAcademy\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
+            #line 19 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Back-End\LightNap.Core\Area\Interfaces\Interface.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));
             
             #line default

@@ -22,7 +22,7 @@ nav_order: 100
    cd LightNap
    ```
 
-2. **Back-End Setup:**
+2. **Backend Setup:**
 
    - Navigate to the `src` directory:
 
@@ -40,7 +40,7 @@ nav_order: 100
     The application will log the error and quit if anything in the startup or seeding process fails. This
     includes database migrations and user/role seeding. Please check the logs if a deployment fails to start.
 
-3. **Front-End Setup:**
+3. **Frontend Setup:**
 
    - In a separate terminal, navigate to the `lightnap-ng` directory:
 
@@ -69,4 +69,4 @@ nav_order: 100
   - **Password**: `A2m!nPassword`
 
   {: .note }
-  If you are debugging the back-end in Visual Studio you may see an **Exception User-Unhandled** dialog in the `IdentityService.LogInAsync` method for a `UserFriendlyApiException`. It is recommended that you disable this behavior by unchecking the `Break when this exception type is user-unhandled` since those exceptions are thrown regularly.
+  If you are debugging the backend in Visual Studio you may see an **Exception User-Unhandled** dialog in the `IdentityService.LogInAsync` method for a `UserFriendlyApiException`. It is recommended that you disable this behavior by unchecking the `Break when this exception type is user-unhandled` since those exceptions are thrown regularly.

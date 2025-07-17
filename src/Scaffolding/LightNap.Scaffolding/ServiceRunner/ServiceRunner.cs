@@ -2,7 +2,6 @@
 using LightNap.Scaffolding.ProjectManager;
 using LightNap.Scaffolding.TemplateManager;
 using LightNap.Scaffolding.Templates;
-using System.Runtime.CompilerServices;
 
 namespace LightNap.Scaffolding.ServiceRunner
 {
@@ -73,7 +72,7 @@ namespace LightNap.Scaffolding.ServiceRunner
                 {
                     new(new CreateDto() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Create{type.Name}Dto.cs"),
                     new(new Dto() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Response/{type.Name}Dto.cs"),
-                    new(new Extensions() { Parameters = templateParameters },$"{parameters.CoreProjectPath}/{pascalNamePlural}/Extensions/{type.Name}Extensions.cs"),
+                    new(new Extensions() { Parameters = templateParameters },$"{parameters.CoreProjectPath}/Extensions/{type.Name}Extensions.cs"),
                     new(new Interface() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Interfaces/I{type.Name}Service.cs"),
                     new(new SearchDto() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Search{pascalNamePlural}Dto.cs"),
                     new(new Service() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Services/{type.Name}Service.cs"),

@@ -1,0 +1,27 @@
+<api-response [apiResponse]="profile$" errorMessage="Error loading profile" loadingMessage="Loading profile...">
+  <ng-template #success let-profile>
+    <p-panel header="Manage Your Profile">
+      <ng-template #icons>
+        <p-button (onClick)="logOut()" label="Log Out" severity="danger" size="small" icon="pi pi-sign-out" />
+      </ng-template>
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
+          <label for="userName" class="font-semibold">User Name</label>
+          <span id="userName">{{ profile.userName }}</span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label for="email" class="font-semibold">Email</label>
+          <span id="email">{{ profile.email }} (<a [routerLink]="'change-email' | route">change</a>)</span>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="updateProfile()" autocomplete="off">
+          <div class="flex flex-col w-80 gap-5">
+            <error-list [errors]="errors()" />
+            <p-button type="submit" label="Update Profile" styleClass="w-full" [disabled]="!form.valid || !form.dirty" />
+          </div>
+        </form>
+      </div>
+    </p-panel>
+  </ng-template>
+</api-response>

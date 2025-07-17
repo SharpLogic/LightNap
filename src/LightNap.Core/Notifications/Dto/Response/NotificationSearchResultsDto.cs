@@ -6,7 +6,7 @@ namespace LightNap.Core.Notifications.Dto.Response
     /// Contains the search results for notifications.
     /// </summary>
     public class NotificationSearchResultsDto(IList<NotificationDto> data, int pageNumber, int pageSize, int totalResults)
-        : PagedResponse<NotificationDto>(data, pageNumber, pageSize, totalResults)
+        : PagedResponseDto<NotificationDto>(data, pageNumber, pageSize, totalResults)
     {
         /// <summary>
         /// The number of unread notifications.

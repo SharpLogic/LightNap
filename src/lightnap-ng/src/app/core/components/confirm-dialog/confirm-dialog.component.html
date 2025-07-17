@@ -1,0 +1,6 @@
+<p-confirmDialog #confirmDialog [key]="key()" [appendTo]="appendTo()">
+  <ng-template #footer>
+    <p-button [icon]="confirmIcon()" [label]="confirmText()" [severity]="confirmSeverity()" (onClick)="confirmDialog.onAccept()"></p-button>
+    <p-button [icon]="rejectIcon()" [label]="rejectText()" [severity]="rejectSeverity()" (onClick)="confirmDialog.onReject()"></p-button>
+  </ng-template>
+</p-confirmDialog>

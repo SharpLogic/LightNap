@@ -1,0 +1,61 @@
+<api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
+  <ng-template #success let-implicit>
+    @let results = asPagedResults(implicit);
+    <p-panel header="Manage Users">
+      <div [formGroup]="form" class="my-2">
+        <div class="flex items-center gap-1">
+          <div class="flex flex-col">
+            <input pInputText placeholder="User Name" formControlName="userName" />
+          </div>
+          <div class="flex flex-col">
+            <input pInputText placeholder="Email" formControlName="email" />
+          </div>
+        </div>
+      </div>
+      <p-table
+        [value]="results.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="results.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadUsersLazy($event)"
+      >
+        <ng-template #header>
+          <tr>
+            <th><i class="pi pi-trash"></i></th>
+            <th pSortableColumn="userName">User Name <p-sortIcon field="userName"></p-sortIcon></th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+            <th pSortableColumn="createdDate">Created <p-sortIcon field="createdDate"></p-sortIcon></th>
+            <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate"></p-sortIcon></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-user>
+          <tr>
+            <td>
+              <confirm-popup [key]="user.id" />
+              <p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser($event, user.id)" />
+            </td>
+            <td>
+              <a [routerLink]="'admin-user' | route: user.id"> {{ user.userName }}</a>
+              @if (user.lockoutEnd) {
+                <p-tag class="ml-1" severity="danger" value="Locked" />
+              }
+            </td>
+            <td>
+              <a href="mailto:{{ user.email }}"> {{ user.email }}</a>
+            </td>
+            <td>{{ user.createdDate | date: "short" }}</td>
+            <td>{{ user.lastModifiedDate | date: "short" }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">No users match the filters.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</api-response>

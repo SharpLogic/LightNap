@@ -26,7 +26,7 @@
 <#              break;
             case "Date": #>
             <label for="<#= property.CamelName #>" class="text-xl"><#= property.Name #></label>
-            <p-calendar id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" [showTime]="true" [showIcon]="true" />
+            <p-datepicker id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" [showTime]="true" [showIcon]="true" />
 <#              break;
             case "number": #>
             <label for="<#= property.CamelName #>" class="text-xl"><#= property.Name #></label>

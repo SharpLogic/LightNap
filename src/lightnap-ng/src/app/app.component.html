@@ -1,9 +1,9 @@
 <router-outlet></router-outlet>
 <p-toast position="top-right" key="global" />
 
-<p-blockUI [blocked]="showBlockUi">
+<p-blockUI [blocked]="showBlockUi()">
   <div class="text-white flex justify-center items-center gap-1 w-full">
-    <i class="{{blockUiIconClass}}"></i>
-    <span>{{blockUiMessage}}</span>
+    <i class="{{blockUiIconClass()}}"></i>
+    <span>{{blockUiMessage()}}</span>
   </div>
 </p-blockUI>

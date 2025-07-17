@@ -1,0 +1,12 @@
+<p-autoComplete
+  [suggestions]="users()"
+  (completeMethod)="searchUsers($event)"
+  optionLabel="userName"
+  [dropdown]="true"
+  [optionLabel]=""
+  [forceSelection]="true"
+  [placeholder]="'Search users...'"
+  [(ngModel)]="selectedUser"
+  (onSelect)="selectUser($any($event))"
+  (onClear)="selectUser($any({ value: null }))"
+/>

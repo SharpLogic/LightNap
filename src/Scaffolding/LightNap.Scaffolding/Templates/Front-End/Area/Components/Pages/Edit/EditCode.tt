@@ -11,7 +11,7 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { ApiResponseComponent, BlockUiService, ConfirmPopupComponent, ErrorListComponent, ToastService } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
-import { CalendarModule } from "primeng/calendar";
+import { DatePickerModule } from "primeng/datepicker";
 import { CardModule } from "primeng/card";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputNumberModule } from "primeng/inputnumber";
@@ -31,7 +31,7 @@ import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.Keba
     ApiResponseComponent,
     ConfirmPopupComponent,
     RouterLink,
-    CalendarModule,
+    DatePickerModule,
     ButtonModule,
     InputTextModule,
     InputNumberModule,

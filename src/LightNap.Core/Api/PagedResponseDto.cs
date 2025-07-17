@@ -4,7 +4,7 @@
     /// Represents a paginated response.
     /// </summary>
     /// <typeparam name="T">The type of data in the response.</typeparam>
-    public class PagedResponse<T>
+    public class PagedResponseDto<T>
     {
         /// <summary>
         /// Gets or sets the data for the current page.
@@ -32,13 +32,13 @@
         public int TotalPages => (int)Math.Ceiling(this.TotalCount / (double)this.PageSize);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedResponse{T}"/> class.
+        /// Initializes a new instance of the <see cref="PagedResponseDto{T}"/> class.
         /// </summary>
         /// <param name="data">The data for the current page.</param>
         /// <param name="pageNumber">The current page number.</param>
         /// <param name="pageSize">The size of the page.</param>
         /// <param name="totalCount">The total count of items.</param>
-        public PagedResponse(IList<T> data, int pageNumber, int pageSize, int totalCount)
+        public PagedResponseDto(IList<T> data, int pageNumber, int pageSize, int totalCount)
         {
             this.Data = data;
             this.PageNumber = pageNumber;

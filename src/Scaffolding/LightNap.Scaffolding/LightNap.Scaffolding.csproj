@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.14.1" />
-    <PackageReference Include="Microsoft.Build" Version="17.13.9" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.Build.Locator" Version="1.7.8" />
-    <PackageReference Include="System.CodeDom" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Build" Version="17.14.8" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.9.1" />
+    <PackageReference Include="System.CodeDom" Version="9.0.7" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
@@ -36,7 +36,7 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
-    <None Update="Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.tt">
+    <None Update="Templates\Back-End\LightNap.Core\Extensions\Extensions.tt">
       <LastGenOutput>Extensions.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
@@ -168,7 +168,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Dto.tt</DependentUpon>
     </Compile>
-    <Compile Update="Templates\Back-End\LightNap.Core\Area\Extensions\Extensions.cs">
+    <Compile Update="Templates\Back-End\LightNap.Core\Extensions\Extensions.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Extensions.tt</DependentUpon>

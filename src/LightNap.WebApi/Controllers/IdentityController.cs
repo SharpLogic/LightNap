@@ -16,27 +16,27 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Logs in a user.
         /// </summary>
-        /// <param name="requestDto">The login request DTO.</param>
+        /// <param name="loginRequest">The login request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("login")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<LoginSuccessDto>> LogIn(LoginRequestDto requestDto)
+        public async Task<ApiResponseDto<LoginSuccessDto>> LogIn(LoginRequestDto loginRequest)
         {
-            return new ApiResponseDto<LoginSuccessDto>(await identityService.LogInAsync(requestDto));
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.LogInAsync(loginRequest));
         }
 
         /// <summary>
         /// Registers a new user.
         /// </summary>
-        /// <param name="requestDto">The registration request DTO.</param>
+        /// <param name="registerRequest">The registration request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("register")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<LoginSuccessDto>> Register(RegisterRequestDto requestDto)
+        public async Task<ApiResponseDto<LoginSuccessDto>> Register(RegisterRequestDto registerRequest)
         {
-            return new ApiResponseDto<LoginSuccessDto>(await identityService.RegisterAsync(requestDto));
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.RegisterAsync(registerRequest));
         }
 
         /// <summary>
@@ -52,43 +52,103 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
+        /// Changes the password of the current user.
+        /// </summary>
+        /// <param name="changePasswordRequest">The password change request.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> indicating whether the password was changed successfully.
+        /// </returns>
+        /// <response code="200">If the password was changed successfully.</response>
+        /// <response code="400">If the request is invalid or the current password is incorrect.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        [HttpPost("change-password")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<ApiResponseDto<bool>> ChangePassword(ChangePasswordRequestDto changePasswordRequest)
+        {
+            await identityService.ChangePasswordAsync(changePasswordRequest);
+            return new ApiResponseDto<bool>(true);
+        }
+
+        /// <summary>
+        /// Changes the email of the current user.
+        /// </summary>
+        /// <param name="changeEmailRequest">The email change request.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> indicating whether the email was changed successfully.
+        /// </returns>
+        /// <response code="200">If the email was changed successfully.</response>
+        /// <response code="400">If the request is invalid or the current email is incorrect.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        [HttpPost("change-email")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<ApiResponseDto<bool>> ChangeEmail(ChangeEmailRequestDto changeEmailRequest)
+        {
+            await identityService.ChangeEmailAsync(changeEmailRequest);
+            return new ApiResponseDto<bool>(true);
+        }
+
+        /// <summary>
+        /// Confirms the email change of the current user.
+        /// </summary>
+        /// <param name="confirmEmailChangeRequest">The email change confirmation details.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> indicating whether the email change was confirmed successfully.
+        /// </returns>
+        /// <response code="200">If the email change was confirmed successfully.</response>
+        /// <response code="400">If the token is invalid or expired.</response>
+        /// <response code="401">If the user is not authenticated.</response>
+        [HttpPost("confirm-email-change")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public async Task<ApiResponseDto<bool>> ConfirmEmailChange(ConfirmEmailChangeRequestDto confirmEmailChangeRequest)
+        {
+            await identityService.ConfirmEmailChangeAsync(confirmEmailChangeRequest);
+            return new ApiResponseDto<bool>(true);
+        }
+
+        /// <summary>
         /// Resets the password for a user.
         /// </summary>
-        /// <param name="requestDto">The reset password request DTO.</param>
+        /// <param name="resetPasswordRequest">The reset password request DTO.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("reset-password")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> ResetPassword(ResetPasswordRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> ResetPassword(ResetPasswordRequestDto resetPasswordRequest)
         {
-            await identityService.ResetPasswordAsync(requestDto);
+            await identityService.ResetPasswordAsync(resetPasswordRequest);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Sets a new password for a user.
         /// </summary>
-        /// <param name="requestDto">The new password request DTO.</param>
+        /// <param name="newPasswordRequest">The new password request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("new-password")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<LoginSuccessDto>> NewPassword(NewPasswordRequestDto requestDto)
+        public async Task<ApiResponseDto<LoginSuccessDto>> NewPassword(NewPasswordRequestDto newPasswordRequest)
         {
-            return new ApiResponseDto<LoginSuccessDto>(await identityService.NewPasswordAsync(requestDto));
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.NewPasswordAsync(newPasswordRequest));
         }
 
         /// <summary>
         /// Verifies the two-factor authentication code.
         /// </summary>
-        /// <param name="requestDto">The verify code request DTO.</param>
+        /// <param name="verifyCodeRequest">The verify code request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("verify-code")]
         [ProducesResponseType(typeof(ApiResponseDto<string>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<string>> VerifyCode(VerifyCodeRequestDto requestDto)
+        public async Task<ApiResponseDto<string>> VerifyCode(VerifyCodeRequestDto verifyCodeRequest)
         {
-            return new ApiResponseDto<string>(await identityService.VerifyCodeAsync(requestDto));
+            return new ApiResponseDto<string>(await identityService.VerifyCodeAsync(verifyCodeRequest));
         }
 
         /// <summary>
@@ -105,42 +165,74 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Requests an email verification email for a user.
         /// </summary>
-        /// <param name="requestDto">Contains the email address of the user.</param>
+        /// <param name="verificationEmailRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-verification-email")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> RequestVerificationEmail(SendVerificationEmailRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> RequestVerificationEmail(SendVerificationEmailRequestDto verificationEmailRequest)
         {
-            await identityService.RequestVerificationEmailAsync(requestDto);
+            await identityService.RequestVerificationEmailAsync(verificationEmailRequest);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Verifies the email address of a user.
         /// </summary>
-        /// <param name="requestDto">The verify email request DTO.</param>
+        /// <param name="verifyEmailRequest">The verify email request DTO.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("verify-email")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> VerifyEmail(VerifyEmailRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> VerifyEmail(VerifyEmailRequestDto verifyEmailRequest)
         {
-            await identityService.VerifyEmailAsync(requestDto);
+            await identityService.VerifyEmailAsync(verifyEmailRequest);
             return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
         /// Requests a magic link the user can use to log in.
         /// </summary>
-        /// <param name="requestDto">Contains the email address of the user.</param>
+        /// <param name="magicLinkRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-magic-link")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> RequestMagicLinkEmail(SendMagicLinkRequestDto requestDto)
+        public async Task<ApiResponseDto<bool>> RequestMagicLinkEmail(SendMagicLinkRequestDto magicLinkRequest)
         {
-            await identityService.RequestMagicLinkEmailAsync(requestDto);
+            await identityService.RequestMagicLinkEmailAsync(magicLinkRequest);
+            return new ApiResponseDto<bool>(true);
+        }
+
+        /// <summary>
+        /// Retrieves the list of devices.
+        /// </summary>
+        /// <returns>The list of devices.</returns>
+        /// <response code="200">Returns the list of devices.</response>
+        /// <response code="401">Unauthorized access.</response>
+        [HttpGet("devices")]
+        [ProducesResponseType(typeof(ApiResponseDto<IList<DeviceDto>>), 200)]
+        [ProducesResponseType(401)]
+        public async Task<ApiResponseDto<IList<DeviceDto>>> GetDevices()
+        {
+            return new ApiResponseDto<IList<DeviceDto>>(await identityService.GetDevicesAsync());
+        }
+
+        /// <summary>
+        /// Revokes a device.
+        /// </summary>
+        /// <param name="deviceId">The ID of the device to revoke.</param>
+        /// <returns>A response indicating whether the device was successfully revoked.</returns>
+        /// <response code="200">Device successfully revoked.</response>
+        /// <response code="401">Unauthorized access.</response>
+        /// <response code="404">Device not found.</response>
+        [HttpDelete("devices/{deviceId}")]
+        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        public async Task<ApiResponseDto<bool>> RevokeDevice(string deviceId)
+        {
+            await identityService.RevokeDeviceAsync(deviceId);
             return new ApiResponseDto<bool>(true);
         }
     }

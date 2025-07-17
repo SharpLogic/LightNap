@@ -14,11 +14,12 @@ LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) is a full stack star
 
 - **.NET Web API**: Backend services built with .NET.
 - **SQL Server, SQLite, and In-Memory**: Data provider implementations for SQL Server, SQLite, and in-memory databases.
-- **ASP.NET Identity**: Out-of-the-box support for user authentication and authorization.
+- **ASP.NET Identity**: Out-of-the-box support for user authentication and authorization, including end-to-end support for roles and claims.
 - **JWT Token Management**: Secure token-based authentication.
 - **Identity Management**: Administrative features for managing user roles and permissions.
 - **Angular**: Frontend framework for building dynamic user interfaces.
 - **PrimeNG**: Rich set of UI components for Angular.
+- **Tailwind**: Utility-first CSS framework.
 - **Scaffolding**: [Generate complete infrastructure and UI](./common-scenarios/scaffolding) from a single entity class.
 
 Check out [the docs](https://lightnap.sharplogic.com).

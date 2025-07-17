@@ -15,6 +15,11 @@ namespace LightNap.WebApi.Services
         public bool IsAdministrator => this.IsInRole(Constants.Roles.Administrator);
 
         /// <summary>
+        /// True if the user is logged in; otherwise, false.
+        /// </summary>
+        public bool IsAuthenticated => httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? throw new InvalidOperationException();
+
+        /// <summary>
         /// Gets the user ID from the HTTP context.
         /// </summary>
         /// <returns>The user ID.</returns>

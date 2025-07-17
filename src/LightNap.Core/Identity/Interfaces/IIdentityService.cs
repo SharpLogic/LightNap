@@ -11,16 +11,16 @@ namespace LightNap.Core.Identity.Interfaces
         /// <summary>
         /// Logs in a user asynchronously.
         /// </summary>
-        /// <param name="requestDto">The login request data transfer object.</param>
+        /// <param name="loginRequest">The login request data transfer object.</param>
         /// <returns>The result of the login operation which may be a token or indicate additional required steps.</returns>
-        Task<LoginSuccessDto> LogInAsync(LoginRequestDto requestDto);
+        Task<LoginSuccessDto> LogInAsync(LoginRequestDto loginRequest);
 
         /// <summary>
         /// Registers a new user asynchronously.
         /// </summary>
-        /// <param name="requestDto">The register request data transfer object.</param>
+        /// <param name="registerRequest">The register request data transfer object.</param>
         /// <returns>The result of the login operation which may be a token or indicate additional required steps.</returns>
-        Task<LoginSuccessDto> RegisterAsync(RegisterRequestDto requestDto);
+        Task<LoginSuccessDto> RegisterAsync(RegisterRequestDto registerRequest);
 
         /// <summary>
         /// Logs out the current user asynchronously.
@@ -29,25 +29,48 @@ namespace LightNap.Core.Identity.Interfaces
         Task LogOutAsync();
 
         /// <summary>
+        /// Changes the password of the requesting user.
+        /// </summary>
+        /// <param name="requestDto">The data transfer object containing the password change information.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task ChangePasswordAsync(ChangePasswordRequestDto requestDto);
+
+        /// <summary>
+        /// Starts the email change process for the logged-in user.
+        /// </summary>
+        /// <param name="requestDto">The data transfer object containing the new email.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="UserFriendlyApiException">Thrown when the email change fails.</exception>
+        Task ChangeEmailAsync(ChangeEmailRequestDto requestDto);
+
+        /// <summary>
+        /// Confirms the email change for the specified user.
+        /// </summary>
+        /// <param name="requestDto">The data transfer object containing the new email and the confirmation code.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <exception cref="UserFriendlyApiException">Thrown when the email confirmation fails.</exception>
+        Task ConfirmEmailChangeAsync(ConfirmEmailChangeRequestDto requestDto);
+
+        /// <summary>
         /// Resets the password of a user asynchronously.
         /// </summary>
-        /// <param name="requestDto">The reset password request data transfer object.</param>
+        /// <param name="resetPasswordRequest">The reset password request data transfer object.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task ResetPasswordAsync(ResetPasswordRequestDto requestDto);
+        Task ResetPasswordAsync(ResetPasswordRequestDto resetPasswordRequest);
 
         /// <summary>
         /// Sets a new password for a user asynchronously.
         /// </summary>
-        /// <param name="requestDto">The new password request data transfer object.</param>
+        /// <param name="newPasswordRequest">The new password request data transfer object.</param>
         /// <returns>The result of the login operation which may be a token or indicate additional required steps.</returns>
-        Task<LoginSuccessDto> NewPasswordAsync(NewPasswordRequestDto requestDto);
+        Task<LoginSuccessDto> NewPasswordAsync(NewPasswordRequestDto newPasswordRequest);
 
         /// <summary>
         /// Verifies a 2FA code asynchronously.
         /// </summary>
-        /// <param name="requestDto">The verify code request data transfer object.</param>
+        /// <param name="verifyCodeRequest">The verify code request data transfer object.</param>
         /// <returns>The access token.</returns>
-        Task<string> VerifyCodeAsync(VerifyCodeRequestDto requestDto);
+        Task<string> VerifyCodeAsync(VerifyCodeRequestDto verifyCodeRequest);
 
         /// <summary>
         /// Gets the access token of the current user asynchronously.
@@ -58,22 +81,35 @@ namespace LightNap.Core.Identity.Interfaces
         /// <summary>
         /// Requests email verification for a user asynchronously.
         /// </summary>
-        /// <param name="requestDto">Contains the email address of the user.</param>
+        /// <param name="verificationEmailRequest">Contains the email address of the user.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task RequestVerificationEmailAsync(SendVerificationEmailRequestDto requestDto);
+        Task RequestVerificationEmailAsync(SendVerificationEmailRequestDto verificationEmailRequest);
 
         /// <summary>
         /// Verifies an email asynchronously.
         /// </summary>
-        /// <param name="requestDto">The verify email request data transfer object.</param>
+        /// <param name="verifyEmailRequest">The verify email request data transfer object.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task VerifyEmailAsync(VerifyEmailRequestDto requestDto);
+        Task VerifyEmailAsync(VerifyEmailRequestDto verifyEmailRequest);
 
         /// <summary>
         /// Requests a magic link the user can use to log in.
         /// </summary>
-        /// <param name="requestDto">The request data transfer object containing the email address.</param>
+        /// <param name="magicLinkRequest">The request data transfer object containing the email address.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task RequestMagicLinkEmailAsync(SendMagicLinkRequestDto requestDto);
+        Task RequestMagicLinkEmailAsync(SendMagicLinkRequestDto magicLinkRequest);
+
+        /// <summary>  
+        /// Retrieves a list of devices for the requesting user.  
+        /// </summary>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="DeviceDto"/>.</returns>  
+        Task<IList<DeviceDto>> GetDevicesAsync();
+
+        /// <summary>  
+        /// Revokes a device for the requesting user.  
+        /// </summary>  
+        /// <param name="deviceId">The ID of the device to be revoked.</param>  
+        /// <returns>A task that represents the asynchronous operation.</returns>  
+        Task RevokeDeviceAsync(string deviceId);
     }
 }

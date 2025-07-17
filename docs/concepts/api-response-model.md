@@ -7,7 +7,7 @@ nav_order: 400
 
 # {{ page.title }}
 
-LightNap relies on a REST API model for communication between the Angular front-end and the .NET back-end. Both implementations use the standard models provided by their respective platforms, but with slight adjustments to make it easier for developers to elegantly implement new features.
+LightNap relies on a REST API model for communication between the Angular frontend and the .NET backend. Both implementations use the standard models provided by their respective platforms, but with slight adjustments to make it easier for developers to elegantly implement new features.
 
 ## The API Response Object
 
@@ -29,11 +29,11 @@ All API responses should be returned as JSON using the following structure:
 | `result`        | The payload of the response.  | The object, array, string, or number response. Assumed to be `null` if not returned. Not provided if the operation did not succeed.            |
 | `errorMessages` | User-friendly error messages. | A list of user-friendly error messages. Not provided if the operation succeeded.                                                               |
 
-The back-end uses the `ApiResponseDto` object to represent responses while the front-end uses the `ApiResponse` interface.
+The backend uses the `ApiResponseDto` object to represent responses while the frontend uses the `ApiResponse` interface.
 
 ## HTTP Codes
 
-LightNap tries to return `200 OK` codes for all responses handled by the .NET pipeline. This makes it easier for API consumers, like the Angular front-end, to process responses without having to focus on the various ways errors can be returned and interpreted. In other words, API consumers can expect `200 OK` responses back from all API requests unless there is an error that results in the pipeline not being invoked.
+LightNap tries to return `200 OK` codes for all responses handled by the .NET pipeline. This makes it easier for API consumers, like the Angular frontend, to process responses without having to focus on the various ways errors can be returned and interpreted. In other words, API consumers can expect `200 OK` responses back from all API requests unless there is an error that results in the pipeline not being invoked.
 
 The main exceptions are:
 
@@ -47,15 +47,15 @@ The main exceptions are:
 
 - `405 Method Not Allowed` is automatically sent when an endpoint exists but the wrong verb is used. For example, using `POST` on a `PUT` endpoint.
 
-There may also be 500-level codes thrown due to the back-end having unrecoverable issues, such as the service being unavailable.
+There may also be 500-level codes thrown due to the backend having unrecoverable issues, such as the service being unavailable.
 
-## Back-End Practices
+## Backend Practices
 
 LightNap is architected to perform all major work in `LightNap.Core` service classes. These services expect to run in a trusted context where user access and permissions have already been validated. As a result, they accept and return DTOs and only perform validation work related to business rules and data integrity. Return errors from these services by throwing `UserFriendlyException`. These exceptions are caught by the Web API middleware, logged as applicable, and converted to `ApiResponse` objects with the provided user-friendly error messages.
 
 Successful responses are returned from the core services as DTOs that are then wrapped by the invoking API controller as a properly-typed `ApiResponse` object.
 
-## Front-End Practices
+## Frontend Practices
 
 LightNap's `apiResponseInterceptor` automatically unwraps successful API responses and publishes the `result` property directly. This allows all pipelines to assume the underlying API calls have succeeded, significantly streamlining code because they don't have to deal with the wrapping `ApiResponse` object.
 

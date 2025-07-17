@@ -36,8 +36,8 @@ import { FormBuilder, ReactiveFormsModule } from ""@angular/forms"";
 import { RouterModule } from ""@angular/router"";
 import { ApiResponseComponent, EmptyPagedResponse } from ""@core"";
 import { ButtonModule } from ""primeng/button"";
-import { CalendarModule } from ""primeng/calendar"";
 import { CardModule } from ""primeng/card"";
+import { DatePickerModule } from ""primeng/datepicker"";
 import { InputNumberModule } from ""primeng/inputnumber"";
 import { InputTextModule } from ""primeng/inputtext"";
 import { PanelModule } from ""primeng/panel"";
@@ -97,7 +97,7 @@ import { ");
     CardModule,
     InputTextModule,
     InputNumberModule,
-    CalendarModule,
+    DatePickerModule,
     CheckboxModule,
     ApiResponseComponent,
     PanelModule,

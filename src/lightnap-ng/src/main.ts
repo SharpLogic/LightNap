@@ -1,6 +1,6 @@
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { enableProdMode, importProvidersFrom, inject, provideAppInitializer } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
@@ -9,12 +9,12 @@ import { apiResponseInterceptor } from "@core/interceptors/api-response-intercep
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { InitializationService } from "@core/services/initialization.service";
 import { PrependNameTitleStrategy } from "@core/strategies/prepend-name-title.strategy";
-import { Routes } from "@routing/routes";
-import { ConfirmationService, MessageService } from "primeng/api";
-import { AppComponent } from "./app/app.component";
-import { environment } from "./environments/environment";
-import { providePrimeNG } from "primeng/config";
 import Aura from "@primeng/themes/aura";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { providePrimeNG } from "primeng/config";
+import { AppComponent } from "./app/app.component";
+import { Routes } from "./app/pages/routes";
+import { environment } from "./environments/environment";
 
 if (environment.production) {
   enableProdMode();
@@ -25,6 +25,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(Routes, withInMemoryScrolling(), withComponentInputBinding(), withRouterConfig({})),
     importProvidersFrom(BrowserModule),
     InitializationService,
+    provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(InitializationService).initialize()),
     provideAnimations(),
     providePrimeNG({

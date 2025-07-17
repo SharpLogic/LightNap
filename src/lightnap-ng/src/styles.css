@@ -11,6 +11,7 @@
  */
 a {
   @apply no-underline;
+  @apply text-primary;
 }
 
 a:hover {

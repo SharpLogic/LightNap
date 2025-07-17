@@ -11,7 +11,7 @@ using <#= ns #>;
 
 namespace <#= Parameters.CoreNamespace #>.<#= Parameters.NameForNamespace #>.Dto.Request
 {
-    public class Search<#= Parameters.PascalNamePlural #>Dto : PaginationRequestDtoBase
+    public class Search<#= Parameters.PascalNamePlural #>Dto : PagedRequestDtoBase
     {
         // TODO: Update to reflect which fields to include for searches.
 <# foreach (var property in Parameters.GetProperties) { #>

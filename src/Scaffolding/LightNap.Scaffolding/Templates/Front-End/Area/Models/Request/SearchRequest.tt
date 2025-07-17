@@ -4,8 +4,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-import { PaginationRequest } from "@core";
-export interface Search<#= Parameters.PascalNamePlural #>Request extends PaginationRequest {
+import { PagedRequestDto } from "@core";
+export interface Search<#= Parameters.PascalNamePlural #>Request extends PagedRequestDto {
 	// TODO: Update these fields to match the server's Search<#= Parameters.PascalName #>Dto.
 <# foreach (var property in Parameters.GetProperties) { #>
 	<#= property.CamelName #>?: <#= property.FrontEndType #>;

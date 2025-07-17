@@ -1,0 +1,33 @@
+<api-response [apiResponse]="devices$()" errorMessage="Error loading devices" loadingMessage="Loading devices...">
+  <ng-template #success let-devices>
+    <p-panel header="Manage Your Devices">
+      <p-table [value]="devices">
+        <ng-template #header>
+          <tr>
+            <th><i class="pi pi-trash"></i></th>
+            <th>Last Seen</th>
+            <th>Details</th>
+            <th>IP Address</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-device>
+          <tr>
+            <td>
+              <confirm-dialog [key]="device.id" />
+              <p-button severity="danger" icon="pi pi-trash" title="Remove device" (onClick)="revokeDevice($event, device.id)" />
+            </td>
+            <td>{{ device.lastSeen | date: "short" }}</td>
+            <td>{{ device.details }}</td>
+            <td>{{ device.ipAddress }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">There are no logged in devices.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</api-response>

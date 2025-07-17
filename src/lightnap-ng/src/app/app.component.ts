@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterOutlet } from "@angular/router";
 import { BlockUiService } from "@core";
@@ -16,19 +16,19 @@ export class AppComponent implements OnInit {
   #primengConfig = inject(PrimeNG);
   #blockUiService = inject(BlockUiService);
 
-  showBlockUi = false;
-  blockUiIconClass = "";
-  blockUiMessage = "";
+  showBlockUi = signal(false);
+  blockUiIconClass = signal("pi pi-spin pi-spinner text-4xl");
+  blockUiMessage = signal("Processing...");
 
   constructor() {
     this.#blockUiService.onShow$.pipe(takeUntilDestroyed()).subscribe(blockUiParams => {
-      this.showBlockUi = true;
-      this.blockUiMessage = blockUiParams.message ?? "Processing...";
-      this.blockUiIconClass = blockUiParams.iconClass ?? "pi pi-spin pi-spinner text-4xl";
+      this.showBlockUi.set(true);
+      this.blockUiMessage.set(blockUiParams.message ?? "Processing...");
+      this.blockUiIconClass.set(blockUiParams.iconClass ?? "pi pi-spin pi-spinner text-4xl");
     });
 
     this.#blockUiService.onHide$.subscribe(() => {
-      this.showBlockUi = false;
+      this.showBlockUi.set(false);
     });
   }
 

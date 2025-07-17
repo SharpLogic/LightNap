@@ -1,11 +1,12 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
+import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { of, throwError } from "rxjs";
-import { apiResponseInterceptor } from "./api-response-interceptor";
-import { IdentityService } from "src/app/identity/services/identity.service";
-import { RouteAliasService } from "@routing";
-import { environment } from "src/environments/environment";
 import { HttpErrorApiResponse } from "@core";
+import { RouteAliasService } from "@core";
+import { of, throwError } from "rxjs";
+import { IdentityService } from "@core/services/identity.service";
+import { environment } from "src/environments/environment";
+import { apiResponseInterceptor } from "./api-response-interceptor";
 
 describe("apiResponseInterceptor", () => {
   let identityService: jasmine.SpyObj<IdentityService>;
@@ -18,6 +19,7 @@ describe("apiResponseInterceptor", () => {
 
     TestBed.configureTestingModule({
       providers: [
+        provideZonelessChangeDetection(),
         { provide: IdentityService, useValue: identityServiceSpy },
         { provide: RouteAliasService, useValue: routeAliasServiceSpy },
       ],
@@ -93,6 +95,7 @@ describe("apiResponseInterceptor", () => {
     TestBed.runInInjectionContext(() => {
       apiResponseInterceptor(request, next).subscribe({
         error: (event: HttpErrorApiResponse<any>) => {
+          expect(event).toBeInstanceOf(HttpErrorApiResponse);
           done();
         },
       });
