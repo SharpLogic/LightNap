@@ -60,7 +60,7 @@ The script above is run from the repo's main `src` directory to cleanly align wi
 
 ## Generated Files
 
-New files are generated to create a new area based around the provided entity. Instead of changing content within the other areas (`Profile`, `Admin`, etc.) the new area will match the entity name (like `TestEntity`) and provide a starting point for integration. It's up to the developer to decide whether and which items are merged into other areas or kept contained within the newly created area.
+Most new files are generated to create a new area based around the provided entity. Instead of changing content within the other areas (`Profile`, `Admin`, etc.) the new area will match the entity name (like `TestEntity`) and provide a starting point for integration. It's up to the developer to decide whether and which items are merged into other areas or kept contained within the newly created area.
 
 In the Core project, everything is added in a new `TestEntities` area folder:
 
@@ -70,9 +70,10 @@ In the Core project, everything is added in a new `TestEntities` area folder:
 | `Dto/Request/CreateTestEntityDto.cs` | Parameter for create requests.                            |
 | `Dto/Request/SearchTestEntityDto.cs` | Parameter for search requests.                            |
 | `Dto/Request/UpdateTestEntityDto.cs` | Parameter for update requests.                            |
-| `Extensions/TestEntityExtensions.cs` | Includes methods for mapping between the entity and DTOs. |
 | `Interfaces/ITestEntityService.cs`   | Interface for the area service.                           |
 | `Services/TestEntityService.cs`      | Implementation of the area service.                       |
+
+The only core service file not stored in the new area folder the extension methods class for mapping between the entity and DTOs, `TestEntityExtensions.cs`. It's created alongside all other extension classes in the root `Extensions` folder.
 
 In the Web API project:
 
@@ -117,11 +118,11 @@ public static IServiceCollection AddApplicationServices(this IServiceCollection 
   ...
 ```
 
-Now you can [build and run](../getting-started/building-and-running) the back-end.
+Now you can [build and run](../getting-started/building-and-running) the backend.
 
-### Registering the Area Routes in the Angular Front-End
+### Registering the Area Routes in the Angular Frontend
 
-The new Angular area routes need to be added to the root route tree in `app/routing/routes.ts` so that the area pages can be accessed.
+The new Angular area routes need to be added to the root route tree in `app/pages/routes.ts` so that the area pages can be accessed.
 
 First, add the import of the routes at the top:
 
@@ -140,7 +141,7 @@ children: [
   ...
 ```
 
-Now you can [build and run](../getting-started/building-and-running) the front-end. You can access the new area at a URL like `http://localhost:4200/test-entities`.
+Now you can [build and run](../getting-started/building-and-running) the frontend. You can access the new area at a URL like `http://localhost:4200/test-entities`.
 
 ## Undoing the Scaffolder
 

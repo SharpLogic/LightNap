@@ -11,11 +11,11 @@ LightNap relies on Angular's built-in routing support with some extensions and a
 
 ## Route Definitions
 
-The root route definition file is at `app/routing/routes.ts`. This file contains the array of top-level routes for the areas of the app, such as `identity`, `profile`, `admin`, etc. Each of those top-level routes then references a child routes file within its area folder, such as `app/identity/components/pages/routes.ts`. This organization allows the path structure of each area to be kept close to the pages it references and easier to manage.
+The root route definition file is at `app/pages/routes.ts`. This file contains the array of top-level routes for the areas of the app, such as `identity`, `profile`, `admin`, etc. Each of those top-level routes then references a child routes file within its area folder, such as `app/pages/identity/routes.ts`. This organization allows the path structure of each area to be kept close to the pages it references and easier to manage.
 
 ## Route Aliases
 
-Route aliases are shortcodes that reference exactly one route configuration in the app. The list of supported route aliases is defined in `app/routing/models/route-alias.ts`.
+Route aliases are shortcodes that reference exactly one route configuration in the app. The list of supported route aliases is defined in `app/core/routing/models/route-alias.ts`.
 
 {: .note}
 Using route aliases is optional. Developers can still hardcode inline routes if preferred.

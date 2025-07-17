@@ -13,7 +13,7 @@ LightNap uses ASP.NET Roles to manage application authorization. By default ther
 
 Roles are defined in `Configuration/ApplicationRoles.cs` in the `LightNap.Core` project. To add a new role, simply use the existing `Administrator` role as a reference example. Roles use the custom `ApplicationRole` instance that can be extended with additional properties, if required.
 
-New roles must also be added to the `ApplicationRoles.All` collection so that they can be managed on startup. The app automatically references this collection to add any roles that don't yet exist and delete those that don't exist anymore. It's also the list that's returned to the front-end for managing user membership in roles.
+New roles must also be added to the `ApplicationRoles.All` collection so that they can be managed on startup. The app automatically references this collection to add any roles that don't yet exist and delete those that don't exist anymore. It's also the list that's returned to the frontend for managing user membership in roles.
 
 Here's an example of how a new `Moderator` role can be added:
 
@@ -80,11 +80,11 @@ Learn about [seeding users in a role](../getting-started/seeding-users).
 
 ## Roles and JSON Web Tokens (JWTs)
 
-Roles are automatically embedded in access tokens by the back-end to authorize future requests. As a result, tokens issued before a role assignment has changed will not reflect the latest role behavior until they are replaced. The maximum theoretical time for this is based on how long the access token is [configured to expire in the application settings](../getting-started/configuring-jwt). Users can speed this up by logging out and in again.
+Roles are automatically embedded in access tokens by the backend to authorize future requests. As a result, tokens issued before a role assignment has changed will not reflect the latest role behavior until they are replaced. The maximum theoretical time for this is based on how long the access token is [configured to expire in the application settings](../getting-started/configuring-jwt). Users can speed this up by logging out and in again.
 
-## Using Roles on the Front-End
+## Using Roles on the Frontend
 
-Roles are automatically extracted from JWTs on the front-end, so there's no additional work required to get them.
+Roles are automatically extracted from JWTs on the frontend, so there's no additional work required to get them.
 
 ### Accessing the Logged-In User's Roles
 
@@ -92,7 +92,7 @@ The best way to access their roles is via `IdentityService.watchUserRole$()` or 
 
 ### Applying the Logged-In User's Roles
 
-The main benefit to using roles on the front-end is to show components available to a user belonging to a given role. There are some good patterns in place that can be referenced when applying behavior for new roles.
+The main benefit to using roles on the frontend is to show components available to a user belonging to a given role. There are some good patterns in place that can be referenced when applying behavior for new roles.
 
 #### Route Guards
 
@@ -101,7 +101,7 @@ Route guards make it easy to determine whether a user can see a given route base
 To protect a route, add the guard to its `canActivate` collection. A reference example for this is in `routing\routes.ts` where the `admin` branch of the route tree is protected by the `roleGuard`.
 
 {: .important }
-Front-end work to restrict access to functionality is superficial. While it provides a nicer user experience to show or hide components, the key security considerations must be taken care of on the back-end. Never rely on front-end security for anything meaningful because insecure back-end APIs can be easily exploited.
+Frontend work to restrict access to functionality is superficial. While it provides a nicer user experience to show or hide components, the key security considerations must be taken care of on the backend. Never rely on frontend security for anything meaningful because insecure backend APIs can be easily exploited.
 
 #### Role Directives
 
@@ -137,4 +137,4 @@ You can also [change the sidebar menu](./sidebar-menu) based on the roles of the
 
 ### Managing User Roles
 
-Most administrative tasks should be covered by the built-in administrative functionality. By default, any `Administrator` can add and remove users from the roles registered on the back-end. Changes to roles are picked up automatically, so running the application with the changes above will now show the new `Moderator` role.
+Most administrative tasks should be covered by the built-in administrative functionality. By default, any `Administrator` can add and remove users from the roles registered on the backend. Changes to roles are picked up automatically, so running the application with the changes above will now show the new `Moderator` role.

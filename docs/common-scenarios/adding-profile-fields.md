@@ -12,9 +12,9 @@ The default LightNap profile isn't very interesting. It just has some default fi
 - TOC
 {:toc}
 
-## Back-End Changes
+## Backend Changes
 
-We'll start off by updating the back-end by changing in layers from entity model to DTOs and then services. Most of the back-end work that needs to be done to change the data model happens in the `LightNap.Core` project.
+We'll start off by updating the backend by changing in layers from entity model to DTOs and then services. Most of the backend work that needs to be done to change the data model happens in the `LightNap.Core` project.
 
 ### Updating the Entity
 
@@ -55,30 +55,8 @@ Almost all access to the `ApplicationUser` class is restricted to the services e
       ...
     ```
 
-5. Open `Administrator/Dto/Response/AdminUserDto.cs`. This is the DTO used in responses to administrator requests for users.
+5. Open `Identity/Dto/Request/RegisterRequestDto.cs`. This is the DTO submitted by users registering an account on the site.
 6. Add fields for the first and last name.
-
-    ```csharp
-    public class AdminUserDto
-    {
-      public required string FirstName { get; set; }
-      public required string LastName { get; set; }
-      ...
-    ```
-
-7. Open `Administrator/Dto/Request/UpdateAdminUserDto.cs`. This is the DTO used by administrators requesting updates to a user.
-8. Add fields for the first and last name.
-
-    ```csharp
-    public class UpdateAdminUserDto
-    {
-      public required string FirstName { get; set; }
-      public required string LastName { get; set; }
-      ...
-    ```
-
-9. Open `Identity/Dto/Request/RegisterRequestDto.cs`. This is the DTO submitted by users registering an account on the site.
-10. Add fields for the first and last name.
 
     ```csharp
     public class RegisterRequestDto
@@ -87,9 +65,6 @@ Almost all access to the `ApplicationUser` class is restricted to the services e
       public required string LastName { get; set; }
       ...
     ```
-
-{: .note}
-If there were other DTOs for `ApplicationUser`, such as those used by the `PublicService` or `UserService` services, then those would need to be updated as well.
 
 ### Updating the Extension Method Mappings
 
@@ -130,62 +105,6 @@ There is no direct mapping relationship between the `ApplicationUser` class and 
       ...
     ```
 
-5. Add fields for the first and last name to the `ToAdminUserDto` method.
-
-    ```csharp
-    public static AdminUserDto ToAdminUserDto(this ApplicationUser user)
-    {
-      ...
-      return new AdminUserDto()
-      {
-        FirstName = user.FirstName,
-        LastName = user.LastName,
-        ...
-    ```
-
-6. Add fields for the first and last name to the `UpdateAdminUserDto` method.
-
-    ```csharp
-    public static void UpdateAdminUserDto(this ApplicationUser user, UpdateAdminUserDto dto)
-    {
-      user.FirstName = dto.FirstName;
-      user.LastName = dto.LastName;
-      ...
-    ```
-
-### Updating the Administrator Search Users Back-End
-
-1. Open `Administrator/Dto/Request/SearchAdminUsersDto.cs`. This is the DTO used by administrators to search the membership across supported fields.
-2. Add fields for the first and last name.
-
-    ```csharp
-    public class SearchAdminUsersDto
-    {
-      public string? FirstName { get; set; }
-      public string? LastName { get; set; }
-      ...
-    ```
-
-3. Open `Administrator/Services/AdministratorService.cs`. This is the service that fulfills all administrator-related functionality.
-4. Update the `SearchUsersAsync` method to apply the name parameters for exact matches, if provided.
-
-    ``` csharp
-    public async Task<PagedResponse<AdminUserDto>> SearchUsersAsync(SearchUsersRequestDto requestDto)
-    {
-        IQueryable<ApplicationUser> query = db.Users.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(requestDto.FirstName))
-        {
-            query = query.Where(user => user.FirstName == user.FirstName);
-        }
-
-        if (!string.IsNullOrWhiteSpace(requestDto.LastName))
-        {
-            query = query.Where(user => user.LastName == user.LastName);
-        }
-        ...
-    ```
-
 ### Add A Migration
 
 1. Add an [Entity Framework migration](../getting-started/database-providers/ef-migrations) and update the database.
@@ -197,19 +116,19 @@ There is no direct mapping relationship between the `ApplicationUser` class and 
 
 For the sake of brevity, updates to the test project are not covered in this article. However, updating them should be straightforward as the API surface area limits changes exposed to the outside to the DTOs with new fields, such as `RegisterRequestDto`. It's also a good practice to add/update tests for the new fields and functionality.
 
-### Additional Back-End Changes
+### Additional Backend Changes
 
-Because all profile manipulation is handled through DTOs and extension methods there is no need to make any other changes on the back-end. The data will now flow from the REST API as request DTOs that validate input values as required.
+Because all profile manipulation is handled through DTOs and extension methods there is no need to make any other changes on the backend. The data will now flow from the REST API as request DTOs that validate input values as required.
 
 If there is a need to enforce additional restrictions, such as length ranges, that can be done via attributes on the request DTOs (see `RegisterRequestDto` for examples on how this can be done). Otherwise all incoming request DTOs are passed by the controllers to their underlying services that call `ApplicationUser` extension methods to get or update database data. However, if there is a need to apply further rules or transformations, that can be done within the service methods.
 
-## Front-End Changes
+## Frontend Changes
 
-The front-end is also divided into areas that map directly to the back-end areas including profile, administrator, and identity. We will approach them area by area so that a full data flow from API to component can be completed before moving to the next. Everything front-end is contained in the `lightnap-ng` project.
+The frontend is also divided into areas that map directly to the backend areas including profile, administrator, and identity. We will approach them area by area so that a full data flow from API to component can be completed before moving to the next. Everything frontend is contained in the `lightnap-ng` project.
 
-### Updating the Registration Front-End
+### Updating the Registration Frontend
 
-1. Open `app/identity/models/request/register-request.ts`. This is the model that maps to the back-end `RegisterRequestDto`.
+1. Open `app/core/backend-api/identity/dtos/identity/request/register-request-dto.ts`. This is the model that maps to the backend `RegisterRequestDto`.
 2. Add fields for the first and last names.
 
     ``` typescript
@@ -219,7 +138,7 @@ The front-end is also divided into areas that map directly to the back-end areas
       ...
     ```
 
-3. Open `app/identity/components/pages/register.component.ts`. This is the code for the page where users register.
+3. Open `app/pages/identity/register.component.ts`. This is the code for the page where users register.
 4. Add fields for the first and last names to the form. This will allow easy binding in the reactive form markup.
 
     ``` typescript
@@ -242,40 +161,22 @@ The front-end is also divided into areas that map directly to the back-end areas
         ...
     ```
 
-6. Open `app/identity/components/pages/register.component.html`. This is the markup for the page where users register.
+6. Open `app/pages/identity/register.component.html`. This is the markup for the page where users register.
 7. Add input fields for the names before the password input.
 
     ``` html
     ...
-    <label for="firstName" class="block text-900 text-xl font-medium mb-2">First Name</label>
-    <input
-      id="firstName"
-      type="text"
-      placeholder="First Name"
-      pInputText
-      formControlName="firstName"
-      class="w-full md:w-30rem mb-5"
-      style="padding: 1rem"
-    />
+    <label for="firstName" class="text-xl">First Name</label>
+    <input id="firstName" type="text" placeholder="First Name" pInputText formControlName="firstName" />
 
-    <label for="lastName" class="block text-900 text-xl font-medium mb-2">Last Name</label>
-    <input
-      id="lastName"
-      type="text"
-      placeholder="Last Name"
-      pInputText
-      formControlName="lastName"
-      class="w-full md:w-30rem mb-5"
-      style="padding: 1rem"
-    />
-
-    <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
+    <label for="lastName" class="text-xl">Last Name</label>
+    <input id="lastName" type="text" placeholder="Last Name" pInputText formControlName="lastName" />
     ...
     ```
 
-### Updating the Profile Front-End
+### Updating the Profile Frontend
 
-1. Open `app/profile/models/response/profile.ts`. This is the model that maps to the back-end `ProfileDto`.
+1. Open `app/core/backend-api/profile/response/profile-dto.ts`. This is the model that maps to the backend `ProfileDto`.
 2. Add fields for the first and last names.
 
     ``` typescript
@@ -285,7 +186,7 @@ The front-end is also divided into areas that map directly to the back-end areas
       ...
     ```
 
-3. Open `app/profile/models/request/update-profile-request.ts`. This is the model that maps to the back-end `UpdateProfileDto`.
+3. Open `app/core/backend-api/profile/request/update-profile-request-dto.ts`. This is the model that maps to the backend `UpdateProfileDto`.
 4. Add fields for the first and last names.
 
     ``` typescript
@@ -295,15 +196,16 @@ The front-end is also divided into areas that map directly to the back-end areas
       ...
     ```
 
-5. Open `app/profile/components/pages/index.component.ts`. This is the code for the page users see when they visit their profile. It includes a stub for a profile update form, but there are no fields by default.
+5. Open `app/pages/profile/index/index.component.ts`. This is the code for the page users see when they visit their profile. It includes a stub for a profile update form, but there are no fields by default.
 6. Add fields for the first and last names to the form. This will allow easy binding in the reactive form markup.
 
     ``` typescript
-    export class RegisterComponent {
+    export class IndexComponent {
       ...
       form = this.#fb.group({
         firstName: this.#fb.control("", [Validators.required]),
         lastName: this.#fb.control("", [Validators.required]),
+      });
       ...
     ```
 
@@ -311,12 +213,11 @@ The front-end is also divided into areas that map directly to the back-end areas
 
     ``` typescript
     profile$ = this.#profileService.getProfile().pipe(
-      tap(response => {
-        if (!response.result) return;
+      tap(profile => {
         // Set form values.
         this.form.setValue({
-          firstName: response.result.firstName,
-          lastName: response.result.lastName,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
           ...
     ```
 
@@ -325,43 +226,42 @@ The front-end is also divided into areas that map directly to the back-end areas
     ``` typescript
     updateProfile() {
       ...
-      this.#profileService.updateProfile({
-        firstName: this.form.value.firstName,
-        lastName: this.form.value.lastName
+      this.#profileService
+        .updateProfile({
+          firstName: this.form.value.firstName,
+          lastName: this.form.value.lastName
       ...
     ```
 
-9. Open `app/profile/components/pages/index.component.html`. This is the markup for the page users see when they visit their profile. It also includes a stub for a profile update form, but there are no fields by default.
+9. Open `app/pages/profile/index/index.component.html`. This is the markup for the page users see when they visit their profile. It also includes a stub for a profile update form, but there are no fields by default.
 10. Update the body of the form with some markup for the new fields.
 
     ``` html
     <form [formGroup]="form" (ngSubmit)="updateProfile()" autocomplete="off">
-    <div class="flex flex-column w-20rem">
-      <label for="firstName" class="font-semibold mb-2">First Name</label>
-      <input
-        id="firstName"
-        type="text"
-        pInputText
-        formControlName="firstName"
-        class="w-full mb-2"
-        style="padding: 1rem" />
-
-      <label for="lastName" class="font-semibold mb-2">Last Name</label>
-      <input id="lastName"
-        type="text"
-        pInputText
-        formControlName="lastName"
-        class="w-full mb-2"
-        style="padding: 1rem" />
+      ...
+      <div class="flex flex-col gap-1">
+        <label for="firstName" class="font-semibold">First Name</label>
+        <input id="firstName" type="text" pInputText formControlName="firstName" class="w-full mb-2" />
+      </div>
+      <label for="lastName" class="font-semibold">Last Name</label>
+      <input id="lastName" type="text" pInputText formControlName="lastName" class="w-full mb-2" />
     ...
     ```
 
-### Updating the Administrator Front-End
+### Updating the User Functionality
 
-Updating the Administrator functionality is similar to the Profile work we just completed, so we'll skip most of it for brevity. But to illustrate the consistency of the areas, here are the general steps to add it:
+While the _profile_ functionality covers a given user and their own details, there is also a _user_ concept used throughout LightNap that covers how the data for a given account is rendered based on user permission. By default, the backend DTOs for this are:
 
-1. Update `app/administrator/models/response/admin-user.ts` with the new fields. This is the model that maps to the back-end `AdminUserDto`.
-2. Update `app/administrator/models/request/update-admin-user-request.ts` with the new fields. This is the model that maps to the back-end `UpdateAdminUserDto`.
-3. Update `app/administrator/models/request/search-admin-users-request.ts` with the new fields. This is the model that maps to the back-end `SearchAdminUsersDto`.
-4. Update `users.component.ts` and `users.component.html` from `app/administrator/components/pages/users` with form fields and markup to search users and/or include the new fields in the results table.
-5. Update `user.component.ts` and `user.component.html` from `app/administrator/components/pages/user` with form fields and markup to view and update user fields.
+- `PublicUserDto`: The minimum details accessible to a user who is not logged in.
+- `PrivilegedUserDto`: An extension of `PublicUserDto` that extends with fields available to _privileged_ users. In the default implementation this applies to any authenticated user.
+- `AdminUserDto`: An extension of the `PrivilegedUserDto` that includes the full set of fields available to users in the `Administrator` role.
+
+Since these DTOs inherit from one another, each derived class automatically includes the properties of its base class. For example, if you want the first and last name properties to only be visible to privileged and administrator users, add them to `PrivilegedUserDto`. The same goes for the search DTOs like `PublicUsersSearchRequestDto` and so on. These are separated so that you can easily use a different set of search parameters from what is available in the response DTO.
+
+If you'd like to continue the exercise to implement these new properties for user functionality throughout the app, the general steps are:
+
+1. Update the backend DTOs to reflect the data available for retrieving and searching users.
+2. Update `Extensions/ApplicationUserExtensions.cs` to populate the fields of the various DTO mappings.
+3. Update `UsersService.SearchUsersAsync` in `Users/Services/UsersService.cs` to implement search on filters supported at the appropriate privilege level.
+4. Update the frontend DTOs in `core/backend-api/dtos/users` to reflect the changes made to the backend DTOs.
+5. Update page components in `pages/admin`  to render the new user fields in the appropriate places.
