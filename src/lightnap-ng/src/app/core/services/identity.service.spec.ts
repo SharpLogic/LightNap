@@ -204,26 +204,7 @@ describe("IdentityService", () => {
     expect(hasClaim).toBeTrue();
   });
 
-  it("should emit correct values from watchAnyUserClaim$", done => {
-    // Setup token with a claim
-    const tokenWithClaims =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiY2xhaW1UeXBlIjoiY2xhaW1WYWx1ZSJ9.PepfbmKe5h2OcPlPmwdmIRTMnydCBE7tnLsAIVwx8G4";
-
-    // Test the observable
-    const emittedValues = new Array<boolean>();
-    service.watchAnyUserClaim$([{ type: "claimType", value: "claimValue" }]).subscribe(hasAnyClaim => {
-      emittedValues.push(hasAnyClaim);
-      if (emittedValues.length === 2) {
-        expect(emittedValues).toEqual([false, true]);
-        done();
-      }
-    });
-
-    dataServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }));
-    service.logIn({} as any).subscribe();
-  });
-
-  it("should emit correct values from watchAnyUserClaim$", done => {
+    it("should emit correct values from watchAnyUserClaim$", done => {
     // Setup token with a claim
     const tokenWithClaims =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiY2xhaW1UeXBlIjoiY2xhaW1WYWx1ZSJ9.PepfbmKe5h2OcPlPmwdmIRTMnydCBE7tnLsAIVwx8G4";
