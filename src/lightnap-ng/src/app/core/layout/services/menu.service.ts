@@ -51,7 +51,7 @@ export class MenuService {
       this.#identityService.watchUserRole$("Administrator").pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
     ])
       .pipe(takeUntilDestroyed(), debounceTime(100))
-      .subscribe(() => this.#refreshMenuItems());
+      .subscribe({ next: () => this.#refreshMenuItems() });
   }
 
   onMenuStateChange(event: MenuChangeEvent) {

@@ -10,7 +10,7 @@ import { ToastModule } from "primeng/toast";
   standalone: true,
   selector: "app-root",
   templateUrl: "./app.component.html",
-  imports: [RouterOutlet, BlockUIModule, ToastModule]
+  imports: [RouterOutlet, BlockUIModule, ToastModule],
 })
 export class AppComponent implements OnInit {
   #primengConfig = inject(PrimeNG);
@@ -27,8 +27,8 @@ export class AppComponent implements OnInit {
       this.blockUiIconClass.set(blockUiParams.iconClass ?? "pi pi-spin pi-spinner text-4xl");
     });
 
-    this.#blockUiService.onHide$.subscribe(() => {
-      this.showBlockUi.set(false);
+    this.#blockUiService.onHide$.subscribe({
+      next: () => this.showBlockUi.set(false),
     });
   }
 

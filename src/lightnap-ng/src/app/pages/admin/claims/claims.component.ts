@@ -26,7 +26,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     RoutePipe,
     ErrorListComponent,
     ApiResponseComponent,
-    CheckboxModule
+    CheckboxModule,
   ],
 })
 export class ClaimsComponent {
@@ -63,9 +63,7 @@ export class ClaimsComponent {
   );
 
   constructor() {
-    this.form.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      this.#lazyLoadEventSubject.next({ first: 0 });
-    });
+    this.form.valueChanges.pipe(debounceTime(300)).subscribe({ next: () => this.#lazyLoadEventSubject.next({ first: 0 }) });
   }
 
   loadUsersLazy(event: TableLazyLoadEvent) {
