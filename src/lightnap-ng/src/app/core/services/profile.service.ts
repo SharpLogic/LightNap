@@ -43,8 +43,10 @@ export class ProfileService {
         takeUntilDestroyed(),
         filter(loggedIn => !loggedIn)
       )
-      .subscribe(() => {
-        this.#settings = undefined;
+      .subscribe({
+        next: _ => {
+          this.#settings = undefined;
+        },
       });
   }
 

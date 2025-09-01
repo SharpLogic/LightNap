@@ -27,9 +27,11 @@ describe("BlockUiService", () => {
   });
 
   it("should emit hide event", done => {
-    service.onHide$.subscribe(() => {
-      expect(true).toBeTrue();
-      done();
+    service.onHide$.subscribe({
+      next: () => {
+        expect(true).toBeTrue();
+        done();
+      },
     });
     service.hide();
   });

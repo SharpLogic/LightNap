@@ -82,9 +82,7 @@ export class UsersComponent {
   ];
 
   constructor() {
-    this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe(() => {
-      this.#lazyLoadEventSubject.next({ first: 0 });
-    });
+    this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe({ next: () => this.#lazyLoadEventSubject.next({ first: 0 }) });
   }
 
   asPagedResults($implicit: any) {

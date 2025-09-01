@@ -25,23 +25,32 @@ export class AppLayoutComponent {
     public renderer: Renderer2,
     public router: Router
   ) {
-    this.layoutService.overlayOpen$.pipe(takeUntilDestroyed()).subscribe(() => {
-      if (!this.menuOutsideClickListener) {
-        this.menuOutsideClickListener = this.renderer.listen("document", "click", event => {
-          if (this.isOutsideClicked(event)) {
-            this.hideMenu();
-          }
-        });
-      }
+    this.layoutService.overlayOpen$.pipe(takeUntilDestroyed()).subscribe({
+      next: () => {
+        if (!this.menuOutsideClickListener) {
+          this.menuOutsideClickListener = this.renderer.listen("document", "click", event => {
+            if (this.isOutsideClicked(event)) {
+              this.hideMenu();
+            }
+          });
+        }
 
-      if (this.layoutService.layoutState().staticMenuMobileActive) {
-        this.blockBodyScroll();
-      }
+        if (this.layoutService.layoutState().staticMenuMobileActive) {
+          this.blockBodyScroll();
+        }
+      },
     });
 
-    this.router.events.pipe(takeUntilDestroyed(), filter(event => event instanceof NavigationEnd)).subscribe(() => {
-      this.hideMenu();
-    });
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(),
+        filter(event => event instanceof NavigationEnd)
+      )
+      .subscribe({
+        next: () => {
+          this.hideMenu();
+        },
+      });
   }
 
   isOutsideClicked(event: MouseEvent) {
