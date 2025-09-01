@@ -19,7 +19,10 @@
                         "polyfills": [],
                         "tsConfig": "tsconfig.app.json",
                         "assets": ["src/favicon.ico", "src/assets"],
-                        "styles": ["src/styles.css"],
+                        "styles": [
+                            "src/styles.css",
+                            "node_modules/primeicons/primeicons.css"
+                        ],
                         "scripts": []
                     },
                     "configurations": {
