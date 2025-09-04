@@ -93,15 +93,17 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task UpdateUserAsync_UserDoesNotExist_ThrowsError()
         {
             // Arrange
             var userId = "non-existent-user-id";
             var updateDto = new AdminUpdateUserRequestDto();
 
-            // Act
-            await this._administratorService.UpdateUserAsync(userId, updateDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._administratorService.UpdateUserAsync(userId, updateDto);
+            });
         }
 
         [TestMethod]
@@ -116,14 +118,16 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task DeleteUserAsync_UserDoesNotExist_ThrowsError()
         {
             // Arrange
             var userId = "non-existent-user-id";
 
-            // Act
-            await this._administratorService.DeleteUserAsync(userId);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._administratorService.DeleteUserAsync(userId);
+            });
         }
 
         [TestMethod]
@@ -159,14 +163,16 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task LockUserAsync_UserDoesNotExist_ThrowsError()
         {
             // Arrange
             var userId = "non-existent-user-id";
 
-            // Act
-            await this._administratorService.LockUserAccountAsync(userId);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._administratorService.LockUserAccountAsync(userId);
+            });
         }
 
         [TestMethod]
@@ -187,14 +193,16 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task UnlockUserAsync_UserDoesNotExist_ThrowsError()
         {
             // Arrange
             var userId = "non-existent-user-id";
 
-            // Act
-            await this._administratorService.UnlockUserAccountAsync(userId);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._administratorService.UnlockUserAccountAsync(userId);
+            });
         }
 
 

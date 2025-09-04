@@ -63,15 +63,17 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task AddUserToRoleAsync_UserDoesNotExist_ThrowsError()
         {
             // Arrange
             var userId = "non-existent-user-id";
             var role = "test-role";
 
-            // Act
-            await this._rolesService.AddUserToRoleAsync(role, userId);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._rolesService.AddUserToRoleAsync(role, userId);
+            });
         }
 
         [TestMethod]

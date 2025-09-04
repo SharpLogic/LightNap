@@ -127,7 +127,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task LogInAsync_BadEmail_ThrowsError()
         {
             // Arrange
@@ -139,12 +138,11 @@ namespace LightNap.Core.Tests.Services
                 DeviceDetails = "TestDevice",
             };
 
-            // Act
-            await this._identityService.LogInAsync(requestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.LogInAsync(requestDto));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task LogInAsync_BadPassword_ThrowsError()
         {
             // Arrange
@@ -159,8 +157,8 @@ namespace LightNap.Core.Tests.Services
             var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Login);
             await this._userManager.AddPasswordAsync(user, "GoodPassword123!");
 
-            // Act
-            await this._identityService.LogInAsync(requestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.LogInAsync(requestDto));
         }
 
         [TestMethod]
@@ -189,13 +187,12 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task GetAccessTokenAsync_NotLoggedIn_ThrowsError()
         {
             // Arrange
 
-            // Act
-            await this._identityService.GetAccessTokenAsync();
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.GetAccessTokenAsync());
         }
 
         [TestMethod]
@@ -315,7 +312,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task NewPasswordAsync_InvalidData_ThrowsError()
         {
             // Arrange
@@ -328,8 +324,8 @@ namespace LightNap.Core.Tests.Services
                 Token = "bad-token"
             };
 
-            // Act
-            await this._identityService.NewPasswordAsync(newPasswordRequestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.NewPasswordAsync(newPasswordRequestDto));
         }
 
         [TestMethod]
@@ -360,7 +356,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task LogInAsync_EmailLoginForUserNameType_ThrowsError()
         {
             // Arrange
@@ -373,8 +368,8 @@ namespace LightNap.Core.Tests.Services
                 Type = LoginType.UserName
             };
 
-            // Act
-            await this._identityService.LogInAsync(requestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.LogInAsync(requestDto));
         }
 
         [TestMethod]
@@ -405,7 +400,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task LogInAsync_UserNameLoginForEmailType_ThrowsError()
         {
             // Arrange
@@ -418,8 +412,8 @@ namespace LightNap.Core.Tests.Services
                 Type = LoginType.Email
             };
 
-            // Act
-            await this._identityService.LogInAsync(requestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.LogInAsync(requestDto));
         }
 
         [TestMethod]
@@ -447,7 +441,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task RequestMagicLinkEmailAsync_InvalidEmail_ThrowsError()
         {
             // Arrange
@@ -456,8 +449,8 @@ namespace LightNap.Core.Tests.Services
                 Email = "invalid@test.com"
             };
 
-            // Act
-            await this._identityService.RequestMagicLinkEmailAsync(requestDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RequestMagicLinkEmailAsync(requestDto));
         }
 
         [TestMethod]
@@ -530,7 +523,6 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task ChangePassword_ShouldFailWithWrongCurrentPassword()
         {
             await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
@@ -547,12 +539,11 @@ namespace LightNap.Core.Tests.Services
             var identityResult = await this._userManager.AddPasswordAsync(user!, "DifferentP@ssw0rd");
             if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
 
-            // Act
-            await this._identityService.ChangePasswordAsync(changePasswordDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.ChangePasswordAsync(changePasswordDto));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UserFriendlyApiException))]
         public async Task ChangePassword_ShouldFailWithWrongMistmatchedNewPassword()
         {
             // Arrange
@@ -569,8 +560,8 @@ namespace LightNap.Core.Tests.Services
             var identityResult = await this._userManager.AddPasswordAsync(user!, "OldPassword123!");
             if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
 
-            // Act
-            await this._identityService.ChangePasswordAsync(changePasswordDto);
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.ChangePasswordAsync(changePasswordDto));
         }
 
         [TestMethod]
