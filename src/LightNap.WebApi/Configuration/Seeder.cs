@@ -147,16 +147,14 @@ namespace LightNap.WebApi.Configuration
         /// <returns>A task representing the asynchronous operation.</returns>
         private async Task AddUserToRole(ApplicationUser user, string role)
         {
-            if (!await this._userManager.IsInRoleAsync(user, role))
-            {
-                var result = await this._userManager.AddToRoleAsync(user, role);
-                if (!result.Succeeded)
-                {
-                    throw new ArgumentException(
-                        $"Unable to add user '{user.UserName}' ('{user.Email}') to role '{role}': {string.Join("; ", result.Errors.Select(error => error.Description))}");
-                }
-            }
+            if (await this._userManager.IsInRoleAsync(user, role)) { return; }
 
+            var result = await this._userManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded)
+            {
+                throw new ArgumentException(
+                    $"Unable to add user '{user.UserName}' ('{user.Email}') to role '{role}': {string.Join("; ", result.Errors.Select(error => error.Description))}");
+            }
             this._logger.LogInformation("Added user '{userName}' ('{email}') to role '{roleName}'", user.UserName, user.Email, role);
         }
 
