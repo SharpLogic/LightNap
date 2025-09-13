@@ -56,16 +56,6 @@
             /// The name of the refresh token cookie.
             /// </summary>
             public const string RefreshToken = "refreshToken";
-
-            /// <summary>
-            /// The "Max-Age" string used in cookies.
-            /// </summary>
-            public const string MaxAge = "Max-Age";
-
-            /// <summary>
-            /// The "Expires" string used in cookies.
-            /// </summary>
-            public const string Expires = "Expires";
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
 
             modelBuilder.Entity("LightNap.Core.Data.Entities.ApplicationRole", b =>
                 {
@@ -170,6 +170,9 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPresistent")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsRevoked")
                         .HasColumnType("INTEGER");

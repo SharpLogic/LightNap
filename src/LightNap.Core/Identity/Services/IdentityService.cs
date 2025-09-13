@@ -70,20 +70,17 @@ namespace LightNap.Core.Identity.Services
             string? refreshTokenCookie = cookieManager.GetCookie(Constants.Cookies.RefreshToken);
             if (refreshTokenCookie is null) { return null; }
 
-            // If neither of these was set last time then the user doesn't want us to remember them across sessions.
-            bool rememberMe = refreshTokenCookie.Contains(Constants.Cookies.Expires) || refreshTokenCookie.Contains(Constants.Cookies.MaxAge);
-
             var refreshToken = await db.RefreshTokens.Include(token => token.User).FirstOrDefaultAsync(token => token.Token == refreshTokenCookie);
             if (refreshToken is null || refreshToken.IsRevoked || refreshToken.Expires < DateTime.UtcNow) { return null; }
 
             refreshToken.LastSeen = DateTime.UtcNow;
             refreshToken.IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided;
-            refreshToken.Expires = DateTime.UtcNow.AddDays(rememberMe ? applicationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
+            refreshToken.Expires = DateTime.UtcNow.AddDays(refreshToken.IsPresistent ? applicationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
             refreshToken.Token = tokenService.GenerateRefreshToken();
 
             await db.SaveChangesAsync();
 
-            cookieManager.SetCookie(Constants.Cookies.RefreshToken, refreshToken.Token, rememberMe, refreshToken.Expires);
+            cookieManager.SetCookie(Constants.Cookies.RefreshToken, refreshToken.Token, refreshToken.IsPresistent, refreshToken.Expires);
 
             return refreshToken.User;
         }
@@ -109,6 +106,7 @@ namespace LightNap.Core.Identity.Services
                     LastSeen = DateTime.UtcNow,
                     IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided,
                     Details = deviceDetails,
+                    IsPresistent = rememberMe,
                     UserId = user.Id
                 });
             await db.SaveChangesAsync();
