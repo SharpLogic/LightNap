@@ -171,7 +171,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsPresistent")
+                    b.Property<bool>("IsPersistent")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsRevoked")

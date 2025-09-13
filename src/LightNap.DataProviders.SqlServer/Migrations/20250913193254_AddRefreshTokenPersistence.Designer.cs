@@ -183,7 +183,7 @@ namespace LightNap.DataProviders.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPresistent")
+                    b.Property<bool>("IsPersistent")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRevoked")

@@ -75,12 +75,12 @@ namespace LightNap.Core.Identity.Services
 
             refreshToken.LastSeen = DateTime.UtcNow;
             refreshToken.IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided;
-            refreshToken.Expires = DateTime.UtcNow.AddDays(refreshToken.IsPresistent ? applicationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
+            refreshToken.Expires = DateTime.UtcNow.AddDays(refreshToken.IsPersistent ? applicationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
             refreshToken.Token = tokenService.GenerateRefreshToken();
 
             await db.SaveChangesAsync();
 
-            cookieManager.SetCookie(Constants.Cookies.RefreshToken, refreshToken.Token, refreshToken.IsPresistent, refreshToken.Expires);
+            cookieManager.SetCookie(Constants.Cookies.RefreshToken, refreshToken.Token, refreshToken.IsPersistent, refreshToken.Expires);
 
             return refreshToken.User;
         }
@@ -106,7 +106,7 @@ namespace LightNap.Core.Identity.Services
                     LastSeen = DateTime.UtcNow,
                     IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided,
                     Details = deviceDetails,
-                    IsPresistent = rememberMe,
+                    IsPersistent = rememberMe,
                     UserId = user.Id
                 });
             await db.SaveChangesAsync();

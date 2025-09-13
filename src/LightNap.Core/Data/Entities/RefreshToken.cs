@@ -38,7 +38,7 @@
         /// <summary>
         /// True if the cookie generated for this token is persistent across browser sessions.
         /// </summary>
-        public bool IsPresistent { get; set; }
+        public bool IsPersistent { get; set; }
 
         /// <summary>
         /// Gets or sets additional details about the token.
