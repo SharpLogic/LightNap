@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <WebJobName>MaintenanceService</WebJobName>
+    <WebJobType>triggered</WebJobType>
+    <PublishDir>$(SolutionDir)/publish/App_Data/jobs/$(WebJobType)/$(WebJobName)</PublishDir>
   </PropertyGroup>
 
   <ItemGroup>

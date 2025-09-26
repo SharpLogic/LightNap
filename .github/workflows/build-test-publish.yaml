@@ -3,7 +3,6 @@ name: Build, Test, and Publish
 env:
   DOTNET_VERSION: '9'
   NODE_VERSION: '22'
-  WEBAPI_PROJECT_NAME: 'LightNap.WebApi'
   ANGULAR_PROJECT_NAME: 'lightnap-ng'
 
 on:
@@ -49,7 +48,7 @@ jobs:
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
         run: npm install
 
-      - name: Run front-end tests (temporarily hiding tailwind.config.js)
+      - name: Run front-end tests
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
         run: npm test -- --watch=false --browsers=ChromeHeadless
 
@@ -65,4 +64,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: src/${{ env.WEBAPI_PROJECT_NAME }}/bin/Release/net${{ env.DOTNET_VERSION }}.0/publish
+          path: src/publish
