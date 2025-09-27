@@ -1,5 +1,7 @@
 <api-response [apiResponse]="devices$()" errorMessage="Error loading devices" loadingMessage="Loading devices...">
-  <ng-template #success let-devices>
+  <ng-template #success let-devicesAny>
+    @let devices = asDevices(devicesAny);
+
     <p-panel header="Manage Your Devices">
       <p-table [value]="devices">
         <ng-template #header>
@@ -10,7 +12,9 @@
             <th>IP Address</th>
           </tr>
         </ng-template>
-        <ng-template #body let-device>
+        <ng-template #body let-deviceAny>
+          @let device = asDevice(deviceAny);
+
           <tr>
             <td>
               <confirm-dialog [key]="device.id" />

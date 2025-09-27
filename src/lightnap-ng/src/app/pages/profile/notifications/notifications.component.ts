@@ -1,13 +1,22 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import { ErrorListComponent, ApiResponseComponent, EmptyPagedResponse, NotificationItem, ToastService } from "@core";
+import {
+  ErrorListComponent,
+  ApiResponseComponent,
+  EmptyPagedResponse,
+  NotificationItem,
+  ToastService,
+  TypeHelpers,
+  PagedResponseDto,
+  NotificationSearchResults,
+} from "@core";
 import { NotificationItemComponent } from "@core/notifications/components/notification-item/notification-item.component";
 import { NotificationService } from "@core/notifications/services";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
-import { startWith, Subject, switchMap } from "rxjs";
+import { startWith, Subject, switchMap, tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -21,8 +30,8 @@ export class NotificationsComponent {
   readonly #toast = inject(ToastService);
   readonly #router = inject(Router);
 
-  #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
-  notifications$ = this.#lazyLoadEventSubject.pipe(
+  readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
+  readonly notifications$ = this.#lazyLoadEventSubject.pipe(
     switchMap(_ =>
       this.#notificationService.searchNotifications({
         pageSize: this.pageSize,
@@ -34,8 +43,11 @@ export class NotificationsComponent {
     startWith(new EmptyPagedResponse<NotificationItem>())
   );
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
   #currentPage = 0;
+
+  asNotifications = TypeHelpers.cast<NotificationSearchResults>;
+  asNotification = TypeHelpers.cast<NotificationItem>;
 
   onLazyLoad(event: TableLazyLoadEvent) {
     this.#currentPage = (event.first ?? 0) / this.pageSize + 1;

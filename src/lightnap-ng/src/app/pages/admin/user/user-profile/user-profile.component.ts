@@ -15,12 +15,12 @@ import { ButtonModule } from "primeng/button";
   ],
 })
 export class UserProfileComponent implements OnChanges {
-  #fb = inject(FormBuilder);
+  readonly #fb = inject(FormBuilder);
 
-  user = input.required<AdminUserDto>();
-  updateProfile = output<any>();
+  readonly user = input.required<AdminUserDto>();
+  readonly updateProfile = output<any>();
 
-  form = this.#fb.group({
+  readonly form = this.#fb.group({
   });
 
   ngOnChanges() {

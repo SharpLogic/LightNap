@@ -1,21 +1,25 @@
 <api-response [apiResponse]="notifications$" errorMessage="Error loading notifications" loadingMessage="Loading notifications...">
-  <ng-template #success let-notifications>
+  <ng-template #success let-resultsAny>
+    @let results = asNotifications(resultsAny);
+
     <p-panel header="Notification Center">
       <div class="flex justify-end">
-        @if (notifications.unreadCount > 0) {
+        @if (results.unreadCount > 0) {
           <p-button icon="pi pi-folder-open" label="Mark all as read" (onClick)="markAllAsRead()" />
         }
       </div>
 
       <p-table
-        [value]="notifications.data"
+        [value]="results.notifications"
         [paginator]="true"
-        [rows]="notifications.data.length"
-        [totalRecords]="notifications.totalCount"
+        [rows]="pageSize"
+        [totalRecords]="results.totalCount"
         [lazy]="true"
         (onLazyLoad)="onLazyLoad($event)"
       >
-        <ng-template #body let-notification>
+        <ng-template #body let-notificationAny>
+          @let notification = asNotification(notificationAny);
+
           <tr>
             <td>
               <div class="w-96">

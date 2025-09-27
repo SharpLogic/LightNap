@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { finalize, tap } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
-import { ErrorListComponent, RoutePipe } from "@core";
+import { ErrorListComponent, ProfileDto, RoutePipe, TypeHelpers } from "@core";
 import { RouteAliasService, BlockUiService, ToastService } from "@core";
 
 @Component({
@@ -24,14 +24,16 @@ export class IndexComponent {
   readonly #toast = inject(ToastService);
   readonly #fb = inject(FormBuilder);
 
-  form = this.#fb.group({});
-  errors = signal(new Array<string>());
+  readonly form = this.#fb.group({});
+  readonly errors = signal(new Array<string>());
 
   readonly profile$ = this.#profileService.getProfile().pipe(
     tap(profile => {
       // Set form values.
     })
   );
+
+  asProfile = TypeHelpers.cast<ProfileDto>;
 
   updateProfile() {
     this.#blockUi.show({ message: "Updating profile..." });

@@ -6,6 +6,8 @@ import {
     LatestNotifications,
     NotificationDto,
     NotificationItem,
+    NotificationSearchResults,
+    NotificationSearchResultsDto,
     PagedResponseDto,
     RouteAliasService,
     SearchNotificationsRequestDto,
@@ -51,7 +53,7 @@ export class NotificationService {
     return this.#dataService.searchNotifications(searchNotificationsRequest).pipe(
       tap(results => this.#unreadCountSubject.next(results.unreadCount)),
       switchMap(results =>
-        this.#loadNotificationItems(results.data).pipe(map(notifications => <PagedResponseDto<NotificationItem>>{ ...results, data: notifications }))
+        this.#loadNotificationItems(results.data).pipe(map(notifications => <NotificationSearchResults>{ ...results, notifications }))
       )
     );
   }
@@ -65,8 +67,8 @@ export class NotificationService {
   #requestLatestNotifications() {
     return this.searchNotifications({ sinceId: this.#notifications?.[0]?.id }).pipe(
       tap(results => {
-        if (!results.data.length && this.#notifications) return;
-        this.#notifications = [...results.data, ...(this.#notifications || [])];
+        if (!results.notifications.length && this.#notifications) return;
+        this.#notifications = [...results.notifications, ...(this.#notifications || [])];
         this.#notificationsSubject.next(this.#notifications);
       })
     );
@@ -78,7 +80,7 @@ export class NotificationService {
       .pipe(finalize(() => this.#pollingManager.resumePolling()))
       .subscribe({
         next: results => {
-          this.#notifications = results.data;
+          this.#notifications = results.notifications;
           this.#notificationsSubject.next(this.#notifications);
         },
         error: (response: ApiResponseDto<any>) => console.error("Unable to refresh unread notifications", response.errorMessages),

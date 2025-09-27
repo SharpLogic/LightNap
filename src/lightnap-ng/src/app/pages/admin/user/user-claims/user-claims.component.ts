@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { ClaimDto, ConfirmPopupComponent } from "@core";
+import { ClaimDto, ConfirmPopupComponent, TypeHelpers } from "@core";
 import { RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -17,17 +17,19 @@ import { TableModule } from "primeng/table";
   imports: [CommonModule, ReactiveFormsModule, InputTextModule, TableModule, ButtonModule, SelectModule, ConfirmPopupComponent, RoutePipe, RouterModule],
 })
 export class UserClaimsComponent {
-  #confirmationService = inject(ConfirmationService);
-  #fb = inject(FormBuilder);
+  readonly #confirmationService = inject(ConfirmationService);
+  readonly #fb = inject(FormBuilder);
 
-  addUserClaimForm = this.#fb.group({
+  readonly addUserClaimForm = this.#fb.group({
     type: this.#fb.control("", [Validators.required]),
     value: this.#fb.control("", [Validators.required]),
   });
 
-  userClaims = input.required<Array<ClaimDto>>();
-  addClaim = output<ClaimDto>();
-  removeClaim = output<ClaimDto>();
+  readonly userClaims = input.required<Array<ClaimDto>>();
+  readonly addClaim = output<ClaimDto>();
+  readonly removeClaim = output<ClaimDto>();
+
+  readonly asClaim = TypeHelpers.cast<ClaimDto>;
 
   removeClaimClicked(event: any, claim: ClaimDto) {
     this.#confirmationService.confirm({

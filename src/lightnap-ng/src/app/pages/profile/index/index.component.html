@@ -1,5 +1,7 @@
 <api-response [apiResponse]="profile$" errorMessage="Error loading profile" loadingMessage="Loading profile...">
-  <ng-template #success let-profile>
+  <ng-template #success let-profileAny>
+    @let profile = asProfile(profileAny);
+
     <p-panel header="Manage Your Profile">
       <ng-template #icons>
         <p-button (onClick)="logOut()" label="Log Out" severity="danger" size="small" icon="pi pi-sign-out" />

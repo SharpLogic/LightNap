@@ -1,5 +1,7 @@
 <api-response [apiResponse]="usersForClaim$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
-  <ng-template #success let-usersForClaim>
+  <ng-template #success let-usersForClaimAny>
+    @let usersForClaim = asUsersForClaim(usersForClaimAny);
+
     <p-panel header="Manage Claim">
       <div class="flex gap-8">
         <div class="flex flex-col">
@@ -20,7 +22,9 @@
             <th width="100%">Email</th>
           </tr>
         </ng-template>
-        <ng-template #body let-user>
+        <ng-template #body let-userAny>
+          @let user = asUser(userAny);
+
           <tr>
             <td>
               <confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />

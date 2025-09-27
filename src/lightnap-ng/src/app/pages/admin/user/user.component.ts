@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService } from "@core";
+import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
@@ -33,18 +33,22 @@ import { UserRolesComponent } from "./user-roles/user-roles.component";
   ],
 })
 export class UserComponent implements OnChanges {
-  adminService = inject(AdminUsersService);
-  #confirmationService = inject(ConfirmationService);
-  #toast = inject(ToastService);
-  #routeAlias = inject(RouteAliasService);
+  readonly adminService = inject(AdminUsersService);
+  readonly #confirmationService = inject(ConfirmationService);
+  readonly #toast = inject(ToastService);
+  readonly #routeAlias = inject(RouteAliasService);
 
-  userId = input.required<string>();
+  readonly userId = input.required<string>();
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
-  user$ = signal<Observable<AdminUserDto>>(new Observable<AdminUserDto>());
-  userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
-  userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
+  readonly user$ = signal<Observable<AdminUserDto>>(new Observable<AdminUserDto>());
+  readonly userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
+  readonly userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
+
+  readonly asUser = TypeHelpers.cast<AdminUserDto>;
+  readonly asUserClaims = TypeHelpers.cast<Array<ClaimDto>>;
+  readonly asUserRoles = TypeHelpers.cast<Array<RoleDto>>;
 
   ngOnChanges() {
     this.#refreshUser();

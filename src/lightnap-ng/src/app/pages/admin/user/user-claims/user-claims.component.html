@@ -7,7 +7,9 @@
         <th>Claim Value</th>
       </tr>
     </ng-template>
-    <ng-template #body let-claim>
+    <ng-template #body let-claimAny>
+      @let claim = asClaim(claimAny);
+
       <tr>
         <td>
           <confirm-popup [key]="claim.type + ':' + claim.value" />

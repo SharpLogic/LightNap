@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUsersService, ApiResponseComponent, ConfirmPopupComponent, ErrorListComponent, PeoplePickerComponent, RoleWithAdminUsers, RoutePipe } from "@core";
+import { AdminUserDto, AdminUsersService, ApiResponseComponent, ConfirmPopupComponent, ErrorListComponent, PeoplePickerComponent, RoleWithAdminUsers, RoutePipe, TypeHelpers } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -37,9 +37,12 @@ export class RoleComponent implements OnInit {
     userId: this.#fb.control<string | null>(null, [Validators.required]),
   });
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
-  roleWithUsers$ = signal(new Observable<RoleWithAdminUsers>());
+  readonly roleWithUsers$ = signal(new Observable<RoleWithAdminUsers>());
+
+  readonly asRoleWithUsers = TypeHelpers.cast<RoleWithAdminUsers>;
+  readonly asAdminUser = TypeHelpers.cast<AdminUserDto>;
 
   ngOnInit() {
     this.#refreshRole();

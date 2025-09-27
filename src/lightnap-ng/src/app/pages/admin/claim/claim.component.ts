@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, AdminUsersService, ConfirmPopupComponent, PeoplePickerComponent, RoutePipe } from "@core";
+import { AdminUserDto, AdminUsersService, ConfirmPopupComponent, PeoplePickerComponent, RoutePipe, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
@@ -43,9 +43,12 @@ export class ClaimComponent {
     userId: this.#fb.control<string | null>(null, [Validators.required]),
   });
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
-  usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
+  readonly usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
+
+  readonly asUsersForClaim = TypeHelpers.cast<Array<AdminUserDto>>;
+  readonly asUser = TypeHelpers.cast<AdminUserDto>;
 
   ngOnChanges() {
     this.#refreshUsers();

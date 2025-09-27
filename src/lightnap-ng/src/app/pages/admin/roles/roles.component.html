@@ -1,5 +1,7 @@
 <api-response [apiResponse]="roles$" errorMessage="Error loading roles" loadingMessage="Loading roles...">
-  <ng-template #success let-roles>
+  <ng-template #success let-rolesAny>
+    @let roles = asRoles(rolesAny);
+
     <p-panel header="Manage Roles">
       <p-table [value]="roles">
         <ng-template #header>
@@ -9,7 +11,9 @@
             <th>Description</th>
           </tr>
         </ng-template>
-        <ng-template #body let-role>
+        <ng-template #body let-roleAny>
+          @let role = asRole(roleAny);
+
           <tr>
             <td>
               <a [routerLink]="'admin-role' | route: role.name"> {{ role.displayName }}</a>

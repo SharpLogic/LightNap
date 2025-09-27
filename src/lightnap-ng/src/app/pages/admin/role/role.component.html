@@ -1,5 +1,7 @@
 <api-response [apiResponse]="roleWithUsers$()" errorMessage="Error loading role" loadingMessage="Loading role...">
-  <ng-template #success let-roleWithUsers>
+  <ng-template #success let-roleWithUsersAny>
+    @let roleWithUsers = asRoleWithUsers(roleWithUsersAny);
+
     <p-panel header="Manage Users In Role: {{ roleWithUsers.role.displayName }}">
       <p-table [value]="roleWithUsers.users">
         <ng-template #header>
@@ -9,7 +11,9 @@
             <th width="100%">Email</th>
           </tr>
         </ng-template>
-        <ng-template #body let-user>
+        <ng-template #body let-userAny>
+          @let user = asAdminUser(userAny);
+
           <tr>
             <td>
               <confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
@@ -30,7 +34,7 @@
         </ng-template>
       </p-table>
 
-      <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserToRole()" >
+      <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserToRole()">
         <people-picker formControlName="userId" />
         <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!form.valid" />
       </form>

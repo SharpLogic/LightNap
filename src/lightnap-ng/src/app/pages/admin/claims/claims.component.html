@@ -1,5 +1,7 @@
 <api-response [apiResponse]="claims$" errorMessage="Error loading claim" loadingMessage="Loading claim...">
-  <ng-template #success let-results>
+  <ng-template #success let-claimResultsAny>
+    @let claimResults = asClaimResults(claimResultsAny);
+
     <p-panel header="Search Claims">
       <form [formGroup]="form" class="my-2">
         <div class="flex gap-1">
@@ -21,10 +23,10 @@
       </form>
 
       <p-table
-        [value]="results.data"
+        [value]="claimResults.data"
         [paginator]="true"
         [rows]="pageSize"
-        [totalRecords]="results.totalCount"
+        [totalRecords]="claimResults.totalCount"
         [lazy]="true"
         (onLazyLoad)="loadUsersLazy($event)"
       >
@@ -34,7 +36,9 @@
             <th width="100%">Claim Value</th>
           </tr>
         </ng-template>
-        <ng-template #body let-claim>
+        <ng-template #body let-claimAny>
+          @let claim = asClaim(claimAny);
+
           <tr>
             <td>
               <a [routerLink]="'admin-claim' | route: [claim.type, claim.value]"> {{ claim.type }}</a>

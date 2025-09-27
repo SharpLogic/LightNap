@@ -1,5 +1,7 @@
 <api-response [apiResponse]="user$()" errorMessage="Error loading user" loadingMessage="Loading user...">
-  <ng-template #success let-user>
+  <ng-template #success let-userAny>
+    @let user = asUser(userAny);
+
     <p-panel>
       <ng-template #header>
         <div class="p-panel-body flex justify-between w-full">
@@ -41,14 +43,18 @@
           </p-tabpanel>
           <p-tabpanel value="roles">
             <api-response [apiResponse]="userRoles$()" errorMessage="Error loading user roles" loadingMessage="Loading user roles...">
-              <ng-template #success let-userRoles>
+              <ng-template #success let-userRolesAny>
+                @let userRoles = asUserRoles(userRolesAny);
+
                 <user-roles [userRoles]="userRoles ?? []" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
               </ng-template>
             </api-response>
           </p-tabpanel>
           <p-tabpanel value="claims">
             <api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
-              <ng-template #success let-userClaims>
+              <ng-template #success let-userClaimsAny>
+                @let userClaims = asUserClaims(userClaimsAny);
+
                 <user-claims [userClaims]="userClaims ?? []" (addClaim)="addClaim($event)" (removeClaim)="removeClaim($event)" />
               </ng-template>
             </api-response>

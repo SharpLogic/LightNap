@@ -13,6 +13,7 @@ import {
   PagedResponseDto,
   SearchUsersSortBy,
   ToastService,
+  TypeHelpers,
 } from "@core";
 import { AdminUsersService } from "@core";
 import { RoutePipe } from "@core";
@@ -55,7 +56,7 @@ export class UsersComponent {
     userName: this.#fb.control(""),
   });
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
   readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
   readonly users$ = this.#lazyLoadEventSubject.pipe(
@@ -74,19 +75,18 @@ export class UsersComponent {
     startWith(new EmptyPagedResponse<AdminUserDto>() as PagedResponseDto<AdminUserDto>)
   );
 
-  sortBys = [
+  readonly sortBys = [
     new ListItem<SearchUsersSortBy>("userName", "User Name", "Sort by user name."),
     new ListItem<SearchUsersSortBy>("email", "Email", "Sort by email."),
     new ListItem<SearchUsersSortBy>("createdDate", "Created", "Sort by created date."),
     new ListItem<SearchUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
   ];
 
+  readonly asUserResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;
+  readonly asUser = TypeHelpers.cast<AdminUserDto>;
+
   constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe({ next: () => this.#lazyLoadEventSubject.next({ first: 0 }) });
-  }
-
-  asPagedResults($implicit: any) {
-    return $implicit as PagedResponseDto<AdminUserDto>;
   }
 
   loadUsersLazy(event: TableLazyLoadEvent) {
