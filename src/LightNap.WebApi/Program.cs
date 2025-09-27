@@ -1,9 +1,12 @@
+using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
+using LightNap.Core.Interfaces;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System.Reflection;
@@ -97,7 +100,19 @@ try
         await context.Database.MigrateAsync();
     }
 
-    Seeder seeder = new(services);
+    // We want to use dependency injection for the Seeder class, but we need to replace the IUserContext service with SystemUserContext for seeding purposes.
+    var seederServiceCollection = new ServiceCollection();
+    foreach (var descriptor in builder.Services.Where(descriptor => descriptor.ServiceType != typeof(IUserContext)))
+    {
+        seederServiceCollection.Add(descriptor);
+    }
+    seederServiceCollection.AddScoped<IUserContext, SystemUserContext>();
+    seederServiceCollection.AddScoped<Seeder>();
+
+#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+    using var seederServiceProvider = seederServiceCollection.BuildServiceProvider();
+#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
+    var seeder = seederServiceProvider.GetRequiredService<Seeder>();
     await seeder.SeedAsync();
 }
 catch (Exception ex)

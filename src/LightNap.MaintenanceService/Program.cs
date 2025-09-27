@@ -1,4 +1,6 @@
-﻿using LightNap.Core.Extensions;
+﻿using LightNap.Core.Api;
+using LightNap.Core.Extensions;
+using LightNap.Core.Interfaces;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.MaintenanceService;
@@ -26,6 +28,8 @@ var host = Host.CreateDefaultBuilder(args)
                 break;
             default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseProvider}'");
         }
+
+        services.AddScoped<IUserContext, SystemUserContext>();
 
         // Manage the tasks to run here. All transient dependencies added for IMaintenanceTask will be in the collection passed to MainService.
         services.AddTransient<IMaintenanceTask, CountUsersMaintenanceTask>();

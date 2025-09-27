@@ -428,6 +428,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A list of devices associated with the user.</returns>  
         public async Task<IList<DeviceDto>> GetDevicesAsync()
         {
+            userContext.AssertAuthenticated();
+
             var tokens = await db.RefreshTokens
                             .Where(token => token.UserId == userContext.GetUserId() && !token.IsRevoked && token.Expires > DateTime.UtcNow)
                             .OrderByDescending(device => device.Expires)
@@ -443,11 +445,48 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>  
         public async Task RevokeDeviceAsync(string deviceId)
         {
+            userContext.AssertAuthenticated();
+
             var token = await db.RefreshTokens.FindAsync(deviceId) ?? throw new UserFriendlyApiException("Device not found.");
             if (token.UserId != userContext.GetUserId()) { throw new UserFriendlyApiException("Device not found."); }
 
             token.IsRevoked = true;
             await db.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Removes all expired refresh tokens from the data store.
+        /// </summary>
+        /// <remarks>This method is intended to clean up expired refresh tokens to maintain the integrity
+        /// of the token store  and prevent unnecessary storage usage. It does not affect active or unexpired
+        /// tokens.</remarks>
+        public async Task PurgeExpiredRefreshTokens()
+        {
+            userContext.AssertAdministrator();
+
+            logger.LogInformation("Starting with {count} refresh tokens", await db.RefreshTokens.CountAsync());
+
+            const int batchSize = 100;
+
+            int deletedCount = 0;
+
+            while (true)
+            {
+                var expiredTokens = await db.RefreshTokens
+                    .Where(token => token.Expires < DateTime.UtcNow)
+                    .OrderByDescending(token => token.Id)
+                    .Take(batchSize)
+                    .ToListAsync();
+                if (expiredTokens.Count == 0) { break; }
+
+                db.RefreshTokens.RemoveRange(expiredTokens);
+                deletedCount += await db.SaveChangesAsync();
+            }
+
+            logger.LogInformation("Deleted {deletedCount} expired refresh tokens", deletedCount);
+
+            // It's possible that some may have been created since we started.
+            logger.LogInformation("Finished with {count} refresh tokens", await db.RefreshTokens.CountAsync());
         }
     }
 }
