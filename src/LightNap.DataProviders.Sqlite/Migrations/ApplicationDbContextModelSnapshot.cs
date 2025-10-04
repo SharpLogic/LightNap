@@ -59,10 +59,6 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("BrowserSettings")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
@@ -195,6 +191,29 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("LightNap.Core.Data.Entities.UserSetting", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "Key");
+
+                    b.ToTable("UserSettings");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -319,6 +338,17 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LightNap.Core.Data.Entities.UserSetting", b =>
+                {
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "User")
+                        .WithMany("UserSettings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("LightNap.Core.Data.Entities.ApplicationRole", null)
@@ -375,6 +405,8 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Navigation("Notifications");
 
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("UserSettings");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,6 +17,13 @@ namespace LightNap.Core.Users.Interfaces
         Task<PublicUserDto?> GetUserAsync(string userId);
 
         /// <summary>  
+        /// Gets a user asynchronously by username.  
+        /// </summary>  
+        /// <param name="userName">The username.</param>  
+        /// <returns>A task that represents the asynchronous operation. The task result contains the user data.</returns>  
+        Task<PublicUserDto?> GetUserByUserNameAsync(string userName);
+
+        /// <summary>  
         /// Searches users asynchronously based on the specified request DTO.  
         /// </summary>  
         /// <param name="adminSearchUsersRequest">The request DTO containing search parameters.</param>  

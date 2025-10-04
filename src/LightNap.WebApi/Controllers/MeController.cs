@@ -5,6 +5,9 @@ using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Interfaces;
+using LightNap.Core.UserSettings.Dto.Request;
+using LightNap.Core.UserSettings.Dto.Response;
+using LightNap.Core.UserSettings.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +16,7 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/users/me")]
-    public class MeController(IProfileService profileService, INotificationService notificationService) : ControllerBase
+    public class MeController(IProfileService profileService, INotificationService notificationService, IUserSettingsService userSettingsService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -48,42 +51,6 @@ namespace LightNap.WebApi.Controllers
         public async Task<ApiResponseDto<ProfileDto>> UpdateProfile(UpdateProfileRequestDto updateProfileRequest)
         {
             return new ApiResponseDto<ProfileDto>(await profileService.UpdateProfileAsync(updateProfileRequest));
-        }
-
-        /// <summary>
-        /// Retrieves the settings of the current user.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="ApiResponseDto{T}"/> containing the settings of the current user.
-        /// </returns>
-        /// <response code="200">Returns the settings of the current user.</response>
-        /// <response code="401">If the user is not authenticated.</response>
-        [HttpGet("settings")]
-        [ProducesResponseType(typeof(ApiResponseDto<BrowserSettingsDto>), 200)]
-        [ProducesResponseType(401)]
-        public async Task<ApiResponseDto<BrowserSettingsDto>> GetSettings()
-        {
-            return new ApiResponseDto<BrowserSettingsDto>(await profileService.GetSettingsAsync());
-        }
-
-        /// <summary>
-        /// Updates the settings of the current user.
-        /// </summary>
-        /// <param name="browserSettings">The updated settings information.</param>
-        /// <returns>
-        /// A <see cref="ApiResponseDto{T}"/> containing true if the update succeeded.
-        /// </returns>
-        /// <response code="200">Returns the updated settings of the current user.</response>
-        /// <response code="401">If the user is not authenticated.</response>
-        /// <response code="400">If the request is invalid.</response>
-        [HttpPut("settings")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(400)]
-        public async Task<ApiResponseDto<bool>> UpdateSettings(BrowserSettingsDto browserSettings)
-        {
-            await profileService.UpdateSettingsAsync(browserSettings);
-            return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>
@@ -131,5 +98,18 @@ namespace LightNap.WebApi.Controllers
             await notificationService.MarkMyNotificationAsReadAsync(id);
             return new ApiResponseDto<bool>(true);
         }
+
+        [HttpGet("settings")]
+        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync()
+        {
+            return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetMySettingsAsync());
+        }
+
+        [HttpPatch("settings")]
+        public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync([FromBody] SetUserSettingRequestDto setSettingDto)
+        {
+            return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetMySettingAsync(setSettingDto));
+        }
+
     }
 }

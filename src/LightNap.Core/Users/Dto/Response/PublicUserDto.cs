@@ -6,9 +6,9 @@ namespace LightNap.Core.Users.Dto.Response
     /// Represents a user DTO with public information.
     /// </summary>
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
-    [JsonDerivedType(typeof(PublicUserDto), nameof(PublicUserDto))]
-    [JsonDerivedType(typeof(PrivilegedUserDto), nameof(PrivilegedUserDto))]
-    [JsonDerivedType(typeof(AdminUserDto), nameof(AdminUserDto))]
+    [JsonDerivedType(typeof(PublicUserDto), "PublicUser")]
+    [JsonDerivedType(typeof(PrivilegedUserDto), "PrivilegedUser")]
+    [JsonDerivedType(typeof(AdminUserDto), "AdminUser")]
     public class PublicUserDto
     {
         /// <summary>

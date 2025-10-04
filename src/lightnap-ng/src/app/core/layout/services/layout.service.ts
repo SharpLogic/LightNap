@@ -248,14 +248,16 @@ export class LayoutService {
     this.#identityService
       .watchLoggedIn$()
       .pipe(takeUntilDestroyed())
-      .subscribe(loggedIn => {
-        if (loggedIn) {
-          this.#profileService.getSettings().subscribe(settings => {
-            this.layoutConfig.update(state => ({ ...state, ...settings.style }));
-          });
-        } else {
-          this.layoutConfig.update(state => ({ ...state, ...this.#profileService.getDefaultStyleSettings() }));
-        }
+      .subscribe({
+        next: loggedIn => {
+          if (loggedIn) {
+            this.#profileService.getStyleSettings().subscribe(styleSettings => {
+              this.layoutConfig.update(state => ({ ...state, ...styleSettings }));
+            });
+          } else {
+            this.layoutConfig.update(state => ({ ...state, ...this.#profileService.getDefaultStyleSettings() }));
+          }
+        },
       });
   }
 
@@ -326,11 +328,11 @@ export class LayoutService {
       this.updatePreset();
     }
 
-    if (presetChanged || this.#config.primary !== this.layoutConfig().primary) {
+    if (!this.#initialized || presetChanged || this.#config.primary !== this.layoutConfig().primary) {
       this.updatePalette();
     }
 
-    if (this.#config.surface !== this.layoutConfig().surface) {
+    if (!this.#initialized || this.#config.surface !== this.layoutConfig().surface) {
       this.updateSurfacePalette();
     }
 

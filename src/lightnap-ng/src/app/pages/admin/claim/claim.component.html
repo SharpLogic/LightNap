@@ -31,7 +31,7 @@
               <p-button severity="danger" icon="pi pi-trash" title="Remove user claim" (onClick)="removeUserClaim($event, user.id)" />
             </td>
             <td>
-              <a [routerLink]="'admin-user' | route: user.id"> {{ user.userName }}</a>
+              <a [routerLink]="'admin-user' | route: user.userName"> {{ user.userName }}</a>
             </td>
             <td>
               <a href="mailto:{{ user.email }}"> {{ user.email }}</a>

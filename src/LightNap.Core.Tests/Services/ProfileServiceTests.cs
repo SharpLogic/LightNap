@@ -95,35 +95,5 @@ namespace LightNap.Core.Tests.Services
             // Act
             await this._profileService.UpdateProfileAsync(updateProfileDto);
         }
-
-        [TestMethod]
-        public async Task GetSettings_ShouldReturnUserSettings()
-        {
-            // Arrange
-            BrowserSettingsDto browserSettings = new();
-
-            // Act
-            var settings = await this._profileService.GetSettingsAsync();
-
-            // Assert
-            Assert.AreEqual(browserSettings.Version, settings.Version);
-        }
-
-        [TestMethod]
-        public async Task UpdateSettings_ShouldUpdateUserSettings()
-        {
-            // Arrange
-            var updateSettingsDto = new BrowserSettingsDto
-            {
-                Version = 2,
-                Style = [],
-                Preferences = [],
-                Features = [],
-                Extended = []
-            };
-
-            // Act
-            await this._profileService.UpdateSettingsAsync(updateSettingsDto);
-        }
     }
 }

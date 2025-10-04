@@ -34,6 +34,15 @@ export class AdminUsersService {
   }
 
   /**
+   * Gets a user by their username.
+   * @param {string} userName - The username of the user to retrieve.
+   * @returns {Observable<AdminUserDto>} An observable containing the user data.
+   */
+  getUserByUserName(userName: string) {
+    return this.#dataService.getUserByUserName(userName);
+  }
+
+  /**
    * Updates a user by their ID.
    * @param {string} userId - The ID of the user to update.
    * @param {AdminUpdateUserRequestDto} updateAdminUserRequest - The update request object.

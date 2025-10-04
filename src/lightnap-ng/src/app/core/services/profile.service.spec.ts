@@ -1,11 +1,11 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
+import { ApplicationSettingsDto, LayoutConfigDto, UpdateProfileRequestDto } from "@core/backend-api";
+import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { ProfileService } from "./profile.service";
 import { TimerService } from "./timer.service";
-import { UpdateProfileRequestDto, ChangePasswordRequestDto, ApplicationSettingsDto, LayoutConfigDto } from "@core/backend-api";
-import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 
 describe("ProfileService", () => {
   let service: ProfileService;
@@ -18,7 +18,7 @@ describe("ProfileService", () => {
       "getProfile",
       "updateProfile",
       "getSettings",
-      "updateSettings",
+      "setSetting",
     ]);
     const identitySpy = jasmine.createSpyObj("IdentityService", ["watchLoggedIn$"]);
     const timerSpy = jasmine.createSpyObj("TimerService", ["watchTimer$"]);
@@ -65,7 +65,7 @@ describe("ProfileService", () => {
   });
 
   it("should get settings", () => {
-    dataServiceSpy.getSettings.and.returnValue(of({} as any));
+    dataServiceSpy.getSettings.and.returnValue(of([{}] as any));
 
     service.getSettings().subscribe();
 
@@ -75,23 +75,23 @@ describe("ProfileService", () => {
 
   it("should update settings", () => {
     const browserSettings: ApplicationSettingsDto = {} as any;
-    dataServiceSpy.updateSettings.and.returnValue(of({} as any));
+    dataServiceSpy.setSetting.and.returnValue(of({} as any));
 
-    service.updateSettings(browserSettings).subscribe();
+    service.setSetting("BrowserSettings", browserSettings).subscribe();
 
-    expect(dataServiceSpy.updateSettings).toHaveBeenCalledWith(browserSettings);
+    expect(dataServiceSpy.setSetting).toHaveBeenCalledWith({ key: "BrowserSettings", value: JSON.stringify(browserSettings) });
   });
 
   it("should update style settings", () => {
-    const styleSettings: LayoutConfigDto = {} as any;
-    const expectedSettings: ApplicationSettingsDto = {} as any;
-    dataServiceSpy.getSettings.and.returnValue(of(expectedSettings));
-    dataServiceSpy.updateSettings.and.returnValue(of({} as any));
+    const clientSettings: LayoutConfigDto = { source: "server" } as any;
+    const serverSettings: ApplicationSettingsDto = { source: "client" } as any;
+    dataServiceSpy.getSettings.and.returnValue(of([{ key: "BrowserSettings", value: JSON.stringify(serverSettings) }] as any));
+    dataServiceSpy.setSetting.and.returnValue(of({} as any));
 
-    service.updateStyleSettings(styleSettings).subscribe();
+    service.updateStyleSettings(clientSettings).subscribe();
 
     expect(dataServiceSpy.getSettings).toHaveBeenCalled();
-    expect(dataServiceSpy.updateSettings).toHaveBeenCalled();
+    expect(dataServiceSpy.setSetting).toHaveBeenCalled();
   });
 
   it("should get default style settings", () => {

@@ -1,8 +1,13 @@
 using LightNap.Core.Api;
+using LightNap.Core.Configuration;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
 using LightNap.Core.Users.Interfaces;
+using LightNap.Core.UserSettings.Dto.Request;
+using LightNap.Core.UserSettings.Dto.Response;
+using LightNap.Core.UserSettings.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightNap.WebApi.Controllers
@@ -12,7 +17,8 @@ namespace LightNap.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(IUsersService usersService, IRolesService rolesService, IClaimsService claimsService) : ControllerBase
+    public class UsersController(IUsersService usersService, IRolesService rolesService, IClaimsService claimsService,
+        IUserSettingsService userSettingsService) : ControllerBase
     {
         /// <summary>
         /// Retrieves a user by ID.
@@ -25,6 +31,19 @@ namespace LightNap.WebApi.Controllers
         public async Task<ApiResponseDto<PublicUserDto?>> GetUser(string userId)
         {
             return new ApiResponseDto<PublicUserDto?>(await usersService.GetUserAsync(userId));
+        }
+
+        /// <summary>
+        /// Retrieves a user by username.
+        /// </summary>
+        /// <param name="userName">The username of the user to retrieve.</param>
+        /// <returns>The user details.</returns>
+        /// <response code="200">Returns the user details.</response>
+        [HttpGet("user-name/{userName}")]
+        [ProducesResponseType(typeof(ApiResponseDto<PublicUserDto?>), 200)]
+        public async Task<ApiResponseDto<PublicUserDto?>> GetUserByUserName(string userName)
+        {
+            return new ApiResponseDto<PublicUserDto?>(await usersService.GetUserByUserNameAsync(userName));
         }
 
         /// <summary>
@@ -248,6 +267,20 @@ namespace LightNap.WebApi.Controllers
         {
             await usersService.UnlockUserAccountAsync(userId);
             return new ApiResponseDto<bool>(true);
+        }
+
+        [Authorize(Roles = Constants.Roles.Administrator)]
+        [HttpGet("{userId}/settings")]
+        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync(string userId)
+        {
+            return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetUserSettingsAsync(userId));
+        }
+
+        [Authorize(Roles = Constants.Roles.Administrator)]
+        [HttpPut("{userId}/settings")]
+        public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync(string userId, [FromBody] SetUserSettingRequestDto setSettingDto)
+        {
+            return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetUserSettingAsync(userId, setSettingDto));
         }
 
     }

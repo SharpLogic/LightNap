@@ -22,6 +22,15 @@ export class PublicUsersService {
   }
 
   /**
+   * Gets a user by their username.
+   * @param {string} userName - The username of the user to retrieve.
+   * @returns {Observable<PublicUserDto>} An observable containing the user data.
+   */
+  getUserByUserName(userName: string) {
+    return this.#usersService.getUserByUserName(userName) as Observable<PublicUserDto>;
+  }
+
+  /**
    * Searches for users based on the search criteria.
    * @param {PublicSearchUsersRequestDto} publicSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<PublicUserDto>>} An observable containing the search results.

@@ -2,8 +2,9 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core/helpers";
 import { tap } from "rxjs";
-import { ApplicationSettingsDto, NotificationSearchResultsDto, ProfileDto, SearchNotificationsRequestDto, UpdateProfileRequestDto } from "../dtos";
+import { NotificationSearchResultsDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
 import { NotificationHelper } from "../helpers/notification.helper";
+import { UserSettingHelper } from "../helpers/user-setting.helper";
 
 @Injectable({
   providedIn: "root",
@@ -20,14 +21,6 @@ export class ProfileDataService {
     return this.#http.put<ProfileDto>(`${this.#apiUrlRoot}profile`, updateProfile);
   }
 
-  getSettings() {
-    return this.#http.get<ApplicationSettingsDto>(`${this.#apiUrlRoot}settings`);
-  }
-
-  updateSettings(browserSettings: ApplicationSettingsDto) {
-    return this.#http.put<boolean>(`${this.#apiUrlRoot}settings`, browserSettings);
-  }
-
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
     return this.#http
       .post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest)
@@ -40,5 +33,17 @@ export class ProfileDataService {
 
   markNotificationAsRead(id: number) {
     return this.#http.put<boolean>(`${this.#apiUrlRoot}notifications/${id}/mark-as-read`, undefined);
+  }
+
+  getSetting(key: string) {
+    return this.#http.get<string>(`${this.#apiUrlRoot}settings/${key}`);
+  }
+
+  getSettings() {
+    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}settings`).pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
+  }
+
+  setSetting(setUserSettingRequest: SetUserSettingRequestDto) {
+    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}settings`, setUserSettingRequest).pipe(tap(UserSettingHelper.rehydrate));
   }
 }

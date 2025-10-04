@@ -23,6 +23,11 @@ namespace LightNap.Core.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
         /// <summary>
+        /// User settings in the DB.
+        /// </summary>
+        public DbSet<UserSetting> UserSettings { get; set; } = null!;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
         /// </summary>
         /// <param name="options">The DbContext options.</param>
@@ -56,10 +61,6 @@ namespace LightNap.Core.Data
                 .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .IsRequired();
-
-            builder.Entity<ApplicationUser>()
-                .Property(u => u.BrowserSettings)
-                .Metadata.SetValueComparer(new BrowserSettingsValueComparer());
         }
 
         /// <inheritdoc />
@@ -67,10 +68,6 @@ namespace LightNap.Core.Data
         {
             // Make sure all DateTime properties are stored as UTC.
             configurationBuilder.Properties<DateTime>().HaveConversion<UtcValueConverter>();
-
-            // Storing this as a JSON string.
-            configurationBuilder.Properties<BrowserSettingsDto>()
-                .HaveConversion<BrowserSettingsValueConverter>();
         }
     }
 }

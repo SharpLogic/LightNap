@@ -10,8 +10,12 @@ import {
     RoleDto,
     SearchClaimsRequestDto,
     SearchUserClaimsRequestDto,
+    SetUserSettingRequestDto,
     UserClaimDto,
+    UserSettingDto,
 } from "../dtos";
+import { tap } from "rxjs";
+import { UserSettingHelper } from "../helpers/user-setting.helper";
 
 @Injectable({
   providedIn: "root",
@@ -22,6 +26,10 @@ export class UsersDataService {
 
   getUser(userId: string) {
     return this.#http.get<AdminUserDto>(`${this.#apiUrlRoot}${userId}`);
+  }
+
+  getUserByUserName(userName: string) {
+    return this.#http.get<AdminUserDto>(`${this.#apiUrlRoot}user-name/${userName}`);
   }
 
   getUsersById(userIds: Array<string>) {
@@ -82,5 +90,13 @@ export class UsersDataService {
 
   unlockUserAccount(userId: string) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}${userId}/unlock`, null);
+  }
+
+  getSettings(userId: string) {
+    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}${userId}/settings`).pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
+  }
+
+  updateSetting(userId: string, setUserSetting: SetUserSettingRequestDto) {
+    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}${userId}/settings`, setUserSetting).pipe(tap(UserSettingHelper.rehydrate));
   }
 }

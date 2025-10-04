@@ -44,6 +44,31 @@ namespace LightNap.Core.Users.Services
         }
 
         /// <summary>
+        /// Retrieves a user by username.
+        /// </summary>
+        /// <param name="userName">The username of the user to retrieve.</param>
+        /// <returns>The user details or null if not found.</returns>
+        public async Task<PublicUserDto?> GetUserByUserNameAsync(string userName)
+        {
+            bool isAdministrator = userContext.IsAdministrator;
+            bool isPrivileged = userContext.IsAuthenticated;
+
+            var user = await userManager.FindByNameAsync(userName);
+
+            if (isAdministrator)
+            {
+                return user?.ToAdminUserDto();
+            }
+
+            if (isPrivileged)
+            {
+                return user?.ToPrivilegedUserDto();
+            }
+
+            return user?.ToPublicUserDto();
+        }
+
+        /// <summary>
         /// Searches for users based on the specified criteria.
         /// </summary>
         /// <param name="adminSearchUsersRequest">The search criteria.</param>

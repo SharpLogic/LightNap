@@ -6,4 +6,4 @@ export * from "./search-claims-request-dto";
 export * from "./search-notifications-request-dto";
 export * from "./search-user-claims-request-dto";
 export * from "./search-users-sort-by";
-
+export * from "./set-user-setting-request-dto";

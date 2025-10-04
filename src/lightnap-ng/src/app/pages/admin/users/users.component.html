@@ -39,7 +39,7 @@
               <p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser($event, user.id)" />
             </td>
             <td>
-              <a [routerLink]="'admin-user' | route: user.id"> {{ user.userName }}</a>
+              <a [routerLink]="'admin-user' | route: user.userName"> {{ user.userName }}</a>
               @if (user.lockoutEnd) {
                 <p-tag class="ml-1" severity="danger" value="Locked" />
               }

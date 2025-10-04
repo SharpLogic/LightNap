@@ -15,6 +15,8 @@ using LightNap.Core.Public.Services;
 using LightNap.Core.Services;
 using LightNap.Core.Users.Interfaces;
 using LightNap.Core.Users.Services;
+using LightNap.Core.UserSettings.Interfaces;
+using LightNap.Core.UserSettings.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
@@ -44,6 +46,7 @@ namespace LightNap.WebApi.Extensions
             services.AddSingleton<IAuthorizationHandler, ClaimAuthorizationHandler>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserContext, WebUserContext>();
+            services.AddScoped<IUserSettingsService, UserSettingsService>();
             services.AddScoped<ICookieManager, WebCookieManager>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IIdentityService, IdentityService>();

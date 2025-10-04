@@ -65,5 +65,18 @@
         {
             public const string NoIpProvided = "No IP Provided";
         }
+
+        /// <summary>
+        /// Contains keys used by user settings.
+        /// </summary>
+        public class UserSettingKeys
+        {
+            /// <summary>
+            /// The JSON data set by the browser for its layout and styling preferences. This is all handled by the browser app
+            /// and we just store and return the data it sends.
+            /// </summary>
+            public const string BrowserSettings = "BrowserSettings";
+        }
+
     }
 }

@@ -13,3 +13,4 @@ export * from "./privileged-user-dto";
 export * from "./public-user-dto";
 export * from "./role-dto";
 export * from "./user-claim-dto";
+export * from "./user-setting-dto";

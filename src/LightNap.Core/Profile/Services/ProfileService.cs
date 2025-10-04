@@ -38,27 +38,5 @@ namespace LightNap.Core.Profile.Services
 
             return user.ToLoggedInUserDto();
         }
-
-        /// <summary>  
-        /// Retrieves the settings of the specified user.  
-        /// </summary>  
-        /// <returns>A <see cref="BrowserSettingsDto"/> containing the user's settings.</returns>  
-        public async Task<BrowserSettingsDto> GetSettingsAsync()
-        {
-            var user = await db.Users.FindAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to load settings");
-            return user.BrowserSettings;
-        }
-
-        /// <summary>  
-        /// Updates the settings of the specified user.  
-        /// </summary>  
-        /// <param name="requestDto">The data transfer object containing the updated settings information.</param>  
-        /// <returns>A task that represents the asynchronous operation.</returns>  
-        public async Task UpdateSettingsAsync(BrowserSettingsDto requestDto)
-        {
-            var user = await db.Users.FindAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to update settings");
-            user.BrowserSettings = requestDto;
-            await db.SaveChangesAsync();
-        }
     }
 }

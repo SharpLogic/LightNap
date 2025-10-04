@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnChanges, signal } from "@angular/core";
+import { Component, computed, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
@@ -9,7 +9,7 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TabsModule } from "primeng/tabs";
 import { TagModule } from "primeng/tag";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { UserClaimsComponent } from "./user-claims/user-claims.component";
 import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { UserRolesComponent } from "./user-roles/user-roles.component";
@@ -38,7 +38,7 @@ export class UserComponent implements OnChanges {
   readonly #toast = inject(ToastService);
   readonly #routeAlias = inject(RouteAliasService);
 
-  readonly userId = input.required<string>();
+  readonly userName = input.required<string>();
 
   readonly errors = signal(new Array<string>());
 
@@ -46,26 +46,36 @@ export class UserComponent implements OnChanges {
   readonly userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
   readonly userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
 
+  #userId = "";
+
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
   readonly asUserClaims = TypeHelpers.cast<Array<ClaimDto>>;
   readonly asUserRoles = TypeHelpers.cast<Array<RoleDto>>;
 
   ngOnChanges() {
     this.#refreshUser();
-    this.#refreshRoles();
-    this.#refreshClaims();
   }
 
   #refreshUser() {
-    this.user$.set(this.adminService.getUser(this.userId()));
+    this.user$.set(
+      this.adminService.getUserByUserName(this.userName()).pipe(
+        tap(user => {
+          if (!user) return;
+
+          this.#userId = user.id;
+          this.#refreshRoles();
+          this.#refreshClaims();
+        })
+      )
+    );
   }
 
   #refreshRoles() {
-    this.userRoles$.set(this.adminService.getUserRoles(this.userId()));
+    this.userRoles$.set(this.adminService.getUserRoles(this.#userId));
   }
 
   #refreshClaims() {
-    this.userClaims$.set(this.adminService.getUserClaims(this.userId()));
+    this.userClaims$.set(this.adminService.getUserClaims(this.#userId));
   }
 
   lockUserAccount(event: any) {
@@ -77,7 +87,7 @@ export class UserComponent implements OnChanges {
       target: event.target,
       key: "lock",
       accept: () => {
-        this.adminService.lockUserAccount(this.userId()).subscribe({
+        this.adminService.lockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
           error: response => this.errors.set(response.errorMessages),
         });
@@ -94,7 +104,7 @@ export class UserComponent implements OnChanges {
       target: event.target,
       key: "unlock",
       accept: () => {
-        this.adminService.unlockUserAccount(this.userId()).subscribe({
+        this.adminService.unlockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
           error: response => this.errors.set(response.errorMessages),
         });
@@ -111,7 +121,7 @@ export class UserComponent implements OnChanges {
       target: event.target,
       key: "delete",
       accept: () => {
-        this.adminService.deleteUser(this.userId()).subscribe({
+        this.adminService.deleteUser(this.#userId).subscribe({
           next: () => {
             this.#toast.success("User deleted successfully.");
             this.#routeAlias.navigate("admin-users");
@@ -125,7 +135,7 @@ export class UserComponent implements OnChanges {
   removeRole(role: string) {
     this.errors.set([]);
 
-    this.adminService.removeUserFromRole(this.userId(), role).subscribe({
+    this.adminService.removeUserFromRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
       error: response => this.errors.set(response.errorMessages),
     });
@@ -134,7 +144,7 @@ export class UserComponent implements OnChanges {
   addRole(role: string) {
     this.errors.set([]);
 
-    this.adminService.addUserToRole(this.userId(), role).subscribe({
+    this.adminService.addUserToRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
       error: response => this.errors.set(response.errorMessages),
     });
@@ -143,7 +153,7 @@ export class UserComponent implements OnChanges {
   removeClaim(claim: ClaimDto) {
     this.errors.set([]);
 
-    this.adminService.removeUserClaim(this.userId(), claim).subscribe({
+    this.adminService.removeUserClaim(this.#userId, claim).subscribe({
       next: () => this.#refreshClaims(),
       error: response => this.errors.set(response.errorMessages),
     });
@@ -152,7 +162,7 @@ export class UserComponent implements OnChanges {
   addClaim(claim: ClaimDto) {
     this.errors.set([]);
 
-    this.adminService.addUserClaim(this.userId(), claim).subscribe({
+    this.adminService.addUserClaim(this.#userId, claim).subscribe({
       next: () => this.#refreshClaims(),
       error: response => this.errors.set(response.errorMessages),
     });

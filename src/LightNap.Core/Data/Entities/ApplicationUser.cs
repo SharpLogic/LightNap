@@ -1,5 +1,4 @@
-﻿using LightNap.Core.Profile.Dto.Response;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace LightNap.Core.Data.Entities
 {
@@ -22,11 +21,6 @@ namespace LightNap.Core.Data.Entities
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// The user's browser app settings.
-        /// </summary>
-        public virtual BrowserSettingsDto BrowserSettings { get; set; } = new BrowserSettingsDto();
-
-        /// <summary>
         /// The notifications associated with the user.
         /// </summary>
         public ICollection<Notification>? Notifications { get; set; }
@@ -35,5 +29,10 @@ namespace LightNap.Core.Data.Entities
         /// The refresh tokens associated with the user.
         /// </summary>
         public ICollection<RefreshToken>? RefreshTokens { get; set; }
+
+        /// <summary>
+        /// The settings associated with the user.
+        /// </summary>
+        public ICollection<UserSetting>? UserSettings { get; set; }
     }
 }
