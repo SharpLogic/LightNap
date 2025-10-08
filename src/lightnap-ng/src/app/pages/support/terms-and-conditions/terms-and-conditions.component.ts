@@ -1,12 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LayoutService } from '@core/layout/services/layout.service';
+import { BrandedCardComponent } from '@core';
 
 @Component({
     standalone: true,
     templateUrl: './terms-and-conditions.component.html',
-    imports: [RouterModule]
+    imports: [RouterModule, BrandedCardComponent]
 })
 export class TermsAndConditionsComponent {
-    layoutService = inject(LayoutService);
 }

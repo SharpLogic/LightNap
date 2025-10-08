@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, IdentityCardComponent } from "@core";
+import { BlockUiService, ErrorListComponent, BrandedCardComponent } from "@core";
 import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
@@ -12,7 +12,7 @@ import { IdentityService } from "@core/services/identity.service";
 @Component({
   standalone: true,
   templateUrl: "./verify-code.component.html",
-  imports: [ReactiveFormsModule, RouterModule, CheckboxModule, ButtonModule, RoutePipe, InputOtpModule, IdentityCardComponent, ErrorListComponent],
+  imports: [ReactiveFormsModule, RouterModule, CheckboxModule, ButtonModule, RoutePipe, InputOtpModule, BrandedCardComponent, ErrorListComponent],
 })
 export class VerifyCodeComponent {
   #identityService = inject(IdentityService);

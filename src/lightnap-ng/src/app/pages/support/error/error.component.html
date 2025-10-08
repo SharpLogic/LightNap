@@ -1,18 +1,9 @@
-<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen w-screen overflow-hidden">
-    <div class="flex flex-col items-center justify-center">
-        <img src="assets/images/logos/logo-{{ layoutService.isDarkTheme() ? 'dark' : 'light' }}.png" alt="LightNap logo" class="mb-8 w-24 shrink-0">
-        <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, rgba(233, 30, 99, 0.4) 10%, rgba(33, 150, 243, 0) 30%);">
-            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20 flex flex-col items-center" style="border-radius:53px">
-                <div class="gap-4 flex flex-col items-center">
-                    <div class="flex justify-center items-center bg-pink-500 rounded-full" style="height:3.2rem; width:3.2rem;">
-                        <i class="pi pi-fw pi-exclamation-circle text-2xl text-white"></i>
-                    </div>
-                    <h1 class="text-surface-900 dark:text-surface-0 font-bold text-5xl mb-2">Error Occurred</h1>
-                    <span class="text-surface-600 dark:text-surface-200 mb-8">Requested resource is not available.</span>
-                    <img src="assets/images/error/asset-error.svg" alt="Error" class="mb-8" width="80%">
-                    <button pButton pRipple icon="pi pi-arrow-left" label="Go Home" class="p-button-text" [routerLink]="'user-home' | route"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<branded-card>
+  <span title>Error Occurred</span>
+  <span subtitle>Requested resource is not available.</span>
+
+  <div class="flex flex-col items-center">
+    <img src="assets/images/error/asset-error.svg" alt="Error" class="mb-8" width="80%" />
+    <button pButton pRipple icon="pi pi-arrow-left" label="Go Home" class="p-button-text" [routerLink]="'user-home' | route"></button>
+  </div>
+</branded-card>

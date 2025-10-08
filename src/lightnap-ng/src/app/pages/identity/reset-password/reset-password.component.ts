@@ -8,12 +8,12 @@ import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
   templateUrl: "./reset-password.component.html",
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, IdentityCardComponent, ErrorListComponent],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, BrandedCardComponent, ErrorListComponent],
 })
 export class ResetPasswordComponent {
   #identityService = inject(IdentityService);

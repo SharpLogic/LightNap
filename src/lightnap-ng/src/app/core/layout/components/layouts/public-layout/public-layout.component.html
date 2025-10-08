@@ -4,7 +4,7 @@
       <a class="flex items-center ml-6 h-10 hover:no-underline" [routerLink]="'landing' | route">
         <img
           src="assets/images/logos/logo-{{ layoutService.isDarkTheme() ? 'dark' : 'light' }}.png"
-          alt="LightNap Logo"
+          alt="{{ layoutService.appName }} Logo"
           class="h-full object-scale-down"
         /><span class="text-color font-medium text-2xl leading-normal ml-2">{{ layoutService.appName }}</span>
       </a>

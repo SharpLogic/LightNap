@@ -8,12 +8,12 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
   templateUrl: "./confirm-email.component.html",
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, InputTextModule, CheckboxModule, IdentityCardComponent, ErrorListComponent],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, InputTextModule, CheckboxModule, BrandedCardComponent, ErrorListComponent],
 })
 export class ConfirmEmailComponent implements OnInit {
   #identityService = inject(IdentityService);

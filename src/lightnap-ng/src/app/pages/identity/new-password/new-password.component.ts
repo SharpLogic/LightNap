@@ -10,12 +10,12 @@ import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
   templateUrl: "./new-password.component.html",
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, CheckboxModule, RoutePipe, ErrorListComponent, IdentityCardComponent],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, CheckboxModule, RoutePipe, ErrorListComponent, BrandedCardComponent],
 })
 export class NewPasswordComponent {
   #identityService = inject(IdentityService);

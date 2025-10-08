@@ -1,8 +1,8 @@
-<div class="flex items-center justify-center min-h-screen w-screen overflow-hidden">
+<div class="flex items-center justify-center overflow-hidden w-full">
   <div class="flex flex-col items-center justify-center">
     <img
       src="assets/images/logos/logo-{{ layoutService.isDarkTheme() ? 'dark' : 'light' }}.png"
-      alt="LightNap logo"
+      alt="{{ layoutService.appName }} logo"
       class="mb-8 w-24 shrink-0"
     />
     <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">

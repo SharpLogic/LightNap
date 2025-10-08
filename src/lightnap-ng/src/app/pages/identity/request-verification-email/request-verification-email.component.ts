@@ -8,12 +8,12 @@ import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
   templateUrl: './request-verification-email.component.html',
-  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, IdentityCardComponent, ErrorListComponent],
+  imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, BrandedCardComponent, ErrorListComponent],
 })
 export class RequestVerificationEmailComponent {
   #identityService = inject(IdentityService);

@@ -12,7 +12,7 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
@@ -25,7 +25,7 @@ import { IdentityCardComponent } from "@core";
     CheckboxModule,
     RoutePipe,
     PasswordModule,
-    IdentityCardComponent,
+    BrandedCardComponent,
     ErrorListComponent,
     InputGroupModule,
     InputGroupAddonModule,

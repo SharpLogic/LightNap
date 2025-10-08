@@ -3,11 +3,11 @@ import { Component, inject } from "@angular/core";
 import { LayoutService } from "@core/layout/services/layout.service";
 
 @Component({
-  selector: "identity-card",
+  selector: 'branded-card',
   standalone: true,
-  templateUrl: "./identity-card.component.html",
+  templateUrl: './branded-card.component.html',
   imports: [CommonModule],
 })
-export class IdentityCardComponent {
+export class BrandedCardComponent {
   layoutService = inject(LayoutService);
 }

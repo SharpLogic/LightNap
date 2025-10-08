@@ -11,7 +11,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
-import { IdentityCardComponent } from "@core";
+import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
@@ -25,7 +25,7 @@ import { IdentityCardComponent } from "@core";
     CheckboxModule,
     RoutePipe,
     ErrorListComponent,
-    IdentityCardComponent,
+    BrandedCardComponent,
   ],
 })
 export class RegisterComponent {
