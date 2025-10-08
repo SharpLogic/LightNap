@@ -121,7 +121,7 @@ export class NotificationService {
             notificationItem.title = `New user registered: ${user.userName}`;
             notificationItem.description = "A new user registered!";
             notificationItem.icon = "pi pi-user";
-            notificationItem.routerLink = this.#routeAlias.getRoute("admin-user", user.id);
+            notificationItem.routerLink = this.#routeAlias.getRoute("admin-user", user.userName);
             return notificationItem;
           })
         );
