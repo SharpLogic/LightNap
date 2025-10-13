@@ -11,7 +11,15 @@ import { PanelModule } from "primeng/panel";
 export class PageComponent {
   readonly #sanitizer = inject(DomSanitizer);
 
-  content = `              <user-id-control userName="admin"></user-id-control>
+  content = `
+  <p-card-control class="w-96">
+    <p>Card Content</p>
+  <ng-template #title> Card Title </ng-template>
+  <ng-template #subtitle> Card Subtitle </ng-template>
+    <p>Card Content</p>
+    </p-card-control>
+
+  <user-id-control userName="admin"></user-id-control>
               <user-id-control userName="user1"></user-id-control>
              `;
 

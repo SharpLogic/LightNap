@@ -1,6 +1,6 @@
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { enableProdMode, importProvidersFrom, inject, isDevMode, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, inputBinding, isDevMode, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { createCustomElement } from "@angular/elements";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
@@ -14,6 +14,7 @@ import { InitializationService } from "@core/services/initialization.service";
 import { PrependNameTitleStrategy } from "@core/strategies/prepend-name-title.strategy";
 import Aura from "@primeng/themes/aura";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { Card } from "primeng/card";
 import { providePrimeNG } from "primeng/config";
 import { AppComponent } from "./app/app.component";
 import { Routes } from "./app/pages/routes";
@@ -59,6 +60,7 @@ bootstrapApplication(AppComponent, {
     const injector = appRef.injector;
 
     customElements.define("user-id-control", createCustomElement(UserIdComponent, { injector }));
+    customElements.define("p-card-control", createCustomElement(Card, { injector }));
 
     // Register other dynamic components as needed
   })
