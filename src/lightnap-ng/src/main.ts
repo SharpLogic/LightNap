@@ -1,10 +1,12 @@
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { enableProdMode, importProvidersFrom, inject, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, inputBinding, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
+import { createCustomElement } from "@angular/elements";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
 import { API_URL_ROOT, APP_NAME, throwInlineError } from "@core";
+import { UserIdComponent } from "@core/components/user-id/user-id.component";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { InitializationService } from "@core/services/initialization.service";
@@ -32,7 +34,7 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: ".app-dark"
+          darkModeSelector: ".app-dark",
         },
       },
     }),
@@ -47,4 +49,12 @@ bootstrapApplication(AppComponent, {
     MessageService,
     ConfirmationService,
   ],
-}).catch(err => console.error("Error bootstrapping application:", err));
+})
+  .then(appRef => {
+    const injector = appRef.injector;
+
+    customElements.define("user-id-control", createCustomElement(UserIdComponent, { injector }));
+
+    // Register other dynamic components as needed
+  })
+  .catch(err => console.error("Error bootstrapping application:", err));

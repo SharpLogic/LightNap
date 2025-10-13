@@ -1,0 +1,6 @@
+<api-response [apiResponse]="user()">
+  <ng-template #success let-userAny>
+    @let user = asUser(userAny);
+    <p>{{ user.userName }} has ID {{ user.id }}</p>
+  </ng-template>
+</api-response>
