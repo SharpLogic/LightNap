@@ -1,9 +1,10 @@
 import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { enableProdMode, importProvidersFrom, inject, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
+import { enableProdMode, importProvidersFrom, inject, isDevMode, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
+import { provideServiceWorker } from "@angular/service-worker";
 import { API_URL_ROOT, APP_NAME, throwInlineError } from "@core";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
@@ -32,7 +33,7 @@ bootstrapApplication(AppComponent, {
       theme: {
         preset: Aura,
         options: {
-          darkModeSelector: ".app-dark"
+          darkModeSelector: ".app-dark",
         },
       },
     }),
@@ -46,5 +47,9 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withInterceptors([tokenInterceptor, apiResponseInterceptor])),
     MessageService,
     ConfirmationService,
+    provideServiceWorker("ngsw-worker.js", {
+      enabled: !isDevMode(),
+      registrationStrategy: "registerWhenStable:30000",
+    }),
   ],
 }).catch(err => console.error("Error bootstrapping application:", err));
