@@ -187,12 +187,13 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetAccessTokenAsync_NotLoggedIn_ThrowsError()
+        public async Task GetAccessTokenAsync_NotLoggedIn_ReturnsEmpty()
         {
             // Arrange
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.GetAccessTokenAsync());
+            var token = await this._identityService.GetAccessTokenAsync();
+            Assert.AreEqual(string.Empty, token);
         }
 
         [TestMethod]
