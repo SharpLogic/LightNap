@@ -18,7 +18,14 @@
                         "browser": "src/main.ts",
                         "polyfills": [],
                         "tsConfig": "tsconfig.app.json",
-                        "assets": ["src/favicon.ico", "src/assets"],
+                        "assets": [
+                            "src/favicon.ico",
+                            "src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "public"
+                            }
+                        ],
                         "styles": [
                             "src/styles.css",
                             "node_modules/primeicons/primeicons.css"
