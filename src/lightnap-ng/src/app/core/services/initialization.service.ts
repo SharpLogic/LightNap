@@ -10,5 +10,6 @@ export class InitializationService {
 
   initialize() {
     this.#initializedSubject$.next(true);
+    this.#initializedSubject$.complete();
   }
 }

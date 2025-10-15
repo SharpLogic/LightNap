@@ -370,10 +370,12 @@ namespace LightNap.Core.Identity.Services
         /// <summary>
         /// Gets a new access token using the refresh token.
         /// </summary>
-        /// <returns>The login result.</returns>
+        /// <returns>The access token or an empty string if the user is not logged in.</returns>
         public async Task<string> GetAccessTokenAsync()
         {
-            var user = await this.ValidateRefreshTokenAsync() ?? throw new UserFriendlyApiException("This account needs to sign in.");
+            var user = await this.ValidateRefreshTokenAsync();
+            if (user is null) { return string.Empty; }
+
             if (!await signInManager.CanSignInAsync(user)) { throw new UserFriendlyApiException("This account may not sign in."); }
 
             return await tokenService.GenerateAccessTokenAsync(user);

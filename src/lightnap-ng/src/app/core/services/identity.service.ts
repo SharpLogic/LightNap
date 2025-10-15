@@ -7,7 +7,20 @@ import { RouteAliasService } from "@core";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
-import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto, ChangeEmailRequestDto, ChangePasswordRequestDto, ConfirmChangeEmailRequestDto } from "@core/backend-api";
+import {
+  ClaimDto,
+  LoginRequestDto,
+  RegisterRequestDto,
+  VerifyCodeRequestDto,
+  ResetPasswordRequestDto,
+  NewPasswordRequestDto,
+  SendVerificationEmailRequestDto,
+  VerifyEmailRequestDto,
+  SendMagicLinkEmailRequestDto,
+  ChangeEmailRequestDto,
+  ChangePasswordRequestDto,
+  ConfirmChangeEmailRequestDto,
+} from "@core/backend-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.
@@ -127,16 +140,16 @@ export class IdentityService {
         next: () => this.#tryRefreshToken(),
       });
 
+    // Need to delay this to the next cycle to allow other services to initialize first. If you try to subscribe
+    // to the InitializationService immediately you'll get a circular dependency error at runtime. This could
+    // probably be fixed more elegantly, but here we are.
     this.#timer
-      .watchTimer$(100)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this.#initializationService.initialized$.pipe(take(1)).subscribe({
-            next: () => this.#tryRefreshToken(),
-          });
-        },
-      });
+      .watchTimer$(0)
+      .pipe(
+        take(1),
+        switchMap(() => this.#initializationService.initialized$)
+      )
+      .subscribe({ next: () => this.#tryRefreshToken() });
   }
 
   #tryRefreshToken() {
@@ -146,7 +159,7 @@ export class IdentityService {
       .getAccessToken()
       .pipe(finalize(() => (this.#requestingRefreshToken = false)))
       .subscribe({
-        next: token => this.#onTokenReceived(token),
+        next: token => this.#onTokenReceived(token?.length ? token : undefined),
         error: () => this.#onTokenReceived(undefined),
       });
   }
@@ -348,11 +361,11 @@ export class IdentityService {
     return `Bearer ${this.#token}`;
   }
 
-    /**
-     * @method isTokenExpired
-     * @description Checks if the current token is expired.
-     * @returns {boolean} True if the token is expired, false otherwise.
-     */
+  /**
+   * @method isTokenExpired
+   * @description Checks if the current token is expired.
+   * @returns {boolean} True if the token is expired, false otherwise.
+   */
   isTokenExpired() {
     return this.#expires <= Date.now();
   }
@@ -460,51 +473,51 @@ export class IdentityService {
   }
 
   /**
-     * @method getDevices
-     * @description Fetches the list of devices associated with the user.
-     * @returns {Observable<Array<Device>>} An observable containing the list of devices.
-     */
-    getDevices() {
-      return this.#dataService.getDevices();
-    }
+   * @method getDevices
+   * @description Fetches the list of devices associated with the user.
+   * @returns {Observable<Array<Device>>} An observable containing the list of devices.
+   */
+  getDevices() {
+    return this.#dataService.getDevices();
+  }
 
-    /**
-     * @method revokeDevice
-     * @description Revokes a device by its ID.
-     * @param {string} deviceId - The ID of the device to revoke.
-     * @returns {Observable<boolean>} An observable containing true if successful.
-     */
-    revokeDevice(deviceId: string) {
-      return this.#dataService.revokeDevice(deviceId);
-    }
+  /**
+   * @method revokeDevice
+   * @description Revokes a device by its ID.
+   * @param {string} deviceId - The ID of the device to revoke.
+   * @returns {Observable<boolean>} An observable containing true if successful.
+   */
+  revokeDevice(deviceId: string) {
+    return this.#dataService.revokeDevice(deviceId);
+  }
 
-    /**
-     * @method changePassword
-     * @description Changes the user's password.
-     * @param {ChangePasswordRequestDto} changePasswordRequest - The request object containing password change information.
-     * @returns {Observable<boolean>} An observable containing true if successful.
-     */
-    changePassword(changePasswordRequest: ChangePasswordRequestDto) {
-      return this.#dataService.changePassword(changePasswordRequest);
-    }
+  /**
+   * @method changePassword
+   * @description Changes the user's password.
+   * @param {ChangePasswordRequestDto} changePasswordRequest - The request object containing password change information.
+   * @returns {Observable<boolean>} An observable containing true if successful.
+   */
+  changePassword(changePasswordRequest: ChangePasswordRequestDto) {
+    return this.#dataService.changePassword(changePasswordRequest);
+  }
 
-    /**
-     * @method changeEmail
-     * @description Changes the user's email address.
-     * @param {ChangeEmailRequestDto} changeEmailRequest - The request object containing email change information.
-     * @returns {Observable<boolean>} An observable containing true if successful.
-     */
-    changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
-      return this.#dataService.changeEmail(changeEmailRequest);
-    }
+  /**
+   * @method changeEmail
+   * @description Changes the user's email address.
+   * @param {ChangeEmailRequestDto} changeEmailRequest - The request object containing email change information.
+   * @returns {Observable<boolean>} An observable containing true if successful.
+   */
+  changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
+    return this.#dataService.changeEmail(changeEmailRequest);
+  }
 
-    /**
-     * @method confirmEmailChange
-     * @description Confirms the user's email change.
-     * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
-     * @returns {Observable<boolean>} An observable containing true if successful.
-     */
-    confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
-      return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
-    }
+  /**
+   * @method confirmEmailChange
+   * @description Confirms the user's email change.
+   * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
+   * @returns {Observable<boolean>} An observable containing true if successful.
+   */
+  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
+    return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
+  }
 }
