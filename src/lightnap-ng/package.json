@@ -23,6 +23,7 @@
         "@angular/service-worker": "^20.3.4",
         "@auth0/angular-jwt": "^5.2.0",
         "@primeng/themes": "^20.2.0",
+        "ngx-markdown": "^20.1.0",
         "primeicons": "^7.0.0",
         "primeng": "20.2.0",
         "rxjs": "~7.8.2",

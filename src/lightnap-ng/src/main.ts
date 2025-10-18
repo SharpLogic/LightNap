@@ -19,6 +19,7 @@ import { providePrimeNG } from "primeng/config";
 import { AppComponent } from "./app/app.component";
 import { Routes } from "./app/pages/routes";
 import { environment } from "./environments/environment";
+import { provideMarkdown } from "ngx-markdown";
 
 if (environment.production) {
   enableProdMode();
@@ -40,6 +41,7 @@ bootstrapApplication(AppComponent, {
         },
       },
     }),
+    provideMarkdown(),
     {
       provide: API_URL_ROOT,
       useValue: environment.apiUrlRoot ?? throwInlineError("Required setting 'environment.apiUrlRoot' is not defined."),

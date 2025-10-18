@@ -1,6 +1,8 @@
 export * from "./api-response/api-response.component";
+export * from "./branded-card/branded-card.component";
 export * from "./confirm-dialog/confirm-dialog.component";
 export * from "./confirm-popup/confirm-popup.component";
 export * from "./dropdown-list-item/dropdown-list-item.component";
 export * from "./error-list/error-list.component";
-export * from "./branded-card/branded-card.component";
+export * from "./static-content/static-content.component";
+

@@ -6,4 +6,5 @@ export * from "./http-error-api-response";
 export * from "./option-dto";
 export * from "./role-names";
 export * from "./user-setting-keys";
+export * from "./static-content-types";
 export * from "./success-api-response";
