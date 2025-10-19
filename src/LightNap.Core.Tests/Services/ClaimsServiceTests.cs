@@ -166,7 +166,7 @@ namespace LightNap.Core.Tests.Services
             var claims = await this._claimsService.SearchClaimsAsync(new SearchUserClaimsRequestDto() { UserId = userId });
 
             // Assert
-            Assert.AreEqual(2, claims.Data.Count);
+            Assert.HasCount(2, claims.Data);
             Assert.IsTrue(claims.Data.Any(c => c.Type == claimType && c.Value == claimValue));
             Assert.IsTrue(claims.Data.Any(c => c.Type == otherClaimType && c.Value == otherClaimValue));
         }
@@ -258,7 +258,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             var claimsAfter = await this._userManager.GetClaimsAsync(user);
-            Assert.AreEqual(claimsBefore.Count, claimsAfter.Count);
+            Assert.HasCount(claimsBefore.Count, claimsAfter);
             Assert.IsFalse(claimsAfter.Any(c => c.Type == claimType && c.Value == claimValue));
         }
 
@@ -284,7 +284,7 @@ namespace LightNap.Core.Tests.Services
             var claims = await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto());
 
             // Assert
-            Assert.AreEqual(1, claims.Data.Count);
+            Assert.HasCount(1, claims.Data);
             Assert.IsTrue(claims.Data.Any(c => c.Type == claimType && c.Value == claimValue));
         }
 
@@ -303,7 +303,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             var userId = "test-user-id";
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
             this.LogInNormalUser(userId);
 
             // Act
@@ -311,7 +311,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(claims.Data);
-            Assert.AreEqual(0, claims.Data.Count);
+            Assert.IsEmpty(claims.Data);
         }
     }
 }

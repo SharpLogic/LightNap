@@ -86,7 +86,7 @@ namespace LightNap.Core.Tests.Services
             var roles = this._rolesService.GetRoles();
 
             // Assert
-            Assert.AreEqual(allRoles.Count, roles.Count);
+            Assert.HasCount(allRoles.Count, roles);
 
             for (int i = 0; i < allRoles.Count; i++)
             {
@@ -109,10 +109,10 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddToRolesAsync(user, roles);
 
             // Act
-            var result = await this._rolesService.GetRolesForUserAsync(userId);
+            var userRoles = await this._rolesService.GetRolesForUserAsync(userId);
 
             // Assert
-            Assert.AreEqual(2, result.Count);
+            Assert.HasCount(2, userRoles);
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace LightNap.Core.Tests.Services
             var users = await this._rolesService.GetUsersInRoleAsync(role);
 
             // Assert
-            Assert.AreEqual(2, users.Count);
+            Assert.HasCount(2, users);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace LightNap.Core.Tests.Services
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
             await this._userManager.AddToRoleAsync(user, role);
             var roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(1, roles.Count);
+            Assert.HasCount(1, roles);
             this._userContext.UserId = user.Id;
 
             // Act
@@ -151,7 +151,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(0, roles.Count);
+            Assert.HasCount(0, roles);
         }
     }
 }

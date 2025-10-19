@@ -119,7 +119,7 @@ namespace LightNap.Core.Tests.Services
             var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
-            Assert.AreEqual(result.Type, LoginSuccessType.AccessToken);
+            Assert.AreEqual(LoginSuccessType.AccessToken, result.Type);
             Assert.IsNotNull(result.AccessToken);
 
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
@@ -216,7 +216,7 @@ namespace LightNap.Core.Tests.Services
             var registeredUser = await this._identityService.RegisterAsync(requestDto);
 
             // Assert
-            Assert.AreEqual(registeredUser.Type, LoginSuccessType.AccessToken);
+            Assert.AreEqual(LoginSuccessType.AccessToken, registeredUser.Type);
             Assert.IsNotNull(registeredUser.AccessToken);
 
             var user = await this._userManager.FindByEmailAsync(requestDto.Email);
@@ -349,7 +349,7 @@ namespace LightNap.Core.Tests.Services
             var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
-            Assert.AreEqual(result.Type, LoginSuccessType.AccessToken);
+            Assert.AreEqual(LoginSuccessType.AccessToken, result.Type);
             Assert.IsNotNull(result.AccessToken);
 
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
@@ -393,7 +393,7 @@ namespace LightNap.Core.Tests.Services
             var result = await this._identityService.LogInAsync(requestDto);
 
             // Assert
-            Assert.AreEqual(result.Type, LoginSuccessType.AccessToken);
+            Assert.AreEqual(LoginSuccessType.AccessToken, result.Type);
             Assert.IsNotNull(result.AccessToken);
 
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
@@ -483,7 +483,7 @@ namespace LightNap.Core.Tests.Services
             var result = await this._identityService.LogInAsync(loginRequest);
 
             // Assert
-            Assert.AreEqual(result.Type, LoginSuccessType.AccessToken);
+            Assert.AreEqual(LoginSuccessType.AccessToken, result.Type);
             Assert.IsNotNull(result.AccessToken);
 
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
@@ -649,7 +649,7 @@ namespace LightNap.Core.Tests.Services
             var result = await this._identityService.GetDevicesAsync();
 
             // Assert
-            Assert.AreEqual(expectedDevices.Count, result.Count);
+            Assert.HasCount(expectedDevices.Count, result);
             expectedDevices.Reverse();
             for (int i = 0; i < expectedDevices.Count; i++)
             {
