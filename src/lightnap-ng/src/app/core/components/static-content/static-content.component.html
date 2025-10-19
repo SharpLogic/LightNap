@@ -1,1 +1,4 @@
 <div [innerHTML]="html()"></div>
+@if (contentStripped()) {
+  <p class="text-red-500 italic">*Content was stripped during sanitization.</p>
+}

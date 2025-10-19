@@ -10,14 +10,25 @@ import { PanelModule } from "primeng/panel";
 })
 export class PageComponent {
     contentType: StaticContentTypes = "Html";
-    // content = `
-    // <p-card-control class="w-96" header="Card Header" subtitle="Card Subtitle">
-    //   <p>Card Content</p>
-    //   </p-card-control>
+    content = `
+    <p-card-control class="w-96" header="Card Header" subtitle="Card Subtitle">
+      <p>Card Content</p>
+      </p-card-control>
 
-    // <user-id-control userName="admin"></user-id-control>
-    //             <user-id-control userName="admin"></user-id-control>
-    //            `;
-  content = "<strong>Hello, world!</strong> This is some <em>HTML</em> content.";
-  //content = "# Markdown Content\n\nThis is some **bold** text and this is *italic* text.\n\n- Item 1\n- Item 2\n- Item 3\n\n[Link to OpenAI](https://www.openai.com)";
+    <user-id-control userName="admin"></user-id-control>
+                <user-id-control userName="admin"></user-id-control>
+               `;
+  //content = "<strong>Hello, world!</strong> This is some <em>HTML</em> content.";
+//   content =
+// `# Markdown Content
+
+// This is some **bold** text and this is *italic* text.
+
+// - Item 1
+// - Item 2
+// - Item 3
+
+// [Link to Quantcha](https://quantcha.com)
+
+// `;//<user-id-control userName="admin"></user-id-control>`;
 }
