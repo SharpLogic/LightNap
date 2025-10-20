@@ -1,7 +1,6 @@
 ﻿using LightNap.Core.Data.Comparers;
 using LightNap.Core.Data.Converters;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +24,7 @@ namespace LightNap.Core.Data
         /// <summary>
         /// Static content in the DB.
         /// </summary>
-        public DbSet<StaticContent> StaticContent { get; set; } = null!;
+        public DbSet<StaticContent> StaticContents { get; set; } = null!;
 
         /// <summary>
         /// Static content language variants in the DB.

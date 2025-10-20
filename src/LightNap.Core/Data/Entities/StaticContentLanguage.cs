@@ -9,9 +9,9 @@ namespace LightNap.Core.Data.Entities
         public StaticContent? StaticContent { get; set; }
 
         public required string Language { get; set; }
-        
+
         public required string Content { get; set; }
-        public required StaticContentFormat ContentType { get; set; }
+        public required StaticContentFormat Format { get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public string? CreatedByUserId { get; set; }
