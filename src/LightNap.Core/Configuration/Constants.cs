@@ -43,6 +43,7 @@
             public const int MaxPasswordLength = 256;
             public const int MaxDeviceDetailsLength = 512;
             public const int MaxPasswordResetTokenLength = 512;
+            public const int MaxStaticContentKeyLength = 64;
             public const int MaxUserNameLength = 32;
             public const int MaxVerificationCodeLength = 512;
         }

@@ -23,6 +23,16 @@ namespace LightNap.Core.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
         /// <summary>
+        /// Static content in the DB.
+        /// </summary>
+        public DbSet<StaticContent> StaticContent { get; set; } = null!;
+
+        /// <summary>
+        /// Static content language variants in the DB.
+        /// </summary>
+        public DbSet<StaticContentLanguage> StaticContentLanguages { get; set; } = null!;
+
+        /// <summary>
         /// User settings in the DB.
         /// </summary>
         public DbSet<UserSetting> UserSettings { get; set; } = null!;
@@ -61,6 +71,13 @@ namespace LightNap.Core.Data
                 .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .IsRequired();
+
+            builder.Entity<StaticContent>()
+                .HasIndex(sc => sc.Key)
+                .IsUnique();
+
+            builder.Entity<StaticContentLanguage>()
+                .HasIndex(scl => scl.Language);
         }
 
         /// <inheritdoc />
