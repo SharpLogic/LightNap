@@ -4,6 +4,6 @@ namespace LightNap.Core.StaticContents.Interfaces
 {
     public interface IStaticContentService
     {
-        Task<StaticContentDto?> GetStaticContentAsync(string key, string languageCode);
+        Task<PublishedStaticContentDto?> GetPublishedStaticContentAsync(string key, string languageCode);
     }
 }

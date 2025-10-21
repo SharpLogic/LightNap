@@ -6,9 +6,9 @@ namespace LightNap.Core.Extensions
 {
     public static class StaticContentExtensions
     {
-        internal static ManageStaticContentDto ToDto(this StaticContent staticContent)
+        internal static StaticContentDto ToDto(this StaticContent staticContent)
         {
-            return new ManageStaticContentDto()
+            return new StaticContentDto()
             {
                 CreatedByUserId = staticContent.CreatedByUserId,
                 CreatedDate = staticContent.CreatedDate,
@@ -47,18 +47,18 @@ namespace LightNap.Core.Extensions
             }
         }
 
-        internal static StaticContentDto ToDto(this StaticContentLanguage staticContentLanguage)
+        internal static PublishedStaticContentDto ToPublishedDto(this StaticContentLanguage staticContentLanguage)
         {
-            return new StaticContentDto()
+            return new PublishedStaticContentDto()
             {
                 Content = staticContentLanguage.Content,
                 Format = staticContentLanguage.Format,
             };
         }
 
-        internal static ManageStaticContentLanguageDto ToManageDto(this StaticContentLanguage staticContentLanguage)
+        internal static StaticContentLanguageDto ToDto(this StaticContentLanguage staticContentLanguage)
         {
-            return new ManageStaticContentLanguageDto()
+            return new StaticContentLanguageDto()
             {
                 Content = staticContentLanguage.Content,
                 Format = staticContentLanguage.Format,
