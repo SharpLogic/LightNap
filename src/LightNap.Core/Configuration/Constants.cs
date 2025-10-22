@@ -25,6 +25,11 @@
             /// The name of the administrator role.
             /// </summary>
             public const string Administrator = "Administrator";
+
+            /// <summary>
+            /// The name of the content editor role.
+            /// </summary>
+            public const string ContentEditor = "ContentEditor";
         }
 
         /// <summary>
@@ -32,6 +37,15 @@
         /// </summary>
         public static class Claims
         {
+            /// <summary>
+            /// The name of the static content editor claim.
+            /// </summary>
+            public const string ContentEditor = "Content:Editor";
+
+            /// <summary>
+            /// The name of the static content viewer claim.
+            /// </summary>
+            public const string ContentViewer = "Content:Viewer";
         }
 
         /// <summary>

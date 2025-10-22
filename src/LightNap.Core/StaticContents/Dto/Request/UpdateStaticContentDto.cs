@@ -9,5 +9,7 @@ namespace LightNap.Core.StaticContents.Dto.Request
         [MaxLength(Constants.Dto.MaxStaticContentKeyLength)]
         public required string Key { get; set; }
         public required StaticContentStatus Status { get; set; }
+        public required bool RequiresAuthentication { get; set; }
+        public string? RequiredRoles { get; set; }
     }
 }

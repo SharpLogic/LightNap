@@ -25,7 +25,7 @@ namespace LightNap.Core.Data.Entities
         public string? LastModifiedByUserId { get; set; }
         public ApplicationUser? LastModifiedByUser { get; set; }
 
-        public bool RequiresAuthentication { get; set; } = false;
+        public bool RequiresAuthentication { get; set; }
         public string? RequiredRoles { get; set; }
 
         public ICollection<StaticContentLanguage>? Languages { get; set; }

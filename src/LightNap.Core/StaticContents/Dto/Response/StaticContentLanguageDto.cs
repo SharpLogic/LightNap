@@ -3,7 +3,7 @@
     public class StaticContentLanguageDto : PublishedStaticContentDto
     {
         public required int StaticContentId { get; set; }
-        public required string Language { get; set; }
+        public required string LanguageCode { get; set; }
         public required DateTime CreatedDate { get; set; }
         public required string? CreatedByUserId { get; set; }
         public required DateTime? LastModifiedDate { get; set; }

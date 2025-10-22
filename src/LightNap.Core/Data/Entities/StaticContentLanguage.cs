@@ -2,13 +2,13 @@
 
 namespace LightNap.Core.Data.Entities
 {
-    [PrimaryKey(nameof(StaticContentId), nameof(Language))]
+    [PrimaryKey(nameof(StaticContentId), nameof(LanguageCode))]
     public class StaticContentLanguage
     {
         public required int StaticContentId { get; set; }
         public StaticContent? StaticContent { get; set; }
 
-        public required string Language { get; set; }
+        public required string LanguageCode { get; set; }
 
         public required string Content { get; set; }
         public required StaticContentFormat Format { get; set; }

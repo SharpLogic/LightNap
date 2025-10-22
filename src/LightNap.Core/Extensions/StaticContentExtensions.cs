@@ -23,7 +23,7 @@ namespace LightNap.Core.Extensions
             };
         }
 
-        internal static StaticContent ToCreate(this CreateStaticContentDto dto)
+        internal static StaticContent ToEntity(this CreateStaticContentDto dto)
         {
             var staticContent = new StaticContent()
             {
@@ -31,6 +31,9 @@ namespace LightNap.Core.Extensions
                 Key = dto.Key,
                 Type = dto.Type,
                 Status = dto.Status,
+                // If RequiredRoles is set, we assume authentication is required.
+                RequiresAuthentication = dto.RequiresAuthentication || (dto.RequiredRoles != null),
+                RequiredRoles = dto.RequiredRoles
             };
             return staticContent;
         }
@@ -38,13 +41,22 @@ namespace LightNap.Core.Extensions
         internal static void UpdateEntity(this UpdateStaticContentDto dto, StaticContent staticContent)
         {
             staticContent.Key = dto.Key;
-            staticContent.Status = dto.Status;
             staticContent.LastModifiedDate = DateTime.UtcNow;
+
+            // If RequiredRoles is set, we assume authentication is required.
+            staticContent.RequiresAuthentication = dto.RequiresAuthentication || (dto.RequiredRoles != null);
+            staticContent.RequiredRoles = dto.RequiredRoles;
 
             if (staticContent.Status != dto.Status)
             {
                 staticContent.StatusChangedDate = DateTime.UtcNow;
             }
+            staticContent.Status = dto.Status;
+        }
+
+        internal static string[]? GetRequiredRoles(this StaticContent staticContent)
+        {
+            return staticContent.RequiredRoles?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
         internal static PublishedStaticContentDto ToPublishedDto(this StaticContentLanguage staticContentLanguage)
@@ -64,21 +76,21 @@ namespace LightNap.Core.Extensions
                 Format = staticContentLanguage.Format,
                 CreatedByUserId = staticContentLanguage.CreatedByUserId,
                 CreatedDate = staticContentLanguage.CreatedDate,
-                Language = staticContentLanguage.Language,
+                LanguageCode = staticContentLanguage.LanguageCode,
                 LastModifiedDate = staticContentLanguage.LastModifiedDate,
                 LastModifiedUserId = staticContentLanguage.LastModifiedUserId,
                 StaticContentId = staticContentLanguage.StaticContentId,
             };
         }
 
-        public static StaticContentLanguage ToCreate(this CreateStaticContentLanguageDto dto, int staticContentId)
+        public static StaticContentLanguage ToEntity(this CreateStaticContentLanguageDto dto, int staticContentId, string language)
         {
             var staticContentLanguage = new StaticContentLanguage()
             {
                 CreatedDate = DateTime.UtcNow,
                 Content = dto.Content,
                 Format = dto.Format,
-                Language = dto.Language,
+                LanguageCode = language,
                 StaticContentId = staticContentId
             };
             return staticContentLanguage;
@@ -88,7 +100,6 @@ namespace LightNap.Core.Extensions
         {
             staticContentLanguage.Content = dto.Content;
             staticContentLanguage.Format = dto.Format;
-            staticContentLanguage.Language = dto.Language;
             staticContentLanguage.LastModifiedDate = DateTime.UtcNow;
         }
     }

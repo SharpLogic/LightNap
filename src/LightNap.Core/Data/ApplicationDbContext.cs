@@ -76,7 +76,7 @@ namespace LightNap.Core.Data
                 .IsUnique();
 
             builder.Entity<StaticContentLanguage>()
-                .HasIndex(scl => scl.Language);
+                .HasIndex(scl => scl.LanguageCode);
         }
 
         /// <inheritdoc />
