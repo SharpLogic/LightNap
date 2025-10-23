@@ -2,8 +2,8 @@
 {
     public enum StaticContentFormat
     {
-        Html,
-        Markdown,
-        PlainText,
+        Html = 0,
+        Markdown = 1,
+        PlainText = 2,
     }
 }

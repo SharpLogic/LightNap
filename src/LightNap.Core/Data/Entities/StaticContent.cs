@@ -25,8 +25,10 @@ namespace LightNap.Core.Data.Entities
         public string? LastModifiedByUserId { get; set; }
         public ApplicationUser? LastModifiedByUser { get; set; }
 
-        public bool RequiresAuthentication { get; set; }
-        public string? RequiredRoles { get; set; }
+        public string? EditorRoles { get; set; }
+
+        public required StaticContentReadAccess ReadAccess { get; set; }
+        public string? ReaderRoles { get; set; }
 
         public ICollection<StaticContentLanguage>? Languages { get; set; }
     }

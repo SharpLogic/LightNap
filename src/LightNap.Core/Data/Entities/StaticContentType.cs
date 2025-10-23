@@ -2,7 +2,7 @@
 {
     public enum StaticContentType
     {
-        Zone,
-        Page,
+        Zone = 0,
+        Page = 1,
     }
 }

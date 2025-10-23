@@ -8,9 +8,15 @@ namespace LightNap.Core.Configuration
     internal static class StaticContentConfig
     {
         /// <summary>
+        /// Change this to select a different fallback language when the selected option is not available.
+        /// See StaticContentConfig.SupportedLanguages for available options (and to add more).
+        /// </summary>
+        public const string DefaultLanguageCode = "en";
+
+        /// <summary>
         /// Defines the list of roles that have global permissions to create and manage static content.
         /// </summary>
-        public static IReadOnlyList<string> GlobalCreatorRoles =>
+        public static IReadOnlyList<string> ContentAdministratorRoles =>
         [
             Constants.Roles.Administrator,
             Constants.Roles.ContentEditor,

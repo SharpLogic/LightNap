@@ -16,6 +16,7 @@ namespace LightNap.Core.Extensions
                 Key = staticContent.Key,
                 LastModifiedByUserId = staticContent.LastModifiedByUserId,
                 LastModifiedDate = staticContent.LastModifiedDate,
+                ReadAccess = staticContent.ReadAccess,
                 Status = staticContent.Status,
                 StatusChangedByUserId = staticContent.StatusChangedByUserId,
                 StatusChangedDate = staticContent.StatusChangedDate,
@@ -25,27 +26,37 @@ namespace LightNap.Core.Extensions
 
         internal static StaticContent ToEntity(this CreateStaticContentDto dto)
         {
+            if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
+            {
+                throw new InvalidOperationException("ReadAccess must be set to Explicit when ViewerRoles is not null.");
+            }
+
             var staticContent = new StaticContent()
             {
                 CreatedDate = DateTime.UtcNow,
                 Key = dto.Key,
                 Type = dto.Type,
                 Status = dto.Status,
-                // If RequiredRoles is set, we assume authentication is required.
-                RequiresAuthentication = dto.RequiresAuthentication || (dto.RequiredRoles != null),
-                RequiredRoles = dto.RequiredRoles
+                ReadAccess = dto.ReadAccess,
+                ReaderRoles = dto.ViewerRoles,
+                EditorRoles = dto.EditorRoles,
             };
             return staticContent;
         }
 
         internal static void UpdateEntity(this UpdateStaticContentDto dto, StaticContent staticContent)
         {
+            if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
+            {
+                throw new InvalidOperationException("ReadAccess must be set to Explicit when ViewerRoles is not null.");
+            }
+
             staticContent.Key = dto.Key;
             staticContent.LastModifiedDate = DateTime.UtcNow;
 
-            // If RequiredRoles is set, we assume authentication is required.
-            staticContent.RequiresAuthentication = dto.RequiresAuthentication || (dto.RequiredRoles != null);
-            staticContent.RequiredRoles = dto.RequiredRoles;
+            staticContent.ReadAccess = dto.ReadAccess;
+            staticContent.ReaderRoles = dto.ViewerRoles;
+            staticContent.EditorRoles = dto.EditorRoles;
 
             if (staticContent.Status != dto.Status)
             {
@@ -54,9 +65,14 @@ namespace LightNap.Core.Extensions
             staticContent.Status = dto.Status;
         }
 
-        internal static string[]? GetRequiredRoles(this StaticContent staticContent)
+        internal static string[]? GetExplicitEditorRoles(this StaticContent staticContent)
         {
-            return staticContent.RequiredRoles?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return staticContent.EditorRoles?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        }
+
+        internal static string[]? GetExplicitReaderRoles(this StaticContent staticContent)
+        {
+            return staticContent.ReaderRoles?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
         internal static PublishedStaticContentDto ToPublishedDto(this StaticContentLanguage staticContentLanguage)

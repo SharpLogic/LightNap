@@ -11,6 +11,7 @@ using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Tests.Services
 {
@@ -64,7 +65,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             var staticContent = await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -103,7 +104,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -131,7 +132,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "draft-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -161,7 +162,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -185,7 +186,7 @@ namespace LightNap.Core.Tests.Services
                     Key = $"key-{i}",
                     Type = StaticContentType.Page,
                     Status = StaticContentStatus.Published,
-                    RequiresAuthentication = false
+                    ReadAccess = StaticContentReadAccess.Public,
                 };
                 await this._staticContentService.CreateStaticContentAsync(createDto);
             }
@@ -214,7 +215,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "new-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
@@ -238,7 +239,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -246,7 +247,7 @@ namespace LightNap.Core.Tests.Services
             {
                 Key = "test-key",
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
@@ -266,7 +267,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -288,7 +289,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -317,7 +318,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -345,7 +346,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -380,7 +381,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             var staticContent = await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -409,7 +410,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "duplicate-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -429,11 +430,11 @@ namespace LightNap.Core.Tests.Services
                 Key = "", // Invalid key
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
-            await Assert.ThrowsExactlyAsync<ArgumentException>(async () =>
+            await Assert.ThrowsExactlyAsync<ValidationException>(async () =>
             {
                 await this._staticContentService.CreateStaticContentAsync(createDto);
             });
@@ -447,7 +448,7 @@ namespace LightNap.Core.Tests.Services
             {
                 Key = "non-existent-key",
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
@@ -500,7 +501,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "auth-required",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = true
+                ReadAccess = StaticContentReadAccess.Authenticated,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -531,7 +532,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "auth-required",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = true
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -548,7 +549,7 @@ namespace LightNap.Core.Tests.Services
 
             // Add viewer claim for this specific content
             var content = await this._dbContext.StaticContents.FirstAsync(c => c.Key == "auth-required");
-            this._userContext.Claims.Add((Constants.Claims.ContentViewer, new List<string> { content.Id.ToString() }));
+            this._userContext.Claims.Add((Constants.Claims.ContentReader, new List<string> { content.Id.ToString() }));
 
             // Act
             var result = await this._staticContentService.GetPublishedStaticContentAsync("auth-required", "en");
@@ -567,7 +568,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "editor-content",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = true
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -601,7 +602,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "protected-content",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = true
+                ReadAccess = StaticContentReadAccess.Explicit,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -632,7 +633,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -656,7 +657,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "new-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Remove admin role
@@ -678,7 +679,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             var created = await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -691,7 +692,7 @@ namespace LightNap.Core.Tests.Services
             {
                 Key = "test-key-updated",
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
@@ -711,7 +712,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             var created = await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -723,7 +724,7 @@ namespace LightNap.Core.Tests.Services
             {
                 Key = "test-key",
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
 
             // Act
@@ -745,7 +746,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "multi-lang",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -783,7 +784,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "no-languages",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -803,7 +804,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -829,7 +830,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "draft-1",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             await this._staticContentService.CreateStaticContentAsync(new CreateStaticContentDto
@@ -837,7 +838,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "published-1",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             var searchDto = new SearchStaticContentRequestDto
@@ -865,7 +866,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "page-1",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             await this._staticContentService.CreateStaticContentAsync(new CreateStaticContentDto
@@ -873,7 +874,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "zone-1",
                 Type = StaticContentType.Zone,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             var searchDto = new SearchStaticContentRequestDto
@@ -901,7 +902,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "about-us",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             await this._staticContentService.CreateStaticContentAsync(new CreateStaticContentDto
@@ -909,7 +910,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "contact-us",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             });
 
             var searchDto = new SearchStaticContentRequestDto
@@ -937,7 +938,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "test-key",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Draft,
-                RequiresAuthentication = false
+                ReadAccess = StaticContentReadAccess.Public,
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -945,8 +946,8 @@ namespace LightNap.Core.Tests.Services
             {
                 Key = "test-key",
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = false,
-                RequiredRoles = "Editor,Moderator"
+                ReadAccess = StaticContentReadAccess.Public,
+                EditorRoles = "Editor,Moderator"
             };
 
             // Act
@@ -955,7 +956,6 @@ namespace LightNap.Core.Tests.Services
             // Assert
             var dbContent = await this._dbContext.StaticContents.FindAsync(result.Id);
             Assert.IsNotNull(dbContent);
-            Assert.IsTrue(dbContent.RequiresAuthentication, "RequiresAuthentication should be auto-set when RequiredRoles is specified");
         }
 
         [TestMethod]
@@ -967,8 +967,7 @@ namespace LightNap.Core.Tests.Services
                 Key = "role-content",
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
-                RequiresAuthentication = true,
-                RequiredRoles = "ContentEditor"
+                ReadAccess = StaticContentReadAccess.Explicit
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -988,6 +987,309 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task GetPublishedStaticContentAsync_WithRequiredViewerRoles_AllowsUserWithRole()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "role-content",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Explicit,
+                ViewerRoles = "Editor,Moderator"
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "Role-protected content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("role-content", "en", languageDto);
+
+            // Set user with one of the required viewer roles
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+            this._userContext.Roles.Add("Editor");
+
+            // Act
+            var result = await this._staticContentService.GetPublishedStaticContentAsync("role-content", "en");
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Role-protected content", result.Content);
+        }
+
+        [TestMethod]
+        public async Task UpdateStaticContentAsync_WithEditorRoles_AllowsUserWithRole()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Draft,
+                ReadAccess = StaticContentReadAccess.Public,
+                EditorRoles = "ContentEditor"
+            };
+            var created = await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            // Set user with the required editor role (not admin)
+            this._userContext.UserId = "editor-user";
+            this._userContext.Roles.Clear();
+            this._userContext.Roles.Add("ContentEditor");
+
+            var updateDto = new UpdateStaticContentDto
+            {
+                Key = "test-key-updated",
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+                EditorRoles = "ContentEditor"
+            };
+
+            // Act
+            var result = await this._staticContentService.UpdateStaticContentAsync("test-key", updateDto);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("test-key-updated", result.Key);
+            Assert.AreEqual(StaticContentStatus.Published, result.Status);
+        }
+
+        [TestMethod]
+        public async Task CreateStaticContentLanguageAsync_WithDuplicateLanguage_ThrowsException()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "English content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
+            });
+        }
+
+        [TestMethod]
+        public async Task CreateStaticContentLanguageAsync_WithoutPermission_ThrowsUnauthorizedException()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            // Remove admin role
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "New content",
+                Format = StaticContentFormat.Markdown
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
+            });
+        }
+
+        [TestMethod]
+        public async Task UpdateStaticContentLanguageAsync_WithoutPermission_ThrowsUnauthorizedException()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "Original content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
+
+            // Remove admin role
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+
+            var updateDto = new UpdateStaticContentLanguageDto
+            {
+                Content = "Updated content",
+                Format = StaticContentFormat.Html
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this._staticContentService.UpdateStaticContentLanguageAsync("test-key", "en", updateDto);
+            });
+        }
+
+        [TestMethod]
+        public async Task DeleteStaticContentLanguageAsync_WithoutPermission_ThrowsUnauthorizedException()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "English content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
+
+            // Remove admin role
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this._staticContentService.DeleteStaticContentLanguageAsync("test-key", "en");
+            });
+        }
+
+        [TestMethod]
+        public void GetSupportedLanguages_ReturnsExpectedLanguages()
+        {
+            // Act
+            var result = this._staticContentService.GetSupportedLanguages();
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsNotEmpty(result);
+            Assert.IsTrue(result.Any(lang => lang.LanguageCode == "en"), "Expected 'en' language to be in supported languages");
+        }
+
+        [TestMethod]
+        public async Task GetPublishedStaticContentAsync_WithAuthenticatedAccess_AllowsAuthenticatedUser()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "authenticated-content",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Authenticated,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "Authenticated content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("authenticated-content", "en", languageDto);
+
+            // Set authenticated user (without any special roles or claims)
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+
+            // Act
+            var result = await this._staticContentService.GetPublishedStaticContentAsync("authenticated-content", "en");
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Authenticated content", result.Content);
+        }
+
+        [TestMethod]
+        public async Task GetPublishedStaticContentAsync_WithExplicitAccessAndViewerRole_AllowsAccess()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "explicit-content",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Explicit,
+                ViewerRoles = "Moderator,Editor"
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            var languageDto = new CreateStaticContentLanguageDto
+            {
+                Content = "Explicit access content",
+                Format = StaticContentFormat.Markdown
+            };
+            await this._staticContentService.CreateStaticContentLanguageAsync("explicit-content", "en", languageDto);
+
+            // Set authenticated user with one of the viewer roles
+            this._userContext.UserId = "moderator-user";
+            this._userContext.Roles.Clear();
+            this._userContext.Roles.Add("Moderator");
+
+            // Act
+            var result = await this._staticContentService.GetPublishedStaticContentAsync("explicit-content", "en");
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("Explicit access content", result.Content);
+        }
+
+        [TestMethod]
+        public async Task GetStaticContentLanguagesAsync_WithoutPermission_ThrowsUnauthorizedException()
+        {
+            // Arrange
+            var createDto = new CreateStaticContentDto
+            {
+                Key = "test-key",
+                Type = StaticContentType.Page,
+                Status = StaticContentStatus.Published,
+                ReadAccess = StaticContentReadAccess.Public,
+            };
+            await this._staticContentService.CreateStaticContentAsync(createDto);
+
+            await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", new CreateStaticContentLanguageDto
+            {
+                Content = "English",
+                Format = StaticContentFormat.Markdown
+            });
+
+            // Remove admin role
+            this._userContext.UserId = "regular-user";
+            this._userContext.Roles.Clear();
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            {
+                await this._staticContentService.GetStaticContentLanguagesAsync("test-key");
+            });
         }
     }
 }

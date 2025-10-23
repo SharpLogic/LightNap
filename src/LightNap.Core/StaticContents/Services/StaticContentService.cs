@@ -8,8 +8,11 @@ using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
 using LightNap.Core.StaticContents.Interfaces;
 using LightNap.Core.StaticContents.Models;
+using LightNap.Core.Users.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.StaticContents.Services
 {
@@ -19,22 +22,16 @@ namespace LightNap.Core.StaticContents.Services
     public class StaticContentService(ApplicationDbContext db, IUserContext userContext, ILogger<StaticContentService> logger) : IStaticContentService
     {
         /// <summary>
-        /// Change this to select a different fallback language when the selected option is not available.
-        /// See StaticContentConfig.SupportedLanguages for available options (and to add more).
-        /// </summary>
-        const string DefaultLanguageCode = "en";
-
-        /// <summary>
-        /// Tests if the current user can create static content.
+        /// Tests if the current user is a global content administrator.
         /// </summary>
         /// <returns>True if they are global creators.</returns>
-        private bool CanCreate()
+        private bool IsContentAdministrator()
         {
             // Must be authenticated to create.
             if (!userContext.IsAuthenticated) { return false; }
 
             // Allow globally configured roles.
-            if (StaticContentConfig.GlobalCreatorRoles.Any(userContext.IsInRole))
+            if (StaticContentConfig.ContentAdministratorRoles.Any(userContext.IsInRole))
             {
                 return true;
             }
@@ -43,11 +40,11 @@ namespace LightNap.Core.StaticContents.Services
         }
 
         /// <summary>
-        /// Throws if the user cannot create static content.
+        /// Throws if the user is not a global content administrator.
         /// </summary>
-        private void AssertCanCreate()
+        private void AssertContentAdministrator()
         {
-            if (!this.CanCreate())
+            if (!this.IsContentAdministrator())
             {
                 logger.LogWarning("User '{UserId}' attempted to create static content without permission.", userContext.GetUserId());
                 throw new UnauthorizedAccessException("User does not have permission to create static content.");
@@ -62,10 +59,10 @@ namespace LightNap.Core.StaticContents.Services
         private bool CanEdit(StaticContent staticContent)
         {
             // If the user can globally create content, then they can globally edit content.
-            if (this.CanCreate()) { return true; }
+            if (this.IsContentAdministrator()) { return true; }
 
             // All content-specific roles explicitly allowed for this content.
-            var requiredRoles = staticContent.GetRequiredRoles();
+            var requiredRoles = staticContent.GetExplicitEditorRoles();
             if (requiredRoles is not null && requiredRoles.Any(userContext.IsInRole))
             {
                 return true;
@@ -106,14 +103,15 @@ namespace LightNap.Core.StaticContents.Services
                 .Select(scl => scl.ToPublishedDto())
                 .FirstOrDefaultAsync();
 
-            if (content is null && languageCode != StaticContentService.DefaultLanguageCode)
+            if (content is null && languageCode != StaticContentConfig.DefaultLanguageCode)
             {
-                return await this.GetPublishedStaticContentInternalAsync(key, DefaultLanguageCode);
+                return await this.GetPublishedStaticContentInternalAsync(key, StaticContentConfig.DefaultLanguageCode);
             }
 
             return content;
         }
 
+        /// <inheritdoc/>
         public async Task<PublishedStaticContentDto?> GetPublishedStaticContentAsync(string key, string languageCode)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
@@ -124,21 +122,27 @@ namespace LightNap.Core.StaticContents.Services
                 .FirstOrDefaultAsync();
             if (staticContent is null) { return null; }
 
-            if (!staticContent.RequiresAuthentication)
+            switch(staticContent.ReadAccess)
             {
-                return await this.GetPublishedStaticContentInternalAsync(key, languageCode);
-            }
-
-            if (!userContext.IsAuthenticated) { return null; }
-
-            if (!this.CanEdit(staticContent))
-            {
-                if (!userContext.HasClaim(Constants.Claims.ContentViewer, staticContent.Id.ToString())) { return null; }
+                case StaticContentReadAccess.Public: break;
+                case StaticContentReadAccess.Authenticated:
+                    if (!userContext.IsAuthenticated) { return null; }
+                    break;
+                case StaticContentReadAccess.Explicit:
+                    if (this.CanEdit(staticContent)) { break; }
+                    if (userContext.HasClaim(Constants.Claims.ContentReader, staticContent.Id.ToString())) { break; }
+                    var viewerRoles = staticContent.GetExplicitReaderRoles();
+                    if (viewerRoles is not null && viewerRoles.Any(userContext.IsInRole)) { break; }
+                    return null;
+                default:
+                    logger.LogWarning("Static content '{StaticContentId}' has unknown ReadAccess value '{ReadAccess}'. Denying access.", staticContent.Id, staticContent.ReadAccess);
+                    return null;
             }
 
             return await this.GetPublishedStaticContentInternalAsync(key, languageCode);
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentDto?> GetStaticContentAsync(string key)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
@@ -153,11 +157,13 @@ namespace LightNap.Core.StaticContents.Services
             return staticContent?.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task<PagedResponseDto<StaticContentDto>> SearchStaticContentAsync(SearchStaticContentRequestDto searchDto)
         {
             ArgumentNullException.ThrowIfNull(searchDto);
+            Validator.ValidateObject(searchDto, new ValidationContext(searchDto), true);
 
-            this.AssertCanCreate();
+            this.AssertContentAdministrator();
 
             var query = db.StaticContents.AsQueryable();
 
@@ -201,12 +207,12 @@ namespace LightNap.Core.StaticContents.Services
             return new PagedResponseDto<StaticContentDto>(staticContents, searchDto.PageNumber, searchDto.PageSize, totalCount);
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentDto> CreateStaticContentAsync(CreateStaticContentDto createDto)
         {
-            ArgumentNullException.ThrowIfNull(createDto);
-            ArgumentException.ThrowIfNullOrEmpty(createDto.Key);
+            Validator.ValidateObject(createDto, new ValidationContext(createDto), true);
 
-            this.AssertCanCreate();
+            this.AssertContentAdministrator();
 
             if (await db.StaticContents.AnyAsync(sc => sc.Key == createDto.Key))
             {
@@ -219,11 +225,11 @@ namespace LightNap.Core.StaticContents.Services
             return staticContent.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentDto> UpdateStaticContentAsync(string key, UpdateStaticContentDto updateDto)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
-            ArgumentNullException.ThrowIfNull(updateDto);
-            ArgumentException.ThrowIfNullOrEmpty(updateDto.Key);
+            Validator.ValidateObject(updateDto, new ValidationContext(updateDto), true);
 
             userContext.AssertAuthenticated();
 
@@ -237,11 +243,12 @@ namespace LightNap.Core.StaticContents.Services
             return staticContent.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task DeleteStaticContentAsync(string key)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
 
-            this.AssertCanCreate();
+            this.AssertContentAdministrator();
 
             var staticContent = await db.StaticContents.FirstOrDefaultAsync(sc => sc.Key == key) ?? throw new UserFriendlyApiException($"Static content with key '{key}' not found.");
 
@@ -249,6 +256,7 @@ namespace LightNap.Core.StaticContents.Services
             await db.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentLanguageDto?> GetStaticContentLanguageAsync(string key, string languageCode)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
@@ -266,6 +274,7 @@ namespace LightNap.Core.StaticContents.Services
             return staticContentLanguage?.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyList<StaticContentLanguageDto>> GetStaticContentLanguagesAsync(string key)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
@@ -279,10 +288,12 @@ namespace LightNap.Core.StaticContents.Services
             return staticContentLanguages;
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentLanguageDto> CreateStaticContentLanguageAsync(string key, string languageCode, CreateStaticContentLanguageDto createDto)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
             ArgumentException.ThrowIfNullOrEmpty(languageCode);
+            Validator.ValidateObject(createDto, new ValidationContext(createDto), true);
             userContext.AssertAuthenticated();
 
             if (!StaticContentConfig.SupportedLanguagesLookup.ContainsKey(languageCode))
@@ -304,11 +315,12 @@ namespace LightNap.Core.StaticContents.Services
             return staticContentLanguage.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task<StaticContentLanguageDto> UpdateStaticContentLanguageAsync(string key, string languageCode, UpdateStaticContentLanguageDto updateDto)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
             ArgumentException.ThrowIfNullOrEmpty(languageCode);
-            ArgumentNullException.ThrowIfNull(updateDto);
+            Validator.ValidateObject(updateDto, new ValidationContext(updateDto), true);
             userContext.AssertAuthenticated();
 
             var staticContent = await db.StaticContents.Where(sc => sc.Key == key).FirstOrDefaultAsync() ?? throw new UserFriendlyApiException($"Static content with key '{key}' not found.");
@@ -324,6 +336,7 @@ namespace LightNap.Core.StaticContents.Services
             return staticContentLanguage.ToDto();
         }
 
+        /// <inheritdoc/>
         public async Task DeleteStaticContentLanguageAsync(string key, string languageCode)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
@@ -341,6 +354,7 @@ namespace LightNap.Core.StaticContents.Services
             await db.SaveChangesAsync();
         }
 
+        /// <inheritdoc/>
         public IReadOnlyList<StaticContentSupportedLanguage> GetSupportedLanguages()
         {
             return StaticContentConfig.SupportedLanguages;

@@ -43,9 +43,9 @@
             public const string ContentEditor = "Content:Editor";
 
             /// <summary>
-            /// The name of the static content viewer claim.
+            /// The name of the static content reader claim.
             /// </summary>
-            public const string ContentViewer = "Content:Viewer";
+            public const string ContentReader = "Content:Reader";
         }
 
         /// <summary>

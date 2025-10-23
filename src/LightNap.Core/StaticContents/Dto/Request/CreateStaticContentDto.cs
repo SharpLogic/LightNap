@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.StaticContents.Dto.Request
 {
