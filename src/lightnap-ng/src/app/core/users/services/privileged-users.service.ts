@@ -31,12 +31,12 @@ export class PrivilegedUsersService {
   }
 
   /**
-     * Gets users by their IDs.
-     * @param {Array<string>} userIds - The IDs of the users to retrieve.
-     * @returns {Observable<Array<PrivilegedUserDto>>} An observable containing the users.
-     */
-    getUsersById(userIds: Array<string>) {
-      if (!userIds || userIds.length === 0) return of([]);
-      return this.#usersService.getUsersById(userIds) as Observable<Array<PrivilegedUserDto>>;
-    }
+   * Gets users by their IDs.
+   * @param {Array<string>} userIds - The IDs of the users to retrieve.
+   * @returns {Observable<Array<PrivilegedUserDto>>} An observable containing the users.
+   */
+  getUsersById(userIds: Array<string>) {
+    if (!userIds || userIds.length === 0) return of([]);
+    return this.#usersService.getUsersById(userIds) as Observable<Array<PrivilegedUserDto>>;
+  }
 }

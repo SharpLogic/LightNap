@@ -1,6 +1,6 @@
 <api-response [apiResponse]="usersForClaim$()" errorMessage="Error loading claim" loadingMessage="Loading claim...">
   <ng-template #success let-usersForClaimAny>
-    @let usersForClaim = asUsersForClaim(usersForClaimAny);
+    @let usersForClaimResults = asUsersForClaimResults(usersForClaimAny);
 
     <p-panel header="Manage Claim">
       <div class="flex gap-8">
@@ -14,7 +14,13 @@
         </div>
       </div>
 
-      <p-table [value]="usersForClaim">
+      <p-table
+        [value]="usersForClaimResults.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="usersForClaimResults.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadUsersLazy($event)">
         <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>

@@ -1,10 +1,12 @@
 using LightNap.Core.Api;
+using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
 using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Profile.Dto.Request;
 using LightNap.Core.Profile.Dto.Response;
 using LightNap.Core.Profile.Interfaces;
+using LightNap.Core.Users.Interfaces;
 using LightNap.Core.UserSettings.Dto.Request;
 using LightNap.Core.UserSettings.Dto.Response;
 using LightNap.Core.UserSettings.Interfaces;
@@ -16,7 +18,7 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/users/me")]
-    public class MeController(IProfileService profileService, INotificationService notificationService, IUserSettingsService userSettingsService) : ControllerBase
+    public class MeController(IProfileService profileService, INotificationService notificationService, IClaimsService claimsService, IUserSettingsService userSettingsService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -99,12 +101,39 @@ namespace LightNap.WebApi.Controllers
             return new ApiResponseDto<bool>(true);
         }
 
+        /// <summary>
+        /// Retrieves the claims associated with the currently authenticated user.
+        /// </summary>
+        /// <remarks>This method returns a list of claims for the user making the request. The claims
+        /// provide  information about the user's identity, roles, or other attributes. The user must be authenticated
+        /// to access this endpoint.</remarks>
+        /// <param name="pagedRequestDto">The pagination and sorting information.</param>
+        /// <returns>A <see cref="PagedResponseDto{ClaimDto}"/> containing the user's claims.</returns>
+        [HttpGet("claims")]
+        public async Task<ApiResponseDto<PagedResponseDto<ClaimDto>>> GetUserClaimsAsync(PagedRequestDtoBase pagedRequestDto)
+        {
+            return new ApiResponseDto<PagedResponseDto<ClaimDto>>(await claimsService.GetMyClaimsAsync(pagedRequestDto));
+        }
+
+        /// <summary>
+        /// Gets the user settings for the current user.
+        /// </summary>
+        /// <returns>The list of user settings.</returns>
         [HttpGet("settings")]
         public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync()
         {
             return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetMySettingsAsync());
         }
 
+        /// <summary>
+        /// Updates the user setting based on the provided request data.
+        /// </summary>
+        /// <remarks>This method applies the changes to the user's settings and returns the updated
+        /// setting in the response. Ensure that the provided request data is valid and complete before calling this
+        /// method.</remarks>
+        /// <param name="setSettingDto">The request data containing the user setting to be updated. This parameter cannot be <see langword="null"/>.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains an <see
+        /// cref="ApiResponseDto{T}"/> object wrapping the updated <see cref="UserSettingDto"/>.</returns>
         [HttpPatch("settings")]
         public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync([FromBody] SetUserSettingRequestDto setSettingDto)
         {

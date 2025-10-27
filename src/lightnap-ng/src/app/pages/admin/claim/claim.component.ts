@@ -1,16 +1,26 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, signal } from "@angular/core";
+import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, AdminUsersService, ConfirmPopupComponent, PeoplePickerComponent, RoutePipe, TypeHelpers } from "@core";
+import {
+  AdminUserDto,
+  AdminUsersService,
+  ClaimDto,
+  ConfirmPopupComponent,
+  EmptyPagedResponse,
+  PagedResponseDto,
+  PeoplePickerComponent,
+  RoutePipe,
+  TypeHelpers,
+} from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
-import { TableModule } from "primeng/table";
-import { Observable } from "rxjs";
+import { TableLazyLoadEvent, TableModule } from "primeng/table";
+import { Observable, startWith, Subject, switchMap, tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -31,6 +41,8 @@ import { Observable } from "rxjs";
   ],
 })
 export class ClaimComponent {
+  readonly pageSize = 5;
+
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
 
@@ -45,18 +57,26 @@ export class ClaimComponent {
 
   readonly errors = signal(new Array<string>());
 
-  readonly usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
+  readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
+  readonly usersForClaim$ = computed(() =>
+    this.#lazyLoadEventSubject.pipe(
+      switchMap(event =>
+        this.#adminService.getUsersWithClaim({
+          type: this.type(),
+          value: this.value(),
+          pageSize: this.pageSize,
+          pageNumber: (event.first ?? 0) / this.pageSize + 1,
+        })
+      ),
+      tap(console.log),
+      // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
+      // so we can avoid a redundant call to the API.
+      startWith(new EmptyPagedResponse<ClaimDto>())
+    )
+  );
 
-  readonly asUsersForClaim = TypeHelpers.cast<Array<AdminUserDto>>;
+  readonly asUsersForClaimResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
-
-  ngOnChanges() {
-    this.#refreshUsers();
-  }
-
-  #refreshUsers() {
-    this.usersForClaim$.set(this.#adminService.getUsersWithClaim({ type: this.type(), value: this.value() }));
-  }
 
   addUserClaim() {
     this.errors.set([]);
@@ -64,7 +84,7 @@ export class ClaimComponent {
     this.#adminService.addUserClaim(this.form.value.userId!, { type: this.type(), value: this.value() }).subscribe({
       next: () => {
         this.form.reset();
-        this.#refreshUsers();
+//        this.#refreshUsers();
       },
       error: response => this.errors.set(response.errorMessages),
     });
@@ -80,10 +100,14 @@ export class ClaimComponent {
       key: userId,
       accept: () => {
         this.#adminService.removeUserClaim(userId, { type: this.type(), value: this.value() }).subscribe({
-          next: () => this.#refreshUsers(),
+          //next: () => this.#refreshUsers(),
           error: response => this.errors.set(response.errorMessages),
         });
       },
     });
+  }
+
+  loadUsersLazy(event: TableLazyLoadEvent) {
+    this.#lazyLoadEventSubject.next(event);
   }
 }

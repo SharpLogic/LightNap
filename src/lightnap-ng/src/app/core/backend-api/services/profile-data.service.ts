@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core/helpers";
 import { tap } from "rxjs";
-import { NotificationSearchResultsDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
+import { ClaimDto, NotificationSearchResultsDto, PagedRequestDto, PagedResponseDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
 import { NotificationHelper } from "../helpers/notification.helper";
 import { UserSettingHelper } from "../helpers/user-setting.helper";
 
@@ -33,6 +33,10 @@ export class ProfileDataService {
 
   markNotificationAsRead(id: number) {
     return this.#http.put<boolean>(`${this.#apiUrlRoot}notifications/${id}/mark-as-read`, undefined);
+  }
+
+  getMyClaims(pagedRequestDto: PagedRequestDto) {
+    return this.#http.post<PagedResponseDto<ClaimDto>>(`${this.#apiUrlRoot}claims`, pagedRequestDto);
   }
 
   getSetting(key: string) {

@@ -69,7 +69,7 @@ export class ClaimsComponent {
     this.form.valueChanges.pipe(debounceTime(300)).subscribe({ next: () => this.#lazyLoadEventSubject.next({ first: 0 }) });
   }
 
-  loadUsersLazy(event: TableLazyLoadEvent) {
+  loadClaimsLazy(event: TableLazyLoadEvent) {
     this.#lazyLoadEventSubject.next(event);
   }
 }

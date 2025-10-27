@@ -1,16 +1,18 @@
 import { Injectable, inject } from "@angular/core";
 import {
-    AdminSearchUsersRequestDto,
-    AdminUpdateUserRequestDto,
-    AdminUserDto,
-    ClaimDto,
-    ErrorApiResponse,
-    RoleDto,
-    SearchClaimsRequestDto,
+  AdminSearchUsersRequestDto,
+  AdminUpdateUserRequestDto,
+  AdminUserDto,
+  ClaimDto,
+  ErrorApiResponse,
+  PagedResponseDto,
+  RoleDto,
+  SearchClaimRequestDto,
+  SearchClaimsRequestDto,
 } from "@core/backend-api";
 import { UsersDataService } from "@core/backend-api/services/users-data.service";
 import { Observable, forkJoin, map, of, switchMap, tap, throwError } from "rxjs";
-import { RoleWithAdminUsers, AdminUserWithRoles } from "../entities";
+import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 
 /**
  * Service for managing users and roles in the application. This service provides full access and should only be used in the context of
@@ -171,19 +173,20 @@ export class AdminUsersService {
   }
 
   /**
-   * Searches for claims based on the search criteria.
-   * @param {SearchAdminClaimsRequestDto} searchAdminClaims - The search criteria.
-   * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
+   * Gets users who have the specified claim.
+   * @param {SearchClaimRequestDto} searchClaimRequestDto - The search criteria.
+   * @returns {Observable<PagedResponseDto<AdminUserDto>>} An observable containing the users.
    */
-  getUsersWithClaim(claim: ClaimDto) {
-    return this.#dataService.searchUserClaims({ type: claim.type, value: claim.value }).pipe(
-      switchMap(response => {
-        if (!response.data || response.data.length === 0) {
-          return of(new Array<AdminUserDto>());
-        }
-        return this.#dataService.getUsersById(response.data.map(user => user.userId));
-      })
-    );
+  getUsersWithClaim(searchClaimRequestDto: SearchClaimRequestDto) {
+    return this.#dataService
+      .getUsersWithClaim(searchClaimRequestDto)
+      .pipe(
+        switchMap(results =>
+          this.getUsersById(results.data || new Array<string>()).pipe(
+            map(users => <PagedResponseDto<AdminUserDto>>{ totalCount: results.totalCount, data: users })
+          )
+        )
+      );
   }
 
   /**

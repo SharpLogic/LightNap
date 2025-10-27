@@ -8,8 +8,6 @@ using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
 using LightNap.Core.StaticContents.Interfaces;
 using LightNap.Core.StaticContents.Models;
-using LightNap.Core.Users.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
@@ -47,7 +45,7 @@ namespace LightNap.Core.StaticContents.Services
             if (!this.IsContentAdministrator())
             {
                 logger.LogWarning("User '{UserId}' attempted to create static content without permission.", userContext.GetUserId());
-                throw new UnauthorizedAccessException("User does not have permission to create static content.");
+                throw new UserFriendlyApiException("You do not have permission to create static content.");
             }
         }
 
@@ -86,7 +84,7 @@ namespace LightNap.Core.StaticContents.Services
             if (!this.CanEdit(staticContent))
             {
                 logger.LogWarning("User '{UserId}' attempted to edit static content '{StaticContentId}' without permission.", userContext.GetUserId(), staticContent.Id);
-                throw new UnauthorizedAccessException("User does not have permission to edit this static content.");
+                throw new UserFriendlyApiException("You do not have permission to edit this static content.");
             }
         }
 
@@ -122,7 +120,7 @@ namespace LightNap.Core.StaticContents.Services
                 .FirstOrDefaultAsync();
             if (staticContent is null) { return null; }
 
-            switch(staticContent.ReadAccess)
+            switch (staticContent.ReadAccess)
             {
                 case StaticContentReadAccess.Public: break;
                 case StaticContentReadAccess.Authenticated:

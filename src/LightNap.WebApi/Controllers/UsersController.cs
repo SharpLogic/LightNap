@@ -191,7 +191,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Searches claims.
+        /// Searches user claims.
         /// </summary>
         /// <param name="searchUserClaimsRequest">The search parameters.</param>
         /// <returns>The list of matching claims.</returns>
@@ -201,6 +201,19 @@ namespace LightNap.WebApi.Controllers
         public async Task<ApiResponseDto<PagedResponseDto<UserClaimDto>>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchUserClaimsRequest)
         {
             return new ApiResponseDto<PagedResponseDto<UserClaimDto>>(await claimsService.SearchUserClaimsAsync(searchUserClaimsRequest));
+        }
+
+        /// <summary>
+        /// Returns users with a specific claim.
+        /// </summary>
+        /// <param name="searchClaimRequestDto">The claim to search.</param>
+        /// <returns>The list of matching claims.</returns>
+        /// <response code="200">Returns the list of claims.</response>
+        [HttpPost("claim-users")]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<string>>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<string>>> GetUsersWithClaim(SearchClaimRequestDto searchClaimRequestDto)
+        {
+            return new ApiResponseDto<PagedResponseDto<string>>(await claimsService.GetUsersWithClaimAsync(searchClaimRequestDto));
         }
 
         /// <summary>
@@ -269,16 +282,29 @@ namespace LightNap.WebApi.Controllers
             return new ApiResponseDto<bool>(true);
         }
 
+        /// <summary>
+        /// Gets the settings for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The list of user settings.</returns>
         [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpGet("{userId}/settings")]
-        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync(string userId)
+        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettings(string userId)
         {
             return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetUserSettingsAsync(userId));
         }
 
+        /// <summary>
+        /// Updates the settings for a specific user.
+        /// </summary>
+        /// <remarks>This method requires the caller to have the Administrator role. It is intended to be
+        /// used for managing user-specific settings.</remarks>
+        /// <param name="userId">The unique identifier of the user whose settings are being updated.</param>
+        /// <param name="setSettingDto">An object containing the new settings to apply to the user.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the updated user settings as a <see cref="UserSettingDto"/>.</returns>
         [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPut("{userId}/settings")]
-        public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync(string userId, [FromBody] SetUserSettingRequestDto setSettingDto)
+        public async Task<ApiResponseDto<UserSettingDto>> SetUserSetting(string userId, [FromBody] SetUserSettingRequestDto setSettingDto)
         {
             return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetUserSettingAsync(userId, setSettingDto));
         }

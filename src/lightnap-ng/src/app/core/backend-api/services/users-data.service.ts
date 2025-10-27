@@ -2,17 +2,17 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT } from "@core/helpers";
 import {
-    AdminSearchUsersRequestDto,
-    AdminUpdateUserRequestDto,
-    AdminUserDto,
-    ClaimDto,
-    PagedResponseDto,
-    RoleDto,
-    SearchClaimsRequestDto,
-    SearchUserClaimsRequestDto,
-    SetUserSettingRequestDto,
-    UserClaimDto,
-    UserSettingDto,
+  AdminSearchUsersRequestDto,
+  AdminUpdateUserRequestDto,
+  AdminUserDto,
+  ClaimDto,
+  PagedResponseDto,
+  RoleDto,
+  SearchClaimsRequestDto,
+  SearchUserClaimsRequestDto,
+  SetUserSettingRequestDto,
+  UserClaimDto,
+  UserSettingDto,
 } from "../dtos";
 import { tap } from "rxjs";
 import { UserSettingHelper } from "../helpers/user-setting.helper";
@@ -72,6 +72,10 @@ export class UsersDataService {
     return this.#http.post<PagedResponseDto<ClaimDto>>(`${this.#apiUrlRoot}claims/search`, searchClaimsRequestDto);
   }
 
+  getUsersWithClaim(claimDto: ClaimDto) {
+    return this.#http.post<PagedResponseDto<string>>(`${this.#apiUrlRoot}claim-users`, claimDto);
+  }
+
   searchUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
     return this.#http.post<PagedResponseDto<UserClaimDto>>(`${this.#apiUrlRoot}user-claims/search`, searchUserClaimsRequestDto);
   }
@@ -93,7 +97,9 @@ export class UsersDataService {
   }
 
   getSettings(userId: string) {
-    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}${userId}/settings`).pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
+    return this.#http
+      .get<Array<UserSettingDto>>(`${this.#apiUrlRoot}${userId}/settings`)
+      .pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
   }
 
   updateSetting(userId: string, setUserSetting: SetUserSettingRequestDto) {

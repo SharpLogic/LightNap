@@ -642,7 +642,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.Roles.Clear();
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.GetStaticContentAsync("test-key");
             });
@@ -664,7 +664,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.Roles.Clear();
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.CreateStaticContentAsync(createDto);
             });
@@ -1110,7 +1110,7 @@ namespace LightNap.Core.Tests.Services
             };
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
             });
@@ -1147,7 +1147,7 @@ namespace LightNap.Core.Tests.Services
             };
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.UpdateStaticContentLanguageAsync("test-key", "en", updateDto);
             });
@@ -1178,7 +1178,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.Roles.Clear();
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.DeleteStaticContentLanguageAsync("test-key", "en");
             });
@@ -1286,7 +1286,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.Roles.Clear();
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UnauthorizedAccessException>(async () =>
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
                 await this._staticContentService.GetStaticContentLanguagesAsync("test-key");
             });
