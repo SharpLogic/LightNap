@@ -9,6 +9,7 @@ import {
   RoleDto,
   SearchClaimRequestDto,
   SearchClaimsRequestDto,
+  SearchUserClaimsRequestDto,
 } from "@core/backend-api";
 import { UsersDataService } from "@core/backend-api/services/users-data.service";
 import { Observable, forkJoin, map, of, switchMap, tap, throwError } from "rxjs";
@@ -165,11 +166,11 @@ export class AdminUsersService {
 
   /**
    * Searches for claims based on the search criteria.
-   * @param {SearchAdminClaimsRequestDto} searchAdminClaims - The search criteria.
+   * @param {SearchUserClaimsRequestDto} searchUserClaimsRequestDto - The search criteria.
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
-  getUserClaims(userId: string) {
-    return this.#dataService.searchUserClaims({ userId }).pipe(map(response => response.data || new Array<ClaimDto>()));
+  getUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
+    return this.#dataService.searchUserClaims(searchUserClaimsRequestDto).pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
   }
 
   /**

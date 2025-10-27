@@ -80,14 +80,16 @@ namespace LightNap.Core.Users.Services
 
             int totalCount = await query.CountAsync();
 
+            query = query
+                .OrderBy(claim => claim.Type)
+                .ThenBy(claim => claim.Value);
+
             if (searchClaimsRequest.PageNumber > 1)
             {
                 query = query.Skip((searchClaimsRequest.PageNumber - 1) * searchClaimsRequest.PageSize);
             }
 
             var claims = await query
-                .OrderBy(claim => claim.Type)
-                .ThenBy(claim => claim.Value)
                 .Take(searchClaimsRequest.PageSize)
                 .ToListAsync();
 
@@ -107,13 +109,16 @@ namespace LightNap.Core.Users.Services
                     Value = uc.ClaimValue!
                 });
             int totalCount = await query.CountAsync();
+
+            query = query
+                .OrderBy(claim => claim.Type)
+                .ThenBy(claim => claim.Value);
+
             if (pagedRequestDto.PageNumber > 1)
             {
                 query = query.Skip((pagedRequestDto.PageNumber - 1) * pagedRequestDto.PageSize);
             }
             var claims = await query
-                .OrderBy(claim => claim.Type)
-                .ThenBy(claim => claim.Value)
                 .Take(pagedRequestDto.PageSize)
                 .ToListAsync();
             return new PagedResponseDto<ClaimDto>(claims, pagedRequestDto.PageNumber, pagedRequestDto.PageSize, totalCount);
@@ -176,15 +181,17 @@ namespace LightNap.Core.Users.Services
 
             int totalCount = await query.CountAsync();
 
+            query = query
+                .OrderBy(claim => claim.UserId)
+                .ThenBy(claim => claim.ClaimType)
+                .ThenBy(claim => claim.ClaimValue);
+
             if (searchClaimsRequest.PageNumber > 1)
             {
                 query = query.Skip((searchClaimsRequest.PageNumber - 1) * searchClaimsRequest.PageSize);
             }
 
             var claims = await query
-                .OrderBy(claim => claim.UserId)
-                .ThenBy(claim => claim.ClaimType)
-                .ThenBy(claim => claim.ClaimValue)
                 .Take(searchClaimsRequest.PageSize)
                 .ToListAsync();
 

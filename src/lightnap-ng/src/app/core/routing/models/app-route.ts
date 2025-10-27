@@ -1,5 +1,5 @@
 import { Route } from "@angular/router";
-import { RouteData } from "../../models";
+import { RouteData } from "./route-data";
 
 /**
  * Represents an application route that extends the Angular `Route` interface.

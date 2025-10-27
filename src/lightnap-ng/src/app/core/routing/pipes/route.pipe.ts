@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from "@angular/core";
 import { RouteAliasService } from "@core";
-import { RouteAlias } from "@core/models";
+import { RouteAlias } from "@core";
 
 @Pipe({
   name: "route",

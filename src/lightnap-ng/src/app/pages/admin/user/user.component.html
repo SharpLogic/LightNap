@@ -51,13 +51,7 @@
             </api-response>
           </p-tabpanel>
           <p-tabpanel value="claims">
-            <api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
-              <ng-template #success let-userClaimsAny>
-                @let userClaims = asUserClaims(userClaimsAny);
-
-                <user-claims [userClaims]="userClaims ?? []" (addClaim)="addClaim($event)" (removeClaim)="removeClaim($event)" />
-              </ng-template>
-            </api-response>
+            <user-claims [userId]="user.id" />
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>

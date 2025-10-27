@@ -20,7 +20,7 @@ import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
-import { Observable, startWith, Subject, switchMap, tap } from "rxjs";
+import { startWith, Subject, switchMap, tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -68,7 +68,6 @@ export class ClaimComponent {
           pageNumber: (event.first ?? 0) / this.pageSize + 1,
         })
       ),
-      tap(console.log),
       // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
       // so we can avoid a redundant call to the API.
       startWith(new EmptyPagedResponse<ClaimDto>())
@@ -84,7 +83,7 @@ export class ClaimComponent {
     this.#adminService.addUserClaim(this.form.value.userId!, { type: this.type(), value: this.value() }).subscribe({
       next: () => {
         this.form.reset();
-//        this.#refreshUsers();
+        this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize });
       },
       error: response => this.errors.set(response.errorMessages),
     });
@@ -100,7 +99,7 @@ export class ClaimComponent {
       key: userId,
       accept: () => {
         this.#adminService.removeUserClaim(userId, { type: this.type(), value: this.value() }).subscribe({
-          //next: () => this.#refreshUsers(),
+          next: () => this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize }),
           error: response => this.errors.set(response.errorMessages),
         });
       },

@@ -43,13 +43,11 @@ export class UserComponent implements OnChanges {
   readonly errors = signal(new Array<string>());
 
   readonly user$ = signal<Observable<AdminUserDto>>(new Observable<AdminUserDto>());
-  readonly userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
   readonly userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
 
   #userId = "";
 
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
-  readonly asUserClaims = TypeHelpers.cast<Array<ClaimDto>>;
   readonly asUserRoles = TypeHelpers.cast<Array<RoleDto>>;
 
   ngOnChanges() {
@@ -64,7 +62,6 @@ export class UserComponent implements OnChanges {
 
           this.#userId = user.id;
           this.#refreshRoles();
-          this.#refreshClaims();
         })
       )
     );
@@ -72,10 +69,6 @@ export class UserComponent implements OnChanges {
 
   #refreshRoles() {
     this.userRoles$.set(this.adminService.getUserRoles(this.#userId));
-  }
-
-  #refreshClaims() {
-    this.userClaims$.set(this.adminService.getUserClaims(this.#userId));
   }
 
   lockUserAccount(event: any) {
@@ -146,24 +139,6 @@ export class UserComponent implements OnChanges {
 
     this.adminService.addUserToRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => this.errors.set(response.errorMessages),
-    });
-  }
-
-  removeClaim(claim: ClaimDto) {
-    this.errors.set([]);
-
-    this.adminService.removeUserClaim(this.#userId, claim).subscribe({
-      next: () => this.#refreshClaims(),
-      error: response => this.errors.set(response.errorMessages),
-    });
-  }
-
-  addClaim(claim: ClaimDto) {
-    this.errors.set([]);
-
-    this.adminService.addUserClaim(this.#userId, claim).subscribe({
-      next: () => this.#refreshClaims(),
       error: response => this.errors.set(response.errorMessages),
     });
   }
