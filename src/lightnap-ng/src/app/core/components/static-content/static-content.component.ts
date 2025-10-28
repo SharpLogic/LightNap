@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { StaticContentTypes } from "@core";
+import { StaticContentFormats } from "@core/backend-api";
 import { Marked } from "marked";
 
 @Component({
@@ -13,7 +13,7 @@ export class StaticContentComponent {
   readonly #sanitizer = inject(DomSanitizer);
 
   readonly content = input.required<string>();
-  readonly contentType = input.required<StaticContentTypes>();
+  readonly format = input.required<StaticContentFormats>();
   readonly bypassSanitization = input<boolean>(false);
 
   readonly #marked = new Marked();
@@ -22,13 +22,13 @@ export class StaticContentComponent {
     const untrusted = this.content();
     if (untrusted?.trim().length === 0) return "";
 
-    switch (this.contentType()) {
+    switch (this.format()) {
       case "Html":
         return untrusted;
       case "Markdown":
         return this.#marked.parse(untrusted) as string;
       default:
-        throw new Error(`Unsupported content type: '${this.contentType()}'`);
+        throw new Error(`Unsupported content format: '${this.format()}'`);
     }
   });
 

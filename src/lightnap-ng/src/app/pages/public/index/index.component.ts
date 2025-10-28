@@ -1,13 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { UserIdComponent } from "@core/components/user-id/user-id.component";
-import { PanelModule } from 'primeng/panel';
+import { ZoneComponent } from "@core";
+import { PanelModule } from "primeng/panel";
 
 @Component({
   standalone: true,
   templateUrl: "./index.component.html",
-  imports: [CommonModule, PanelModule, UserIdComponent],
+  imports: [CommonModule, PanelModule, ZoneComponent],
 })
-export class IndexComponent {
-
-}
+export class IndexComponent {}

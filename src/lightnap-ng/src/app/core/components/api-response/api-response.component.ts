@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, contentChild, input, OnChanges, signal, SimpleChanges, TemplateRef } from "@angular/core";
-import { ApiResponseDto, ErrorApiResponse, SuccessApiResponse } from "@core";
+import { ApiResponseDto, ErrorApiResponse, SuccessApiResponse } from "@core/backend-api";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
 import { catchError, map, Observable, of } from "rxjs";
 import { ErrorListComponent } from "../error-list/error-list.component";

@@ -3,4 +3,7 @@
     @let user = asUser(userAny);
     <p>{{ user.userName }} has ID {{ user.id }}</p>
   </ng-template>
+  <ng-template #null>
+    <p>This user was not found.</p>
+  </ng-template>
 </api-response>

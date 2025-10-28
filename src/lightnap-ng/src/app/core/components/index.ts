@@ -5,4 +5,5 @@ export * from "./confirm-popup/confirm-popup.component";
 export * from "./dropdown-list-item/dropdown-list-item.component";
 export * from "./error-list/error-list.component";
 export * from "./static-content/static-content.component";
+export * from "./zone/zone.component";
 

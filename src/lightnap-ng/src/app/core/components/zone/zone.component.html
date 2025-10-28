@@ -1,0 +1,6 @@
+<api-response [apiResponse]="content()">
+  <ng-template let-contentAny #success>
+    @let publishedContent = asContent(contentAny);
+    <static-content [content]="publishedContent.content" [format]="publishedContent.format" [bypassSanitization]="bypassSanitization()" />
+  </ng-template>
+</api-response>

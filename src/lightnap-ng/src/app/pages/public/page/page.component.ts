@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { StaticContentComponent, StaticContentTypes } from "@core";
+import { StaticContentComponent, StaticContentFormats } from "@core";
 import { PanelModule } from "primeng/panel";
 
 @Component({
@@ -9,8 +9,8 @@ import { PanelModule } from "primeng/panel";
   imports: [CommonModule, PanelModule, StaticContentComponent],
 })
 export class PageComponent {
-    contentType: StaticContentTypes = "Html";
-    content = `
+  format: StaticContentFormats = "Html";
+  content = `
     <p-card-control class="w-96" header="Card Header" subtitle="Card Subtitle">
       <p>Card Content</p>
       </p-card-control>
@@ -19,16 +19,16 @@ export class PageComponent {
                 <user-id-control userName="admin"></user-id-control>
                `;
   //content = "<strong>Hello, world!</strong> This is some <em>HTML</em> content.";
-//   content =
-// `# Markdown Content
+  //   content =
+  // `# Markdown Content
 
-// This is some **bold** text and this is *italic* text.
+  // This is some **bold** text and this is *italic* text.
 
-// - Item 1
-// - Item 2
-// - Item 3
+  // - Item 1
+  // - Item 2
+  // - Item 3
 
-// [Link to Quantcha](https://quantcha.com)
+  // [Link to Quantcha](https://quantcha.com)
 
-// `;//<user-id-control userName="admin"></user-id-control>`;
+  // `;//<user-id-control userName="admin"></user-id-control>`;
 }

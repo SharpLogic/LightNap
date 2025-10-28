@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { NavigationExtras, Router } from "@angular/router";
-import { AppRoute, RouteAlias } from "@core";
+import { AppRoute, RouteAlias } from "../models";
 
 @Injectable({
   providedIn: "root",

@@ -237,8 +237,8 @@ describe("UsersService", () => {
     const userId = "user-id";
     const claims = [{ type: "email", value: "test@test.com", userId }];
     dataServiceSpy.searchUserClaims = jasmine.createSpy().and.returnValue(of({ data: claims }));
-    service.getUserClaims(userId).subscribe(result => {
-      expect(result).toEqual(claims);
+    service.getUserClaims({userId}).subscribe(result => {
+      expect(result.data).toEqual(claims);
     });
     expect(dataServiceSpy.searchUserClaims).toHaveBeenCalledWith({ userId });
   });
@@ -247,7 +247,7 @@ describe("UsersService", () => {
     const claim = { type: "role", value: "admin" } as any;
     dataServiceSpy.searchUserClaims = jasmine.createSpy().and.returnValue(of({ data: [] }));
     service.getUsersWithClaim(claim).subscribe(result => {
-      expect(result).toEqual([]);
+      expect(result.totalCount).toEqual(0);
     });
   });
 

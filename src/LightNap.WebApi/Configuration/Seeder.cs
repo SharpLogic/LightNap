@@ -3,6 +3,8 @@ using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
+using LightNap.Core.StaticContents.Dto.Request;
+using LightNap.Core.StaticContents.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
@@ -24,6 +26,7 @@ namespace LightNap.WebApi.Configuration
     /// <param name="logger">The logger.</param>
     /// <param name="roleManager">The role manager.</param>
     /// <param name="userManager">The user manager.</param>
+    /// <param name="contentService">The static content service.</param>
     /// <param name="seededUserConfigurations">The users to seed.</param>
     /// <param name="applicationSettings">The configured application settings.</param>
     public partial class Seeder(
@@ -31,6 +34,7 @@ namespace LightNap.WebApi.Configuration
         ILogger<Seeder> logger,
         RoleManager<ApplicationRole> roleManager,
         UserManager<ApplicationUser> userManager,
+        IStaticContentService contentService,
         IOptions<Dictionary<string, List<SeededUserConfiguration>>> seededUserConfigurations,
         IOptions<ApplicationSettings> applicationSettings)
     {
@@ -43,8 +47,39 @@ namespace LightNap.WebApi.Configuration
         {
             await this.SeedRolesAsync();
             await this.SeedUsersAsync();
+            await this.SeedStaticContentAsync();
             await this.SeedApplicationContentAsync();
             await this.SeedEnvironmentContentAsync();
+        }
+
+        private async Task SeedStaticContentAsync()
+        {
+            string content =
+@"<p-panel-control header=""Welcome To The App"">
+  <p>This is the public landing page accessible to anyone.</p>
+  <user-id-control userName=""admin""></user-id-control>
+  <user-id-control userName=""user1""></user-id-control>
+  <user-id-control userName=""user2""></user-id-control>
+</p-panel-control>";
+
+            var staticContent =
+                await contentService.CreateStaticContentAsync(
+                new CreateStaticContentDto()
+                {
+                    Key = "public-index-welcome",
+                    Type = StaticContentType.Zone,
+                    Status = StaticContentStatus.Published,
+                    ReadAccess = StaticContentReadAccess.Public
+                });
+
+            await contentService.CreateStaticContentLanguageAsync(
+                staticContent.Key,
+                "en",
+                new CreateStaticContentLanguageDto()
+                {
+                    Content = content,
+                    Format = StaticContentFormat.Html,
+                });
         }
 
         /// <summary>

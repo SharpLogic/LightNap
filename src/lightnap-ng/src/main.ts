@@ -20,6 +20,7 @@ import { AppComponent } from "./app/app.component";
 import { Routes } from "./app/pages/routes";
 import { environment } from "./environments/environment";
 import { provideMarkdown } from "ngx-markdown";
+import { Panel } from "primeng/panel";
 
 if (environment.production) {
   enableProdMode();
@@ -62,6 +63,7 @@ bootstrapApplication(AppComponent, {
     const injector = appRef.injector;
 
     customElements.define("user-id-control", createCustomElement(UserIdComponent, { injector }));
+    customElements.define("p-panel-control", createCustomElement(Panel, { injector }));
     customElements.define("p-card-control", createCustomElement(Card, { injector }));
 
     // Register other dynamic components as needed
