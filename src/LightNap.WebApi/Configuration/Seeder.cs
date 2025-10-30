@@ -62,47 +62,91 @@ namespace LightNap.WebApi.Configuration
                 return;
             }
 
-            Regex fileNameRegex = new Regex(@"^(zone|page)\.(public|authenticated|explicit)\.([a-z]{2})\.([a-z0-9]+(-[a-z0-9]+)*)\.(.+)$", RegexOptions.Compiled);
+            // Track keys during this scan to detect duplicates in the file system
+            var keyRegistry = new Dictionary<string, (StaticContentType Type, StaticContentReadAccess ReadAccess, string Path)>();
 
-            foreach (var path in Directory.GetFiles(basePath))
+            // Pattern: {languageCode}.{extension}
+            Regex fileNameRegex = new Regex(@"^([a-z]{2})\.([a-z0-9]+)$", RegexOptions.Compiled);
+
+            // Iterate through type folders (zones, pages, others added in future)
+            foreach (var typeDir in Directory.GetDirectories(basePath))
             {
-                Match match = fileNameRegex.Match(Path.GetFileName(path));
-                if (!match.Success)
+                string typeName = Path.GetFileName(typeDir);
+                StaticContentType type = typeName.ToLowerInvariant() switch
                 {
-                    throw new InvalidOperationException($"Static content file name is invalid: '{path}'. See documentation for formatting rules.");
+                    "zones" => StaticContentType.Zone,
+                    "pages" => StaticContentType.Page,
+                    _ => throw new InvalidOperationException($"Invalid static content type directory: '{typeDir}'")
+                };
+
+                // Iterate through read access folders (public, authenticated, explicit)
+                foreach (var accessDir in Directory.GetDirectories(typeDir))
+                {
+                    string accessName = Path.GetFileName(accessDir);
+                    StaticContentReadAccess readAccess = accessName.ToLowerInvariant() switch
+                    {
+                        "public" => StaticContentReadAccess.Public,
+                        "authenticated" => StaticContentReadAccess.Authenticated,
+                        "explicit" => StaticContentReadAccess.Explicit,
+                        _ => throw new InvalidOperationException($"Invalid static content read access directory: '{accessDir}'")
+                    };
+
+                    // Iterate through key folders
+                    foreach (var keyDir in Directory.GetDirectories(accessDir))
+                    {
+                        string key = Path.GetFileName(keyDir);
+
+                        // Validate key format (kebab-case)
+                        if (!Regex.IsMatch(key, @"^[a-z0-9]+(-[a-z0-9]+)*$"))
+                        {
+                            throw new InvalidOperationException($"Invalid static content key directory name: '{key}'. Must be kebab-case.");
+                        }
+
+                        // Check for duplicate keys in the file system
+                        if (keyRegistry.TryGetValue(key, out var existing))
+                        {
+                            throw new InvalidOperationException(
+                                $"Duplicate static content key '{key}' found in file system.\n" +
+                                $"  First location: {existing.Path} (Type: {existing.Type}, Access: {existing.ReadAccess})\n" +
+                                $"  Second location: {keyDir} (Type: {type}, Access: {readAccess})\n" +
+                                $"Each key must appear in exactly one location.");
+                        }
+
+                        // Register this key
+                        keyRegistry[key] = (type, readAccess, keyDir);
+
+                        // Iterate through language files
+                        foreach (var filePath in Directory.GetFiles(keyDir))
+                        {
+                            string fileName = Path.GetFileName(filePath);
+                            Match match = fileNameRegex.Match(fileName);
+
+                            if (!match.Success)
+                            {
+                                logger.LogWarning("Skipping invalid static content file: '{filePath}'. Expected format: {{languageCode}}.{{extension}}", filePath);
+                                continue;
+                            }
+
+                            string languageCode = match.Groups[1].Value;
+                            string extension = match.Groups[2].Value;
+
+                            StaticContentFormat format = extension.ToLowerInvariant() switch
+                            {
+                                "html" => StaticContentFormat.Html,
+                                "md" => StaticContentFormat.Markdown,
+                                "txt" => StaticContentFormat.PlainText,
+                                _ => throw new InvalidOperationException($"Invalid static content format in file: '{filePath}'")
+                            };
+
+                            string content = await File.ReadAllTextAsync(filePath);
+
+                            await this.SeedStaticContentLanguageAsync(key, type, readAccess, languageCode, format, content);
+                        }
+                    }
                 }
-
-                StaticContentType type = match.Groups[1].Value.ToLowerInvariant() switch
-                {
-                    "zone" => StaticContentType.Zone,
-                    "page" => StaticContentType.Page,
-                    _ => throw new InvalidOperationException($"Invalid static content type in file: '{path}'")
-                };
-
-                StaticContentReadAccess readAccess = match.Groups[2].Value.ToLowerInvariant() switch
-                {
-                    "public" => StaticContentReadAccess.Public,
-                    "authenticated" => StaticContentReadAccess.Authenticated,
-                    "explicit" => StaticContentReadAccess.Explicit,
-                    _ => throw new InvalidOperationException($"Invalid static content read access in file: '{path}'")
-                };
-
-                string languageCode = match.Groups[3].Value;
-
-                string key = match.Groups[4].Value;
-
-                StaticContentFormat format = match.Groups[6].Value.ToLowerInvariant() switch
-                {
-                    "html" => StaticContentFormat.Html,
-                    "md" => StaticContentFormat.Markdown,
-                    "txt" => StaticContentFormat.PlainText,
-                    _ => throw new InvalidOperationException($"Invalid static content format in file: '{path}'")
-                };
-
-                string content = await File.ReadAllTextAsync(path);
-
-                await this.SeedStaticContentLanguageAsync(key, type, readAccess, languageCode, format, content);
             }
+
+            logger.LogInformation("Seeded {count} static content keys from file system", keyRegistry.Count);
         }
 
         private async Task SeedStaticContentLanguageAsync(string key, StaticContentType type, StaticContentReadAccess readAccess,
