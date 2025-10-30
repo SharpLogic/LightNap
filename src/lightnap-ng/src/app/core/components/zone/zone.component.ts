@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input } from "@angular/core";
-import { PublishedStaticContentDto } from "@core/backend-api";
+import { PublishedContent } from "@core/content/entities";
 import { ContentService } from "@core/content/services/content.service";
+import { StaticContentDirective } from "@core/directives";
 import { TypeHelpers } from "@core/helpers";
 import { ApiResponseComponent } from "../api-response/api-response.component";
-import { StaticContentDirective } from "@core/directives";
 
 @Component({
   selector: "zone",
@@ -18,5 +18,5 @@ export class ZoneComponent {
   readonly sanitize = input(false);
   readonly showContentStripWarning = input(false);
   readonly content = computed(() => this.#contentService.getPublishedStaticContent(this.key(), this.languageCode()));
-  readonly asContent = TypeHelpers.cast<PublishedStaticContentDto>;
+  readonly asContent = TypeHelpers.cast<PublishedContent>;
 }

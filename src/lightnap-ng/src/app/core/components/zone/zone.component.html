@@ -1,9 +1,26 @@
 <api-response [apiResponse]="content()">
   <ng-template let-contentAny #success>
     @let publishedContent = asContent(contentAny);
-    <div staticContent [content]="publishedContent.content" [format]="publishedContent.format" [sanitize]="sanitize()" [showContentStripWarning]="showContentStripWarning()"></div>
+    @if (publishedContent.canView) {
+      @if (publishedContent.canEdit) {
+        <div class="mt-4 text-sm text-blue-500 content-end">[edit]</div>
+      }
+      <div
+        staticContent
+        [content]="publishedContent.content!"
+        [format]="publishedContent.format!"
+        [sanitize]="sanitize()"
+        [showContentStripWarning]="showContentStripWarning()"
+      ></div>
+    } @else if (publishedContent.requiresAuthentication) {
+      <p class="text-red-500">You must be logged in to view this content.</p>
+    } @else {
+      <p class="text-red-500">Access to this content is restricted.</p>
+    }
   </ng-template>
   <ng-template #null>
-    <p class="text-red-500">The content key <strong>{{ key() }}</strong> was not found.</p>
+    <p class="text-red-500">
+      The content key <strong>{{ key() }}</strong> was not found.
+    </p>
   </ng-template>
 </api-response>
