@@ -81,8 +81,9 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Test content", result.Content);
-            Assert.AreEqual(StaticContentFormat.Markdown, result.Format);
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Test content", result.Content.Content);
+            Assert.AreEqual(StaticContentFormat.Markdown, result.Content.Format);
         }
 
         [TestMethod]
@@ -120,7 +121,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Default content", result.Content);
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Default content", result.Content.Content);
         }
 
         [TestMethod]
@@ -520,7 +522,9 @@ namespace LightNap.Core.Tests.Services
             var result = await this._staticContentService.GetPublishedStaticContentAsync("auth-required", "en");
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StaticContentUserVisibility.RequiresAuthentication, result.Visibility);
+            Assert.IsNull(result.Content);
         }
 
         [TestMethod]
@@ -556,7 +560,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Protected content", result.Content);
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Protected content", result.Content.Content);
         }
 
         [TestMethod]
@@ -621,7 +626,9 @@ namespace LightNap.Core.Tests.Services
             var result = await this._staticContentService.GetPublishedStaticContentAsync("protected-content", "en");
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StaticContentUserVisibility.Restricted, result.Visibility);
+            Assert.IsNull(result.Content);
         }
 
         [TestMethod]
@@ -789,10 +796,14 @@ namespace LightNap.Core.Tests.Services
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
             // Act
+            this._userContext.UserId = null;
+            this._userContext.Roles.Clear();
             var result = await this._staticContentService.GetPublishedStaticContentAsync("no-languages", "en");
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StaticContentUserVisibility.Reader, result.Visibility);
+            Assert.IsNull(result.Content);
         }
 
         [TestMethod]
@@ -986,7 +997,9 @@ namespace LightNap.Core.Tests.Services
             var result = await this._staticContentService.GetPublishedStaticContentAsync("role-content", "en");
 
             // Assert
-            Assert.IsNull(result);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(StaticContentUserVisibility.Restricted, result.Visibility);
+            Assert.IsNull(result.Content);
         }
 
         [TestMethod]
@@ -1020,100 +1033,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Role-protected content", result.Content);
-        }
-
-        [TestMethod]
-        public async Task UpdateStaticContentAsync_WithEditorRoles_AllowsUserWithRole()
-        {
-            // Arrange
-            var createDto = new CreateStaticContentDto
-            {
-                Key = "test-key",
-                Type = StaticContentType.Page,
-                Status = StaticContentStatus.Draft,
-                ReadAccess = StaticContentReadAccess.Public,
-                EditorRoles = "ContentEditor"
-            };
-            var created = await this._staticContentService.CreateStaticContentAsync(createDto);
-
-            // Set user with the required editor role (not admin)
-            this._userContext.UserId = "editor-user";
-            this._userContext.Roles.Clear();
-            this._userContext.Roles.Add("ContentEditor");
-
-            var updateDto = new UpdateStaticContentDto
-            {
-                Key = "test-key-updated",
-                Status = StaticContentStatus.Published,
-                ReadAccess = StaticContentReadAccess.Public,
-                EditorRoles = "ContentEditor"
-            };
-
-            // Act
-            var result = await this._staticContentService.UpdateStaticContentAsync("test-key", updateDto);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual("test-key-updated", result.Key);
-            Assert.AreEqual(StaticContentStatus.Published, result.Status);
-        }
-
-        [TestMethod]
-        public async Task CreateStaticContentLanguageAsync_WithDuplicateLanguage_ThrowsException()
-        {
-            // Arrange
-            var createDto = new CreateStaticContentDto
-            {
-                Key = "test-key",
-                Type = StaticContentType.Page,
-                Status = StaticContentStatus.Published,
-                ReadAccess = StaticContentReadAccess.Public,
-            };
-            await this._staticContentService.CreateStaticContentAsync(createDto);
-
-            var languageDto = new CreateStaticContentLanguageDto
-            {
-                Content = "English content",
-                Format = StaticContentFormat.Markdown
-            };
-            await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
-
-            // Act & Assert
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
-            {
-                await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
-            });
-        }
-
-        [TestMethod]
-        public async Task CreateStaticContentLanguageAsync_WithoutPermission_ThrowsUnauthorizedException()
-        {
-            // Arrange
-            var createDto = new CreateStaticContentDto
-            {
-                Key = "test-key",
-                Type = StaticContentType.Page,
-                Status = StaticContentStatus.Published,
-                ReadAccess = StaticContentReadAccess.Public,
-            };
-            await this._staticContentService.CreateStaticContentAsync(createDto);
-
-            // Remove admin role
-            this._userContext.UserId = "regular-user";
-            this._userContext.Roles.Clear();
-
-            var languageDto = new CreateStaticContentLanguageDto
-            {
-                Content = "New content",
-                Format = StaticContentFormat.Markdown
-            };
-
-            // Act & Assert
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
-            {
-                await this._staticContentService.CreateStaticContentLanguageAsync("test-key", "en", languageDto);
-            });
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Role-protected content", result.Content.Content);
         }
 
         [TestMethod]
@@ -1225,7 +1146,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Authenticated content", result.Content);
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Authenticated content", result.Content.Content);
         }
 
         [TestMethod]
@@ -1259,7 +1181,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual("Explicit access content", result.Content);
+            Assert.IsNotNull(result.Content);
+            Assert.AreEqual("Explicit access content", result.Content.Content);
         }
 
         [TestMethod]

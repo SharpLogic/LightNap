@@ -8,6 +8,7 @@ using LightNap.Core.StaticContents.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace LightNap.WebApi.Configuration
 {
@@ -54,32 +55,88 @@ namespace LightNap.WebApi.Configuration
 
         private async Task SeedStaticContentAsync()
         {
-            string content =
-@"<p-panel-control header=""Welcome To The App"">
-  <p>This is the public landing page accessible to anyone.</p>
-  <user-id-control userName=""admin""></user-id-control>
-  <user-id-control userName=""user1""></user-id-control>
-  <user-id-control userName=""user2""></user-id-control>
-</p-panel-control>";
+            string basePath = Path.Combine(AppContext.BaseDirectory, "StaticContent");
+            if (!Directory.Exists(basePath))
+            {
+                logger.LogWarning("Static content directory not found: '{basePath}'", basePath);
+                return;
+            }
 
-            var staticContent =
-                await contentService.CreateStaticContentAsync(
-                new CreateStaticContentDto()
-                {
-                    Key = "public-index-welcome",
-                    Type = StaticContentType.Zone,
-                    Status = StaticContentStatus.Published,
-                    ReadAccess = StaticContentReadAccess.Public
-                });
+            Regex fileNameRegex = new Regex(@"^(zone|page)\.(public|authenticated|explicit)\.([a-z]{2})\.([a-z0-9]+(-[a-z0-9]+)*)\.(.+)$", RegexOptions.Compiled);
 
-            await contentService.CreateStaticContentLanguageAsync(
-                staticContent.Key,
-                "en",
-                new CreateStaticContentLanguageDto()
+            foreach (var path in Directory.GetFiles(basePath))
+            {
+                Match match = fileNameRegex.Match(Path.GetFileName(path));
+                if (!match.Success)
                 {
-                    Content = content,
-                    Format = StaticContentFormat.Html,
-                });
+                    throw new InvalidOperationException($"Static content file name is invalid: '{path}'. See documentation for formatting rules.");
+                }
+
+                StaticContentType type = match.Groups[1].Value.ToLowerInvariant() switch
+                {
+                    "zone" => StaticContentType.Zone,
+                    "page" => StaticContentType.Page,
+                    _ => throw new InvalidOperationException($"Invalid static content type in file: '{path}'")
+                };
+
+                StaticContentReadAccess readAccess = match.Groups[2].Value.ToLowerInvariant() switch
+                {
+                    "public" => StaticContentReadAccess.Public,
+                    "authenticated" => StaticContentReadAccess.Authenticated,
+                    "explicit" => StaticContentReadAccess.Explicit,
+                    _ => throw new InvalidOperationException($"Invalid static content read access in file: '{path}'")
+                };
+
+                string languageCode = match.Groups[3].Value;
+
+                string key = match.Groups[4].Value;
+
+                StaticContentFormat format = match.Groups[6].Value.ToLowerInvariant() switch
+                {
+                    "html" => StaticContentFormat.Html,
+                    "md" => StaticContentFormat.Markdown,
+                    "txt" => StaticContentFormat.PlainText,
+                    _ => throw new InvalidOperationException($"Invalid static content format in file: '{path}'")
+                };
+
+                string content = await File.ReadAllTextAsync(path);
+
+                await this.SeedStaticContentLanguageAsync(key, type, readAccess, languageCode, format, content);
+            }
+        }
+
+        private async Task SeedStaticContentLanguageAsync(string key, StaticContentType type, StaticContentReadAccess readAccess,
+            string languageCode, StaticContentFormat format, string content)
+        {
+            var staticContent = await contentService.GetStaticContentAsync(key);
+            if (staticContent is null)
+            {
+                staticContent = await contentService.CreateStaticContentAsync(
+                    new CreateStaticContentDto()
+                    {
+                        Key = key,
+                        Type = type,
+                        Status = StaticContentStatus.Published,
+                        ReadAccess = readAccess
+                    });
+
+                logger.LogInformation("Created static content with key '{key}'", key);
+            }
+
+            var existingLanguage = await contentService.GetStaticContentLanguageAsync(key, languageCode);
+            if (existingLanguage is null)
+            {
+                await contentService.CreateStaticContentLanguageAsync(
+                    staticContent.Key,
+                    languageCode,
+                    new CreateStaticContentLanguageDto()
+                    {
+                        Content = content,
+                        Format = format,
+                    });
+
+                logger.LogInformation("Created static content language '{languageCode}' for key '{key}'", languageCode, key);
+            }
         }
 
         /// <summary>

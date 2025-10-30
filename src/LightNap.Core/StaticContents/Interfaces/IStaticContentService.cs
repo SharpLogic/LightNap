@@ -17,8 +17,8 @@ namespace LightNap.Core.StaticContents.Interfaces
         /// </summary>
         /// <param name="key">The unique key identifying the static content.</param>
         /// <param name="languageCode">The language code for the desired content variant.</param>
-        /// <returns>The published content in the requested language, or null if not accessible.</returns>
-        Task<PublishedStaticContentDto?> GetPublishedStaticContentAsync(string key, string languageCode);
+        /// <returns>The visibility of the content along with published content in the requested language (if visible), or null if not accessible.</returns>
+        Task<PublishedStaticContentResultDto?> GetPublishedStaticContentAsync(string key, string languageCode);
 
         /// <summary>
         /// Retrieves static content metadata by key. Requires authentication and edit permissions.

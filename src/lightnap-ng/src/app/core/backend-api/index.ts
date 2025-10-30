@@ -11,4 +11,5 @@ export * from "./static-content-read-accesses";
 export * from "./static-content-sort-bys";
 export * from "./static-content-statuses";
 export * from "./static-content-types";
+export * from "./static-content-user-visibilities";
 export * from "./success-api-response";

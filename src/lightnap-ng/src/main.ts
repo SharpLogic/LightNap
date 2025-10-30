@@ -6,21 +6,20 @@ import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
 import { provideServiceWorker } from "@angular/service-worker";
-import { API_URL_ROOT, APP_NAME, throwInlineError } from "@core";
-import { UserIdComponent } from "@core/components/user-id/user-id.component";
+import { API_URL_ROOT, APP_NAME, BrandedCardComponent, throwInlineError } from "@core";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { InitializationService } from "@core/services/initialization.service";
 import { PrependNameTitleStrategy } from "@core/strategies/prepend-name-title.strategy";
 import Aura from "@primeng/themes/aura";
+import { provideMarkdown } from "ngx-markdown";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { Card } from "primeng/card";
 import { providePrimeNG } from "primeng/config";
+import { Panel } from "primeng/panel";
 import { AppComponent } from "./app/app.component";
 import { Routes } from "./app/pages/routes";
 import { environment } from "./environments/environment";
-import { provideMarkdown } from "ngx-markdown";
-import { Panel } from "primeng/panel";
 
 if (environment.production) {
   enableProdMode();
@@ -62,7 +61,7 @@ bootstrapApplication(AppComponent, {
   .then(appRef => {
     const injector = appRef.injector;
 
-    customElements.define("user-id-control", createCustomElement(UserIdComponent, { injector }));
+    customElements.define("branded-card-control", createCustomElement(BrandedCardComponent, { injector }));
     customElements.define("p-panel-control", createCustomElement(Panel, { injector }));
     customElements.define("p-card-control", createCustomElement(Card, { injector }));
 

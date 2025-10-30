@@ -15,9 +15,9 @@ namespace LightNap.WebApi.Controllers
     {
         [HttpGet("published/{key}/{languageCode}")]
         [AllowAnonymous]
-        public async Task<ApiResponseDto<PublishedStaticContentDto?>> GetPublishedStaticContentAsync(string key, string languageCode)
+        public async Task<ApiResponseDto<PublishedStaticContentResultDto?>> GetPublishedStaticContentAsync(string key, string languageCode)
         {
-            return new ApiResponseDto<PublishedStaticContentDto?>(await staticContentService.GetPublishedStaticContentAsync(key, languageCode));
+            return new ApiResponseDto<PublishedStaticContentResultDto?>(await staticContentService.GetPublishedStaticContentAsync(key, languageCode));
         }
 
         [HttpGet("supported-languages")]

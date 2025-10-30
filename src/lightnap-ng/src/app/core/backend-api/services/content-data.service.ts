@@ -6,7 +6,6 @@ import {
     CreateStaticContentDto,
     CreateStaticContentLanguageDto,
     PagedResponseDto,
-    PublishedStaticContentDto,
     SearchStaticContentRequestDto,
     StaticContentDto,
     StaticContentLanguageDto,
@@ -14,6 +13,7 @@ import {
     UpdateStaticContentDto,
     UpdateStaticContentLanguageDto
 } from "../dtos";
+import { PublishedStaticContentResultDto } from "../dtos/static-contents/response/published-static-content-result-dto";
 import { StaticContentLanguageHelper } from "../helpers/static-content-language.helper";
 import { StaticContentHelper } from "../helpers/static-content.helper";
 
@@ -25,7 +25,7 @@ export class ContentDataService {
   #apiUrlRoot = `${inject(API_URL_ROOT)}content/`;
 
   getPublishedStaticContent(key: string, languageCode: string) {
-    return this.#http.get<PublishedStaticContentDto | null>(`${this.#apiUrlRoot}published/${key}/${languageCode}`);
+    return this.#http.get<PublishedStaticContentResultDto | null>(`${this.#apiUrlRoot}published/${key}/${languageCode}`);
   }
 
   getSupportedLanguages() {

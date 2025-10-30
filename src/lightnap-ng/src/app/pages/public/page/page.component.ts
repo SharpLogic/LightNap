@@ -1,34 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { StaticContentComponent, StaticContentFormats } from "@core";
-import { PanelModule } from "primeng/panel";
+import { Component, inject, input } from "@angular/core";
+import { IdentityService, ZoneComponent } from "@core";
 
 @Component({
-  standalone: true,
   templateUrl: "./page.component.html",
-  imports: [CommonModule, PanelModule, StaticContentComponent],
+  imports: [CommonModule, ZoneComponent],
 })
 export class PageComponent {
-  format: StaticContentFormats = "Html";
-  content = `
-    <p-card-control class="w-96" header="Card Header" subtitle="Card Subtitle">
-      <p>Card Content</p>
-      </p-card-control>
-
-    <user-id-control userName="admin"></user-id-control>
-                <user-id-control userName="admin"></user-id-control>
-               `;
-  //content = "<strong>Hello, world!</strong> This is some <em>HTML</em> content.";
-  //   content =
-  // `# Markdown Content
-
-  // This is some **bold** text and this is *italic* text.
-
-  // - Item 1
-  // - Item 2
-  // - Item 3
-
-  // [Link to Quantcha](https://quantcha.com)
-
-  // `;//<user-id-control userName="admin"></user-id-control>`;
+  #identityService = inject(IdentityService);
+  key = input.required<string>();
 }

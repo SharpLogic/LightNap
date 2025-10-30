@@ -109,8 +109,38 @@ namespace LightNap.Core.StaticContents.Services
             return content;
         }
 
+        /// <summary>
+        /// Determines the visibility of static content for the current user based on the content's read access
+        /// settings.
+        /// </summary>
+        /// <remarks>The visibility is determined based on the <see cref="StaticContent.ReadAccess"/>
+        /// property of the content and the user's authentication status, claims, and roles. If the <see
+        /// cref="StaticContent.ReadAccess"/> value is unknown, access is denied.</remarks>
+        /// <param name="staticContent">The static content whose visibility is being evaluated.</param>
+        /// <returns>A <see cref="StaticContentUserVisibility"/> value indicating the visibility of the static content for the
+        /// current user. Returns <see cref="StaticContentUserVisibility.Visible"/> if the content is accessible, <see
+        /// cref="StaticContentUserVisibility.RequiresAuthentication"/> if authentication is required, or <see
+        /// cref="StaticContentUserVisibility.Restricted"/> if access is denied.</returns>
+        private StaticContentUserVisibility GetUserVisibilityInternal(StaticContent staticContent)
+        {
+            if (this.CanEdit(staticContent)) { return StaticContentUserVisibility.Editor; }
+
+            if (staticContent.ReadAccess == StaticContentReadAccess.Public) { return StaticContentUserVisibility.Reader; }
+
+            if (!userContext.IsAuthenticated) { return StaticContentUserVisibility.RequiresAuthentication; }
+
+            if (staticContent.ReadAccess == StaticContentReadAccess.Authenticated) { return StaticContentUserVisibility.Reader; }
+
+            if (userContext.HasClaim(Constants.Claims.ContentReader, staticContent.Id.ToString())) { return StaticContentUserVisibility.Reader; }
+
+            var viewerRoles = staticContent.GetExplicitReaderRoles();
+            if (viewerRoles is not null && viewerRoles.Any(userContext.IsInRole)) { return StaticContentUserVisibility.Reader; }
+
+            return StaticContentUserVisibility.Restricted;
+        }
+
         /// <inheritdoc/>
-        public async Task<PublishedStaticContentDto?> GetPublishedStaticContentAsync(string key, string languageCode)
+        public async Task<PublishedStaticContentResultDto?> GetPublishedStaticContentAsync(string key, string languageCode)
         {
             ArgumentException.ThrowIfNullOrEmpty(key);
             ArgumentException.ThrowIfNullOrEmpty(languageCode);
@@ -120,24 +150,21 @@ namespace LightNap.Core.StaticContents.Services
                 .FirstOrDefaultAsync();
             if (staticContent is null) { return null; }
 
-            switch (staticContent.ReadAccess)
+            var visibility = this.GetUserVisibilityInternal(staticContent);
+            var result = new PublishedStaticContentResultDto
             {
-                case StaticContentReadAccess.Public: break;
-                case StaticContentReadAccess.Authenticated:
-                    if (!userContext.IsAuthenticated) { return null; }
+                Visibility = visibility,
+            };
+
+            switch (visibility)
+            {
+                case StaticContentUserVisibility.Reader:
+                case StaticContentUserVisibility.Editor:
+                    result.Content = await this.GetPublishedStaticContentInternalAsync(key, languageCode);
                     break;
-                case StaticContentReadAccess.Explicit:
-                    if (this.CanEdit(staticContent)) { break; }
-                    if (userContext.HasClaim(Constants.Claims.ContentReader, staticContent.Id.ToString())) { break; }
-                    var viewerRoles = staticContent.GetExplicitReaderRoles();
-                    if (viewerRoles is not null && viewerRoles.Any(userContext.IsInRole)) { break; }
-                    return null;
-                default:
-                    logger.LogWarning("Static content '{StaticContentId}' has unknown ReadAccess value '{ReadAccess}'. Denying access.", staticContent.Id, staticContent.ReadAccess);
-                    return null;
             }
 
-            return await this.GetPublishedStaticContentInternalAsync(key, languageCode);
+            return result;
         }
 
         /// <inheritdoc/>

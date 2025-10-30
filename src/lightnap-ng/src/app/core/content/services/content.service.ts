@@ -1,21 +1,31 @@
 import { Injectable, inject } from "@angular/core";
 import {
-    CreateStaticContentDto,
-    CreateStaticContentLanguageDto,
-    SearchStaticContentRequestDto,
-    UpdateStaticContentDto,
-    UpdateStaticContentLanguageDto,
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  SearchStaticContentRequestDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
+import { map, switchMap, take } from "rxjs";
+import { PublishedContent } from "../entities";
+import { IdentityService } from "@core";
 
 @Injectable({
   providedIn: "root",
 })
 export class ContentService {
   #dataService = inject(ContentDataService);
+  #identityService = inject(IdentityService);
 
   getPublishedStaticContent(key: string, languageCode: string) {
-    return this.#dataService.getPublishedStaticContent(key, languageCode);
+    // We need to ensure the user's identity status has been established before making requests for content.
+    return this.#identityService.watchLoggedIn$().pipe(
+      take(1),
+      switchMap(_ =>
+        this.#dataService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
+      )
+    );
   }
 
   getSupportedLanguages() {
