@@ -1,7 +1,7 @@
 <api-response [apiResponse]="content()">
   <ng-template let-contentAny #success>
     @let publishedContent = asContent(contentAny);
-    <div staticContent [content]="publishedContent.content" [format]="publishedContent.format" [bypassSanitization]="bypassSanitization()" [showContentStripWarning]="showContentStripWarning()"></div>
+    <div staticContent [content]="publishedContent.content" [format]="publishedContent.format" [sanitize]="sanitize()" [showContentStripWarning]="showContentStripWarning()"></div>
   </ng-template>
   <ng-template #null>
     <p class="text-red-500">The content key <strong>{{ key() }}</strong> was not found.</p>

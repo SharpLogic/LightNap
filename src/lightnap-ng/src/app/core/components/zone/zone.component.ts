@@ -15,7 +15,7 @@ export class ZoneComponent {
   readonly #contentService = inject(ContentService);
   readonly key = input.required<string>();
   readonly languageCode = input("en");
-  readonly bypassSanitization = input(false);
+  readonly sanitize = input(false);
   readonly showContentStripWarning = input(false);
   readonly content = computed(() => this.#contentService.getPublishedStaticContent(this.key(), this.languageCode()));
   readonly asContent = TypeHelpers.cast<PublishedStaticContentDto>;

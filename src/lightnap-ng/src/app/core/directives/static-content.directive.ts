@@ -13,7 +13,7 @@ export class StaticContentDirective {
 
   readonly content = input.required<string>();
   readonly format = input.required<StaticContentFormats>();
-  readonly bypassSanitization = input<boolean>(false);
+  readonly sanitize = input<boolean>(false);
   readonly showContentStripWarning = input<boolean>(false);
 
   readonly #marked = new Marked();
@@ -66,10 +66,10 @@ export class StaticContentDirective {
   }
 
   #getTrustedHtml(untrusted: string): string {
-    if (this.bypassSanitization()) {
-      return untrusted;
+    if (this.sanitize()) {
+      return this.#sanitizer.sanitize(SecurityContext.HTML, untrusted) ?? "The provided content could not be sanitized.";
     }
-    return this.#sanitizer.sanitize(SecurityContext.HTML, untrusted) ?? "The provided content could not be sanitized.";
+    return untrusted;
   }
 
   #wasContentStripped(untrustedHtml: string, trustedHtml: string): boolean {
