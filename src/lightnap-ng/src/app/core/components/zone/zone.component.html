@@ -3,7 +3,7 @@
     @let publishedContent = asContent(contentAny);
     @if (publishedContent.canView) {
       @if (publishedContent.canEdit) {
-        <div class="mt-4 text-sm text-blue-500 content-end">[edit]</div>
+        <a [routerLink]="'edit-content' | route: key()">[edit]</a>
       }
       <div
         staticContent

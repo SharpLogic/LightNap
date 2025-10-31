@@ -20,16 +20,4 @@ export const Routes: AppRoute[] = [
     data: { alias: "not-found" },
     loadComponent: () => import("../support/not-found/not-found.component").then(m => m.NotFoundComponent),
   },
-  {
-    path: "terms-and-conditions",
-    title: "Terms & Conditions",
-    data: { alias: "terms-and-conditions" },
-    loadComponent: () => import("../support/terms-and-conditions/terms-and-conditions.component").then(m => m.TermsAndConditionsComponent),
-  },
-  {
-    path: "privacy-policy",
-    title: "Privacy Policy",
-    data: { alias: "privacy-policy" },
-    loadComponent: () => import("../support/privacy-policy/privacy-policy.component").then(m => m.PrivacyPolicyComponent),
-  },
 ];

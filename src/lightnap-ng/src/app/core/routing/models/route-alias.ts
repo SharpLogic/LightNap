@@ -6,14 +6,17 @@ export type RouteAlias =
     // Public
     | 'landing'
     | 'about'
-    | 'terms-and-conditions'
-    | 'privacy-policy'
     | 'access-denied'
     | 'error'
     | 'not-found'
 
     // User
     | 'user-home'
+
+    // Content
+    | 'view-content'
+    | 'edit-content'
+    | 'manage-content'
 
     // Admin
     | 'admin-home'

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { PanelModule } from 'primeng/panel';
+import { ZoneComponent } from '@core';
 
 @Component({
     selector: 'app-home-index',
     standalone: true,
     templateUrl: './index.component.html',
-    imports: [PanelModule]
+    imports: [ZoneComponent]
 })
 export class IndexComponent {
 }
