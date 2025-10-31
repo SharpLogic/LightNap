@@ -1,15 +1,15 @@
-import { Injectable, inject } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
+import { ExtendedMap, IdentityService } from "@core";
 import {
-  CreateStaticContentDto,
-  CreateStaticContentLanguageDto,
-  SearchStaticContentRequestDto,
-  UpdateStaticContentDto,
-  UpdateStaticContentLanguageDto,
+    CreateStaticContentDto,
+    CreateStaticContentLanguageDto,
+    SearchStaticContentRequestDto,
+    UpdateStaticContentDto,
+    UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
-import { map, switchMap, take } from "rxjs";
+import { map, Observable, shareReplay, switchMap, take } from "rxjs";
 import { PublishedContent } from "../entities";
-import { IdentityService } from "@core";
 
 @Injectable({
   providedIn: "root",
@@ -18,18 +18,31 @@ export class ContentService {
   #dataService = inject(ContentDataService);
   #identityService = inject(IdentityService);
 
+  #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(shareReplay({ bufferSize: 1, refCount: false }));
+
+  #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
+
   getPublishedStaticContent(key: string, languageCode: string) {
-    // We need to ensure the user's identity status has been established before making requests for content.
-    return this.#identityService.watchLoggedIn$().pipe(
-      take(1),
-      switchMap(_ =>
-        this.#dataService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
+    const cacheKey = `${key}:${languageCode}`;
+
+    return this.#publishedContentCache.getOrSetDefault(cacheKey, () =>
+      this.#identityService.watchLoggedIn$().pipe(
+        take(1),
+        switchMap(_ =>
+          this.#dataService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
+        ),
+        shareReplay({ bufferSize: 1, refCount: false })
       )
     );
   }
 
+  clearCachedPublishedStaticContent(key: string, languageCode: string) {
+    const cacheKey = `${key}:${languageCode}`;
+    this.#publishedContentCache.delete(cacheKey);
+  }
+
   getSupportedLanguages() {
-    return this.#dataService.getSupportedLanguages();
+    return this.#supportedLanguages$;
   }
 
   createStaticContent(createDto: CreateStaticContentDto) {
