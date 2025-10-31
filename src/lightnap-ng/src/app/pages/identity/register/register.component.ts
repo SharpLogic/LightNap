@@ -1,7 +1,7 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, LoginSuccessTypes } from "@core";
+import { BlockUiService, LoginSuccessTypes, setApiErrors } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { RouteAliasService, RoutePipe } from "@core";
@@ -77,7 +77,7 @@ export class RegisterComponent {
               throw new Error(`Unexpected LoginSuccessResult.type: '${loginResult.type}'`);
           }
         },
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

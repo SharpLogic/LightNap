@@ -24,12 +24,11 @@ export const editPageGuard = (next: ActivatedRouteSnapshot, state: RouterStateSn
         return of(createUrlTreeFromSnapshot(next, routeAliasService.getRoute("login")));
       }
 
-      return contentService.getPublishedStaticContent(key, "en").pipe(
+      return contentService.getStaticContent(key).pipe(
         map(content => {
           if (!content) return createUrlTreeFromSnapshot(next, routeAliasService.getRoute("not-found"));
-          if (content.canEdit) return true;
 
-          return createUrlTreeFromSnapshot(next, routeAliasService.getRoute("access-denied"));
+          return true;
         })
       );
     })

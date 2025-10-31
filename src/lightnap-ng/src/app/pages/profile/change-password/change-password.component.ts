@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, IdentityService } from "@core";
+import { BlockUiService, IdentityService, setApiErrors } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { ToastService } from "@core/services/toast.service";
@@ -49,7 +49,7 @@ export class ChangePasswordComponent {
           this.#toast.success("Password changed successfully.");
           this.form.reset();
         },
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

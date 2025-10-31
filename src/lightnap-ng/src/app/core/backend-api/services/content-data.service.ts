@@ -49,7 +49,7 @@ export class ContentDataService {
   }
 
   updateStaticContent(key: string, updateDto: UpdateStaticContentDto) {
-    return this.#http.put<StaticContentDto>(`${this.#apiUrlRoot}${key}`, updateDto).pipe(tap(StaticContentHelper.rehydrate));
+    return this.#http.put<StaticContentDto>(`${this.#apiUrlRoot}${key}`, updateDto).pipe(tap(sc => StaticContentHelper.rehydrate(sc)!));
   }
 
   deleteStaticContent(key: string) {

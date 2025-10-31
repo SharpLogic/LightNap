@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, BrandedCardComponent } from "@core";
+import { BlockUiService, ErrorListComponent, BrandedCardComponent, setApiErrors } from "@core";
 import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
@@ -43,7 +43,7 @@ export class VerifyCodeComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("user-home"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

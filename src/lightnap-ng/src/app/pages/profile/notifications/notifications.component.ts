@@ -10,6 +10,7 @@ import {
   TypeHelpers,
   PagedResponseDto,
   NotificationSearchResults,
+  setApiErrors,
 } from "@core";
 import { NotificationItemComponent } from "@core/notifications/components/notification-item/notification-item.component";
 import { NotificationService } from "@core/notifications/services";
@@ -65,7 +66,7 @@ export class NotificationsComponent {
         this.#toast.success("All notifications marked as read.");
         this.#lazyLoadEventSubject.next({ first: 0 });
       },
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 }

@@ -14,6 +14,12 @@
             /// The purpose string used to create and validate magic link tokens.
             /// </summary>
             public const string MagicLinkTokenPurpose = "MagicLink";
+
+            /// <summary>
+            /// The hardcoded user ID for system-generated actions. This will not map to a user in the database,
+            /// so it needs to be accounted for wherever user IDs are used that may be the system, such as content creation.
+            /// </summary>
+            public const string SystemUserId = "system";
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { finalize, tap } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
-import { ErrorListComponent, ProfileDto, RoutePipe, TypeHelpers } from "@core";
+import { ErrorListComponent, ProfileDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { RouteAliasService, BlockUiService, ToastService } from "@core";
 
 @Component({
@@ -42,7 +42,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#toast.success("Profile updated successfully."),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 
@@ -53,7 +53,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("landing"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

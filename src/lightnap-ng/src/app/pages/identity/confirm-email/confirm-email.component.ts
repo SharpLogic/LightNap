@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { BlockUiService, ErrorListComponent, setApiErrors } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
@@ -35,7 +35,7 @@ export class ConfirmEmailComponent implements OnInit {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigateWithExtras("user-home", undefined, { replaceUrl: true }),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

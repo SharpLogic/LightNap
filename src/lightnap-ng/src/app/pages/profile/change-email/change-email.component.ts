@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, ErrorListComponent, IdentityService, RouteAliasService } from "@core";
+import { BlockUiService, ErrorListComponent, IdentityService, RouteAliasService, setApiErrors } from "@core";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from 'primeng/panel';
@@ -35,7 +35,7 @@ export class ChangeEmailComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("change-email-requested"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

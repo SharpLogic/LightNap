@@ -1,7 +1,7 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { BlockUiService, ErrorListComponent, setApiErrors } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
@@ -34,7 +34,7 @@ export class RequestVerificationEmailComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("email-verification-required"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

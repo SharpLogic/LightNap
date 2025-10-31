@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, AdminUsersService, ApiResponseComponent, ConfirmPopupComponent, ErrorListComponent, PeoplePickerComponent, RoleWithAdminUsers, RoutePipe, TypeHelpers } from "@core";
+import { AdminUserDto, AdminUsersService, ApiResponseComponent, ConfirmPopupComponent, ErrorListComponent, PeoplePickerComponent, RoleWithAdminUsers, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -58,7 +58,7 @@ export class RoleComponent implements OnInit {
         this.form.reset();
         this.#refreshRole();
       },
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 
@@ -73,7 +73,7 @@ export class RoleComponent implements OnInit {
       accept: () => {
         this.#adminService.removeUserFromRole(userId, this.role()).subscribe({
           next: () => this.#refreshRole(),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });

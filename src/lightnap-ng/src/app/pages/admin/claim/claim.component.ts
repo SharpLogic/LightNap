@@ -11,6 +11,7 @@ import {
   PagedResponseDto,
   PeoplePickerComponent,
   RoutePipe,
+  setApiErrors,
   TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
@@ -85,7 +86,7 @@ export class ClaimComponent {
         this.form.reset();
         this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize });
       },
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 
@@ -100,7 +101,7 @@ export class ClaimComponent {
       accept: () => {
         this.#adminService.removeUserClaim(userId, { type: this.type(), value: this.value() }).subscribe({
           next: () => this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize }),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });

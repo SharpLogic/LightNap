@@ -2,7 +2,7 @@ import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, LoginSuccessTypes } from "@core";
+import { BlockUiService, ErrorListComponent, LoginSuccessTypes, setApiErrors } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
@@ -82,7 +82,7 @@ export class LoginComponent {
               throw new Error(`Unexpected LoginSuccessResult.type: '${result.type}'`);
           }
         },
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 
@@ -96,7 +96,7 @@ export class LoginComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("magic-link-sent"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Data.Entities;
+﻿using LightNap.Core.Configuration;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
 
@@ -24,7 +25,7 @@ namespace LightNap.Core.Extensions
             };
         }
 
-        internal static StaticContent ToEntity(this CreateStaticContentDto dto)
+        internal static StaticContent ToEntity(this CreateStaticContentDto dto, string userId)
         {
             if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
@@ -34,6 +35,7 @@ namespace LightNap.Core.Extensions
             var staticContent = new StaticContent()
             {
                 CreatedDate = DateTime.UtcNow,
+                CreatedByUserId = userId != Constants.Identity.SystemUserId ? userId : null,
                 Key = dto.Key,
                 Type = dto.Type,
                 Status = dto.Status,
@@ -44,7 +46,7 @@ namespace LightNap.Core.Extensions
             return staticContent;
         }
 
-        internal static void UpdateEntity(this UpdateStaticContentDto dto, StaticContent staticContent)
+        internal static void UpdateEntity(this UpdateStaticContentDto dto, StaticContent staticContent, string userId)
         {
             if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
@@ -53,6 +55,7 @@ namespace LightNap.Core.Extensions
 
             staticContent.Key = dto.Key;
             staticContent.LastModifiedDate = DateTime.UtcNow;
+            staticContent.LastModifiedByUserId = userId;
 
             staticContent.ReadAccess = dto.ReadAccess;
             staticContent.ReaderRoles = dto.ViewerRoles;
@@ -61,6 +64,7 @@ namespace LightNap.Core.Extensions
             if (staticContent.Status != dto.Status)
             {
                 staticContent.StatusChangedDate = DateTime.UtcNow;
+                staticContent.StatusChangedByUserId = userId;
             }
             staticContent.Status = dto.Status;
         }

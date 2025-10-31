@@ -4,19 +4,20 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import {
-  AdminUserDto,
-  ApiResponseComponent,
-  ConfirmPopupComponent,
-  EmptyPagedResponse,
-  ErrorListComponent,
-  ListItem,
-  PagedResponseDto,
-  SearchUsersSortBy,
-  ToastService,
-  TypeHelpers,
+    AdminUserDto,
+    AdminUsersService,
+    ApiResponseComponent,
+    ConfirmPopupComponent,
+    EmptyPagedResponse,
+    ErrorListComponent,
+    ListItem,
+    PagedResponseDto,
+    RoutePipe,
+    SearchUsersSortBy,
+    setApiErrors,
+    ToastService,
+    TypeHelpers,
 } from "@core";
-import { AdminUsersService } from "@core";
-import { RoutePipe } from "@core";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
@@ -105,7 +106,7 @@ export class UsersComponent {
             this.#toast.success("User deleted successfully.");
             this.#lazyLoadEventSubject.next({ first: 0 });
           },
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });

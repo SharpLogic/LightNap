@@ -244,7 +244,7 @@ namespace LightNap.Core.StaticContents.Services
                 throw new UserFriendlyApiException($"Static content with key '{createDto.Key}' already exists.");
             }
 
-            var staticContent = createDto.ToEntity();
+            var staticContent = createDto.ToEntity(userContext.GetUserId());
             db.StaticContents.Add(staticContent);
             await db.SaveChangesAsync();
             return staticContent.ToDto();
@@ -262,7 +262,7 @@ namespace LightNap.Core.StaticContents.Services
 
             this.AssertCanEdit(staticContent);
 
-            updateDto.UpdateEntity(staticContent);
+            updateDto.UpdateEntity(staticContent, userContext.GetUserId());
             db.StaticContents.Update(staticContent);
             await db.SaveChangesAsync();
             return staticContent.ToDto();

@@ -1,3 +1,58 @@
-<p-panel header="Edit Content">
-  <zone [key]="key()" />
-</p-panel>
+<api-response [apiResponse]="content()">
+  <ng-template let-contentAny #success>
+    @let content = asContent(contentAny);
+
+    <p-panel header="Edit Content: {{ key() }}" class="max-w-prose">
+      <p class="text-sm">
+        Created {{ content.createdDate | date: "medium" }}
+        @if (content.createdByUserId) {
+          <user-link [userId]="content.createdByUserId" />
+        }
+      </p>
+
+      @if (content.lastModifiedDate) {
+        <p class="text-sm">
+          Last Updated {{ content.lastModifiedDate | date: "medium" }} by
+          @if (content.lastModifiedByUserId) {
+            <user-link [userId]="content.lastModifiedByUserId" />
+          }
+        </p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onUpdate()">
+        <div class="flex flex-col gap-2">
+          <div class="field">
+            <label for="key" class="text-xl">Key</label>
+            <input id="key" type="text" pInputText formControlName="key" class="w-full" />
+          </div>
+
+          <div class="field">
+            <label for="status" class="text-xl">Status</label>
+            <content-status-dropdown id="status" formControlName="status" class="w-full" />
+
+            @if (content.statusChangedDate) {
+              <p class="text-sm">
+                Last changed {{ content.statusChangedDate | date: "medium" }} by
+                @if (content.statusChangedByUserId) {
+                  <user-link [userId]="content.statusChangedByUserId" />
+                }
+              </p>
+            }
+          </div>
+
+          <div class="field">
+            <label for="readAccess" class="text-xl">Read Access</label>
+            <content-read-access-dropdown id="readAccess" formControlName="readAccess" class="w-full" />
+          </div>
+
+          <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
+        </div>
+      </form>
+
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+  <ng-template #null>
+    <p class="text-red-500">Content with key "{{ key() }}" not found</p>
+  </ng-template>
+</api-response>

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService, TypeHelpers } from "@core";
+import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, setApiErrors, ToastService, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
@@ -82,7 +82,7 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.lockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -99,7 +99,7 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.unlockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -119,7 +119,7 @@ export class UserComponent implements OnChanges {
             this.#toast.success("User deleted successfully.");
             this.#routeAlias.navigate("admin-users");
           },
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -130,7 +130,7 @@ export class UserComponent implements OnChanges {
 
     this.adminService.removeUserFromRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 
@@ -139,7 +139,7 @@ export class UserComponent implements OnChanges {
 
     this.adminService.addUserToRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 }
