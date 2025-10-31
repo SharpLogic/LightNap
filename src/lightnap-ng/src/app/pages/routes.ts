@@ -8,6 +8,7 @@ import { Routes as IdentityRoutes } from "./identity/routes";
 import { Routes as ProfileRoutes } from "./profile/routes";
 import { Routes as PublicRoutes } from "./public/routes";
 import { Routes as HomeRoutes } from "./home/routes";
+import { RoleName } from "@core";
 
 export const Routes: AppRoute[] = [
   { path: "", component: PublicLayoutComponent, children: PublicRoutes },
@@ -23,7 +24,7 @@ export const Routes: AppRoute[] = [
   {
     path: "admin",
     component: AppLayoutComponent,
-    canActivate: [loggedInGuard, roleGuard("Administrator")],
+    canActivate: [loggedInGuard, roleGuard(RoleName.Administrator)],
     children: [{ path: "", data: { breadcrumb: "Admin" }, children: AdminRoutes }],
   },
   { path: "identity", component: PublicLayoutComponent, data: { breadcrumb: "Identity" }, children: IdentityRoutes },

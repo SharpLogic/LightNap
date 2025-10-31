@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { RouteAliasService } from "@core";
+import { RoleName, RouteAliasService } from "@core";
 import { MenuItem } from "primeng/api";
 import { BehaviorSubject, combineLatest, debounceTime, Subject, tap } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
@@ -48,7 +48,7 @@ export class MenuService {
   constructor() {
     combineLatest([
       this.#identityService.watchLoggedIn$().pipe(tap(isLoggedIn => (this.#isLoggedIn = isLoggedIn))),
-      this.#identityService.watchUserRole$("Administrator").pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
+      this.#identityService.watchUserRole$(RoleName.Administrator).pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
     ])
       .pipe(takeUntilDestroyed(), debounceTime(100))
       .subscribe({ next: () => this.#refreshMenuItems() });

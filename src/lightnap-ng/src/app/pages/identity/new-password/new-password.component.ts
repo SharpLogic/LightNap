@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService } from "@core";
+import { BlockUiService, LoginSuccessTypes } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { RouteAliasService, RoutePipe } from "@core";
@@ -51,13 +51,13 @@ export class NewPasswordComponent {
       .subscribe({
         next: result => {
           switch (result.type) {
-            case "AccessToken":
+            case LoginSuccessTypes.AccessToken:
                 this.#identityService.redirectLoggedInUser();
               break;
-            case "TwoFactorRequired":
+            case LoginSuccessTypes.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.email());
               break;
-            case "EmailVerificationRequired":
+            case LoginSuccessTypes.EmailVerificationRequired:
               throw new Error("Email verification should not be required since email was used to set a new password.");
             default:
               throw new Error(`Unexpected LoginSuccessResult.type: '${result.type}'`);

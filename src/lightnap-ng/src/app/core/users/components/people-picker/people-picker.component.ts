@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, forwardRef, inject, Input, Output, EventEmitter, signal } from "@angular/core";
 import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from "@angular/forms";
 import { AdminUsersService } from "@core";
-import { AdminUserDto, PublicSearchUsersRequestDto } from "@core/backend-api";
+import { AdminUserDto, PublicSearchUsersRequestDto, SearchUsersSortBy } from "@core/backend-api";
 import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplete";
 import { finalize } from "rxjs";
 
@@ -35,7 +35,7 @@ export class PeoplePickerComponent implements ControlValueAccessor {
 
     const request: PublicSearchUsersRequestDto = {
       userName: event.query,
-      sortBy: "userName",
+      sortBy: SearchUsersSortBy.UserName,
       reverseSort: false,
       pageNumber: 1,
       pageSize: 10,

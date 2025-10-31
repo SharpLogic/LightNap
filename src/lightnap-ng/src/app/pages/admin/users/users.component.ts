@@ -62,7 +62,7 @@ export class UsersComponent {
   readonly users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: (event.sortField as SearchUsersSortBy) ?? "userName",
+        sortBy: (event.sortField as SearchUsersSortBy) ?? SearchUsersSortBy.UserName,
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
@@ -76,10 +76,10 @@ export class UsersComponent {
   );
 
   readonly sortBys = [
-    new ListItem<SearchUsersSortBy>("userName", "User Name", "Sort by user name."),
-    new ListItem<SearchUsersSortBy>("email", "Email", "Sort by email."),
-    new ListItem<SearchUsersSortBy>("createdDate", "Created", "Sort by created date."),
-    new ListItem<SearchUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
+    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.UserName, "User Name", "Sort by user name."),
+    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.Email, "Email", "Sort by email."),
+    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.CreatedDate, "Created", "Sort by created date."),
+    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.LastModifiedDate, "Last Modified", "Sort by last modified date."),
   ];
 
   readonly asUserResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;

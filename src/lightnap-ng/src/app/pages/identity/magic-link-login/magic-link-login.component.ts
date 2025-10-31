@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { BlockUiService, ErrorListComponent, LoginType } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
@@ -29,7 +29,7 @@ export class MagicLinkLoginComponent implements OnInit {
     this.#blockUi.show({ message: "Verifying login..." });
     this.#identityService
       .logIn({
-        type: "MagicLink",
+        type: LoginType.MagicLink,
         password: this.code(),
         login: this.email(),
         deviceDetails: navigator.userAgent,

@@ -8,6 +8,8 @@ import {
     NotificationItem,
     NotificationSearchResults,
     NotificationSearchResultsDto,
+    NotificationStatus,
+    NotificationType,
     PagedResponseDto,
     RouteAliasService,
     SearchNotificationsRequestDto,
@@ -108,11 +110,11 @@ export class NotificationService {
     var notificationItem = <NotificationItem>{
       id: notification.id,
       timestamp: notification.timestamp,
-      isUnread: notification.status === "Unread",
+      isUnread: notification.status === NotificationStatus.Unread,
     };
 
     switch (notification.type) {
-      case "AdministratorNewUserRegistration":
+      case NotificationType.AdministratorNewUserRegistration:
         return this.#adminService.getUser(notification.data.userId).pipe(
           map(user => {
             // User may have been deleted since the notification was created

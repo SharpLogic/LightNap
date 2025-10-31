@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { LayoutConfigDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto, UserSettingKeys } from "@core/backend-api";
+import { LayoutConfigDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto, UserSettingKey, UserSettingKeys } from "@core/backend-api";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { filter, map, Observable, of, shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";
@@ -118,7 +118,7 @@ export class ProfileService {
   }
 
   getStyleSettings() {
-    return this.getSetting<LayoutConfigDto>("BrowserSettings", this.#defaultBrowserSettings);
+    return this.getSetting<LayoutConfigDto>(UserSettingKey.BrowserSettings, this.#defaultBrowserSettings);
   }
 
   /**
@@ -133,7 +133,7 @@ export class ProfileService {
         if (JSON.stringify(styleSettings) === JSON.stringify(layoutConfig)) {
           return of(layoutConfig);
         }
-        return this.setSetting("BrowserSettings", layoutConfig);
+        return this.setSetting(UserSettingKey.BrowserSettings, layoutConfig);
       })
     );
   }

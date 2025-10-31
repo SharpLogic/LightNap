@@ -2,7 +2,7 @@ import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { BlockUiService, ErrorListComponent, LoginSuccessTypes } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { RouteAliasService, RoutePipe } from "@core";
 import { ButtonModule } from "primeng/button";
@@ -69,13 +69,13 @@ export class LoginComponent {
       .subscribe({
         next: result => {
           switch (result.type) {
-            case "TwoFactorRequired":
+            case LoginSuccessTypes.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.form.value.login);
               break;
-            case "AccessToken":
+            case LoginSuccessTypes.AccessToken:
               this.#identityService.redirectLoggedInUser();
               break;
-            case "EmailVerificationRequired":
+            case LoginSuccessTypes.EmailVerificationRequired:
               this.#routeAlias.navigate("email-verification-required");
               break;
             default:

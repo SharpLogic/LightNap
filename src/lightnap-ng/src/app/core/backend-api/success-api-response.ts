@@ -1,4 +1,4 @@
-import { ApiResponseDto, ApiResponseType } from ".";
+import { ApiResponseDto, ApiResponseType, ApiResponseTypes } from ".";
 
 /**
  * Represents a successful API response. This is useful when a method needs to return a successful API response,
@@ -10,7 +10,7 @@ export class SuccessApiResponse<T> implements ApiResponseDto<T> {
      * The type of the API response.
      * @default "Success"
      */
-    type: ApiResponseType = "Success";
+    type: ApiResponseType = ApiResponseTypes.Success;
 
     /**
      * An array of error messages. This will be empty for a successful response.

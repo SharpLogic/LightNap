@@ -1,7 +1,7 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService } from "@core";
+import { BlockUiService, LoginSuccessTypes } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
 import { RouteAliasService, RoutePipe } from "@core";
@@ -64,13 +64,13 @@ export class RegisterComponent {
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
-            case "TwoFactorRequired":
+            case LoginSuccessTypes.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.form.value.email);
               break;
-            case "AccessToken":
+            case LoginSuccessTypes.AccessToken:
                 this.#identityService.redirectLoggedInUser();
               break;
-            case "EmailVerificationRequired":
+            case LoginSuccessTypes.EmailVerificationRequired:
               this.#routeAlias.navigate("email-verification-required");
               break;
             default:
