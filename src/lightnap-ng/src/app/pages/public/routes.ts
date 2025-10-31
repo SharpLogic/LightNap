@@ -1,9 +1,7 @@
 import { AppRoute } from "@core";
-import { pageGuard } from "@core/guards/page.guard";
 
 export const Routes: AppRoute[] = [
   { path: "", title: "Welcome!", data: { alias: "landing" }, loadComponent: () => import("./index/index.component").then(m => m.IndexComponent) },
-  { path: "pages/:key", canActivate: [pageGuard], title: "Page", loadComponent: () => import("./page/page.component").then(m => m.PageComponent) },
   {
     path: "access-denied",
     title: "Access Denied",

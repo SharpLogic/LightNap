@@ -44,7 +44,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
   ],
 })
 export class UsersComponent {
-  readonly pageSize = 25;
+  readonly pageSize = 10;
 
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);

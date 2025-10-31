@@ -5,14 +5,14 @@ import { map, switchMap, take } from "rxjs";
 import { IdentityService } from "@core/services/identity.service";
 import { ContentService } from "@core/content/services/content.service";
 
-export const pageGuard = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const readPageGuard = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const routeAliasService = inject(RouteAliasService);
   const identityService = inject(IdentityService);
   const contentService = inject(ContentService);
 
   const key = next.paramMap.get("key");
   if (!key) {
-    console.warn("Page guard activated without a key parameter.");
+    console.warn("Read page guard activated without a key parameter.");
     return createUrlTreeFromSnapshot(next, routeAliasService.getRoute("not-found"));
   }
 

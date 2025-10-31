@@ -41,7 +41,7 @@ import { startWith, Subject, switchMap, tap } from "rxjs";
   ],
 })
 export class ClaimComponent {
-  readonly pageSize = 5;
+  readonly pageSize = 10;
 
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);

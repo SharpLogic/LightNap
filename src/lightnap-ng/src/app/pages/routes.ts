@@ -5,6 +5,7 @@ import { PublicLayoutComponent } from "@core/layout/components/layouts/public-la
 import { Routes as AdminRoutes } from "./admin/routes";
 import { AppRoute } from "../core/routing/models/app-route";
 import { Routes as IdentityRoutes } from "./identity/routes";
+import { Routes as ContentRoutes } from "./content/routes";
 import { Routes as ProfileRoutes } from "./profile/routes";
 import { Routes as PublicRoutes } from "./public/routes";
 import { Routes as HomeRoutes } from "./home/routes";
@@ -27,6 +28,7 @@ export const Routes: AppRoute[] = [
     canActivate: [loggedInGuard, roleGuard(RoleName.Administrator)],
     children: [{ path: "", data: { breadcrumb: "Admin" }, children: AdminRoutes }],
   },
+  { path: "content", component: PublicLayoutComponent, data: { breadcrumb: "Content" }, children: ContentRoutes },
   { path: "identity", component: PublicLayoutComponent, data: { breadcrumb: "Identity" }, children: IdentityRoutes },
   { path: "**", redirectTo: "/not-found" },
 ];

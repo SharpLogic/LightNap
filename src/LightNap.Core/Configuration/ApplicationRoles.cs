@@ -15,7 +15,7 @@ namespace LightNap.Core.Configuration
         /// <summary>
         /// Gets the content editor role with access to all content editing features.
         /// </summary>
-        public static readonly ApplicationRole ContentEditor = new(Constants.Roles.ContentEditor, "ContentEditor", "Access to all content editing features");
+        public static readonly ApplicationRole ContentEditor = new(Constants.Roles.ContentEditor, "Content Editor", "Access to all content editing features");
 
         /// <summary>
         /// Gets a read-only list of all predefined application roles.

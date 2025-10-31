@@ -35,7 +35,7 @@ import { startWith, Subject, switchMap } from "rxjs";
   templateUrl: "./user-claims.component.html",
 })
 export class UserClaimsComponent {
-  readonly pageSize = 5;
+  readonly pageSize = 10;
 
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
