@@ -1,14 +1,14 @@
 import { inject, Injectable } from "@angular/core";
 import { ExtendedMap, IdentityService } from "@core";
 import {
-    CreateStaticContentDto,
-    CreateStaticContentLanguageDto,
-    SearchStaticContentRequestDto,
-    UpdateStaticContentDto,
-    UpdateStaticContentLanguageDto,
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  SearchStaticContentRequestDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
-import { map, Observable, shareReplay, switchMap, take } from "rxjs";
+import { map, Observable, shareReplay, switchMap, take, tap } from "rxjs";
 import { PublishedContent } from "../entities";
 
 @Injectable({
@@ -58,7 +58,15 @@ export class ContentService {
   }
 
   updateStaticContent(key: string, updateDto: UpdateStaticContentDto) {
-    return this.#dataService.updateStaticContent(key, updateDto);
+    return this.#dataService.updateStaticContent(key, updateDto).pipe(
+      switchMap(staticContent =>
+        this.getSupportedLanguages().pipe(
+          take(1),
+          tap(languages => languages.forEach(language => this.clearCachedPublishedStaticContent(key, language.languageCode))),
+          map(_ => staticContent)
+        )
+      )
+    );
   }
 
   deleteStaticContent(key: string) {
@@ -78,7 +86,11 @@ export class ContentService {
   }
 
   updateStaticContentLanguage(key: string, languageCode: string, updateDto: UpdateStaticContentLanguageDto) {
-    return this.#dataService.updateStaticContentLanguage(key, languageCode, updateDto);
+    return this.#dataService.updateStaticContentLanguage(key, languageCode, updateDto).pipe(
+      tap(_ => {
+        this.clearCachedPublishedStaticContent(key, languageCode);
+      })
+    );
   }
 
   deleteStaticContentLanguage(key: string, languageCode: string) {

@@ -24,6 +24,13 @@ export const Routes: AppRoute[] = [
         title: "Edit Content",
         loadComponent: () => import("./edit/edit.component").then(m => m.EditComponent),
       },
+      {
+        path: "edit/:key/:languageCode",
+        data: { alias: "edit-language" },
+        canActivate: [editPageGuard],
+        title: "Edit Language",
+        loadComponent: () => import("./edit-language/edit-language.component").then(m => m.EditLanguageComponent),
+      },
     ],
   },
   {

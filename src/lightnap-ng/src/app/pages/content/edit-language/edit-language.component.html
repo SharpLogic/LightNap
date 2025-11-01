@@ -1,0 +1,45 @@
+<api-response [apiResponse]="language()">
+  <ng-template let-languageAny #success>
+    @let language = asLanguage(languageAny);
+
+    <p-panel header="Edit Content: {{ key() }}" class="max-w-prose">
+      <p class="text-sm">
+        Created {{ language.createdDate | date: "medium" }}
+        @if (language.createdByUserId) {
+          <user-link [userId]="language.createdByUserId" />
+        }
+      </p>
+
+      @if (language.lastModifiedDate) {
+        <p class="text-sm">
+          Last Updated {{ language.lastModifiedDate | date: "medium" }} by
+          @if (language.lastModifiedByUserId) {
+            <user-link [userId]="language.lastModifiedByUserId" />
+          }
+        </p>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onUpdate()">
+        <div class="flex flex-col gap-2">
+          <div class="field">
+            <label for="format" class="text-xl">Format</label>
+            <content-format-dropdown id="format" formControlName="format" class="w-full" />
+          </div>
+
+          <div class="field">
+            <label for="content" class="text-xl">Content</label>
+            <textarea id="content" pTextarea formControlName="content" class="w-full"></textarea>
+          </div>
+
+          <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
+        </div>
+      </form>
+
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+  <ng-template #null>
+    <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>
+    <p-button label="Create Language Content" (onClick)="onCreate()" />
+  </ng-template>
+</api-response>

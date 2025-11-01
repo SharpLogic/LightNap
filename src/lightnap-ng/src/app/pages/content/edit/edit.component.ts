@@ -1,24 +1,27 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { RouterLink } from "@angular/router";
 import {
-    ApiResponseComponent,
-    ContentReadAccessDropdownComponent,
-    ContentStatusDropdownComponent,
-    ContentTypeDropdownComponent,
-    ErrorListComponent,
-    RouteAliasService,
-    setApiErrors,
-    StaticContentDto,
-    StaticContentReadAccess,
-    StaticContentReadAccesses,
-    StaticContentStatus,
-    StaticContentStatuses,
-    StaticContentType,
-    StaticContentTypes,
-    ToastService,
-    TypeHelpers,
-    UserLinkComponent,
+  ApiResponseComponent,
+  ContentReadAccessDropdownComponent,
+  ContentStatusDropdownComponent,
+  ContentTypeDropdownComponent,
+  ErrorListComponent,
+  RouteAliasService,
+  RoutePipe,
+  setApiErrors,
+  StaticContentDto,
+  StaticContentReadAccess,
+  StaticContentReadAccesses,
+  StaticContentStatus,
+  StaticContentStatuses,
+  StaticContentSupportedLanguageDto,
+  StaticContentType,
+  StaticContentTypes,
+  ToastService,
+  TypeHelpers,
+  UserLinkComponent,
 } from "@core";
 import { ContentService } from "@core/content/services/content.service";
 import { ButtonModule } from "primeng/button";
@@ -40,6 +43,8 @@ import { tap } from "rxjs";
     ContentStatusDropdownComponent,
     ContentTypeDropdownComponent,
     UserLinkComponent,
+    RouterLink,
+    RoutePipe,
   ],
 })
 export class EditComponent {
@@ -77,15 +82,16 @@ export class EditComponent {
     )
   );
 
+  languages = computed(() => this.#contentService.getSupportedLanguages());
+
   asContent = TypeHelpers.cast<StaticContentDto>;
+  asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguageDto>>;
 
   onUpdate() {
     this.#contentService.updateStaticContent(this.key(), this.form.getRawValue()).subscribe({
       next: sc => {
         this.#toast.success("Content updated successfully.");
-        if (this.key() !== sc.key) {
-          this.#routeAlias.navigate("edit-content", sc.key);
-        }
+        this.#routeAlias.navigate("edit-content", sc.key);
       },
       error: setApiErrors(this.errors),
     });

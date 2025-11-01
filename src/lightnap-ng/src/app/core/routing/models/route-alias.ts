@@ -16,6 +16,7 @@ export type RouteAlias =
     // Content
     | 'view-content'
     | 'edit-content'
+    | 'edit-language'
     | 'manage-content'
 
     // Admin

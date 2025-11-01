@@ -58,6 +58,23 @@
     </p-panel>
   </ng-template>
   <ng-template #null>
-    <p class="text-red-500">Content with key "{{ key() }}" not found</p>
+    <p class="text-red-500">Content with key "{{ key() }}" not found.</p>
+  </ng-template>
+</api-response>
+
+<api-response [apiResponse]="languages()">
+  <ng-template let-languageAny #success>
+    @let languages = asLanguages(languageAny);
+    <p-panel header="Language Contents">
+      <ul>
+        @for (language of languages; track language.languageCode) {
+          <li>
+            <a [routerLink]="'edit-language' | route: [this.key(), language.languageCode]">
+              {{ language.languageName }} ({{ language.languageCode }})
+            </a>
+          </li>
+        }
+      </ul>
+    </p-panel>
   </ng-template>
 </api-response>
