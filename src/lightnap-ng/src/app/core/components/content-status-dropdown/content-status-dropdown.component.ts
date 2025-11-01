@@ -1,7 +1,9 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { DropdownListItemComponent, ListItem, StaticContentStatus, StaticContentStatuses } from "@core";
 import { SelectModule } from "primeng/select";
+import { DropdownListItemComponent } from "../dropdown-list-item/dropdown-list-item.component";
+import { StaticContentStatus, StaticContentStatuses } from "@core/backend-api/static-content-statuses";
+import { ListItem } from "@core/models/list-item";
 
 @Component({
   selector: "content-status-dropdown",

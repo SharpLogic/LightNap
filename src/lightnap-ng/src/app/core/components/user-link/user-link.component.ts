@@ -1,6 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input } from "@angular/core";
-import { ApiResponseComponent, PublicUserDto, PublicUsersService, TypeHelpers } from "@core";
+import { PublicUserDto } from "@core/backend-api/dtos/users/response/public-user-dto";
+import { TypeHelpers } from "@core/helpers/type-helpers";
+import { PublicUsersService } from "@core/users/services/public-users.service";
+import { ApiResponseComponent } from "../api-response/api-response.component";
 
 @Component({
   selector: "user-link",
@@ -15,7 +18,7 @@ export class UserLinkComponent {
 
   user = computed(() => {
     return this.#usersService.getUser(this.userId());
-});
+  });
 
   readonly asUser = TypeHelpers.cast<PublicUserDto>;
 }
