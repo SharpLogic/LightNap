@@ -12,7 +12,7 @@ export interface StaticContentDto {
   status: StaticContentStatuses;
   readAccess: StaticContentReadAccesses;
   editorRoles?: string;
-  viewerRoles?: string;
+  readerRoles?: string;
   createdDate: Date;
   createdByUserId?: string;
   statusChangedDate?: Date;

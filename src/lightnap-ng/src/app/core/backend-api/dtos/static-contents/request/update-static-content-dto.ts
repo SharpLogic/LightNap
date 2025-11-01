@@ -9,5 +9,5 @@ export interface UpdateStaticContentDto {
     type: StaticContentTypes;
     readAccess: StaticContentReadAccesses;
     editorRoles?: string;
-    viewerRoles?: string;
+    readerRoles?: string;
 }

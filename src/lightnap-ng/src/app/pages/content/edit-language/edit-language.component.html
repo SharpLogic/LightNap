@@ -2,7 +2,7 @@
   <ng-template let-languageAny #success>
     @let language = asLanguage(languageAny);
 
-    <p-panel header="Edit Content: {{ key() }}" class="max-w-prose">
+    <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="max-w-prose">
       <p class="text-sm">
         Created {{ language.createdDate | date: "medium" }}
         @if (language.createdByUserId) {
@@ -28,7 +28,7 @@
 
           <div class="field">
             <label for="content" class="text-xl">Content</label>
-            <textarea id="content" pTextarea formControlName="content" class="w-full"></textarea>
+            <textarea id="content" pTextarea formControlName="content" class="w-full" [rows]="20"></textarea>
           </div>
 
           <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
@@ -37,6 +37,10 @@
 
       <error-list [errors]="errors()" />
     </p-panel>
+
+    <h2>Preview</h2>
+    <div staticContent [format]="form.controls.format.value" [content]="form.controls.content.value"></div>
+
   </ng-template>
   <ng-template #null>
     <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>

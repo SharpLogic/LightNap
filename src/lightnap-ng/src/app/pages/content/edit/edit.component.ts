@@ -8,6 +8,7 @@ import {
   ContentStatusPickerComponent,
   ContentTypePickerComponent,
   ErrorListComponent,
+  RolesPickerComponent,
   RouteAliasService,
   RoutePipe,
   setApiErrors,
@@ -43,6 +44,7 @@ import { tap } from "rxjs";
     ContentStatusPickerComponent,
     ContentTypePickerComponent,
     UserLinkComponent,
+    RolesPickerComponent,
     RouterLink,
     RoutePipe,
   ],
@@ -61,7 +63,7 @@ export class EditComponent {
     type: this.#fb.nonNullable.control<StaticContentTypes>(StaticContentType.Page, [Validators.required]),
     readAccess: this.#fb.nonNullable.control<StaticContentReadAccesses>(StaticContentReadAccess.Explicit, [Validators.required]),
     editorRoles: this.#fb.nonNullable.control(""),
-    viewerRoles: this.#fb.nonNullable.control(""),
+    readerRoles: this.#fb.nonNullable.control(""),
   });
 
   errors = signal(new Array<string>());
@@ -76,7 +78,7 @@ export class EditComponent {
           type: content.type,
           readAccess: content.readAccess,
           editorRoles: content.editorRoles,
-          viewerRoles: content.viewerRoles,
+          readerRoles: content.readerRoles,
         });
       })
     )
@@ -88,7 +90,12 @@ export class EditComponent {
   asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguageDto>>;
 
   onUpdate() {
-    this.#contentService.updateStaticContent(this.key(), this.form.getRawValue()).subscribe({
+    const value = {
+      ...this.form.getRawValue(),
+      readerRoles: this.form.value.readAccess === StaticContentReadAccess.Explicit ? this.form.value.readerRoles : undefined,
+    };
+
+    this.#contentService.updateStaticContent(this.key(), value).subscribe({
       next: sc => {
         this.#toast.success("Content updated successfully.");
         this.#routeAlias.navigate("edit-content", sc.key);

@@ -133,8 +133,8 @@ namespace LightNap.Core.StaticContents.Services
 
             if (userContext.HasClaim(Constants.Claims.ContentReader, staticContent.Id.ToString())) { return StaticContentUserVisibility.Reader; }
 
-            var viewerRoles = staticContent.GetExplicitReaderRoles();
-            if (viewerRoles is not null && viewerRoles.Any(userContext.IsInRole)) { return StaticContentUserVisibility.Reader; }
+            var ReaderRoles = staticContent.GetExplicitReaderRoles();
+            if (ReaderRoles is not null && ReaderRoles.Any(userContext.IsInRole)) { return StaticContentUserVisibility.Reader; }
 
             return StaticContentUserVisibility.Restricted;
         }

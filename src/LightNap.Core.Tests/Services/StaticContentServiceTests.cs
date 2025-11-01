@@ -1003,7 +1003,7 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetPublishedStaticContentAsync_WithRequiredViewerRoles_AllowsUserWithRole()
+        public async Task GetPublishedStaticContentAsync_WithRequiredReaderRoles_AllowsUserWithRole()
         {
             // Arrange
             var createDto = new CreateStaticContentDto
@@ -1012,7 +1012,7 @@ namespace LightNap.Core.Tests.Services
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Explicit,
-                ViewerRoles = "Editor,Moderator"
+                ReaderRoles = "Editor,Moderator"
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 
@@ -1160,7 +1160,7 @@ namespace LightNap.Core.Tests.Services
                 Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Explicit,
-                ViewerRoles = "Moderator,Editor"
+                ReaderRoles = "Moderator,Editor"
             };
             await this._staticContentService.CreateStaticContentAsync(createDto);
 

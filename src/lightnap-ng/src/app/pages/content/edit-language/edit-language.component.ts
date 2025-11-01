@@ -1,18 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import {
-  ApiResponseComponent,
-  ContentFormatPickerComponent,
-  ErrorListComponent,
-  setApiErrors,
-  StaticContentFormat,
-  StaticContentFormats,
-  StaticContentLanguageDto,
-  ToastService,
-  TypeHelpers,
-  UserLinkComponent,
-} from "@core";
+import { ApiResponseComponent, ContentFormatPickerComponent, ErrorListComponent, setApiErrors, StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, ToastService, TypeHelpers, UserLinkComponent, StaticContentDirective } from "@core";
 import { ContentService } from "@core/content/services/content.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -31,7 +20,8 @@ import { tap } from "rxjs";
     ButtonModule,
     TextareaModule,
     ContentFormatPickerComponent,
-  ],
+    StaticContentDirective
+],
 })
 export class EditLanguageComponent {
   #contentService = inject(ContentService);

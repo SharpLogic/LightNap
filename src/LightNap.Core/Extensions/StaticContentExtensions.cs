@@ -13,6 +13,7 @@ namespace LightNap.Core.Extensions
             {
                 CreatedByUserId = staticContent.CreatedByUserId,
                 CreatedDate = staticContent.CreatedDate,
+                EditorRoles = staticContent.EditorRoles,
                 Id = staticContent.Id,
                 Key = staticContent.Key,
                 LastModifiedByUserId = staticContent.LastModifiedByUserId,
@@ -22,14 +23,15 @@ namespace LightNap.Core.Extensions
                 StatusChangedByUserId = staticContent.StatusChangedByUserId,
                 StatusChangedDate = staticContent.StatusChangedDate,
                 Type = staticContent.Type,
+                ReaderRoles = staticContent.ReaderRoles,
             };
         }
 
         internal static StaticContent ToEntity(this CreateStaticContentDto dto, string userId)
         {
-            if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
+            if (dto.ReaderRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
-                throw new InvalidOperationException("ReadAccess must be set to Explicit when ViewerRoles is not null.");
+                throw new InvalidOperationException("ReadAccess must be set to Explicit when ReaderRoles is not null.");
             }
 
             var staticContent = new StaticContent()
@@ -40,7 +42,7 @@ namespace LightNap.Core.Extensions
                 Type = dto.Type,
                 Status = dto.Status,
                 ReadAccess = dto.ReadAccess,
-                ReaderRoles = dto.ViewerRoles,
+                ReaderRoles = dto.ReaderRoles,
                 EditorRoles = dto.EditorRoles,
             };
             return staticContent;
@@ -48,9 +50,9 @@ namespace LightNap.Core.Extensions
 
         internal static void UpdateEntity(this UpdateStaticContentDto dto, StaticContent staticContent, string userId)
         {
-            if (dto.ViewerRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
+            if (dto.ReaderRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
-                throw new InvalidOperationException("ReadAccess must be set to Explicit when ViewerRoles is not null.");
+                throw new InvalidOperationException("ReadAccess must be set to Explicit when ReaderRoles is not null.");
             }
 
             staticContent.Key = dto.Key;
@@ -59,7 +61,7 @@ namespace LightNap.Core.Extensions
             staticContent.Type = dto.Type;
 
             staticContent.ReadAccess = dto.ReadAccess;
-            staticContent.ReaderRoles = dto.ViewerRoles;
+            staticContent.ReaderRoles = dto.ReaderRoles;
             staticContent.EditorRoles = dto.EditorRoles;
 
             if (staticContent.Status != dto.Status)

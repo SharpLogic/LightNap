@@ -19,6 +19,6 @@ namespace LightNap.Core.StaticContents.Dto.Request
 
         [RegularExpression(@"^[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+)*$", ErrorMessage = "Viewer roles must be a comma-separated list of valid role names (alphanumeric, hyphens, and underscores only).")]
         [MaxLength(256)]
-        public string? ViewerRoles { get; set; }
+        public string? ReaderRoles { get; set; }
     }
 }

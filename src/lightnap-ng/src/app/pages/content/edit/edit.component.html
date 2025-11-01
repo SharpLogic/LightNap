@@ -45,10 +45,28 @@
             }
           </div>
 
+          <hr />
+
+          <div class="field">
+            <label for="editorRoles" class="text-xl">Roles That Can Edit</label>
+            <p class="text-sm">Users in Administrator and Content Editor roles can always edit.</p>
+            <roles-picker id="editorRoles" formControlName="editorRoles" class="w-full" />
+          </div>
+
+          <hr />
+
           <div class="field">
             <label for="readAccess" class="text-xl">Read Access</label>
             <content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
           </div>
+
+          @if (form.controls.readAccess.value === "Explicit") {
+            <div class="field">
+              <label for="readerRoles" class="text-xl">Roles That Can Read</label>
+              <p class="text-sm">Users in Administrator and Content Editor roles can always read.</p>
+              <roles-picker id="readerRoles" formControlName="readerRoles" class="w-full" />
+            </div>
+          }
 
           <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
         </div>

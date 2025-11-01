@@ -1,0 +1,17 @@
+<p-multiSelect
+  [(ngModel)]="value"
+  [options]="(options | async)!"
+  optionLabel="label"
+  optionValue="value"
+  placeholder="Select roles"
+  [disabled]="disabled"
+  (onChange)="onValueChange($event.value)"
+  (onBlur)="onTouched()"
+  [showClear]="true"
+  display="chip"
+  class="w-full"
+>
+  <ng-template let-role pTemplate="item">
+    <dropdown-list-item [listItem]="role" />
+  </ng-template>
+</p-multiSelect>
