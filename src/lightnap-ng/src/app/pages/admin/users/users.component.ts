@@ -14,6 +14,7 @@ import {
     PagedResponseDto,
     RoutePipe,
     SearchUsersSortBy,
+    SearchUsersSortByListItems,
     setApiErrors,
     ToastService,
     TypeHelpers,
@@ -76,12 +77,7 @@ export class UsersComponent {
     startWith(new EmptyPagedResponse<AdminUserDto>() as PagedResponseDto<AdminUserDto>)
   );
 
-  readonly sortBys = [
-    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.UserName, "User Name", "Sort by user name."),
-    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.Email, "Email", "Sort by email."),
-    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.CreatedDate, "Created", "Sort by created date."),
-    new ListItem<SearchUsersSortBy>(SearchUsersSortBy.LastModifiedDate, "Last Modified", "Sort by last modified date."),
-  ];
+  readonly sortBys = SearchUsersSortByListItems;
 
   readonly asUserResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;
   readonly asUser = TypeHelpers.cast<AdminUserDto>;

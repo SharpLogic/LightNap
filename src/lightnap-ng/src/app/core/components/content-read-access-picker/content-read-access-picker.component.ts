@@ -1,34 +1,30 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectModule } from "primeng/select";
-import { DropdownListItemComponent } from "../dropdown-list-item/dropdown-list-item.component";
-import { StaticContentReadAccess, StaticContentReadAccesses } from "@core/backend-api/static-content-read-accesses";
+import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
+import { StaticContentReadAccess, StaticContentReadAccesses, StaticContentReadAccessListItems } from "@core/backend-api/static-content-read-accesses";
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: "content-read-access-dropdown",
-  templateUrl: "./content-read-access-dropdown.component.html",
+  selector: 'content-read-access-picker',
+  templateUrl: './content-read-access-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ContentReadAccessDropdownComponent),
+      useExisting: forwardRef(() => ContentReadAccessPickerComponent),
       multi: true,
     },
   ],
 })
-export class ContentReadAccessDropdownComponent implements ControlValueAccessor {
+export class ContentReadAccessPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
   value: StaticContentReadAccesses | null = StaticContentReadAccess.Explicit;
   disabled = false;
 
   get options() {
-    const baseOptions = [
-      new ListItem<StaticContentReadAccesses>(StaticContentReadAccess.Public, "Public", "Visible to anyone."),
-      new ListItem<StaticContentReadAccesses>(StaticContentReadAccess.Authenticated, "Authenticated", "Visible to authenticated users."),
-      new ListItem<StaticContentReadAccesses>(StaticContentReadAccess.Explicit, "Explicit", "Visible to explicitly granted roles and users."),
-    ];
+    const baseOptions = StaticContentReadAccessListItems;
 
     if (this.showAnyOption()) {
       return [new ListItem<StaticContentReadAccesses>(null!, "Any", "Don't filter by read access."), ...baseOptions];

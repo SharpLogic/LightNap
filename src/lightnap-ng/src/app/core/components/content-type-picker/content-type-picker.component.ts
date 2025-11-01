@@ -1,33 +1,30 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectModule } from "primeng/select";
-import { DropdownListItemComponent } from "../dropdown-list-item/dropdown-list-item.component";
-import { StaticContentType, StaticContentTypes } from "@core/backend-api/static-content-types";
+import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
+import { StaticContentType, StaticContentTypeListItems, StaticContentTypes } from "@core/backend-api/static-content-types";
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: "content-type-dropdown",
-  templateUrl: "./content-type-dropdown.component.html",
+  selector: 'content-type-picker',
+  templateUrl: './content-type-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ContentTypeDropdownComponent),
+      useExisting: forwardRef(() => ContentTypePickerComponent),
       multi: true,
     },
   ],
 })
-export class ContentTypeDropdownComponent implements ControlValueAccessor {
+export class ContentTypePickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
   value: StaticContentTypes | null = StaticContentType.Page;
   disabled = false;
 
   get options() {
-    const baseOptions = [
-      new ListItem<StaticContentTypes>(StaticContentType.Page, "Page", "Full page content with a URL."),
-      new ListItem<StaticContentTypes>(StaticContentType.Zone, "Zone", "Content for a zone within another page."),
-    ];
+    const baseOptions = StaticContentTypeListItems;
 
     if (this.showAnyOption()) {
       return [new ListItem<StaticContentTypes | null>(null, "Any", "Don't filter by type."), ...baseOptions];

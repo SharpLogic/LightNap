@@ -1,34 +1,30 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { SelectModule } from "primeng/select";
-import { DropdownListItemComponent } from "../dropdown-list-item/dropdown-list-item.component";
-import { StaticContentStatus, StaticContentStatuses } from "@core/backend-api/static-content-statuses";
+import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
+import { StaticContentStatus, StaticContentStatuses, StaticContentStatusListItems } from "@core/backend-api/static-content-statuses";
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: "content-status-dropdown",
-  templateUrl: "./content-status-dropdown.component.html",
+  selector: 'content-status-picker',
+  templateUrl: './content-status-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ContentStatusDropdownComponent),
+      useExisting: forwardRef(() => ContentStatusPickerComponent),
       multi: true,
     },
   ],
 })
-export class ContentStatusDropdownComponent implements ControlValueAccessor {
+export class ContentStatusPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
   value: StaticContentStatuses | null = StaticContentStatus.Draft;
   disabled = false;
 
   get options() {
-    const baseOptions = [
-      new ListItem<StaticContentStatuses>(StaticContentStatus.Draft, "Draft", "Content is not visible to end users."),
-      new ListItem<StaticContentStatuses>(StaticContentStatus.Published, "Published", "Published content visible to allowed users."),
-      new ListItem<StaticContentStatuses>(StaticContentStatus.Archived, "Archived", "Archived and not visible to end users."),
-    ];
+    const baseOptions = StaticContentStatusListItems;
 
     if (this.showAnyOption()) {
       return [new ListItem<StaticContentStatuses | null>(null, "Any", "Don't filter by status."), ...baseOptions];

@@ -1,34 +1,30 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectModule } from "primeng/select";
-import { DropdownListItemComponent } from "../dropdown-list-item/dropdown-list-item.component";
-import { StaticContentFormat, StaticContentFormats } from "@core/backend-api";
+import { StaticContentFormat, StaticContentFormatListItems, StaticContentFormats } from "@core/backend-api";
+import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
 import { ListItem } from "@core/models/list-item";
+import { SelectModule } from "primeng/select";
 
 @Component({
-  selector: "content-format-dropdown",
-  templateUrl: "./content-format-dropdown.component.html",
+  selector: "content-format-picker",
+  templateUrl: "./content-format-picker.component.html",
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ContentFormatDropdownComponent),
+      useExisting: forwardRef(() => ContentFormatPickerComponent),
       multi: true,
     },
   ],
 })
-export class ContentFormatDropdownComponent implements ControlValueAccessor {
+export class ContentFormatPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
   value: StaticContentFormats | null = StaticContentFormat.Html;
   disabled = false;
 
   get options() {
-    const baseOptions = [
-      new ListItem<StaticContentFormats>(StaticContentFormat.Html, "HTML", "Render as HTML."),
-      new ListItem<StaticContentFormats>(StaticContentFormat.Markdown, "Markdown", "Render as Markdown."),
-      new ListItem<StaticContentFormats>(StaticContentFormat.PlainText, "Plain Text", "Render as plain text."),
-    ];
+    const baseOptions = StaticContentFormatListItems;
 
     if (this.showAnyOption()) {
       return [new ListItem<StaticContentFormats | null>(null, "Any", "Don't filter by format."), ...baseOptions];

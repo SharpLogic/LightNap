@@ -28,12 +28,12 @@
 
           <div class="field">
             <label for="type" class="text-xl">Type</label>
-            <content-type-dropdown id="type" formControlName="type" class="w-full" />
+            <content-type-picker id="type" formControlName="type" class="w-full" />
           </div>
 
           <div class="field">
             <label for="status" class="text-xl">Status</label>
-            <content-status-dropdown id="status" formControlName="status" class="w-full" />
+            <content-status-picker id="status" formControlName="status" class="w-full" />
 
             @if (content.statusChangedDate) {
               <p class="text-sm">
@@ -47,7 +47,7 @@
 
           <div class="field">
             <label for="readAccess" class="text-xl">Read Access</label>
-            <content-read-access-dropdown id="readAccess" formControlName="readAccess" class="w-full" />
+            <content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
           </div>
 
           <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
@@ -65,7 +65,7 @@
 <api-response [apiResponse]="languages()">
   <ng-template let-languageAny #success>
     @let languages = asLanguages(languageAny);
-    <p-panel header="Language Contents">
+    <p-panel header="Language Contents" class="mt-2 max-w-fit">
       <ul>
         @for (language of languages; track language.languageCode) {
           <li>

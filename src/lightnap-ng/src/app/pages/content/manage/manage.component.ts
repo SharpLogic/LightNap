@@ -4,9 +4,9 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import {
   ApiResponseComponent,
-  ContentReadAccessDropdownComponent,
-  ContentStatusDropdownComponent,
-  ContentTypeDropdownComponent,
+  ContentReadAccessPickerComponent,
+  ContentStatusPickerComponent,
+  ContentTypePickerComponent,
   EmptyPagedResponse,
   ErrorListComponent,
   PagedResponseDto,
@@ -37,9 +37,9 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     ApiResponseComponent,
     ErrorListComponent,
     TableModule,
-    ContentTypeDropdownComponent,
-    ContentStatusDropdownComponent,
-    ContentReadAccessDropdownComponent,
+    ContentTypePickerComponent,
+    ContentStatusPickerComponent,
+    ContentReadAccessPickerComponent,
   ],
 })
 export class ManageComponent {

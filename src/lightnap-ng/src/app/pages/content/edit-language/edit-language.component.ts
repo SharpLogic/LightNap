@@ -3,7 +3,7 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
   ApiResponseComponent,
-  ContentFormatDropdownComponent,
+  ContentFormatPickerComponent,
   ErrorListComponent,
   setApiErrors,
   StaticContentFormat,
@@ -30,7 +30,7 @@ import { tap } from "rxjs";
     ReactiveFormsModule,
     ButtonModule,
     TextareaModule,
-    ContentFormatDropdownComponent,
+    ContentFormatPickerComponent,
   ],
 })
 export class EditLanguageComponent {

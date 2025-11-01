@@ -1,4 +1,4 @@
-import { PublishedStaticContentResultDto, StaticContentFormats, StaticContentUserVisibilities } from "@core/backend-api";
+import { PublishedStaticContentResultDto, StaticContentFormats, StaticContentUserVisibilities, StaticContentUserVisibility } from "@core/backend-api";
 
 export class PublishedContent {
   readonly visibility: StaticContentUserVisibilities;
@@ -14,9 +14,9 @@ export class PublishedContent {
     this.format = result.content?.format;
     this.content = result.content?.content;
 
-    this.requiresAuthentication = this.visibility === "RequiresAuthentication";
-    this.isRestricted = this.visibility === "Restricted";
-    this.canEdit = this.visibility === "Editor";
-    this.canView = this.canEdit || this.visibility === "Reader";
+    this.requiresAuthentication = this.visibility === StaticContentUserVisibility.RequiresAuthentication;
+    this.isRestricted = this.visibility === StaticContentUserVisibility.Restricted;
+    this.canEdit = this.visibility === StaticContentUserVisibility.Editor;
+    this.canView = this.canEdit || this.visibility === StaticContentUserVisibility.Reader;
   }
 }
