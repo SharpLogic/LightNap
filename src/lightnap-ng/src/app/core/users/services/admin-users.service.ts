@@ -1,18 +1,18 @@
 import { Injectable, inject } from "@angular/core";
 import {
-  AdminSearchUsersRequestDto,
-  AdminUpdateUserRequestDto,
-  AdminUserDto,
-  ClaimDto,
-  ErrorApiResponse,
-  PagedResponseDto,
-  RoleDto,
-  SearchClaimRequestDto,
-  SearchClaimsRequestDto,
-  SearchUserClaimsRequestDto,
+    AdminSearchUsersRequestDto,
+    AdminUpdateUserRequestDto,
+    AdminUserDto,
+    ClaimDto,
+    ErrorApiResponse,
+    PagedResponseDto,
+    RoleDto,
+    SearchClaimRequestDto,
+    SearchClaimsRequestDto,
+    SearchUserClaimsRequestDto,
 } from "@core/backend-api";
 import { UsersDataService } from "@core/backend-api/services/users-data.service";
-import { Observable, forkJoin, map, of, shareReplay, switchMap, tap, throwError } from "rxjs";
+import { Observable, forkJoin, map, of, shareReplay, switchMap, throwError } from "rxjs";
 import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 
 /**
