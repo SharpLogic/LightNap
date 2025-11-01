@@ -1,6 +1,6 @@
 
 import { Component, Input, signal } from "@angular/core";
-import { ListItem } from "@core";
+import { ListItem } from "@core/models/list-item";
 
 @Component({
     selector: 'dropdown-list-item',

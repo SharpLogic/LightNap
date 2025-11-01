@@ -12,6 +12,11 @@ namespace LightNap.Core.StaticContents.Dto.Request
         public string? KeyContains { get; set; }
 
         /// <summary>
+        /// Filter for read access.
+        /// </summary>
+        public StaticContentReadAccess? ReadAccess { get; set; }
+
+        /// <summary>
         /// Filter for status.
         /// </summary>
         public StaticContentStatus? Status { get; set; }

@@ -56,6 +56,7 @@ namespace LightNap.Core.Extensions
             staticContent.Key = dto.Key;
             staticContent.LastModifiedDate = DateTime.UtcNow;
             staticContent.LastModifiedByUserId = userId;
+            staticContent.Type = dto.Type;
 
             staticContent.ReadAccess = dto.ReadAccess;
             staticContent.ReaderRoles = dto.ViewerRoles;

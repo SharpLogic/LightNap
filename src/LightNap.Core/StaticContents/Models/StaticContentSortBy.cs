@@ -8,6 +8,7 @@
         Key,
         Status,
         Type,
+        ReadAccess,
         CreatedDate,
         LastModifiedDate
     }

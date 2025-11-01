@@ -1,2 +1,81 @@
-<p-panel header="Manage Content">
-</p-panel>
+<api-response [apiResponse]="contents$" errorMessage="Error loading contents" loadingMessage="Loading contents...">
+  <ng-template #success let-contentResultsAny>
+    @let contentResults = asContentResults(contentResultsAny);
+
+    <p-panel header="Manage Contents">
+      <form [formGroup]="form" class="my-2">
+        <div class="flex gap-2 flex-wrap">
+          <div class="flex flex-col">
+            <label>Key contains</label>
+            <input pInputText placeholder="Key contains" formControlName="keyContains" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Status</label>
+            <content-status-dropdown formControlName="status" [showAnyOption]="true" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Type</label>
+            <content-type-dropdown formControlName="type" [showAnyOption]="true" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Read Access</label>
+            <content-read-access-dropdown formControlName="readAccess" [showAnyOption]="true" class="w-60" />
+          </div>
+        </div>
+      </form>
+
+      <p-table
+        [value]="contentResults.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="contentResults.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadContentsLazy($event)"
+      >
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="Key">Key <p-sortIcon field="Key" /></th>
+            <th pSortableColumn="Type">Type <p-sortIcon field="Type" /></th>
+            <th pSortableColumn="Status">Status <p-sortIcon field="Status" /></th>
+            <th pSortableColumn="ReadAccess">Read Access <p-sortIcon field="ReadAccess" /></th>
+            <th pSortableColumn="CreatedDate">Created Date <p-sortIcon field="CreatedDate" /></th>
+            <th pSortableColumn="LastModifiedDate">Last Modified Date <p-sortIcon field="LastModifiedDate" /></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-contentAny>
+          @let content = asContent(contentAny);
+
+          <tr>
+            <td>
+              <a [routerLink]="'edit-content' | route: [content.key]"> {{ content.key }}</a>
+            </td>
+            <td>
+              {{ content.type }}
+            </td>
+            <td>
+              {{ content.status }}
+            </td>
+            <td>
+              {{ content.readAccess }}
+            </td>
+            <td>
+              {{ content.createdDate | date: "short" }}
+            </td>
+            <td>
+              {{ content.lastModifiedDate | date: "short" }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">
+              <span>There are no matching contents.</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</api-response>

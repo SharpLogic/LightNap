@@ -27,12 +27,17 @@
           </div>
 
           <div class="field">
+            <label for="type" class="text-xl">Type</label>
+            <content-type-dropdown id="type" formControlName="type" class="w-full" />
+          </div>
+
+          <div class="field">
             <label for="status" class="text-xl">Status</label>
             <content-status-dropdown id="status" formControlName="status" class="w-full" />
 
             @if (content.statusChangedDate) {
               <p class="text-sm">
-                Last changed {{ content.statusChangedDate | date: "medium" }} by
+                Status last changed {{ content.statusChangedDate | date: "medium" }} by
                 @if (content.statusChangedByUserId) {
                   <user-link [userId]="content.statusChangedByUserId" />
                 }

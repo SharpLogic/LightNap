@@ -5,6 +5,7 @@ import {
     ApiResponseComponent,
     ContentReadAccessDropdownComponent,
     ContentStatusDropdownComponent,
+    ContentTypeDropdownComponent,
     ErrorListComponent,
     RouteAliasService,
     setApiErrors,
@@ -13,6 +14,8 @@ import {
     StaticContentReadAccesses,
     StaticContentStatus,
     StaticContentStatuses,
+    StaticContentType,
+    StaticContentTypes,
     ToastService,
     TypeHelpers,
     UserLinkComponent,
@@ -33,8 +36,9 @@ import { tap } from "rxjs";
     PanelModule,
     ApiResponseComponent,
     ErrorListComponent,
-    ContentStatusDropdownComponent,
     ContentReadAccessDropdownComponent,
+    ContentStatusDropdownComponent,
+    ContentTypeDropdownComponent,
     UserLinkComponent,
   ],
 })
@@ -49,6 +53,7 @@ export class EditComponent {
   form = this.#fb.group({
     key: this.#fb.nonNullable.control("", [Validators.required]),
     status: this.#fb.nonNullable.control<StaticContentStatuses>(StaticContentStatus.Draft, [Validators.required]),
+    type: this.#fb.nonNullable.control<StaticContentTypes>(StaticContentType.Page, [Validators.required]),
     readAccess: this.#fb.nonNullable.control<StaticContentReadAccesses>(StaticContentReadAccess.Explicit, [Validators.required]),
     editorRoles: this.#fb.nonNullable.control(""),
     viewerRoles: this.#fb.nonNullable.control(""),
@@ -63,6 +68,7 @@ export class EditComponent {
         this.form.patchValue({
           key: content.key,
           status: content.status,
+          type: content.type,
           readAccess: content.readAccess,
           editorRoles: content.editorRoles,
           viewerRoles: content.viewerRoles,

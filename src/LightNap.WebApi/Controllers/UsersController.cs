@@ -110,6 +110,7 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <returns>The list of roles.</returns>
         /// <response code="200">Returns the list of roles.</response>
+        [Authorize]
         [HttpGet("roles")]
         [ProducesResponseType(typeof(ApiResponseDto<IList<RoleDto>>), 200)]
         public ApiResponseDto<IList<RoleDto>> GetRoles()

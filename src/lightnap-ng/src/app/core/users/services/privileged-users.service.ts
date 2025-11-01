@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
-import { PrivilegedSearchUsersRequestDto, PrivilegedUserDto } from "@core/backend-api";
+import { PrivilegedSearchUsersRequestDto, PrivilegedUserDto, RoleDto } from "@core/backend-api";
 
 /**
  * Service for privileged endpoint access.
@@ -22,6 +22,15 @@ export class PrivilegedUsersService {
   }
 
   /**
+   * Gets a user by their username.
+   * @param {string} userName - The username of the user to retrieve.
+   * @returns {Observable<PublicUserDto>} An observable containing the user data.
+   */
+  getUserByUserName(userName: string) {
+    return this.#usersService.getUserByUserName(userName) as Observable<PrivilegedUserDto>;
+  }
+
+  /**
    * Searches for users based on the search criteria.
    * @param {PrivilegedSearchUsersRequestDto} privilegedSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<PrivilegedUserDto>>} An observable containing the search results.
@@ -36,7 +45,14 @@ export class PrivilegedUsersService {
    * @returns {Observable<Array<PrivilegedUserDto>>} An observable containing the users.
    */
   getUsersById(userIds: Array<string>) {
-    if (!userIds || userIds.length === 0) return of([]);
     return this.#usersService.getUsersById(userIds) as Observable<Array<PrivilegedUserDto>>;
+  }
+
+  /**
+   * Gets the list of roles.
+   * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
+   */
+  getRoles(): Observable<Array<RoleDto>> {
+    return this.#usersService.getRoles();
   }
 }

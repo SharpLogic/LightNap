@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
-import { PublicUserDto, PublicSearchUsersRequestDto, PagedResponseDto } from "@core/backend-api";
+import { PagedResponseDto, PublicSearchUsersRequestDto, PublicUserDto } from "@core/backend-api";
 import { Observable, of } from "rxjs";
-import { AdminUsersService } from "./admin-users.service";
+import { PrivilegedUsersService } from "./privileged-users.service";
 
 /**
  * Service for public functionality any user can access, even if they're not logged in.
@@ -10,7 +10,7 @@ import { AdminUsersService } from "./admin-users.service";
   providedIn: "root",
 })
 export class PublicUsersService {
-  #usersService = inject(AdminUsersService);
+  #usersService = inject(PrivilegedUsersService);
 
   /**
    * Gets a user by their ID.

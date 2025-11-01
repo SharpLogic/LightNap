@@ -12,7 +12,7 @@ import {
   SearchUserClaimsRequestDto,
 } from "@core/backend-api";
 import { UsersDataService } from "@core/backend-api/services/users-data.service";
-import { Observable, forkJoin, map, of, switchMap, tap, throwError } from "rxjs";
+import { Observable, forkJoin, map, of, shareReplay, switchMap, tap, throwError } from "rxjs";
 import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 
 /**
@@ -25,7 +25,8 @@ import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 })
 export class AdminUsersService {
   #dataService = inject(UsersDataService);
-  #rolesResponse?: Array<RoleDto>;
+
+  #roles$ = this.#dataService.getRoles().pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   /**
    * Gets a user by their ID.
@@ -88,8 +89,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getRoles(): Observable<Array<RoleDto>> {
-    if (this.#rolesResponse) return of(this.#rolesResponse);
-    return this.#dataService.getRoles().pipe(tap(roles => (this.#rolesResponse = roles)));
+    return this.#roles$;
   }
 
   /**
@@ -170,7 +170,9 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   getUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
-    return this.#dataService.searchUserClaims(searchUserClaimsRequestDto).pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
+    return this.#dataService
+      .searchUserClaims(searchUserClaimsRequestDto)
+      .pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
   }
 
   /**

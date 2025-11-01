@@ -30,6 +30,11 @@ export class MenuService {
     ],
   });
 
+  #contentMenuItems = new Array<MenuItem>({
+    label: "Content",
+    items: [{ label: "Manage", icon: "pi pi-fw pi-cog", routerLink: this.#routeAlias.getRoute("manage-content") }],
+  });
+
   #adminMenuItems = new Array<MenuItem>({
     label: "Admin",
     items: [
@@ -43,11 +48,15 @@ export class MenuService {
   #menuItemSubject = new BehaviorSubject<Array<MenuItem>>(this.#defaultMenuItems);
 
   #isLoggedIn = false;
+  #isContentEditorLoggedIn = false;
   #isAdminLoggedIn = false;
 
   constructor() {
     combineLatest([
       this.#identityService.watchLoggedIn$().pipe(tap(isLoggedIn => (this.#isLoggedIn = isLoggedIn))),
+      this.#identityService
+        .watchAnyUserRole$([RoleName.Administrator, RoleName.ContentEditor])
+        .pipe(tap(isContentEditorLoggedIn => (this.#isContentEditorLoggedIn = isContentEditorLoggedIn))),
       this.#identityService.watchUserRole$(RoleName.Administrator).pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
     ])
       .pipe(takeUntilDestroyed(), debounceTime(100))
@@ -63,6 +72,10 @@ export class MenuService {
 
     if (this.#isLoggedIn) {
       menuItems.push(...this.#loggedInMenuItems);
+    }
+
+    if (this.#isContentEditorLoggedIn) {
+      menuItems.push(...this.#contentMenuItems);
     }
 
     if (this.#isAdminLoggedIn) {

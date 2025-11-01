@@ -192,6 +192,11 @@ namespace LightNap.Core.StaticContents.Services
 
             var query = db.StaticContents.AsQueryable();
 
+            if (searchDto.ReadAccess.HasValue)
+            {
+                query = query.Where(sc => sc.ReadAccess == searchDto.ReadAccess.Value);
+            }
+
             if (searchDto.Status.HasValue)
             {
                 query = query.Where(sc => sc.Status == searchDto.Status.Value);
@@ -212,6 +217,7 @@ namespace LightNap.Core.StaticContents.Services
                 StaticContentSortBy.Key => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.Key) : query.OrderBy(sc => sc.Key),
                 StaticContentSortBy.CreatedDate => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.CreatedDate) : query.OrderBy(sc => sc.CreatedDate),
                 StaticContentSortBy.LastModifiedDate => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.LastModifiedDate) : query.OrderBy(sc => sc.LastModifiedDate),
+                StaticContentSortBy.ReadAccess => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.ReadAccess) : query.OrderBy(sc => sc.ReadAccess),
                 StaticContentSortBy.Status => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.Status) : query.OrderBy(sc => sc.Status),
                 StaticContentSortBy.Type => searchDto.ReverseSort ? query.OrderByDescending(sc => sc.Type) : query.OrderBy(sc => sc.Type),
                 _ => throw new ArgumentException("Invalid sort field: '{sortBy}'", searchDto.SortBy.ToString()),

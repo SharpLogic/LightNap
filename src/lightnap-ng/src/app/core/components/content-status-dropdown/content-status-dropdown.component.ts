@@ -1,12 +1,12 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { StaticContentStatus, StaticContentStatuses } from "@core";
+import { DropdownListItemComponent, ListItem, StaticContentStatus, StaticContentStatuses } from "@core";
 import { SelectModule } from "primeng/select";
 
 @Component({
   selector: "content-status-dropdown",
   templateUrl: "./content-status-dropdown.component.html",
-  imports: [SelectModule, FormsModule],
+  imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -16,23 +16,33 @@ import { SelectModule } from "primeng/select";
   ],
 })
 export class ContentStatusDropdownComponent implements ControlValueAccessor {
-  value: StaticContentStatuses = StaticContentStatus.Draft;
+  showAnyOption = input<boolean>(false);
+
+  value: StaticContentStatuses | null = StaticContentStatus.Draft;
   disabled = false;
 
-  options = [
-    { label: "Draft", value: StaticContentStatus.Draft },
-    { label: "Published", value: StaticContentStatus.Published },
-    { label: "Archived", value: StaticContentStatus.Archived },
-  ];
+  get options() {
+    const baseOptions = [
+      new ListItem<StaticContentStatuses>(StaticContentStatus.Draft, "Draft", "Content is not visible to end users."),
+      new ListItem<StaticContentStatuses>(StaticContentStatus.Published, "Published", "Published content visible to allowed users."),
+      new ListItem<StaticContentStatuses>(StaticContentStatus.Archived, "Archived", "Archived and not visible to end users."),
+    ];
 
-  onChange: (value: StaticContentStatuses) => void = () => {};
+    if (this.showAnyOption()) {
+      return [new ListItem<StaticContentStatuses | null>(null, "Any", "Don't filter by status."), ...baseOptions];
+    }
+
+    return baseOptions;
+  }
+
+  onChange: (value: StaticContentStatuses | null) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: StaticContentStatuses): void {
+  writeValue(value: StaticContentStatuses | null): void {
     this.value = value;
   }
 
-  registerOnChange(fn: (value: StaticContentStatuses) => void): void {
+  registerOnChange(fn: (value: StaticContentStatuses | null) => void): void {
     this.onChange = fn;
   }
 

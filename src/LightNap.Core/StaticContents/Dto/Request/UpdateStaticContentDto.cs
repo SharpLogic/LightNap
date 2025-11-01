@@ -9,6 +9,7 @@ namespace LightNap.Core.StaticContents.Dto.Request
         [RegularExpression(@"^[a-z0-9]+(-[a-z0-9]+)*$", ErrorMessage = "Static content key must be lowercase alphanumeric with hyphens (kebab-case), cannot start/end with hyphen, and cannot contain consecutive hyphens.")]
         [Length(1, Constants.Dto.MaxStaticContentKeyLength)]
         public required string Key { get; set; }
+        public required StaticContentType Type { get; set; }
         public required StaticContentStatus Status { get; set; }
         public required StaticContentReadAccess ReadAccess { get; set; }
 
