@@ -18,7 +18,7 @@ import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
 import { setApiErrors } from "@core/helpers/rxjs-helpers";
 
 @Component({
-  selector: "claim-users-manager",
+  selector: "ln-claim-users-manager",
   templateUrl: "./claim-users-manager.component.html",
   imports: [
     CommonModule,

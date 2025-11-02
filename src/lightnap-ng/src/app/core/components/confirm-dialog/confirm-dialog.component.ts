@@ -5,7 +5,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @Component({
   standalone: true,
-  selector: "confirm-dialog",
+  selector: "ln-confirm-dialog",
   templateUrl: "./confirm-dialog.component.html",
   imports: [ConfirmDialogModule, ButtonModule],
 })

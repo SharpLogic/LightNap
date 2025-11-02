@@ -1,4 +1,4 @@
-<api-response [apiResponse]="language()">
+<ln-api-response [apiResponse]="language()">
   <ng-template let-languageAny #success>
     @let language = asLanguage(languageAny);
 
@@ -7,7 +7,7 @@
         <p class="text-sm">
           Created {{ language.createdDate | date: "medium" }}
           @if (language.createdByUserId) {
-            <user-link [userId]="language.createdByUserId" />
+            <ln-user-link [userId]="language.createdByUserId" />
           }
         </p>
 
@@ -15,7 +15,7 @@
           <p class="text-sm">
             Last Updated {{ language.lastModifiedDate | date: "medium" }} by
             @if (language.lastModifiedByUserId) {
-              <user-link [userId]="language.lastModifiedByUserId" />
+              <ln-user-link [userId]="language.lastModifiedByUserId" />
             }
           </p>
         }
@@ -24,7 +24,7 @@
           <div class="flex flex-col gap-2">
             <div class="field">
               <label for="format" class="text-xl">Format</label>
-              <content-format-picker id="format" formControlName="format" class="w-full" />
+              <ln-content-format-picker id="format" formControlName="format" class="w-full" />
             </div>
 
             <div class="field">
@@ -36,7 +36,7 @@
           </div>
         </form>
 
-        <error-list [errors]="errors()" />
+        <ln-error-list [errors]="errors()" />
       </p-panel>
 
       <div>
@@ -49,4 +49,4 @@
     <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>
     <p-button label="Create Language Content" (onClick)="onCreate()" />
   </ng-template>
-</api-response>
+</ln-api-response>

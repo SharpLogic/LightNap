@@ -8,7 +8,7 @@ import { MultiSelectModule } from "primeng/multiselect";
 import { map } from "rxjs";
 
 @Component({
-  selector: "roles-picker",
+  selector: "ln-roles-picker",
   templateUrl: "./roles-picker.component.html",
   imports: [CommonModule, MultiSelectModule, FormsModule, DropdownListItemComponent],
   providers: [

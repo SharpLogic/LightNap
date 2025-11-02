@@ -1,4 +1,4 @@
-<api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
+<ln-api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
   <ng-template #success let-resultsAny>
     @let results = asUserResults(resultsAny);
 
@@ -35,7 +35,7 @@
 
           <tr>
             <td>
-              <confirm-popup [key]="user.id" />
+              <ln-confirm-popup [key]="user.id" />
               <p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser($event, user.id)" />
             </td>
             <td>
@@ -58,7 +58,7 @@
         </ng-template>
       </p-table>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

@@ -1,4 +1,4 @@
-<api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading claims...">
+<ln-api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading claims...">
   <ng-template #success let-userClaimsAny>
     @let userClaims = asUserClaims(userClaimsAny);
 
@@ -23,7 +23,7 @@
           @let claim = asClaim(claimAny);
           <tr>
             <td>
-              <confirm-popup [key]="claim.type + '=' + claim.value" />
+              <ln-confirm-popup [key]="claim.type + '=' + claim.value" />
               <p-button severity="danger" icon="pi pi-trash" title="Remove user claim" (onClick)="removeClaimClicked($event, claim)" />
             </td>
             <td>
@@ -53,4 +53,4 @@
       </form>
     </div>
   </ng-template>
-</api-response>
+</ln-api-response>

@@ -4,7 +4,7 @@ import { MessageModule } from "primeng/message";
 import { ApiResponseDto } from "@core";
 
 @Component({
-  selector: "error-list",
+  selector: "ln-error-list",
   standalone: true,
   templateUrl: "./error-list.component.html",
   imports: [CommonModule, MessageModule],

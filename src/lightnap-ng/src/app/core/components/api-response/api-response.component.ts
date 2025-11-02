@@ -6,7 +6,7 @@ import { catchError, map, Observable, of } from "rxjs";
 import { ErrorListComponent } from "../error-list/error-list.component";
 
 @Component({
-  selector: "api-response",
+  selector: "ln-api-response",
   standalone: true,
   templateUrl: "./api-response.component.html",
   imports: [CommonModule, ErrorListComponent, ProgressSpinnerModule],

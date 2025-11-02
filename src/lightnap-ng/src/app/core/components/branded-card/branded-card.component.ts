@@ -3,7 +3,7 @@ import { Component, inject } from "@angular/core";
 import { LayoutService } from "@core/layout/services/layout.service";
 
 @Component({
-  selector: 'branded-card',
+  selector: 'ln-branded-card',
   standalone: true,
   templateUrl: './branded-card.component.html',
   imports: [CommonModule],

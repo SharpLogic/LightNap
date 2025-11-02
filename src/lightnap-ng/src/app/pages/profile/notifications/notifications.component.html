@@ -1,4 +1,4 @@
-<api-response [apiResponse]="notifications$" errorMessage="Error loading notifications" loadingMessage="Loading notifications...">
+<ln-api-response [apiResponse]="notifications$" errorMessage="Error loading notifications" loadingMessage="Loading notifications...">
   <ng-template #success let-resultsAny>
     @let results = asNotifications(resultsAny);
 
@@ -35,7 +35,7 @@
         </ng-template>
       </p-table>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

@@ -3,7 +3,7 @@ import { Component, Input, signal } from "@angular/core";
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-    selector: 'dropdown-list-item',
+    selector: 'ln-dropdown-list-item',
     templateUrl: './dropdown-list-item.component.html',
     imports: [],
     standalone: true,
