@@ -1,9 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { RoleName, RouteAliasService } from "@core";
+import { RoleName } from "@core";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { IdentityService } from "@core/services/identity.service";
 import { MenuItem } from "primeng/api";
 import { BehaviorSubject, combineLatest, debounceTime, Subject, tap } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
 import { MenuChangeEvent } from "../models/menu-change-event";
 
 @Injectable({

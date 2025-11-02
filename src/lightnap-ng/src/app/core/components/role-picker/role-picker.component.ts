@@ -3,7 +3,7 @@ import { Component, forwardRef, inject } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
 import { ListItem } from "@core/models/list-item";
-import { PrivilegedUsersService } from "@core/users";
+import { PrivilegedUsersService } from "@core/users/services/privileged-users.service";
 import { SelectModule } from "primeng/select";
 import { map } from "rxjs";
 

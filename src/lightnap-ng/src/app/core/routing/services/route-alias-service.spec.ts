@@ -1,8 +1,8 @@
+import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { Router } from "@angular/router";
-import { RouteAlias } from "../models/route-alias";
-import { AppRoute } from "../models/app-route";
-import { provideZonelessChangeDetection } from "@angular/core";
+import { AppRoute } from "@core/models";
+import { RouteAlias } from "../models";
 import { RouteAliasService } from "./route-alias-service";
 
 describe("RouteAliasService", () => {
@@ -24,7 +24,11 @@ describe("RouteAliasService", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), RouteAliasService, { provide: Router, useValue: { config: mockRoutes, navigate: jasmine.createSpy("navigate") } }],
+      providers: [
+        provideZonelessChangeDetection(),
+        RouteAliasService,
+        { provide: Router, useValue: { config: mockRoutes, navigate: jasmine.createSpy("navigate") } },
+      ],
     });
 
     service = TestBed.inject(RouteAliasService);
@@ -61,7 +65,11 @@ describe("RouteAliasService", () => {
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), { provide: Router, useValue: { config: duplicateRoutes, navigate: jasmine.createSpy("navigate") } }, RouteAliasService],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: Router, useValue: { config: duplicateRoutes, navigate: jasmine.createSpy("navigate") } },
+        RouteAliasService,
+      ],
     });
 
     expect(() => {

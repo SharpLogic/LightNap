@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { RouteAliasService, setApiErrors } from "@core";
+import { setApiErrors } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";

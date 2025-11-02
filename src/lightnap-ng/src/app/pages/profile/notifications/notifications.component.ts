@@ -5,7 +5,7 @@ import { EmptyPagedResponse, NotificationItem, NotificationSearchResults, setApi
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { NotificationItemComponent } from "@core/notifications/components/notification-item/notification-item.component";
-import { NotificationService } from "@core/notifications/services";
+import { NotificationService } from "@core/notifications/services/notification.service";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";

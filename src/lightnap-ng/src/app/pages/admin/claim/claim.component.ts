@@ -2,20 +2,12 @@ import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import {
-    AdminUserDto,
-    AdminUsersService,
-    ClaimDto,
-    EmptyPagedResponse,
-    PagedResponseDto,
-    PeoplePickerComponent,
-    RoutePipe,
-    setApiErrors,
-    TypeHelpers,
-} from "@core";
+import { AdminUserDto, ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { PeoplePickerComponent } from "@core/users/components/people-picker/people-picker.component";
+import { AdminUsersService } from "@core/users/services/admin-users.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";

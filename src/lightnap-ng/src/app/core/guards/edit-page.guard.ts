@@ -1,9 +1,9 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from "@angular/router";
-import { RouteAliasService } from "@core";
-import { map, of, switchMap, take } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
 import { ContentService } from "@core/content/services/content.service";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { IdentityService } from "@core/services/identity.service";
+import { map, of, switchMap, take } from "rxjs";
 
 export const editPageGuard = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const routeAliasService = inject(RouteAliasService);

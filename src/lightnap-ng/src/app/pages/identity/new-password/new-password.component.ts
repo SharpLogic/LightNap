@@ -1,10 +1,11 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { LoginSuccessTypes, RouteAliasService, RoutePipe, setApiErrors } from "@core";
+import { LoginSuccessTypes, RoutePipe, setApiErrors } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";

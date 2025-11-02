@@ -2,25 +2,25 @@ import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
+import {
+    ChangeEmailRequestDto,
+    ChangePasswordRequestDto,
+    ClaimDto,
+    ConfirmChangeEmailRequestDto,
+    LoginRequestDto,
+    NewPasswordRequestDto,
+    RegisterRequestDto,
+    ResetPasswordRequestDto,
+    SendMagicLinkEmailRequestDto,
+    SendVerificationEmailRequestDto,
+    VerifyCodeRequestDto,
+    VerifyEmailRequestDto,
+} from "@core/backend-api";
 import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
-import { RouteAliasService } from "@core";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
-import {
-  ClaimDto,
-  LoginRequestDto,
-  RegisterRequestDto,
-  VerifyCodeRequestDto,
-  ResetPasswordRequestDto,
-  NewPasswordRequestDto,
-  SendVerificationEmailRequestDto,
-  VerifyEmailRequestDto,
-  SendMagicLinkEmailRequestDto,
-  ChangeEmailRequestDto,
-  ChangePasswordRequestDto,
-  ConfirmChangeEmailRequestDto,
-} from "@core/backend-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.

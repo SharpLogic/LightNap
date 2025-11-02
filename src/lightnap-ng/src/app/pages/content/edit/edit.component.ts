@@ -3,7 +3,6 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-    RouteAliasService,
     RoutePipe,
     setApiErrors,
     ShowByPermissionsDirective,
@@ -26,6 +25,7 @@ import { ErrorListComponent } from "@core/components/error-list/error-list.compo
 import { RolesPickerComponent } from "@core/components/roles-picker/roles-picker.component";
 import { UserLinkComponent } from "@core/components/user-link/user-link.component";
 import { ContentService } from "@core/content/services/content.service";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";

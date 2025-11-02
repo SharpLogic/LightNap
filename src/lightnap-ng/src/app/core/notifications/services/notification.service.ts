@@ -1,21 +1,19 @@
 import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-    AdminUsersService,
     ApiResponseDto,
     LatestNotifications,
     NotificationDto,
     NotificationItem,
     NotificationSearchResults,
-    NotificationSearchResultsDto,
     NotificationStatus,
     NotificationType,
-    PagedResponseDto,
-    RouteAliasService,
     SearchNotificationsRequestDto,
 } from "@core";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { RequestPollingManager } from "@core/helpers";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { AdminUsersService } from "@core/users/services/admin-users.service";
 import { ReplaySubject, combineLatest, finalize, forkJoin, map, of, switchMap, tap } from "rxjs";
 import { IdentityService } from "../../services/identity.service";
 

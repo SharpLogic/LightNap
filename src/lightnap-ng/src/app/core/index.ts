@@ -1,4 +1,5 @@
 export * from "./backend-api";
+export * from "./content";
 export * from "./directives";
 export * from "./helpers";
 export * from "./models";

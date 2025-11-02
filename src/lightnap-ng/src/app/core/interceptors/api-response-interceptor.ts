@@ -1,9 +1,9 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { ApiResponseDto, ApiResponseTypes, HttpErrorApiResponse } from "@core";
-import { RouteAliasService } from "@core";
-import { Observable, catchError, of, switchMap, throwError } from "rxjs";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
+import { Observable, catchError, of, switchMap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 
 /**

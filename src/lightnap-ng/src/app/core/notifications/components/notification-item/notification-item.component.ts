@@ -1,8 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input } from "@angular/core";
 import { Router } from "@angular/router";
+import { NotificationItem } from "@core";
+import { NotificationService } from "@core/notifications/services/notification.service";
 import { SincePipe } from "@core/pipes/since.pipe";
-import { NotificationItem, NotificationService } from "@core";
 import { ButtonModule } from "primeng/button";
 
 @Component({

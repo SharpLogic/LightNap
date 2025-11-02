@@ -1,10 +1,10 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { HttpErrorApiResponse } from "@core";
-import { RouteAliasService } from "@core";
-import { of, throwError } from "rxjs";
+import { HttpErrorApiResponse } from "@core/backend-api";
+import { RouteAliasService } from "@core/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
+import { of, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 import { apiResponseInterceptor } from "./api-response-interceptor";
 
