@@ -34,4 +34,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <Target Name="CleanStaticContentBeforeBuild" BeforeTargets="PreBuildEvent">
+    <RemoveDir Directories="$(OutputPath)StaticContent" />
+    <Message Text="Cleaned StaticContent directory" Importance="high" />
+  </Target>
 </Project>
