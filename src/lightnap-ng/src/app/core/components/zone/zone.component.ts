@@ -9,7 +9,7 @@ import { RouterModule } from "@angular/router";
 import { RoutePipe } from "@core/routing";
 
 @Component({
-  selector: "zone",
+  selector: "ln-zone",
   templateUrl: "./zone.component.html",
   imports: [CommonModule, RouterModule, RoutePipe, ApiResponseComponent, StaticContentDirective],
 })

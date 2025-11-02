@@ -1,4 +1,4 @@
-<api-response [apiResponse]="claims$" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
+<ln-api-response [apiResponse]="claims$" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
   <ng-template #success let-userResultsAny>
     @let userResults = asUserResults(userResultsAny);
 
@@ -24,7 +24,7 @@
             <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="removeUser(user.id)" pTooltip="Remove claim from user" />
           </td>
           <td>
-            <user-link [userId]="user.id" />
+            <ln-user-link [userId]="user.id" />
           </td>
         </tr>
       </ng-template>
@@ -37,14 +37,14 @@
       </ng-template>
     </p-table>
 
-    <error-list [errors]="errors()" />
+    <ln-error-list [errors]="errors()" />
 
     <div class="mb-4">
       <label>Add User</label>
       <form [formGroup]="addUserForm" (ngSubmit)="addUser()" class="flex gap-2">
-        <people-picker formControlName="userId" class="flex-1" />
+        <ln-people-picker formControlName="userId" class="flex-1" />
         <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!addUserForm.valid" />
       </form>
     </div>
   </ng-template>
-</api-response>
+</ln-api-response>

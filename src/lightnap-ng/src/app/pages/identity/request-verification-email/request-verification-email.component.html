@@ -1,4 +1,4 @@
-<branded-card>
+<ln-branded-card>
   <span title>Verify Your Email</span>
   <span subtitle>Enter your email to request a verification link</span>
 
@@ -10,7 +10,7 @@
           <input id="email" type="text" placeholder="Email address" pInputText formControlName="email" />
         </div>
 
-        <error-list [errors]="errors()" />
+        <ln-error-list [errors]="errors()" />
       </div>
       <p-button type="submit" label="Resend Verification Email" styleClass="w-full text-xl" [disabled]="!form.valid" pRipple />
       <div class="mt-6">
@@ -18,4 +18,4 @@
       </div>
     </div>
   </form>
-</branded-card>
+</ln-branded-card>

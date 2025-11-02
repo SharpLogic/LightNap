@@ -1,4 +1,4 @@
-<api-response [apiResponse]="content()">
+<ln-api-response [apiResponse]="content()">
   <ng-template let-contentAny #success>
     @let publishedContent = asContent(contentAny);
     @if (publishedContent.canView) {
@@ -23,4 +23,4 @@
       The content key <strong>{{ key() }}</strong> was not found.
     </p>
   </ng-template>
-</api-response>
+</ln-api-response>

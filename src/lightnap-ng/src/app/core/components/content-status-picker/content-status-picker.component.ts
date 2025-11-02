@@ -6,7 +6,7 @@ import { StaticContentStatus, StaticContentStatuses, StaticContentStatusListItem
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: 'content-status-picker',
+  selector: 'ln-content-status-picker',
   templateUrl: './content-status-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [

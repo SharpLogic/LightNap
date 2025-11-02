@@ -1,4 +1,4 @@
-<api-response [apiResponse]="content()">
+<ln-api-response [apiResponse]="content()">
   <ng-template let-contentAny #success>
     @let content = asContent(contentAny);
 
@@ -7,7 +7,7 @@
         <p class="text-sm">
           Created {{ content.createdDate | date: "medium" }}
           @if (content.createdByUserId) {
-            <user-link [userId]="content.createdByUserId" />
+            <ln-user-link [userId]="content.createdByUserId" />
           }
         </p>
 
@@ -15,7 +15,7 @@
           <p class="text-sm">
             Last Updated {{ content.lastModifiedDate | date: "medium" }} by
             @if (content.lastModifiedByUserId) {
-              <user-link [userId]="content.lastModifiedByUserId" />
+              <ln-user-link [userId]="content.lastModifiedByUserId" />
             }
           </p>
         }
@@ -29,18 +29,18 @@
 
             <div class="field">
               <label for="type" class="text-xl">Type</label>
-              <content-type-picker id="type" formControlName="type" class="w-full" />
+              <ln-content-type-picker id="type" formControlName="type" class="w-full" />
             </div>
 
             <div class="field">
               <label for="status" class="text-xl">Status</label>
-              <content-status-picker id="status" formControlName="status" class="w-full" />
+              <ln-content-status-picker id="status" formControlName="status" class="w-full" />
 
               @if (content.statusChangedDate) {
                 <p class="text-sm">
                   Status last changed {{ content.statusChangedDate | date: "medium" }} by
                   @if (content.statusChangedByUserId) {
-                    <user-link [userId]="content.statusChangedByUserId" />
+                    <ln-user-link [userId]="content.statusChangedByUserId" />
                   }
                 </p>
               }
@@ -51,21 +51,21 @@
             <div class="field">
               <label for="editorRoles" class="text-xl">Roles That Can Edit</label>
               <p class="text-sm">Users in Administrator and Content Editor roles can always edit.</p>
-              <roles-picker id="editorRoles" formControlName="editorRoles" class="w-full" />
+              <ln-roles-picker id="editorRoles" formControlName="editorRoles" class="w-full" />
             </div>
 
             <hr />
 
             <div class="field">
               <label for="readAccess" class="text-xl">Read Access</label>
-              <content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
+              <ln-content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
             </div>
 
             @if (form.controls.readAccess.value === "Explicit") {
               <div class="field">
                 <label for="readerRoles" class="text-xl">Roles That Can Read</label>
                 <p class="text-sm">Users in Administrator and Content Editor roles can always read.</p>
-                <roles-picker id="readerRoles" formControlName="readerRoles" class="w-full" />
+                <ln-roles-picker id="readerRoles" formControlName="readerRoles" class="w-full" />
               </div>
             }
 
@@ -73,20 +73,20 @@
           </div>
         </form>
 
-        <error-list [errors]="errors()" />
+        <ln-error-list [errors]="errors()" />
       </p-panel>
 
       <div class="flex flex-col gap-2">
         <p-panel header="Explicit Content Editors" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <claim-users-manager type="Content:Editor" [value]="content.id.toString()" />
+          <ln-claim-users-manager type="Content:Editor" [value]="content.id.toString()" />
         </p-panel>
 
         <p-panel header="Explicit Content Readers" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <claim-users-manager type="Content:Reader" [value]="content.id.toString()" />
+          <ln-claim-users-manager type="Content:Reader" [value]="content.id.toString()" />
         </p-panel>
       </div>
 
-      <api-response [apiResponse]="languages()">
+      <ln-api-response [apiResponse]="languages()">
         <ng-template let-languageAny #success>
           @let languages = asLanguages(languageAny);
           <p-panel header="Language Contents" class="max-w-fit">
@@ -101,10 +101,10 @@
             </ul>
           </p-panel>
         </ng-template>
-      </api-response>
+      </ln-api-response>
     </div>
   </ng-template>
   <ng-template #null>
     <p class="text-red-500">Content with key "{{ key() }}" not found.</p>
   </ng-template>
-</api-response>
+</ln-api-response>

@@ -6,7 +6,7 @@ import { ToggleSwitchModule } from "primeng/toggleswitch";
 import { Observable } from "rxjs";
 
 @Component({
-  selector: "user-setting-toggle",
+  selector: "ln-user-setting-toggle",
   standalone: true,
   templateUrl: "./user-setting-toggle.component.html",
   imports: [CommonModule, FormsModule, ToggleSwitchModule, ApiResponseComponent],

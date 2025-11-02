@@ -1,4 +1,4 @@
-<branded-card>
+<ln-branded-card>
   <span title>Two-Factor Verification</span>
   <span subtitle>Please enter your security code to continue.</span>
 
@@ -15,7 +15,7 @@
             <label for="rememberMe">Remember Me</label>
           </div>
 
-          <error-list [errors]="errors()" />
+          <ln-error-list [errors]="errors()" />
         </div>
 
         <p-button type="submit" label="Verify" class="w-full" [disabled]="!form.valid" pRipple (onClick)="onVerifyClicked()" />
@@ -26,4 +26,4 @@
       </div>
     </div>
   </div>
-</branded-card>
+</ln-branded-card>

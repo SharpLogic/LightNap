@@ -1,24 +1,24 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
+import { PrivilegedUserDto } from "@core/backend-api/dtos/users/response/privileged-user-dto";
+import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
+import { setApiErrors } from "@core/helpers/rxjs-helpers";
+import { TypeHelpers } from "@core/helpers/type-helpers";
+import { ToastService } from "@core/services/toast.service";
+import { PeoplePickerComponent } from "@core/users/components/people-picker/people-picker.component";
+import { PrivilegedUsersService } from "@core/users/services/privileged-users.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 import { ApiResponseComponent } from "../api-response/api-response.component";
 import { ErrorListComponent } from "../error-list/error-list.component";
-import { PeoplePickerComponent } from "@core/users/components/people-picker/people-picker.component";
 import { UserLinkComponent } from "../user-link/user-link.component";
-import { PrivilegedUsersService } from "@core/users/services/privileged-users.service";
-import { ToastService } from "@core/services/toast.service";
-import { PrivilegedUserDto } from "@core/backend-api/dtos/users/response/privileged-user-dto";
-import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
-import { TypeHelpers } from "@core/helpers/type-helpers";
-import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
-import { setApiErrors } from "@core/helpers/rxjs-helpers";
 
 @Component({
-  selector: "claim-users-manager",
+  selector: "ln-claim-users-manager",
   templateUrl: "./claim-users-manager.component.html",
   imports: [
     CommonModule,

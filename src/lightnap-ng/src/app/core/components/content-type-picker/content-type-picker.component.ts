@@ -6,7 +6,7 @@ import { StaticContentType, StaticContentTypeListItems, StaticContentTypes } fro
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: 'content-type-picker',
+  selector: 'ln-content-type-picker',
   templateUrl: './content-type-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [

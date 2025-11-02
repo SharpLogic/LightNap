@@ -8,7 +8,7 @@ import { SelectModule } from "primeng/select";
 import { map } from "rxjs";
 
 @Component({
-  selector: "role-picker",
+  selector: "ln-role-picker",
   templateUrl: "./role-picker.component.html",
   imports: [CommonModule, SelectModule, FormsModule, DropdownListItemComponent],
   providers: [

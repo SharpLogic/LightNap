@@ -12,7 +12,7 @@ import { NotificationItemComponent } from "../notification-item/notification-ite
 import { NotificationService } from "@core";
 
 @Component({
-  selector: "notifications-button",
+  selector: "ln-notifications-button",
   standalone: true,
   templateUrl: "./notifications-button.component.html",
   imports: [CommonModule, ButtonModule, PopoverModule, OverlayBadgeModule, NotificationItemComponent, RoutePipe, RouterLink],
