@@ -1,4 +1,4 @@
-<api-response [apiResponse]="roleWithUsers$()" errorMessage="Error loading role" loadingMessage="Loading role...">
+<ln-api-response [apiResponse]="roleWithUsers$()" errorMessage="Error loading role" loadingMessage="Loading role...">
   <ng-template #success let-roleWithUsersAny>
     @let roleWithUsers = asRoleWithUsers(roleWithUsersAny);
 
@@ -16,7 +16,7 @@
 
           <tr>
             <td>
-              <confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
+              <ln-confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
               <p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeUserFromRole($event, user.id)" />
             </td>
             <td>
@@ -35,11 +35,11 @@
       </p-table>
 
       <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserToRole()">
-        <people-picker formControlName="userId" />
+        <ln-people-picker formControlName="userId" />
         <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!form.valid" />
       </form>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

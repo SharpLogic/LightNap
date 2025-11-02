@@ -11,7 +11,7 @@ import { filter } from "rxjs/operators";
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
-  selector: "[app-menu-item]",
+  selector: "[ln-app-menu-item]",
   templateUrl: "./app-menu-item.component.html",
   animations: [
     trigger("children", [

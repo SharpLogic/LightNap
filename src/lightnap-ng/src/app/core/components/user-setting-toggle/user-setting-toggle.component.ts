@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 import { ApiResponseComponent } from "../api-response/api-response.component";
 
 @Component({
-  selector: "user-setting-toggle",
+  selector: "ln-user-setting-toggle",
   standalone: true,
   templateUrl: "./user-setting-toggle.component.html",
   imports: [CommonModule, FormsModule, ToggleSwitchModule, ApiResponseComponent],

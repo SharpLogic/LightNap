@@ -1,4 +1,4 @@
-<api-response [apiResponse]="roles$" errorMessage="Error loading roles" loadingMessage="Loading roles...">
+<ln-api-response [apiResponse]="roles$" errorMessage="Error loading roles" loadingMessage="Loading roles...">
   <ng-template #success let-rolesAny>
     @let roles = asRoles(rolesAny);
 
@@ -32,4 +32,4 @@
       </p-table>
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

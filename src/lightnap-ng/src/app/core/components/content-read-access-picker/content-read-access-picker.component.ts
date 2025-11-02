@@ -6,7 +6,7 @@ import { StaticContentReadAccess, StaticContentReadAccesses, StaticContentReadAc
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-  selector: 'content-read-access-picker',
+  selector: 'ln-content-read-access-picker',
   templateUrl: './content-read-access-picker.component.html',
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [

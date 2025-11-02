@@ -7,7 +7,7 @@ import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplet
 import { finalize } from "rxjs";
 
 @Component({
-  selector: "people-picker",
+  selector: "ln-people-picker",
   templateUrl: "./people-picker.component.html",
   imports: [CommonModule, FormsModule, AutoCompleteModule],
   providers: [

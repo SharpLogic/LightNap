@@ -5,7 +5,7 @@ import { ConfirmPopupModule } from "primeng/confirmpopup";
 
 @Component({
   standalone: true,
-  selector: "confirm-popup",
+  selector: "ln-confirm-popup",
   templateUrl: "./confirm-popup.component.html",
   imports: [ConfirmPopupModule, ButtonModule],
 })

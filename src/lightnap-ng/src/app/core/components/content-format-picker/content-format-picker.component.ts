@@ -6,7 +6,7 @@ import { ListItem } from "@core/models/list-item";
 import { SelectModule } from "primeng/select";
 
 @Component({
-  selector: "content-format-picker",
+  selector: "ln-content-format-picker",
   templateUrl: "./content-format-picker.component.html",
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [

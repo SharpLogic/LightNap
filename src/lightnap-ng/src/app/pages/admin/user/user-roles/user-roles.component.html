@@ -9,7 +9,7 @@
     <ng-template #body let-role>
       <tr>
         <td>
-          <confirm-popup [key]="role.name" />
+          <ln-confirm-popup [key]="role.name" />
           <p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeRoleClicked($event, role.name)" />
         </td>
         <td>
@@ -29,7 +29,7 @@
 
   <form [formGroup]="addUserToRoleForm" (ngSubmit)="addRole.emit(this.addUserToRoleForm.value.role!)">
     <div class="flex gap-1">
-      <role-picker formControlName="role" />
+      <ln-role-picker formControlName="role" />
 
       <p-button severity="success" label="Add user to role" type="submit" [disabled]="!addUserToRoleForm.valid" />
     </div>

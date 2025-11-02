@@ -6,7 +6,7 @@ import { PublicUsersService } from "@core/users/services/public-users.service";
 import { ApiResponseComponent } from "../api-response/api-response.component";
 
 @Component({
-  selector: "user-link",
+  selector: "ln-user-link",
   standalone: true,
   templateUrl: "./user-link.component.html",
   imports: [CommonModule, ApiResponseComponent],

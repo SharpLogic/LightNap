@@ -5,7 +5,7 @@ import { LayoutService } from "@core/layout/services/layout.service";
 import { MenuService } from "@core/layout/services/menu.service";
 
 @Component({
-  selector: "app-menu",
+  selector: "ln-app-menu",
   standalone: true,
   templateUrl: "./app-menu.component.html",
   imports: [CommonModule, AppMenuItemComponent],

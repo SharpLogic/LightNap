@@ -1,4 +1,4 @@
-<api-response [apiResponse]="contents$" errorMessage="Error loading contents" loadingMessage="Loading contents...">
+<ln-api-response [apiResponse]="contents$" errorMessage="Error loading contents" loadingMessage="Loading contents...">
   <ng-template #success let-contentResultsAny>
     @let contentResults = asContentResults(contentResultsAny);
 
@@ -11,15 +11,15 @@
           </div>
           <div class="flex flex-col">
             <label>Status</label>
-            <content-status-picker formControlName="status" [showAnyOption]="true" class="w-60" />
+            <ln-content-status-picker formControlName="status" [showAnyOption]="true" class="w-60" />
           </div>
           <div class="flex flex-col">
             <label>Type</label>
-            <content-type-picker formControlName="type" [showAnyOption]="true" class="w-60" />
+            <ln-content-type-picker formControlName="type" [showAnyOption]="true" class="w-60" />
           </div>
           <div class="flex flex-col">
             <label>Read Access</label>
-            <content-read-access-picker formControlName="readAccess" [showAnyOption]="true" class="w-60" />
+            <ln-content-read-access-picker formControlName="readAccess" [showAnyOption]="true" class="w-60" />
           </div>
         </div>
       </form>
@@ -75,7 +75,7 @@
         </ng-template>
       </p-table>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

@@ -6,7 +6,7 @@ import { NotificationItem, NotificationService } from "@core";
 import { ButtonModule } from "primeng/button";
 
 @Component({
-  selector: "notification-item",
+  selector: "ln-notification-item",
   templateUrl: "./notification-item.component.html",
   imports: [CommonModule, ButtonModule, SincePipe],
 })
