@@ -1,6 +1,9 @@
 import { Injectable, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { APP_NAME, IdentityService, LayoutConfigDto, ProfileService } from "@core";
+import { LayoutConfigDto } from "@core/backend-api";
+import { APP_NAME } from "@core/helpers";
+import { IdentityService } from "@core/services/identity.service";
+import { ProfileService } from "@core/services/profile.service";
 import { updatePreset, updateSurfacePalette } from "@primeng/themes";
 import Aura from "@primeng/themes/aura";
 import Lara from "@primeng/themes/lara";

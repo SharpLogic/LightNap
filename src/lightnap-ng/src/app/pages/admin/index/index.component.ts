@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ZoneComponent } from "@core";
+import { ZoneComponent } from "@core/components/zone/zone.component";
 
 @Component({
   standalone: true,

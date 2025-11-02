@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { ZoneComponent } from "@core";
+import { ZoneComponent } from "@core/components/zone/zone.component";
 import { PanelModule } from "primeng/panel";
 
 @Component({

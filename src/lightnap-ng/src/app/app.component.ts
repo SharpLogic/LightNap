@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterOutlet } from "@angular/router";
-import { BlockUiService } from "@core";
+import { BlockUiService } from "@core/services/block-ui.service";
 import { VersionCheckService } from "@core/services/version-check.service";
 import { BlockUIModule } from "primeng/blockui";
 import { PrimeNG } from "primeng/config";

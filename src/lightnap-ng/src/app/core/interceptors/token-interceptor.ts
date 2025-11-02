@@ -1,6 +1,7 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { API_URL_ROOT, IdentityService } from "@core";
+import { API_URL_ROOT } from "@core/helpers";
+import { IdentityService } from "@core/services/identity.service";
 import { Observable } from "rxjs";
 
 /**

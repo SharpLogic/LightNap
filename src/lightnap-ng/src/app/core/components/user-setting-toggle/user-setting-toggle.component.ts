@@ -1,9 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnChanges, inject, input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { ApiResponseComponent, ProfileService, ToastService, UserSettingKeys } from "@core";
+import { UserSettingKeys } from "@core/backend-api/user-setting-keys";
+import { ProfileService } from "@core/services/profile.service";
+import { ToastService } from "@core/services/toast.service";
 import { ToggleSwitchModule } from "primeng/toggleswitch";
 import { Observable } from "rxjs";
+import { ApiResponseComponent } from "../api-response/api-response.component";
 
 @Component({
   selector: "user-setting-toggle",

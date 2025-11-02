@@ -1,15 +1,18 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, ErrorListComponent, IdentityService, RouteAliasService, setApiErrors } from "@core";
+import { RouteAliasService, setApiErrors } from "@core";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
-import { PanelModule } from 'primeng/panel';
+import { PanelModule } from "primeng/panel";
 import { finalize } from "rxjs";
 
 @Component({
   standalone: true,
-  templateUrl: './change-email.component.html',
+  templateUrl: "./change-email.component.html",
   imports: [CommonModule, ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
 })
 export class ChangeEmailComponent {
@@ -20,11 +23,9 @@ export class ChangeEmailComponent {
 
   errors = signal(new Array<string>());
 
-  form = this.#fb.nonNullable.group(
-    {
-      newEmail: this.#fb.control("", [Validators.required, Validators.email]),
-    }
-  );
+  form = this.#fb.nonNullable.group({
+    newEmail: this.#fb.control("", [Validators.required, Validators.email]),
+  });
 
   changeEmail() {
     this.#blockUi.show({ message: "Changing email..." });

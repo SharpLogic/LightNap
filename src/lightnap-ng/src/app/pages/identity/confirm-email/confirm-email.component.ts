@@ -1,14 +1,15 @@
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, setApiErrors } from "@core";
+import { RouteAliasService, setApiErrors } from "@core";
+import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
-import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,

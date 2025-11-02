@@ -3,13 +3,6 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-    ApiResponseComponent,
-    ClaimUsersManagerComponent,
-    ContentReadAccessPickerComponent,
-    ContentStatusPickerComponent,
-    ContentTypePickerComponent,
-    ErrorListComponent,
-    RolesPickerComponent,
     RouteAliasService,
     RoutePipe,
     setApiErrors,
@@ -22,11 +15,18 @@ import {
     StaticContentSupportedLanguageDto,
     StaticContentType,
     StaticContentTypes,
-    ToastService,
     TypeHelpers,
-    UserLinkComponent
 } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ClaimUsersManagerComponent } from "@core/components/claim-users-manager/claim-users-manager.component";
+import { ContentReadAccessPickerComponent } from "@core/components/content-read-access-picker/content-read-access-picker.component";
+import { ContentStatusPickerComponent } from "@core/components/content-status-picker/content-status-picker.component";
+import { ContentTypePickerComponent } from "@core/components/content-type-picker/content-type-picker.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { RolesPickerComponent } from "@core/components/roles-picker/roles-picker.component";
+import { UserLinkComponent } from "@core/components/user-link/user-link.component";
 import { ContentService } from "@core/content/services/content.service";
+import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";

@@ -1,13 +1,14 @@
 import { inject, Injectable } from "@angular/core";
-import { ExtendedMap, IdentityService, PrivilegedUsersService } from "@core";
+import { ExtendedMap, PrivilegedUsersService } from "@core";
 import {
-  CreateStaticContentDto,
-  CreateStaticContentLanguageDto,
-  SearchStaticContentRequestDto,
-  UpdateStaticContentDto,
-  UpdateStaticContentLanguageDto,
+    CreateStaticContentDto,
+    CreateStaticContentLanguageDto,
+    SearchStaticContentRequestDto,
+    UpdateStaticContentDto,
+    UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
+import { IdentityService } from "@core/services/identity.service";
 import { map, Observable, shareReplay, switchMap, take, tap } from "rxjs";
 import { PublishedContent } from "../entities";
 

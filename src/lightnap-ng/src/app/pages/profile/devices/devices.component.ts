@@ -1,9 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
-import { ConfirmDialogComponent, DeviceDto, IdentityService, setApiErrors, TypeHelpers } from "@core";
+import { DeviceDto, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmDialogComponent } from "@core/components/confirm-dialog/confirm-dialog.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { ProfileService } from "@core/services/profile.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";

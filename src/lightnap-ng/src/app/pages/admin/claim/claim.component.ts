@@ -3,25 +3,25 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-  AdminUserDto,
-  AdminUsersService,
-  ClaimDto,
-  ConfirmPopupComponent,
-  EmptyPagedResponse,
-  PagedResponseDto,
-  PeoplePickerComponent,
-  RoutePipe,
-  setApiErrors,
-  TypeHelpers,
+    AdminUserDto,
+    AdminUsersService,
+    ClaimDto,
+    EmptyPagedResponse,
+    PagedResponseDto,
+    PeoplePickerComponent,
+    RoutePipe,
+    setApiErrors,
+    TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
-import { startWith, Subject, switchMap, tap } from "rxjs";
+import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   standalone: true,

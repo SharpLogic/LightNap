@@ -1,8 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ApiResponseComponent, ContentFormatPickerComponent, ErrorListComponent, setApiErrors, StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, ToastService, TypeHelpers, UserLinkComponent, StaticContentDirective } from "@core";
+import { StaticContentDirective, StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, TypeHelpers, setApiErrors } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ContentFormatPickerComponent } from "@core/components/content-format-picker/content-format-picker.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { UserLinkComponent } from "@core/components/user-link/user-link.component";
 import { ContentService } from "@core/content/services/content.service";
+import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TextareaModule } from "primeng/textarea";
@@ -20,8 +25,8 @@ import { tap } from "rxjs";
     ButtonModule,
     TextareaModule,
     ContentFormatPickerComponent,
-    StaticContentDirective
-],
+    StaticContentDirective,
+  ],
 })
 export class EditLanguageComponent {
   #contentService = inject(ContentService);

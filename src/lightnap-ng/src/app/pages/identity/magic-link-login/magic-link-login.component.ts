@@ -1,18 +1,19 @@
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, ErrorListComponent, LoginType, setApiErrors } from "@core";
+import { LoginType, RouteAliasService, setApiErrors } from "@core";
+import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
-import { RouteAliasService } from "@core";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
-  templateUrl: './magic-link-login.component.html',
+  templateUrl: "./magic-link-login.component.html",
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, InputTextModule, CheckboxModule, BrandedCardComponent, ErrorListComponent],
 })
 export class MagicLinkLoginComponent implements OnInit {
@@ -33,7 +34,7 @@ export class MagicLinkLoginComponent implements OnInit {
         password: this.code(),
         login: this.email(),
         deviceDetails: navigator.userAgent,
-        rememberMe: false
+        rememberMe: false,
       })
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({

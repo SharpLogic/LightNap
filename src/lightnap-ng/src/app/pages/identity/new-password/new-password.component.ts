@@ -1,16 +1,16 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService, LoginSuccessTypes, setApiErrors } from "@core";
+import { LoginSuccessTypes, RouteAliasService, RoutePipe, setApiErrors } from "@core";
+import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
-import { RouteAliasService, RoutePipe } from "@core";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
-import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
@@ -52,7 +52,7 @@ export class NewPasswordComponent {
         next: result => {
           switch (result.type) {
             case LoginSuccessTypes.AccessToken:
-                this.#identityService.redirectLoggedInUser();
+              this.#identityService.redirectLoggedInUser();
               break;
             case LoginSuccessTypes.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.email());

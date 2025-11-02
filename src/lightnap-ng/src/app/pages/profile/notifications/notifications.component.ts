@@ -1,23 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-  ErrorListComponent,
-  ApiResponseComponent,
-  EmptyPagedResponse,
-  NotificationItem,
-  ToastService,
-  TypeHelpers,
-  PagedResponseDto,
-  NotificationSearchResults,
-  setApiErrors,
-} from "@core";
+import { EmptyPagedResponse, NotificationItem, NotificationSearchResults, setApiErrors, TypeHelpers } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { NotificationItemComponent } from "@core/notifications/components/notification-item/notification-item.component";
 import { NotificationService } from "@core/notifications/services";
+import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
-import { startWith, Subject, switchMap, tap } from "rxjs";
+import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   standalone: true,
