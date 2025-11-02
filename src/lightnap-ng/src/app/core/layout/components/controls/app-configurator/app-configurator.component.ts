@@ -6,7 +6,7 @@ import { LayoutService } from "@core/layout/services/layout.service";
 import { SelectButtonModule } from "primeng/selectbutton";
 
 @Component({
-  selector: "app-configurator",
+  selector: "ln-app-configurator",
   templateUrl: "./app-configurator.component.html",
   imports: [CommonModule, FormsModule, SelectButtonModule],
   host: {

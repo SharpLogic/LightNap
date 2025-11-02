@@ -9,7 +9,7 @@ import { AppSidebarComponent } from "../../controls/app-sidebar/app-sidebar.comp
 import { AppTopBarComponent } from "../../controls/app-top-bar/app-top-bar.component";
 
 @Component({
-  selector: "app-layout",
+  selector: "ln-app-layout",
   templateUrl: "./app-layout.component.html",
   imports: [CommonModule, AppTopBarComponent, AppSidebarComponent, RouterModule, AppFooterComponent],
 })

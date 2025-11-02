@@ -8,7 +8,7 @@ import { StyleClassModule } from "primeng/styleclass";
 import { AppConfiguratorComponent } from "../app-configurator/app-configurator.component";
 
 @Component({
-  selector: "app-top-bar",
+  selector: "ln-app-top-bar",
   standalone: true,
   templateUrl: "./app-top-bar.component.html",
   imports: [RouterModule, CommonModule, StyleClassModule, AppConfiguratorComponent, NotificationsButtonComponent, RoutePipe],
