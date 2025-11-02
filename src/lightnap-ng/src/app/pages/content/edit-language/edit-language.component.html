@@ -2,45 +2,48 @@
   <ng-template let-languageAny #success>
     @let language = asLanguage(languageAny);
 
-    <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="max-w-prose">
-      <p class="text-sm">
-        Created {{ language.createdDate | date: "medium" }}
-        @if (language.createdByUserId) {
-          <user-link [userId]="language.createdByUserId" />
-        }
-      </p>
-
-      @if (language.lastModifiedDate) {
+    <div class="flex flex-wrap gap-2">
+      <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="max-w-prose">
         <p class="text-sm">
-          Last Updated {{ language.lastModifiedDate | date: "medium" }} by
-          @if (language.lastModifiedByUserId) {
-            <user-link [userId]="language.lastModifiedByUserId" />
+          Created {{ language.createdDate | date: "medium" }}
+          @if (language.createdByUserId) {
+            <user-link [userId]="language.createdByUserId" />
           }
         </p>
-      }
 
-      <form [formGroup]="form" (ngSubmit)="onUpdate()">
-        <div class="flex flex-col gap-2">
-          <div class="field">
-            <label for="format" class="text-xl">Format</label>
-            <content-format-picker id="format" formControlName="format" class="w-full" />
+        @if (language.lastModifiedDate) {
+          <p class="text-sm">
+            Last Updated {{ language.lastModifiedDate | date: "medium" }} by
+            @if (language.lastModifiedByUserId) {
+              <user-link [userId]="language.lastModifiedByUserId" />
+            }
+          </p>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="onUpdate()">
+          <div class="flex flex-col gap-2">
+            <div class="field">
+              <label for="format" class="text-xl">Format</label>
+              <content-format-picker id="format" formControlName="format" class="w-full" />
+            </div>
+
+            <div class="field">
+              <label for="content" class="text-xl">Content</label>
+              <textarea id="content" pTextarea formControlName="content" class="w-full" [rows]="20"></textarea>
+            </div>
+
+            <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
           </div>
+        </form>
 
-          <div class="field">
-            <label for="content" class="text-xl">Content</label>
-            <textarea id="content" pTextarea formControlName="content" class="w-full" [rows]="20"></textarea>
-          </div>
+        <error-list [errors]="errors()" />
+      </p-panel>
 
-          <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
-        </div>
-      </form>
-
-      <error-list [errors]="errors()" />
-    </p-panel>
-
-    <h2>Preview</h2>
-    <div staticContent [format]="form.controls.format.value" [content]="form.controls.content.value"></div>
-
+      <div>
+        <h2>Preview</h2>
+        <div staticContent [format]="form.controls.format.value" [content]="form.controls.content.value"></div>
+      </div>
+    </div>
   </ng-template>
   <ng-template #null>
     <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>

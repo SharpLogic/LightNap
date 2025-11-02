@@ -3,26 +3,28 @@ import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-  ApiResponseComponent,
-  ContentReadAccessPickerComponent,
-  ContentStatusPickerComponent,
-  ContentTypePickerComponent,
-  ErrorListComponent,
-  RolesPickerComponent,
-  RouteAliasService,
-  RoutePipe,
-  setApiErrors,
-  StaticContentDto,
-  StaticContentReadAccess,
-  StaticContentReadAccesses,
-  StaticContentStatus,
-  StaticContentStatuses,
-  StaticContentSupportedLanguageDto,
-  StaticContentType,
-  StaticContentTypes,
-  ToastService,
-  TypeHelpers,
-  UserLinkComponent,
+    ApiResponseComponent,
+    ClaimUsersManagerComponent,
+    ContentReadAccessPickerComponent,
+    ContentStatusPickerComponent,
+    ContentTypePickerComponent,
+    ErrorListComponent,
+    RolesPickerComponent,
+    RouteAliasService,
+    RoutePipe,
+    setApiErrors,
+    ShowByPermissionsDirective,
+    StaticContentDto,
+    StaticContentReadAccess,
+    StaticContentReadAccesses,
+    StaticContentStatus,
+    StaticContentStatuses,
+    StaticContentSupportedLanguageDto,
+    StaticContentType,
+    StaticContentTypes,
+    ToastService,
+    TypeHelpers,
+    UserLinkComponent
 } from "@core";
 import { ContentService } from "@core/content/services/content.service";
 import { ButtonModule } from "primeng/button";
@@ -47,6 +49,8 @@ import { tap } from "rxjs";
     RolesPickerComponent,
     RouterLink,
     RoutePipe,
+    ClaimUsersManagerComponent,
+    ShowByPermissionsDirective,
   ],
 })
 export class EditComponent {

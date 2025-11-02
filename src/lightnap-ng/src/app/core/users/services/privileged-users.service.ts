@@ -1,7 +1,15 @@
 import { Injectable, inject } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { map, Observable, of, switchMap } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
-import { PrivilegedSearchUsersRequestDto, PrivilegedUserDto, RoleDto } from "@core/backend-api";
+import {
+  AdminUserDto,
+  ClaimDto,
+  PagedResponseDto,
+  PrivilegedSearchUsersRequestDto,
+  PrivilegedUserDto,
+  RoleDto,
+  SearchClaimRequestDto,
+} from "@core/backend-api";
 
 /**
  * Service for privileged endpoint access.
@@ -54,5 +62,34 @@ export class PrivilegedUsersService {
    */
   getRoles(): Observable<Array<RoleDto>> {
     return this.#usersService.getRoles();
+  }
+
+  /**
+   * Gets users who have the specified claim.
+   * @param {SearchClaimRequestDto} searchClaimRequestDto - The search criteria.
+   * @returns {Observable<PagedResponseDto<AdminUserDto>>} An observable containing the users.
+   */
+  getUsersWithClaim(searchClaimRequestDto: SearchClaimRequestDto) {
+    return this.#usersService.getUsersWithClaim(searchClaimRequestDto) as Observable<PagedResponseDto<PrivilegedUserDto>>;
+  }
+
+  /**
+   * Adds a claim to a user.
+   * @param {string} userId - The user to add the claim to.
+   * @param {ClaimDto} claim - The claim to add.
+   * @returns {Observable<boolean>} An observable with a result of true if successful.
+   */
+  addUserClaim(userId: string, claim: ClaimDto) {
+    return this.#usersService.addUserClaim(userId, claim);
+  }
+
+  /**
+   * Removes a claim from a user.
+   * @param {string} userId - The user to remove the claim from.
+   * @param {ClaimDto} claim - The claim to remove.
+   * @returns {Observable<boolean>} An observable with a result of true if successful.
+   */
+  removeUserClaim(userId: string, claim: ClaimDto) {
+    return this.#usersService.removeUserClaim(userId, claim);
   }
 }

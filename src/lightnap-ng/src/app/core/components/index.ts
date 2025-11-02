@@ -1,5 +1,6 @@
 export * from "./api-response/api-response.component";
 export * from "./branded-card/branded-card.component";
+export * from "./claim-users-manager/claim-users-manager.component";
 export * from "./confirm-dialog/confirm-dialog.component";
 export * from "./confirm-popup/confirm-popup.component";
 export * from "./content-format-picker/content-format-picker.component";

@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { ExtendedMap, IdentityService } from "@core";
+import { ExtendedMap, IdentityService, PrivilegedUsersService } from "@core";
 import {
   CreateStaticContentDto,
   CreateStaticContentLanguageDto,
@@ -17,6 +17,7 @@ import { PublishedContent } from "../entities";
 export class ContentService {
   #dataService = inject(ContentDataService);
   #identityService = inject(IdentityService);
+  #usersService = inject(PrivilegedUsersService);
 
   #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
@@ -71,6 +72,22 @@ export class ContentService {
 
   deleteStaticContent(key: string) {
     return this.#dataService.deleteStaticContent(key);
+  }
+
+  addReader(userId: string, key: string) {
+    return this.#usersService.addUserClaim(userId, { type: "Content:Reader", value: key });
+  }
+
+  removeReader(userId: string, key: string) {
+    return this.#usersService.removeUserClaim(userId, { type: "Content:Reader", value: key });
+  }
+
+  addEditor(userId: string, key: string) {
+    return this.#usersService.addUserClaim(userId, { type: "Content:Editor", value: key });
+  }
+
+  removeEditor(userId: string, key: string) {
+    return this.#usersService.removeUserClaim(userId, { type: "Content:Editor", value: key });
   }
 
   getStaticContentLanguage(key: string, languageCode: string) {
