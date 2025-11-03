@@ -31,7 +31,7 @@ namespace LightNap.Core.Extensions
         {
             if (dto.ReaderRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
-                throw new InvalidOperationException("ReadAccess must be set to Explicit when ReaderRoles is not null.");
+                throw new InvalidOperationException($"ReadAccess must be set to Explicit when {nameof(dto.ReaderRoles)} is not null.");
             }
 
             var staticContent = new StaticContent()
@@ -52,7 +52,7 @@ namespace LightNap.Core.Extensions
         {
             if (dto.ReaderRoles != null && dto.ReadAccess != StaticContentReadAccess.Explicit)
             {
-                throw new InvalidOperationException("ReadAccess must be set to Explicit when ReaderRoles is not null.");
+                throw new InvalidOperationException($"ReadAccess must be set to Explicit when {nameof(dto.ReaderRoles)} is not null.");
             }
 
             staticContent.Key = dto.Key;

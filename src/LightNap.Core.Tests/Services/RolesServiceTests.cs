@@ -4,7 +4,6 @@ using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Tests.Utilities;
-using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -83,6 +82,7 @@ namespace LightNap.Core.Tests.Services
             var allRoles = ApplicationRoles.All;
 
             // Act
+            this._userContext.UserId = "logged-in-user-id";
             var roles = this._rolesService.GetRoles();
 
             // Assert

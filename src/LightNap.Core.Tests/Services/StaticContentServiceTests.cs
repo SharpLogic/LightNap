@@ -248,6 +248,7 @@ namespace LightNap.Core.Tests.Services
             var updateDto = new UpdateStaticContentDto
             {
                 Key = "test-key",
+                Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Public,
             };
@@ -449,6 +450,7 @@ namespace LightNap.Core.Tests.Services
             var updateDto = new UpdateStaticContentDto
             {
                 Key = "non-existent-key",
+                Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Public,
             };
@@ -698,6 +700,7 @@ namespace LightNap.Core.Tests.Services
             var updateDto = new UpdateStaticContentDto
             {
                 Key = "test-key-updated",
+                Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Public,
             };
@@ -730,6 +733,7 @@ namespace LightNap.Core.Tests.Services
             var updateDto = new UpdateStaticContentDto
             {
                 Key = "test-key",
+                Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Public,
             };
@@ -956,6 +960,7 @@ namespace LightNap.Core.Tests.Services
             var updateDto = new UpdateStaticContentDto
             {
                 Key = "test-key",
+                Type = StaticContentType.Page,
                 Status = StaticContentStatus.Published,
                 ReadAccess = StaticContentReadAccess.Public,
                 EditorRoles = "Editor,Moderator"
