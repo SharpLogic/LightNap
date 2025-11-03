@@ -24,7 +24,7 @@ export class RolePickerComponent implements ControlValueAccessor {
   value: string | null = null;
   disabled = false;
 
-  options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.name, role.description))));
+  options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.displayName, role.description))));
 
   onChange: (value: string | null) => void = () => {};
   onTouched: () => void = () => {};

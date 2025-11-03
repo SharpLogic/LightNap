@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LightNap.WebApi.Controllers
 {
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
     [Route("api/[controller]")]
     public class ContentController(IStaticContentService staticContentService) : ControllerBase
     {
@@ -52,6 +52,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         [HttpDelete("{key}")]
+        [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<bool>> DeleteStaticContentAsync(string key)
         {
             await staticContentService.DeleteStaticContentAsync(key);
@@ -83,6 +84,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         [HttpDelete("{key}/languages/{languageCode}")]
+        [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<bool>> DeleteStaticContentLanguageAsync(string key, string languageCode)
         {
             await staticContentService.DeleteStaticContentLanguageAsync(key, languageCode);
