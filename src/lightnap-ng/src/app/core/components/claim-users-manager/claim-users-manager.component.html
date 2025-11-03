@@ -21,7 +21,8 @@
 
         <tr>
           <td>
-            <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="removeUser(user.id)" pTooltip="Remove claim from user" />
+            <ln-confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
+            <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="removeUser($event, user.id)" pTooltip="Remove claim from user" />
           </td>
           <td>
             <ln-user-link [userId]="user.id" />

@@ -2,8 +2,8 @@ import { CommonModule } from "@angular/common";
 import { Component, forwardRef, inject } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
-import { ListItem } from "@core/models/list-item";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
+import { ListItem } from "@core/models/list-item";
 import { MultiSelectModule } from "primeng/multiselect";
 import { map } from "rxjs";
 
@@ -24,7 +24,7 @@ export class RolesPickerComponent implements ControlValueAccessor {
   value: string[] = [];
   disabled = false;
 
-  options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.name, role.description))));
+  options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.displayName, role.description))));
 
   onChange: (value: string) => void = () => {};
   onTouched: () => void = () => {};

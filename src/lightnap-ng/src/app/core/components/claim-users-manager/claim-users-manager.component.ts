@@ -4,16 +4,18 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
 import { PrivilegedUserDto } from "@core/backend-api/dtos/users/response/privileged-user-dto";
 import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
+import { PeoplePickerComponent } from "@core/features/users/components/people-picker/people-picker.component";
+import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
 import { setApiErrors } from "@core/helpers/rxjs-helpers";
 import { TypeHelpers } from "@core/helpers/type-helpers";
 import { ToastService } from "@core/services/toast.service";
-import { PeoplePickerComponent } from "@core/features/users/components/people-picker/people-picker.component";
-import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
+import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 import { ApiResponseComponent } from "../api-response/api-response.component";
+import { ConfirmPopupComponent } from "../confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "../error-list/error-list.component";
 import { UserLinkComponent } from "../user-link/user-link.component";
 
@@ -30,11 +32,13 @@ import { UserLinkComponent } from "../user-link/user-link.component";
     ErrorListComponent,
     PeoplePickerComponent,
     UserLinkComponent,
+    ConfirmPopupComponent,
   ],
 })
 export class ClaimUsersManagerComponent {
   #usersService = inject(PrivilegedUsersService);
   #toast = inject(ToastService);
+  #confirmationService = inject(ConfirmationService);
   #fb = inject(FormBuilder);
 
   type = input.required<string>();
@@ -90,19 +94,28 @@ export class ClaimUsersManagerComponent {
       });
   }
 
-  removeUser(userId: string) {
+  removeUser(event: any, userId: string) {
     this.errors.set([]);
-    this.#usersService
-      .removeUserClaim(userId, {
-        type: this.type(),
-        value: this.value(),
-      })
-      .subscribe({
-        next: () => {
-          this.#toast.success("User claim removed successfully.");
-          this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize() });
-        },
-        error: setApiErrors(this.errors),
-      });
+
+    this.#confirmationService.confirm({
+      header: "Confirm User Claim Removal",
+      message: `Are you sure that you want to remove this user claim?`,
+      target: event.target,
+      key: userId,
+      accept: () => {
+        this.#usersService
+          .removeUserClaim(userId, {
+            type: this.type(),
+            value: this.value(),
+          })
+          .subscribe({
+            next: () => {
+              this.#toast.success("User claim removed successfully.");
+              this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize() });
+            },
+            error: setApiErrors(this.errors),
+          });
+      },
+    });
   }
 }
