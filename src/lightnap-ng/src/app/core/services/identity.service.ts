@@ -17,7 +17,7 @@ import {
     VerifyEmailRequestDto,
 } from "@core/backend-api";
 import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
-import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";

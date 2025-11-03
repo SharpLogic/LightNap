@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input } from "@angular/core";
-import { PublishedContent } from "@core/content/entities";
-import { ContentService } from "@core/content/services/content.service";
+import { PublishedContent } from "@core/features/content/entities";
+import { ContentService } from "@core/features/content/services/content.service";
 import { StaticContentDirective } from "@core/directives";
 import { TypeHelpers } from "@core/helpers";
 import { ApiResponseComponent } from "../api-response/api-response.component";
 import { RouterModule } from "@angular/router";
-import { RoutePipe } from "@core/routing";
+import { RoutePipe } from "@core/features/routing";
 
 @Component({
   selector: "ln-zone",

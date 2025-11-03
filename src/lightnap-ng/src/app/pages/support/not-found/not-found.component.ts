@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
-import { LayoutService } from "@core/layout/services/layout.service";
+import { LayoutService } from "@core/features/layout/services/layout.service";
 
 @Component({
   standalone: true,

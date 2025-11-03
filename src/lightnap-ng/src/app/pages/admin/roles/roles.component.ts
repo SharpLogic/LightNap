@@ -3,7 +3,7 @@ import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { RoleDto, RoutePipe, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { AdminUsersService } from "@core/users/services/admin-users.service";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 

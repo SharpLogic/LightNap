@@ -1,9 +1,9 @@
 import { AppRoute, RoleName } from "@core";
+import { AppLayoutComponent } from "@core/features/layout/components/layouts/app-layout/app-layout.component";
+import { PublicLayoutComponent } from "@core/features/layout/components/layouts/public-layout/public-layout.component";
 import { editPageGuard } from "@core/guards/edit-page.guard";
 import { permissionsGuard } from "@core/guards/permissions.guard";
 import { readPageGuard } from "@core/guards/read-page.guard";
-import { AppLayoutComponent } from "@core/layout/components/layouts/app-layout/app-layout.component";
-import { PublicLayoutComponent } from "@core/layout/components/layouts/public-layout/public-layout.component";
 
 export const Routes: AppRoute[] = [
   {

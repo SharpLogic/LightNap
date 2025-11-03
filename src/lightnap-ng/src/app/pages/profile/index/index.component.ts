@@ -5,7 +5,7 @@ import { RouterLink } from "@angular/router";
 import { ProfileDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ProfileService } from "@core/services/profile.service";

@@ -5,7 +5,7 @@ import { RouterLink } from "@angular/router";
 import { ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { AdminUsersService } from "@core/users/services/admin-users.service";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";

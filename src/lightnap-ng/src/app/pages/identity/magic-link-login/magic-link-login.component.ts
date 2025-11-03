@@ -4,7 +4,7 @@ import { RouterModule } from "@angular/router";
 import { LoginType, setApiErrors } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";

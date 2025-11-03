@@ -3,23 +3,23 @@ import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import {
-    EmptyPagedResponse,
-    PagedResponseDto,
-    RoutePipe,
-    StaticContentDto,
-    StaticContentReadAccesses,
-    StaticContentSortBy,
-    StaticContentSortBys,
-    StaticContentStatuses,
-    StaticContentTypes,
-    TypeHelpers,
+  EmptyPagedResponse,
+  PagedResponseDto,
+  RoutePipe,
+  StaticContentDto,
+  StaticContentReadAccesses,
+  StaticContentSortBy,
+  StaticContentSortBys,
+  StaticContentStatuses,
+  StaticContentTypes,
+  TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ContentReadAccessPickerComponent } from "@core/components/content-read-access-picker/content-read-access-picker.component";
 import { ContentStatusPickerComponent } from "@core/components/content-status-picker/content-status-picker.component";
 import { ContentTypePickerComponent } from "@core/components/content-type-picker/content-type-picker.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { ContentService } from "@core/content/services/content.service";
+import { ContentService } from "@core/features/content/services/content.service";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";

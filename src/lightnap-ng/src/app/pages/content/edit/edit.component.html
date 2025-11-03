@@ -78,11 +78,11 @@
 
       <div class="flex flex-col gap-2">
         <p-panel header="Explicit Content Editors" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <ln-claim-users-manager type="Content:Editor" [value]="content.id.toString()" />
+          <ln-claim-users-manager type="Content:Editor" [value]="content.id | toString" />
         </p-panel>
 
         <p-panel header="Explicit Content Readers" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <ln-claim-users-manager type="Content:Reader" [value]="content.id.toString()" />
+          <ln-claim-users-manager type="Content:Reader" [value]="content.id | toString" />
         </p-panel>
       </div>
 

@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
-import { LayoutService } from "@core/layout/services/layout.service";
+import { LayoutService } from "@core/features/layout/services/layout.service";
 
 @Component({
   selector: 'ln-branded-card',

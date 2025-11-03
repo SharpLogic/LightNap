@@ -6,7 +6,7 @@ import { ApiResponseComponent } from "@core/components/api-response/api-response
 import { ContentFormatPickerComponent } from "@core/components/content-format-picker/content-format-picker.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { UserLinkComponent } from "@core/components/user-link/user-link.component";
-import { ContentService } from "@core/content/services/content.service";
+import { ContentService } from "@core/features/content/services/content.service";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";

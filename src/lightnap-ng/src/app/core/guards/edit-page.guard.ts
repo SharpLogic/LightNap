@@ -1,7 +1,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from "@angular/router";
-import { ContentService } from "@core/content/services/content.service";
-import { RouteAliasService } from "@core/routing/services/route-alias-service";
+import { ContentService } from "@core/features/content/services/content.service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
 import { map, of, switchMap, take } from "rxjs";
 

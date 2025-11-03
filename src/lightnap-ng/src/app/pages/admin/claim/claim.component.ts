@@ -6,8 +6,8 @@ import { AdminUserDto, ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { PeoplePickerComponent } from "@core/users/components/people-picker/people-picker.component";
-import { AdminUsersService } from "@core/users/services/admin-users.service";
+import { PeoplePickerComponent } from "@core/features/users/components/people-picker/people-picker.component";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
