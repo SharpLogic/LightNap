@@ -3,6 +3,9 @@
     @let contentResults = asContentResults(contentResultsAny);
 
     <p-panel header="Manage Contents">
+      <ng-template #icons>
+        <p-button pTooltip="Create New Content" icon="pi pi-plus" severity="success" label="Create" (onClick)="showCreateDialog()" />
+      </ng-template>
       <form [formGroup]="form" class="my-2">
         <div class="flex gap-2 flex-wrap">
           <div class="flex flex-col">
@@ -79,3 +82,16 @@
     </p-panel>
   </ng-template>
 </ln-api-response>
+
+<p-dialog header="Create New Content" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '30rem'}">
+  <form [formGroup]="createForm" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="contentKey">Key</label>
+      <input pInputText id="contentKey" formControlName="key" placeholder="Enter content key" class="w-full" />
+    </div>
+  </form>
+  <ng-template #footer>
+    <p-button label="Create" severity="success" (onClick)="createContent()" [disabled]="createForm.invalid" />
+    <p-button label="Cancel" severity="secondary" (onClick)="hideCreateDialog()" />
+  </ng-template>
+</p-dialog>
