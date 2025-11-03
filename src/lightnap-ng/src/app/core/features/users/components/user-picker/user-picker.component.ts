@@ -7,18 +7,18 @@ import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplet
 import { finalize } from "rxjs";
 
 @Component({
-  selector: "ln-people-picker",
-  templateUrl: "./people-picker.component.html",
+  selector: 'ln-user-picker',
+  templateUrl: './user-picker.component.html',
   imports: [CommonModule, FormsModule, AutoCompleteModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => PeoplePickerComponent),
+      useExisting: forwardRef(() => UserPickerComponent),
       multi: true,
     },
   ],
 })
-export class PeoplePickerComponent implements ControlValueAccessor {
+export class UserPickerComponent implements ControlValueAccessor {
   #usersService = inject(AdminUsersService);
   @Input() selectedUserId: string | null = null;
   @Output() selectedUserIdChange = new EventEmitter<string | null>();

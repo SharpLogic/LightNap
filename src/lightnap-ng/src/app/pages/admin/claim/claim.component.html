@@ -52,7 +52,7 @@
       </p-table>
 
       <form [formGroup]="form" class="flex gap-2 my-3" (ngSubmit)="addUserClaim()">
-        <ln-people-picker formControlName="userId" />
+        <ln-user-picker formControlName="userId" />
         <p-button type="submit" label="Add User" icon="pi pi-plus" [disabled]="!form.valid" />
       </form>
 

@@ -6,7 +6,7 @@ import { AdminUserDto, RoleWithAdminUsers, RoutePipe, setApiErrors, TypeHelpers 
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { PeoplePickerComponent } from "@core/features/users/components/people-picker/people-picker.component";
+import { UserPickerComponent } from "@core/features/users/components/user-picker/user-picker.component";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
@@ -28,7 +28,7 @@ import { Observable } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    PeoplePickerComponent,
+    UserPickerComponent,
   ],
 })
 export class RoleComponent implements OnInit {
