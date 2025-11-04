@@ -190,7 +190,14 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("(id, request);\r\n    }\r\n\r\n    delete");
+            this.Write("(");
+            
+            #line 32 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\AreaService.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));
+            
+            #line default
+            #line hidden
+            this.Write(", request);\r\n    }\r\n\r\n    delete");
             
             #line 35 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\AreaService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
