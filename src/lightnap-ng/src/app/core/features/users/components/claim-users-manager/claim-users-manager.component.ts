@@ -14,9 +14,9 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
-import { ApiResponseComponent } from "../api-response/api-response.component";
-import { ConfirmPopupComponent } from "../confirm-popup/confirm-popup.component";
-import { ErrorListComponent } from "../error-list/error-list.component";
+import { ApiResponseComponent } from "../../../../components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "../../../../components/confirm-popup/confirm-popup.component";
+import { ErrorListComponent } from "../../../../components/error-list/error-list.component";
 import { UserLinkComponent } from "../user-link/user-link.component";
 
 @Component({

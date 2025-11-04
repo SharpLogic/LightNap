@@ -19,9 +19,9 @@ import {
   TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { ContentReadAccessPickerComponent } from "@core/components/content-read-access-picker/content-read-access-picker.component";
-import { ContentStatusPickerComponent } from "@core/components/content-status-picker/content-status-picker.component";
-import { ContentTypePickerComponent } from "@core/components/content-type-picker/content-type-picker.component";
+import { ContentReadAccessPickerComponent } from "@core/features/content/components/content-read-access-picker/content-read-access-picker.component";
+import { ContentStatusPickerComponent } from "@core/features/content/components/content-status-picker/content-status-picker.component";
+import { ContentTypePickerComponent } from "@core/features/content/components/content-type-picker/content-type-picker.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ContentService } from "@core/features/content/services/content.service";
 import { Button } from "primeng/button";

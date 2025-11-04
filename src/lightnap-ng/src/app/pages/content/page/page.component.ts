@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core";
-import { ZoneComponent } from "@core/components/zone/zone.component";
+import { ZoneComponent } from "@core/features/content/components/zone/zone.component";
 
 @Component({
   templateUrl: "./page.component.html",

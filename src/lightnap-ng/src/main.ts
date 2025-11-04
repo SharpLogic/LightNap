@@ -21,6 +21,7 @@ import { Panel } from "primeng/panel";
 import { AppComponent } from "./app/app.component";
 import { Routes } from "./app/pages/routes";
 import { environment } from "./environments/environment";
+import { CMS_ELEMENTS } from "@core/features/content/models/cms-elements";
 
 if (environment.production) {
   enableProdMode();
@@ -28,12 +29,18 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(Routes, withInMemoryScrolling(), withComponentInputBinding(), withRouterConfig({})),
+    // 1. Core Angular providers
     importProvidersFrom(BrowserModule),
-    InitializationService,
     provideZonelessChangeDetection(),
-    provideAppInitializer(() => inject(InitializationService).initialize()),
     provideAnimationsAsync(),
+
+    // 2. Routing
+    provideRouter(Routes, withInMemoryScrolling(), withComponentInputBinding(), withRouterConfig({})),
+
+    // 3. HTTP & Interceptors
+    provideHttpClient(withInterceptors([tokenInterceptor, apiResponseInterceptor])),
+
+    // 4. Third-party libraries
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -43,16 +50,27 @@ bootstrapApplication(AppComponent, {
       },
     }),
     provideMarkdown(),
+
+    // 5. Application initialization
+    InitializationService,
+    provideAppInitializer(() => inject(InitializationService).initialize()),
+
+    // 6. Configuration values (tokens)
     {
       provide: API_URL_ROOT,
       useValue: environment.apiUrlRoot ?? throwInlineError("Required setting 'environment.apiUrlRoot' is not defined."),
     },
     { provide: APP_NAME, useValue: environment.appName },
+
+    // 7. Strategies & overrides
     { provide: LocationStrategy, useClass: PathLocationStrategy },
     { provide: TitleStrategy, useClass: PrependNameTitleStrategy },
-    provideHttpClient(withInterceptors([tokenInterceptor, apiResponseInterceptor])),
+
+    // 8. Services
     MessageService,
     ConfirmationService,
+
+    // 9. Service Worker (last, as it's environment-dependent)
     provideServiceWorker("ngsw-worker.js", {
       enabled: !isDevMode(),
       registrationStrategy: "registerWhenStable:30000",
@@ -62,10 +80,8 @@ bootstrapApplication(AppComponent, {
   .then(appRef => {
     const injector = appRef.injector;
 
-    customElements.define("branded-card-control", createCustomElement(BrandedCardComponent, { injector }));
-    customElements.define("p-panel-control", createCustomElement(Panel, { injector }));
-    customElements.define("p-card-control", createCustomElement(Card, { injector }));
-
-    // Register other dynamic components as needed
+    CMS_ELEMENTS.forEach(element => {
+      customElements.define(element.tagName, createCustomElement(element.component, { injector }));
+    });
   })
   .catch(err => console.error("Error bootstrapping application:", err));

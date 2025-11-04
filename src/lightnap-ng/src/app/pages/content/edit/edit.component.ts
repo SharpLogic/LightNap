@@ -18,13 +18,13 @@ import {
     TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { ClaimUsersManagerComponent } from "@core/components/claim-users-manager/claim-users-manager.component";
-import { ContentReadAccessPickerComponent } from "@core/components/content-read-access-picker/content-read-access-picker.component";
-import { ContentStatusPickerComponent } from "@core/components/content-status-picker/content-status-picker.component";
-import { ContentTypePickerComponent } from "@core/components/content-type-picker/content-type-picker.component";
+import { ClaimUsersManagerComponent } from "@core/features/users/components/claim-users-manager/claim-users-manager.component";
+import { ContentReadAccessPickerComponent } from "@core/features/content/components/content-read-access-picker/content-read-access-picker.component";
+import { ContentStatusPickerComponent } from "@core/features/content/components/content-status-picker/content-status-picker.component";
+import { ContentTypePickerComponent } from "@core/features/content/components/content-type-picker/content-type-picker.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { RolesPickerComponent } from "@core/components/roles-picker/roles-picker.component";
-import { UserLinkComponent } from "@core/components/user-link/user-link.component";
+import { RolesPickerComponent } from "@core/features/users/components/roles-picker/roles-picker.component";
+import { UserLinkComponent } from "@core/features/users/components/user-link/user-link.component";
 import { ContentService } from "@core/features/content/services/content.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { ToastService } from "@core/services/toast.service";

@@ -3,7 +3,7 @@
     @let language = asLanguage(languageAny);
 
     <div class="flex flex-wrap gap-2">
-      <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="max-w-prose">
+      <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="w-full">
         <p class="text-sm">
           Created {{ language.createdDate | date: "medium" }}
           @if (language.createdByUserId) {

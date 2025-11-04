@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { PublishedContent } from "@core/features/content/entities";
 import { ContentService } from "@core/features/content/services/content.service";
-import { StaticContentDirective } from "@core/directives";
-import { TypeHelpers } from "@core/helpers";
-import { ApiResponseComponent } from "../api-response/api-response.component";
-import { RouterModule } from "@angular/router";
 import { RoutePipe } from "@core/features/routing";
+import { TypeHelpers } from "@core/helpers";
+import { StaticContentDirective } from "../../directives/static-content.directive";
 
 @Component({
   selector: "ln-zone",
@@ -19,6 +19,7 @@ export class ZoneComponent {
   readonly languageCode = input("en");
   readonly sanitize = input(false);
   readonly showContentStripWarning = input(false);
+  readonly showAccessWarnings = input(false);
   readonly content = computed(() => this.#contentService.getPublishedStaticContent(this.key(), this.languageCode()));
   readonly asContent = TypeHelpers.cast<PublishedContent>;
 }

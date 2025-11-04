@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { RoleDto, RoutePipe } from "@core";
 import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
-import { RolePickerComponent } from "@core/components/role-picker/role-picker.component";
+import { RolePickerComponent } from "@core/features/users/components/role-picker/role-picker.component";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { TableModule } from "primeng/table";

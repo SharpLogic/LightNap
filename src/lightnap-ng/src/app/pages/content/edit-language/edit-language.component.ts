@@ -1,12 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { StaticContentDirective, StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, TypeHelpers, setApiErrors } from "@core";
+import { StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, TypeHelpers, setApiErrors } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { ContentFormatPickerComponent } from "@core/components/content-format-picker/content-format-picker.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { UserLinkComponent } from "@core/components/user-link/user-link.component";
+import { ContentFormatPickerComponent } from "@core/features/content/components/content-format-picker/content-format-picker.component";
+import { StaticContentDirective } from "@core/features/content/directives/static-content.directive";
 import { ContentService } from "@core/features/content/services/content.service";
+import { UserLinkComponent } from "@core/features/users/components/user-link/user-link.component";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";

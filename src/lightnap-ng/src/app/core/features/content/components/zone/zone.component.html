@@ -12,10 +12,12 @@
         [sanitize]="sanitize()"
         [showContentStripWarning]="showContentStripWarning()"
       ></div>
-    } @else if (publishedContent.requiresAuthentication) {
-      <p class="text-red-500">You must be logged in to view this content.</p>
-    } @else {
-      <p class="text-red-500">Access to this content is restricted.</p>
+    } @else if (showAccessWarnings()) {
+      @if (publishedContent.requiresAuthentication) {
+        <p class="text-red-500">You must be logged in to view this content.</p>
+      } @else {
+        <p class="text-red-500">Access to this content is restricted.</p>
+      }
     }
   </ng-template>
   <ng-template #null>
