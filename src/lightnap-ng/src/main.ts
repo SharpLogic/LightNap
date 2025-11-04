@@ -3,7 +3,7 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { enableProdMode, importProvidersFrom, inject, isDevMode, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { createCustomElement } from "@angular/elements";
 import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
 import { provideServiceWorker } from "@angular/service-worker";
 import { API_URL_ROOT, APP_NAME, throwInlineError } from "@core";
@@ -33,7 +33,7 @@ bootstrapApplication(AppComponent, {
     InitializationService,
     provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(InitializationService).initialize()),
-    provideAnimations(),
+    provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: Aura,
