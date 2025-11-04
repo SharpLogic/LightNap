@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Data.Entities
+﻿namespace LightNap.Core.StaticContents.Enums
 {
     public enum StaticContentReadAccess
     {

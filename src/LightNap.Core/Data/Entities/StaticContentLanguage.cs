@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LightNap.Core.StaticContents.Enums;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Data.Entities
 {
@@ -8,6 +10,7 @@ namespace LightNap.Core.Data.Entities
         public required int StaticContentId { get; set; }
         public StaticContent? StaticContent { get; set; }
 
+        [MaxLength(16)]
         public required string LanguageCode { get; set; }
 
         public required string Content { get; set; }

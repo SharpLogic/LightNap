@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Data.Entities
+﻿namespace LightNap.Core.Notifications.Enums
 {
     public enum NotificationType
     {

@@ -4,6 +4,7 @@ using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Request;
+using LightNap.Core.StaticContents.Enums;
 using LightNap.Core.StaticContents.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

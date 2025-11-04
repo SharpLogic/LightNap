@@ -5,6 +5,7 @@ using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.StaticContents.Dto.Request;
+using LightNap.Core.StaticContents.Enums;
 using LightNap.Core.StaticContents.Models;
 using LightNap.Core.StaticContents.Services;
 using LightNap.Core.Tests.Utilities;

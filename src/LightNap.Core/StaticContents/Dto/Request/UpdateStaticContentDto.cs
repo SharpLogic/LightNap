@@ -1,5 +1,5 @@
 ﻿using LightNap.Core.Configuration;
-using LightNap.Core.Data.Entities;
+using LightNap.Core.StaticContents.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.StaticContents.Dto.Request

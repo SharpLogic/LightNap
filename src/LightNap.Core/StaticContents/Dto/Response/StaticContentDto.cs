@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Data.Entities;
+﻿using LightNap.Core.StaticContents.Enums;
 
 namespace LightNap.Core.StaticContents.Dto.Response
 {

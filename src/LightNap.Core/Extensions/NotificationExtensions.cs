@@ -1,6 +1,7 @@
 ﻿using LightNap.Core.Data.Entities;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
+using LightNap.Core.Notifications.Enums;
 
 namespace LightNap.Core.Extensions
 {

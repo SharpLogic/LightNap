@@ -6,6 +6,7 @@ using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
+using LightNap.Core.StaticContents.Enums;
 using LightNap.Core.StaticContents.Interfaces;
 using LightNap.Core.StaticContents.Models;
 using Microsoft.EntityFrameworkCore;

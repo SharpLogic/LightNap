@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Configuration;
+using LightNap.Core.StaticContents.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Data.Entities

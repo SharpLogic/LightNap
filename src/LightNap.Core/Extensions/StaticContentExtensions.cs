@@ -2,6 +2,7 @@
 using LightNap.Core.Data.Entities;
 using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
+using LightNap.Core.StaticContents.Enums;
 
 namespace LightNap.Core.Extensions
 {
