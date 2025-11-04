@@ -9,7 +9,8 @@ import { Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { ApiResponseComponent, EmptyPagedResponse } from "@core";
+import { EmptyPagedResponse, PagedResponseDto, TypeHelpers } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DatePickerModule } from "primeng/datepicker";
@@ -19,7 +20,7 @@ import { PanelModule } from "primeng/panel";
 import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { CheckboxModule } from "primeng/checkbox";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
-import { <#= Parameters.PascalName #> } from "src/app/<#= Parameters.KebabNamePlural #>/models/response/<#= Parameters.KebabName #>";
+import { <#= Parameters.PascalName #>Dto } from "src/app/<#= Parameters.KebabNamePlural #>/models/response/<#= Parameters.KebabName #>-dto";
 import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.KebabNamePlural #>/services/<#= Parameters.KebabName #>.service";
 
 @Component({
@@ -37,22 +38,23 @@ import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.Keba
     PanelModule,
     TableModule,
     RouterModule,
-    ButtonModule],
+    ButtonModule,
+  ],
 })
 export class IndexComponent {
-  pageSize = 10;
+  readonly pageSize = 10;
 
-  #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
-  #fb = inject(FormBuilder);
+  readonly #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
+  readonly #fb = inject(FormBuilder);
 
-  form = this.#fb.group({
+  readonly form = this.#fb.group({
 <#  foreach (var property in Parameters.GetProperties) { #>
       <#= property.CamelName #>: this.#fb.nonNullable.control<<#= property.FrontEndType #> | undefined>(undefined),
 <#  }#>
   });
 
-  #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
-  searchResults$ = this.#lazyLoadEventSubject.pipe(
+  readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
+  readonly searchResults$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#<#= Parameters.CamelName #>Service.search<#= Parameters.PascalNamePlural #>({
         ...this.form.value,
@@ -62,8 +64,11 @@ export class IndexComponent {
     ),
     // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to
     // fake an empty response so we can avoid a redundant call to the API.
-    startWith(new EmptyPagedResponse<<#= Parameters.PascalName #>>())
+    startWith(new EmptyPagedResponse<<#= Parameters.PascalName #>Dto>())
   );
+
+  readonly asSearchResults = TypeHelpers.cast<PagedResponseDto<<#= Parameters.PascalName #>Dto>>;
+  readonly as<#= Parameters.PascalName #> = TypeHelpers.cast<<#= Parameters.PascalName #>Dto>;
 
   constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe(() => {

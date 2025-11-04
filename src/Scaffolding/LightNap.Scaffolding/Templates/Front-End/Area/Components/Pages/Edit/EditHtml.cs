@@ -28,15 +28,15 @@ namespace LightNap.Scaffolding.Templates
         /// </summary>
         public override string TransformText()
         {
-            this.Write("\r\n<p-card header=\"Edit\">\r\n  <api-response [apiResponse]=\"");
+            this.Write("\r\n<p-card header=\"Edit\">\r\n  <ln-api-response [apiResponse]=\"");
             
             #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Edit\EditHtml.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
             
             #line default
             #line hidden
-            this.Write("$\" errorMessage=\"Error loading\" loadingMessage=\"Loading...\">\r\n    <ng-template #s" +
-                    "uccess let-");
+            this.Write("()\" errorMessage=\"Error loading\" loadingMessage=\"Loading...\">\r\n    <ng-template #" +
+                    "success let-");
             
             #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Edit\EditHtml.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
@@ -48,7 +48,7 @@ namespace LightNap.Scaffolding.Templates
         <p-button [routerLink]=""['../..']"" icon=""pi pi-arrow-up"" label=""See all"" />
         <p-button [routerLink]=""['..']"" icon=""pi pi-arrow-left"" label=""Back to item"" />
         <p-button (onClick)=""deleteClicked($event)"" severity=""danger"" icon=""pi pi-trash"" label=""Delete"" />
-        <confirm-popup key=""delete"" confirmSeverity=""danger"" confirmIcon=""pi pi-trash"" />
+        <ln-confirm-popup key=""delete"" confirmSeverity=""danger"" confirmIcon=""pi pi-trash"" />
       </div>
       <form [formGroup]=""form"" (ngSubmit)=""saveClicked()"" autocomplete=""off"">
         <div class=""w-[30rem] flex flex-col gap-5"">
@@ -177,7 +177,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\" styleClass=\"w-full\" mode=\"decimal\" [minFractionDigits]=\"2\" />\r\n");
+            this.Write("\" class=\"w-full\" mode=\"decimal\" [minFractionDigits]=\"2\" />\r\n");
             
             #line 38 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Edit\EditHtml.tt"
                       break;
@@ -199,7 +199,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\" styleClass=\"w-full\" />\r\n");
+            this.Write("\" class=\"w-full\" />\r\n");
             
             #line 41 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Edit\EditHtml.tt"
                   break;
@@ -252,9 +252,10 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n          <error-list [errors]=\"errors\" />\r\n          <p-button type=\"submit\" l" +
-                    "abel=\"Save\" icon=\"pi pi-save\" severity=\"success\" [disabled]=\"!form.valid\" />\r\n  " +
-                    "      </div>\r\n      </form>\r\n    </ng-template>\r\n  </api-response>\r\n</p-card>\r\n");
+            this.Write("\r\n          <ln-error-list [errors]=\"errors()\" />\r\n          <p-button type=\"subm" +
+                    "it\" label=\"Save\" icon=\"pi pi-save\" severity=\"success\" [disabled]=\"!form.valid\" /" +
+                    ">\r\n        </div>\r\n      </form>\r\n    </ng-template>\r\n  </ln-api-response>\r\n</p-" +
+                    "card>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

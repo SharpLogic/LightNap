@@ -18,9 +18,9 @@ namespace LightNap.Scaffolding.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+    #line 1 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
-    public partial class UpdateRequest : LightNap.Scaffolding.Templates.BaseTemplate
+    public partial class CreateRequestDto : LightNap.Scaffolding.Templates.BaseTemplate
     {
 #line hidden
         /// <summary>
@@ -28,55 +28,55 @@ namespace LightNap.Scaffolding.Templates
         /// </summary>
         public override string TransformText()
         {
-            this.Write("\r\nexport interface Update");
+            this.Write("\r\nexport interface Create");
             
-            #line 7 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 7 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write("Request {\r\n\t// TODO: Update these fields to match the server\'s Update");
+            this.Write("RequestDto {\r\n\t// TODO: Update these fields to match the server\'s Create");
             
-            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 8 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Dto.\r\n");
             
-            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
  foreach (var property in Parameters.SetProperties) { 
             
             #line default
             #line hidden
             this.Write("\t");
             
-            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.CamelName));
             
             #line default
             #line hidden
             
-            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.IsNullable ? "?" : ""));
             
             #line default
             #line hidden
             this.Write(": ");
             
-            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 10 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.FrontEndType));
             
             #line default
             #line hidden
             this.Write(";\r\n");
             
-            #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\UpdateRequest.tt"
+            #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Models\Request\CreateRequestDto.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("}");
+            this.Write("}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

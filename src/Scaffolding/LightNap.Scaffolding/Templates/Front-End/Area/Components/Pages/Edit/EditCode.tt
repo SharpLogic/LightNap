@@ -5,10 +5,15 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnInit } from "@angular/core";
+import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { ApiResponseComponent, BlockUiService, ConfirmPopupComponent, ErrorListComponent, ToastService } from "@core";
+import { setApiErrors } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { ToastService } from "@core/services/toast.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { DatePickerModule } from "primeng/datepicker";
@@ -16,9 +21,8 @@ import { CardModule } from "primeng/card";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
-import { finalize, Observable, tap } from "rxjs";
-import { Update<#= Parameters.PascalName #>Request } from "src/app/<#= Parameters.KebabNamePlural #>/models/request/update-<#= Parameters.KebabName #>-request";
-import { <#= Parameters.PascalName #> } from "src/app/<#= Parameters.KebabNamePlural #>/models/response/<#= Parameters.KebabName #>";
+import { finalize, tap } from "rxjs";
+import { Update<#= Parameters.PascalName #>RequestDto } from "src/app/<#= Parameters.KebabNamePlural #>/models/request/update-<#= Parameters.KebabName #>-request-dto";
 import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.KebabNamePlural #>/services/<#= Parameters.KebabName #>.service";
 
 @Component({
@@ -39,18 +43,18 @@ import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.Keba
     ErrorListComponent,
   ],
 })
-export class EditComponent implements OnInit {
-  #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
-  #router = inject(Router);
-  #activeRoute = inject(ActivatedRoute);
-  #confirmationService = inject(ConfirmationService);
-  #toast = inject(ToastService);
-  #fb = inject(FormBuilder);
-  #blockUi = inject(BlockUiService);
+export class EditComponent {
+  readonly #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
+  readonly #router = inject(Router);
+  readonly #activeRoute = inject(ActivatedRoute);
+  readonly #confirmationService = inject(ConfirmationService);
+  readonly #toast = inject(ToastService);
+  readonly #fb = inject(FormBuilder);
+  readonly #blockUi = inject(BlockUiService);
 
-  errors = new Array<string>();
+  readonly errors = signal(new Array<string>());
 
-  form = this.#fb.group({
+  readonly form = this.#fb.group({
 	// TODO: Update these fields to match the right parameters.
 <#  foreach (var property in Parameters.SetProperties) {
         switch (property.FrontEndType) {
@@ -61,7 +65,7 @@ export class EditComponent implements OnInit {
 	<#= property.CamelName #>: this.#fb.control(0, [<#= !property.IsNullable ? "Validators.required" : "" #>]),
 <#              break;
             case "Date": #>
-		<#= property.CamelName #>: this.#fb.control(new Date(), [<#= !property.IsNullable ? "Validators.required" : "" #>]),
+	<#= property.CamelName #>: this.#fb.control(new Date(), [<#= !property.IsNullable ? "Validators.required" : "" #>]),
 <#              break;
             default:
                 if (property.BackEndType == "Guid") { #>
@@ -85,18 +89,16 @@ export class EditComponent implements OnInit {
   });
 
   readonly id = input.required<<#= Parameters.IdProperty.FrontEndType #>>();
-  <#= Parameters.CamelName #>$ = new Observable<<#= Parameters.PascalName #>>();
 
-  ngOnInit() {
-    this.<#= Parameters.CamelName #>$ = this.#<#= Parameters.CamelName #>Service.get<#= Parameters.PascalName #>(this.<#= Parameters.IdProperty.CamelName #>()).pipe(
+  readonly <#= Parameters.CamelName #> = computed(() => 
+    this.#<#= Parameters.CamelName #>Service.get<#= Parameters.PascalName #>(this.<#= Parameters.IdProperty.CamelName #>()).pipe(
       tap(<#= Parameters.CamelName #> => this.form.patchValue(<#= Parameters.CamelName #>))
-    );
-  }
+    ));
 
   saveClicked() {
-    this.errors = [];
+    this.errors.set([]);
 
-    const request = <Update<#= Parameters.PascalName #>Request>this.form.value;
+    const request = <Update<#= Parameters.PascalName #>RequestDto>this.form.value;
 
     this.#blockUi.show({ message: "Saving..." });
     this.#<#= Parameters.CamelName #>Service
@@ -104,12 +106,12 @@ export class EditComponent implements OnInit {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#toast.success("Updated successfully"),
-        error: response => (this.errors = response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
   
   deleteClicked(event: any) {
-    this.errors = [];
+    this.errors.set([]);
 
     this.#confirmationService.confirm({
       header: "Confirm Delete Item",
@@ -125,7 +127,7 @@ export class EditComponent implements OnInit {
               this.#toast.success("Deleted successfully");
               this.#router.navigate(["."], { relativeTo: this.#activeRoute.parent });
             },
-            error: response => this.errors = response.errorMessages
+            error: setApiErrors(this.errors),
           });
       },
     });

@@ -9,9 +9,10 @@
     <p-button [routerLink]="['create']" severity="success" icon="pi pi-plus" label="Create" />
   </div>
 
-  <api-response [apiResponse]="searchResults$" errorMessage="Error loading items" loadingMessage="Loading items...">
-    <ng-template #success let-searchResults>
-      <p-panel header="Filters" [formGroup]="form" [toggleable]="true" [collapsed]="true" styleClass="mb-2">
+  <ln-api-response [apiResponse]="searchResults$" errorMessage="Error loading items" loadingMessage="Loading items...">
+    <ng-template #success let-searchResultsAny>
+      @let searchResults = asSearchResults(searchResultsAny);
+      <p-panel header="Filters" [formGroup]="form" [toggleable]="true" [collapsed]="true" class="mb-2">
         <div class="flex flex-wrap gap-2">
 <# foreach (var property in Parameters.GetProperties) { #>
           <div class="w-[16rem]">
@@ -33,10 +34,10 @@
 				    case "float":
 				    case "decimal":
 #>
-            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" mode="decimal" [minFractionDigits]="2" />
+            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" mode="decimal" [minFractionDigits]="2" />
 <#                      break;
                     default: #>
-            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" />
+            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" />
 <#                  break;
 			    }
                 break;
@@ -107,5 +108,5 @@
         </ng-template>
       </p-table>
     </ng-template>
-  </api-response>
+  </ln-api-response>
 </p-card>

@@ -5,13 +5,13 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 <p-card header="Edit">
-  <api-response [apiResponse]="<#= Parameters.CamelName #>$" errorMessage="Error loading" loadingMessage="Loading...">
+  <ln-api-response [apiResponse]="<#= Parameters.CamelName #>()" errorMessage="Error loading" loadingMessage="Loading...">
     <ng-template #success let-<#= Parameters.CamelName #>>
       <div class="flex gap-1 mb-1">
         <p-button [routerLink]="['../..']" icon="pi pi-arrow-up" label="See all" />
         <p-button [routerLink]="['..']" icon="pi pi-arrow-left" label="Back to item" />
         <p-button (onClick)="deleteClicked($event)" severity="danger" icon="pi pi-trash" label="Delete" />
-        <confirm-popup key="delete" confirmSeverity="danger" confirmIcon="pi pi-trash" />
+        <ln-confirm-popup key="delete" confirmSeverity="danger" confirmIcon="pi pi-trash" />
       </div>
       <form [formGroup]="form" (ngSubmit)="saveClicked()" autocomplete="off">
         <div class="w-[30rem] flex flex-col gap-5">
@@ -34,10 +34,10 @@
 				    case "double":
 				    case "float":
 				    case "decimal":#>
-            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" mode="decimal" [minFractionDigits]="2" />
+            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" mode="decimal" [minFractionDigits]="2" />
 <#                      break;
                     default: #>
-            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" />
+            <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" />
 <#                  break;
 			    }
                 break;
@@ -49,10 +49,10 @@
           </div>
 <# } #>
 
-          <error-list [errors]="errors" />
+          <ln-error-list [errors]="errors()" />
           <p-button type="submit" label="Save" icon="pi pi-save" severity="success" [disabled]="!form.valid" />
         </div>
       </form>
     </ng-template>
-  </api-response>
+  </ln-api-response>
 </p-card>

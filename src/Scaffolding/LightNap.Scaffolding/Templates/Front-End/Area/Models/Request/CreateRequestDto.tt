@@ -4,7 +4,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-export interface Create<#= Parameters.PascalName #>Request {
+export interface Create<#= Parameters.PascalName #>RequestDto {
 	// TODO: Update these fields to match the server's Create<#= Parameters.PascalName #>Dto.
 <# foreach (var property in Parameters.SetProperties) { #>
 	<#= property.CamelName #><#= property.IsNullable ? "?" : "" #>: <#= property.FrontEndType #>;

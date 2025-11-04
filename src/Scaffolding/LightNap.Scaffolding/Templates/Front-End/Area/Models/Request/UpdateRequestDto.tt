@@ -4,10 +4,9 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-export interface <#= Parameters.PascalName #> {
-	// TODO: Update these fields to match the server's <#= Parameters.PascalName #>Dto.
-	<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>;
-<# foreach (var property in Parameters.GetProperties) { #>
+export interface Update<#= Parameters.PascalName #>RequestDto {
+	// TODO: Update these fields to match the server's Update<#= Parameters.PascalName #>Dto.
+<# foreach (var property in Parameters.SetProperties) { #>
 	<#= property.CamelName #><#= property.IsNullable ? "?" : "" #>: <#= property.FrontEndType #>;
 <# } #>
 }

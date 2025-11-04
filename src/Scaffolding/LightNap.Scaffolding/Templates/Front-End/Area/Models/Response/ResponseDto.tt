@@ -4,10 +4,10 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-import { PagedRequestDto } from "@core";
-export interface Search<#= Parameters.PascalNamePlural #>Request extends PagedRequestDto {
-	// TODO: Update these fields to match the server's Search<#= Parameters.PascalName #>Dto.
+export interface <#= Parameters.PascalName #>Dto {
+	// TODO: Update these fields to match the server's <#= Parameters.PascalName #>Dto.
+	<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>;
 <# foreach (var property in Parameters.GetProperties) { #>
-	<#= property.CamelName #>?: <#= property.FrontEndType #>;
+	<#= property.CamelName #><#= property.IsNullable ? "?" : "" #>: <#= property.FrontEndType #>;
 <# } #>
 }

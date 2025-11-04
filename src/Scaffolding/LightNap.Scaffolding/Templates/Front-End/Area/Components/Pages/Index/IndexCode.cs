@@ -34,7 +34,8 @@ import { Component, inject } from ""@angular/core"";
 import { takeUntilDestroyed } from ""@angular/core/rxjs-interop"";
 import { FormBuilder, ReactiveFormsModule } from ""@angular/forms"";
 import { RouterModule } from ""@angular/router"";
-import { ApiResponseComponent, EmptyPagedResponse } from ""@core"";
+import { EmptyPagedResponse, PagedResponseDto, TypeHelpers } from ""@core"";
+import { ApiResponseComponent } from ""@core/components/api-response/api-response.component"";
 import { ButtonModule } from ""primeng/button"";
 import { CardModule } from ""primeng/card"";
 import { DatePickerModule } from ""primeng/datepicker"";
@@ -46,42 +47,42 @@ import { CheckboxModule } from ""primeng/checkbox"";
 import { debounceTime, startWith, Subject, switchMap } from ""rxjs"";
 import { ");
             
-            #line 22 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(" } from \"src/app/");
+            this.Write("Dto } from \"src/app/");
             
-            #line 22 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabNamePlural));
             
             #line default
             #line hidden
             this.Write("/models/response/");
             
-            #line 22 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
             #line hidden
-            this.Write("\";\r\nimport { ");
+            this.Write("-dto\";\r\nimport { ");
             
-            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 24 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
             this.Write("Service } from \"src/app/");
             
-            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 24 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabNamePlural));
             
             #line default
             #line hidden
             this.Write("/services/");
             
-            #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 24 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
@@ -103,64 +104,67 @@ import { ");
     PanelModule,
     TableModule,
     RouterModule,
-    ButtonModule],
+    ButtonModule,
+  ],
 })
 export class IndexComponent {
-  pageSize = 10;
+  readonly pageSize = 10;
 
-  #");
+  readonly #");
             
-            #line 45 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 47 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
             
             #line default
             #line hidden
             this.Write("Service = inject(");
             
-            #line 45 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 47 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write("Service);\r\n  #fb = inject(FormBuilder);\r\n\r\n  form = this.#fb.group({\r\n");
+            this.Write("Service);\r\n  readonly #fb = inject(FormBuilder);\r\n\r\n  readonly form = this.#fb.gr" +
+                    "oup({\r\n");
             
-            #line 49 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 51 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
   foreach (var property in Parameters.GetProperties) { 
             
             #line default
             #line hidden
             this.Write("      ");
             
-            #line 50 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 52 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.CamelName));
             
             #line default
             #line hidden
             this.Write(": this.#fb.nonNullable.control<");
             
-            #line 50 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 52 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(property.FrontEndType));
             
             #line default
             #line hidden
             this.Write(" | undefined>(undefined),\r\n");
             
-            #line 51 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 53 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
   }
             
             #line default
             #line hidden
-            this.Write("  });\r\n\r\n  #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();\r\n  searchRe" +
-                    "sults$ = this.#lazyLoadEventSubject.pipe(\r\n    switchMap(event =>\r\n      this.#");
+            this.Write("  });\r\n\r\n  readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();\r\n " +
+                    " readonly searchResults$ = this.#lazyLoadEventSubject.pipe(\r\n    switchMap(event" +
+                    " =>\r\n      this.#");
             
-            #line 57 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 59 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
             
             #line default
             #line hidden
             this.Write("Service.search");
             
-            #line 57 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 59 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
             
             #line default
@@ -175,13 +179,33 @@ export class IndexComponent {
     // fake an empty response so we can avoid a redundant call to the API.
     startWith(new EmptyPagedResponse<");
             
-            #line 65 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            #line 67 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(@">())
-  );
+            this.Write("Dto>())\r\n  );\r\n\r\n  readonly asSearchResults = TypeHelpers.cast<PagedResponseDto<");
+            
+            #line 70 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
+            
+            #line default
+            #line hidden
+            this.Write("Dto>>;\r\n  readonly as");
+            
+            #line 71 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
+            
+            #line default
+            #line hidden
+            this.Write(" = TypeHelpers.cast<");
+            
+            #line 71 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Index\IndexCode.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
+            
+            #line default
+            #line hidden
+            this.Write(@"Dto>;
 
   constructor() {
     this.form.valueChanges.pipe(takeUntilDestroyed(), debounceTime(1000)).subscribe(() => {

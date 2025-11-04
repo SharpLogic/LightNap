@@ -30,12 +30,12 @@ namespace LightNap.Scaffolding.Templates
         {
             this.Write(@"
 import { CommonModule } from ""@angular/common"";
-import { Component, effect, inject, input } from ""@angular/core"";
+import { Component, computed, inject, input } from ""@angular/core"";
 import { RouterLink } from ""@angular/router"";
-import { ApiResponseComponent } from ""@core"";
+import { TypeHelpers } from ""@core"";
+import { ApiResponseComponent } from ""@core/components/api-response/api-response.component"";
 import { ButtonModule } from ""primeng/button"";
 import { CardModule } from ""primeng/card"";
-import { Observable } from ""rxjs"";
 import { ");
             
             #line 14 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
@@ -43,7 +43,7 @@ import { ");
             
             #line default
             #line hidden
-            this.Write(" } from \"src/app/");
+            this.Write("Dto } from \"src/app/");
             
             #line 14 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabNamePlural));
@@ -57,7 +57,7 @@ import { ");
             
             #line default
             #line hidden
-            this.Write("\";\r\nimport { ");
+            this.Write("-dto\";\r\nimport { ");
             
             #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
@@ -80,7 +80,7 @@ import { ");
             #line hidden
             this.Write(".service\";\r\n\r\n@Component({\r\n  standalone: true,\r\n  templateUrl: \"./get.component." +
                     "html\",\r\n  imports: [CommonModule, CardModule, RouterLink, ApiResponseComponent, " +
-                    "ButtonModule],\r\n})\r\nexport class GetComponent {\r\n  #");
+                    "ButtonModule],\r\n})\r\nexport class GetComponent {\r\n  readonly #");
             
             #line 23 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
@@ -94,49 +94,49 @@ import { ");
             
             #line default
             #line hidden
-            this.Write("Service);\r\n  errors = new Array<string>();\r\n\r\n  readonly id = input.required<");
+            this.Write("Service);\r\n\r\n  readonly id = input.required<");
             
-            #line 26 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
+            #line 25 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.FrontEndType));
             
             #line default
             #line hidden
-            this.Write(">();\r\n  ");
+            this.Write(">();\r\n\r\n  readonly ");
             
             #line 27 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
             
             #line default
             #line hidden
-            this.Write("$ = new Observable<");
+            this.Write(" = computed(() => this.#");
             
             #line 27 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
-            
-            #line default
-            #line hidden
-            this.Write(">();\r\n\r\n  constructor() {\r\n    effect(() => this.");
-            
-            #line 30 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
-            
-            #line default
-            #line hidden
-            this.Write("$ = this.#");
-            
-            #line 30 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));
             
             #line default
             #line hidden
             this.Write("Service.get");
             
-            #line 30 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
+            #line 27 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write("(this.id()));\r\n  }\r\n}\r\n");
+            this.Write("(this.id()));\r\n\r\n  readonly errors = new Array<string>();\r\n\r\n  readonly as");
+            
+            #line 31 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
+            
+            #line default
+            #line hidden
+            this.Write(" = TypeHelpers.cast<");
+            
+            #line 31 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Get\GetCode.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
+            
+            #line default
+            #line hidden
+            this.Write("Dto>;\r\n}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

@@ -78,7 +78,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\" styleClass=\"w-full\" />\r\n");
+            this.Write("\" class=\"w-full\" />\r\n");
             
             #line 19 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Create\CreateHtml.tt"
 	    } else { 
@@ -252,7 +252,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\" styleClass=\"w-full\" mode=\"decimal\" [minFractionDigits]=\"2\" />\r\n");
+            this.Write("\" class=\"w-full\" mode=\"decimal\" [minFractionDigits]=\"2\" />\r\n");
             
             #line 46 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Create\CreateHtml.tt"
                       break;
@@ -274,7 +274,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\" styleClass=\"w-full\" />\r\n");
+            this.Write("\" class=\"w-full\" />\r\n");
             
             #line 49 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Components\Pages\Create\CreateHtml.tt"
                   break;
@@ -327,9 +327,9 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("\r\n      <error-list [errors]=\"errors\" />\r\n      <p-button type=\"submit\" label=\"Cr" +
-                    "eate\" icon=\"pi pi-save\" severity=\"success\" [disabled]=\"!form.valid\" />\r\n    </di" +
-                    "v>\r\n  </form>\r\n</p-card>\r\n");
+            this.Write("\r\n      <ln-error-list [errors]=\"errors()\" />\r\n      <p-button type=\"submit\" labe" +
+                    "l=\"Create\" icon=\"pi pi-save\" severity=\"success\" [disabled]=\"!form.valid\" />\r\n   " +
+                    " </div>\r\n  </form>\r\n</p-card>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
