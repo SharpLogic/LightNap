@@ -30,7 +30,6 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     // 1. Core Angular providers
-    importProvidersFrom(BrowserModule),
     provideZonelessChangeDetection(),
     provideAnimationsAsync(),
 
