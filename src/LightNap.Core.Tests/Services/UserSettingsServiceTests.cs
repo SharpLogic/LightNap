@@ -174,7 +174,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count > 0);
+            Assert.IsNotEmpty(result);
             Assert.IsTrue(result.Any(s => s.Key == TestSettingKey));
         }
 
@@ -189,7 +189,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count > 0);
+            Assert.IsNotEmpty(result);
             // Should contain default settings
         }
 
@@ -259,7 +259,7 @@ namespace LightNap.Core.Tests.Services
             // Assert
             Assert.IsNotNull(result);
             // All returned settings should be user-readable
-            Assert.IsTrue(result.Count > 0);
+            Assert.IsNotEmpty(result);
         }
 
         #endregion

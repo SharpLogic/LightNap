@@ -198,8 +198,8 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.HasCount(2, userRoles);
-            Assert.IsTrue(userRoles.Contains(roles[0]));
-            Assert.IsTrue(userRoles.Contains(roles[1]));
+            Assert.Contains(roles[0], userRoles);
+            Assert.Contains(roles[1], userRoles);
         }
 
         [TestMethod]

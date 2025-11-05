@@ -123,7 +123,7 @@ namespace LightNap.Core.Tests.Services
             var users = await this._usersService.GetUsersByIdsAsync([userId1, userId2, userId3]);
 
             // Assert
-            Assert.AreEqual(3, users.Count);
+            Assert.HasCount(3, users);
         }
 
         [TestMethod]
@@ -139,7 +139,7 @@ namespace LightNap.Core.Tests.Services
             var users = await this._usersService.GetUsersByIdsAsync([userId1, "invalid-id", userId2]);
 
             // Assert
-            Assert.AreEqual(2, users.Count);
+            Assert.HasCount(2, users);
         }
 
         [TestMethod]
@@ -227,7 +227,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.AreEqual(0, result.TotalCount);
-            Assert.AreEqual(0, result.Data.Count);
+            Assert.IsEmpty(result.Data);
         }
 
         [TestMethod]
@@ -250,7 +250,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.AreEqual(3, result.TotalCount);
-            Assert.AreEqual(2, result.Data.Count);
+            Assert.HasCount(2, result.Data);
             Assert.AreEqual(1, result.PageNumber);
         }
 
