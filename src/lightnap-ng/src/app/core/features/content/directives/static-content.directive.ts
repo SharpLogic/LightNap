@@ -35,7 +35,7 @@ export class StaticContentDirective {
           this.#renderer.setProperty(this.#elementRef.nativeElement, "innerHTML", trustedHtml);
           break;
         case "PlainText":
-          const textNode = this.#renderer.createText(trustedHtml);
+          const textNode = this.#renderer.createText(untrustedHtml);
           this.#renderer.setProperty(this.#elementRef.nativeElement, "innerHTML", "");
           this.#renderer.appendChild(this.#elementRef.nativeElement, textNode);
           break;
