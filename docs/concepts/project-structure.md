@@ -30,7 +30,7 @@ There are four Web API controllers by default. They are organized from the persp
 
 2. **UsersController** (`/api/users`): Covers user administration features, such as searching users, managing roles & claims, deleting users, and so on.
 
-3. **MeController** (`/api/users/me`): Covers logged-in user features, such as setting profile data, managing devices & settings, and notifications.
+3. **MeController** (`/api/users/me`): Covers logged-in user features, such as setting profile data, managing devices & settings, and [in-app notifications](../common-scenarios/adding-notifications).
 
 4. **PublicController** (`/api/public`): Covers business features intended for any user, including those who are not logged in. This infrastructure is provided as a series of stubs to be extended for the application scenario.
 
@@ -72,7 +72,7 @@ The `backend-api` folder that contains REST API integration services and DTOs.
 - `helpers`: Helper classes for rehydrating data pulled down from the backend, which is usually just `Date` objects.
 - `services`: Thin layers to wrap backend HTTP requests. If you add or update endpoints on existing backend controllers, update them here as well. It's recommended that these data services never be used directly by application code, but are rather accessed through an application service described below.
 
-There are also a variety of application services that are exposed in the `services` folder or from the `services` folders under functional areas, such as the `notifications` or `users` folder. Some of these wrap the data services in the `backend-api` folder and are the recommended way to access those features from application code. This level of abstraction provides a better way to handle pre- and post-processing of requests and responses, as well as to compose or otherwise translate raw DTOs into more sophisticated entities.
+There are also a variety of application services that are exposed in the `services` folder or from the `services` folders under functional areas, such as the `notifications` or `users` folder. Some of these wrap the data services in the `backend-api` folder and are the recommended way to access those features from application code. This level of abstraction provides a better way to handle pre- and post-processing of requests and responses, as well as to compose or otherwise translate raw DTOs into more sophisticated entities. Learn more about [adding notification types](../common-scenarios/adding-notifications).
 
 #### The `pages` Folder
 

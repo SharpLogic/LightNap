@@ -150,3 +150,9 @@ The scaffolder only creates files, so deleting those files will undo its work.
 ## Updating Scaffolding
 
 The scaffolder does not support updating existing files. It will exit without making changes if there are any files already in locations it plans to write to.
+
+## See Also
+
+- [Adding Entities](./adding-entities) - Manual process for adding entities
+- [Adding In-App Notification Types](./adding-notifications) - Example of implementing a feature without scaffolding
+- [Solution & Project Structure](../concepts/project-structure) - Understanding the architecture

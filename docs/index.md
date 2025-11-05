@@ -17,6 +17,7 @@ LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) is a full stack star
 - **ASP.NET Identity**: Out-of-the-box support for user authentication and authorization, including end-to-end support for roles and claims.
 - **JWT Token Management**: Secure token-based authentication.
 - **Identity Management**: Administrative features for managing user roles and permissions.
+- **In-App Notifications**: Built-in notification system for delivering real-time alerts to users.
 - **Angular**: Frontend framework for building dynamic user interfaces.
 - **PrimeNG**: Rich set of UI components for Angular.
 - **Tailwind**: Utility-first CSS framework.

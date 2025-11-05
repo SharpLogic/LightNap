@@ -265,3 +265,9 @@ If you'd like to continue the exercise to implement these new properties for use
 3. Update `UsersService.SearchUsersAsync` in `Users/Services/UsersService.cs` to implement search on filters supported at the appropriate privilege level.
 4. Update the frontend DTOs in `core/backend-api/dtos/users` to reflect the changes made to the backend DTOs.
 5. Update page components in `pages/admin`  to render the new user fields in the appropriate places.
+
+## See Also
+
+- [Adding Entities](./adding-entities) - Working with Entity Framework models
+- [Adding In-App Notification Types](./adding-notifications) - Another example of working with entities and DTOs
+- [Solution & Project Structure](../concepts/project-structure) - Understanding the data flow pattern
