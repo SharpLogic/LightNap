@@ -1,5 +1,4 @@
 using LightNap.Core.Api;
-using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
@@ -30,7 +29,7 @@ namespace LightNap.Core.Tests.Services
         {
             var services = new ServiceCollection();
             services.AddLogging()
-                .AddLightNapInMemoryDatabase()
+                .AddLightNapInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
                 .AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -52,23 +51,7 @@ namespace LightNap.Core.Tests.Services
             this._dbContext.Dispose();
         }
 
-        private void LogInAdministrator()
-        {
-            this._userContext.UserId = "admin-user-id";
-            this._userContext.Roles.Add(Constants.Roles.Administrator);
-        }
-
-        private void LogInNormalUser(string userId)
-        {
-            this._userContext.UserId = userId;
-            this._userContext.Roles.Clear();
-        }
-
-        private void LogOut()
-        {
-            this._userContext.UserId = null;
-            this._userContext.Roles.Clear();
-        }
+        #region AddUserClaimAsync Tests
 
         [TestMethod]
         public async Task AddUserClaimAsync_UserAndClaimExist_AddsClaimToUser()
@@ -78,7 +61,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             await this._claimsService.AddUserClaimAsync(userId, new ClaimDto { Type = claimType, Value = claimValue });
@@ -96,7 +79,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Add the claim once
             await this._claimsService.AddUserClaimAsync(userId, new ClaimDto { Type = claimType, Value = claimValue });
@@ -114,7 +97,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -129,7 +112,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogOut();
+            this._userContext.LogOut();
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -143,52 +126,29 @@ namespace LightNap.Core.Tests.Services
             var userId = "non-existent-user-id";
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
-            // Act
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._claimsService.AddUserClaimAsync(userId, new ClaimDto { Type = claimType, Value = claimValue }));
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+                await this._claimsService.AddUserClaimAsync(userId, new ClaimDto { Type = claimType, Value = claimValue }));
         }
 
+        #endregion
+
+        #region RemoveUserClaimAsync Tests
+
         [TestMethod]
-        public async Task GetClaimsForUserAsync_UserExists_ReturnsClaims()
+        public async Task RemoveUserClaimAsync_UserAndClaimExist_RemovesClaimFromUser()
         {
             // Arrange
             var userId = "test-user-id";
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            await this._userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
-
-            var otherUserId = "other-user-id";
-            var otherClaimType = "other-claim-type";
-            var otherClaimValue = "other-claim-value";
-            var otherUser = await TestHelper.CreateTestUserAsync(this._userManager, otherUserId);
-            await this._userManager.AddClaimAsync(otherUser, new Claim(otherClaimType, otherClaimValue));
-
-            this.LogInAdministrator();
-
-            // Act
-            var claims = await this._claimsService.SearchClaimsAsync(new SearchUserClaimsRequestDto() { UserId = userId });
-
-            // Assert
-            Assert.HasCount(2, claims.Data);
-            Assert.IsTrue(claims.Data.Any(c => c.Type == claimType && c.Value == claimValue));
-            Assert.IsTrue(claims.Data.Any(c => c.Type == otherClaimType && c.Value == otherClaimValue));
-        }
-
-        [TestMethod]
-        public async Task RemoveClaimFromUserAsync_UserAndClaimExist_RemovesClaimFromUser()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            var claimType = "test-claim-type";
-            var claimValue = "test-claim-value";
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
             await this._userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
             var claims = await this._userManager.GetClaimsAsync(user);
             Assert.IsTrue(claims.Any(c => c.Type == claimType && c.Value == claimValue));
-            this._userContext.UserId = user.Id;
 
             // Act
             await this._claimsService.RemoveUserClaimAsync(userId, new ClaimDto { Type = claimType, Value = claimValue });
@@ -206,7 +166,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
             await this._userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
 
             // Act & Assert
@@ -222,7 +182,7 @@ namespace LightNap.Core.Tests.Services
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogOut();
+            this._userContext.LogOut();
             await this._userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
 
             // Act & Assert
@@ -237,7 +197,7 @@ namespace LightNap.Core.Tests.Services
             var userId = "non-existent-user-id";
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -245,14 +205,14 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task RemoveUserClaimAsync_UserExistsButClaimDoesNotExist_DoesNotThrowAndDoesNotRemoveAnyClaim()
+        public async Task RemoveUserClaimAsync_ClaimDoesNotExist_DoesNotThrow()
         {
             // Arrange
             var userId = "test-user-id";
             var claimType = "non-existent-claim-type";
             var claimValue = "non-existent-claim-value";
             var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Ensure user has no claims
             var claimsBefore = await this._userManager.GetClaimsAsync(user);
@@ -267,8 +227,12 @@ namespace LightNap.Core.Tests.Services
             Assert.IsFalse(claimsAfter.Any(c => c.Type == claimType && c.Value == claimValue));
         }
 
+        #endregion
+
+        #region GetMyClaimsAsync Tests
+
         [TestMethod]
-        public async Task SearchClaimsAsync_NonAdminUserLoggedIn_ReturnsOwnClaims()
+        public async Task GetMyClaimsAsync_UserAuthenticated_ReturnsUserClaims()
         {
             // Arrange
             var userId = "test-user-id";
@@ -283,7 +247,7 @@ namespace LightNap.Core.Tests.Services
             var otherUser = await TestHelper.CreateTestUserAsync(this._userManager, otherUserId);
             await this._userManager.AddClaimAsync(otherUser, new Claim(otherClaimType, otherClaimValue));
 
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
 
             // Act
             var claims = await this._claimsService.GetMyClaimsAsync(new PagedRequestDtoBase());
@@ -291,12 +255,14 @@ namespace LightNap.Core.Tests.Services
             // Assert
             Assert.HasCount(1, claims.Data);
             Assert.IsTrue(claims.Data.Any(c => c.Type == claimType && c.Value == claimValue));
+            Assert.IsFalse(claims.Data.Any(c => c.Type == otherClaimType && c.Value == otherClaimValue));
         }
 
         [TestMethod]
         public async Task GetMyClaimsAsync_UserLoggedOut_ThrowsError()
         {
             // Arrange
+            this._userContext.LogOut();
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -309,7 +275,7 @@ namespace LightNap.Core.Tests.Services
             // Arrange
             var userId = "test-user-id";
             await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
 
             // Act
             var claims = await this._claimsService.GetMyClaimsAsync(new PagedRequestDtoBase());
@@ -319,55 +285,12 @@ namespace LightNap.Core.Tests.Services
             Assert.IsEmpty(claims.Data);
         }
 
-        [TestMethod]
-        public async Task GetMyClaims_UserAuthenticated_ReturnsUserClaims()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            var claimType = "test-claim-type";
-            var claimValue = "test-claim-value";
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            await this._userManager.AddClaimAsync(user, new Claim(claimType, claimValue));
-            this.LogInNormalUser(userId);
+        #endregion
 
-            // Act
-            var claims = await this._claimsService.GetMyClaimsAsync(new PagedRequestDtoBase());
-
-            // Assert
-            Assert.IsNotNull(claims);
-            Assert.HasCount(1, claims.Data);
-            Assert.IsTrue(claims.Data.Any(c => c.Type == claimType && c.Value == claimValue));
-        }
+        #region GetUsersWithClaimAsync Tests
 
         [TestMethod]
-        public async Task GetMyClaims_UserNotAuthenticated_ThrowsError()
-        {
-            // Arrange
-            this.LogOut();
-
-            // Act & Assert
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
-                await this._claimsService.GetMyClaimsAsync(new PagedRequestDtoBase()));
-        }
-
-        [TestMethod]
-        public async Task GetMyClaims_UserHasNoClaims_ReturnsEmptyList()
-        {
-            // Arrange
-            var userId = "test-user-id";
-            await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
-
-            // Act
-            var claims = await this._claimsService.GetMyClaimsAsync(new PagedRequestDtoBase());
-
-            // Assert
-            Assert.IsNotNull(claims);
-            Assert.IsEmpty(claims.Data);
-        }
-
-        [TestMethod]
-        public async Task GetUsersWithClaim_ClaimExists_ReturnsUserIds()
+        public async Task GetUsersWithClaimAsync_ClaimExists_ReturnsUserIds()
         {
             // Arrange
             var claimType = "test-claim-type";
@@ -380,7 +303,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user2, new Claim(claimType, claimValue));
             await this._userManager.AddClaimAsync(user3, new Claim(claimType, "different-value"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var results = await this._claimsService.GetUsersWithClaimAsync(
@@ -399,13 +322,13 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetUsersWithClaim_NoUsersWithClaim_ReturnsEmptyList()
+        public async Task GetUsersWithClaimAsync_NoUsersWithClaim_ReturnsEmptyList()
         {
             // Arrange
             var claimType = "test-claim-type";
             var claimValue = "test-claim-value";
             await TestHelper.CreateTestUserAsync(this._userManager, "user-1");
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var userIds = await this._claimsService.GetUsersWithClaimAsync(
@@ -421,12 +344,12 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetUsersWithClaim_UserNotAdmin_ThrowsError()
+        public async Task GetUsersWithClaimAsync_UserNotAdmin_ThrowsError()
         {
             // Arrange
             var userId = "test-user-id";
             await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -439,10 +362,10 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetUsersWithClaim_UserLoggedOut_ThrowsError()
+        public async Task GetUsersWithClaimAsync_UserLoggedOut_ThrowsError()
         {
             // Arrange
-            this.LogOut();
+            this._userContext.LogOut();
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -453,6 +376,10 @@ namespace LightNap.Core.Tests.Services
                         Value = "test-claim-value"
                     }));
         }
+
+        #endregion
+
+        #region SearchClaimsAsync Tests (Distinct Claims)
 
         [TestMethod]
         public async Task SearchClaimsAsync_AdminUser_ReturnsAllDistinctClaims()
@@ -466,7 +393,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user2, new Claim("claim-type-1", "claim-value-1")); // Duplicate
             await this._userManager.AddClaimAsync(user2, new Claim("claim-type-3", "claim-value-3"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto());
@@ -487,7 +414,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user, new Claim("type-a", "value-1"));
             await this._userManager.AddClaimAsync(user, new Claim("type-b", "value-2"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto { Type = "type-a" });
@@ -506,7 +433,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user, new Claim("admin-permission", "value-2"));
             await this._userManager.AddClaimAsync(user, new Claim("other-type", "value-3"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto { TypeContains = "permission" });
@@ -518,6 +445,34 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
+        public async Task SearchClaimsAsync_UserNotAdmin_ThrowsError()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            this._userContext.LogIn(userId);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+                await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto()));
+        }
+
+        [TestMethod]
+        public async Task SearchClaimsAsync_UserLoggedOut_ThrowsError()
+        {
+            // Arrange
+            this._userContext.LogOut();
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+                await this._claimsService.SearchClaimsAsync(new SearchClaimsRequestDto()));
+        }
+
+        #endregion
+
+        #region SearchUserClaimsAsync Tests (User-Claim Pairs)
+
+        [TestMethod]
         public async Task SearchUserClaimsAsync_AdminUser_ReturnsAllUserClaims()
         {
             // Arrange
@@ -527,7 +482,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user1, new Claim("claim-type-1", "claim-value-1"));
             await this._userManager.AddClaimAsync(user2, new Claim("claim-type-2", "claim-value-2"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchUserClaimsAsync(new SearchUserClaimsRequestDto());
@@ -547,7 +502,7 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddClaimAsync(user1, new Claim("claim-type-1", "claim-value-1"));
             await this._userManager.AddClaimAsync(user2, new Claim("claim-type-2", "claim-value-2"));
 
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchUserClaimsAsync(new SearchUserClaimsRequestDto { UserId = "user-1" });
@@ -563,7 +518,7 @@ namespace LightNap.Core.Tests.Services
             // Arrange
             var userId = "test-user-id";
             await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            this.LogInNormalUser(userId);
+            this._userContext.LogIn(userId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -574,7 +529,7 @@ namespace LightNap.Core.Tests.Services
         public async Task SearchUserClaimsAsync_UserLoggedOut_ThrowsError()
         {
             // Arrange
-            this.LogOut();
+            this._userContext.LogOut();
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -586,7 +541,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             await TestHelper.CreateTestUserAsync(this._userManager, "user-1");
-            this.LogInAdministrator();
+            this._userContext.LogInAdministrator();
 
             // Act
             var result = await this._claimsService.SearchUserClaimsAsync(new SearchUserClaimsRequestDto { UserId = "user-1" });
@@ -595,5 +550,7 @@ namespace LightNap.Core.Tests.Services
             Assert.IsNotNull(result.Data);
             Assert.IsEmpty(result.Data);
         }
+
+        #endregion
     }
 }

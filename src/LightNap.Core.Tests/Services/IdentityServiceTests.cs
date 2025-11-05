@@ -9,13 +9,13 @@ using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Identity.Models;
 using LightNap.Core.Identity.Services;
+using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
@@ -41,6 +41,7 @@ namespace LightNap.Core.Tests.Services
         private Mock<IEmailService> _emailServiceMock;
         private Mock<ITokenService> _tokenServiceMock;
         private Mock<INotificationService> _notificationServiceMock;
+        private TestUserContext _userContext;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -48,7 +49,7 @@ namespace LightNap.Core.Tests.Services
         {
             var services = new ServiceCollection();
             services.AddLogging()
-                .AddLightNapInMemoryDatabase()
+                .AddLightNapInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
                 .AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -56,41 +57,45 @@ namespace LightNap.Core.Tests.Services
             // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
             services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();
 
-            this._serviceProvider = services.BuildServiceProvider();
-            this._dbContext = this._serviceProvider.GetRequiredService<ApplicationDbContext>();
-            this._userManager = this._serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var signInManager = this._serviceProvider.GetRequiredService<SignInManager<ApplicationUser>>();
-            var logger = this._serviceProvider.GetRequiredService<ILogger<IdentityService>>();
+            this._userContext = new();
+            this._userContext.LogIn(IdentityServiceTests._userId);
+            this._userContext.IpAddress = "127.0.0.1";
+
+            services.AddScoped<IUserContext>(sp => this._userContext);
+
+            services.AddScoped<IOptions<ApplicationSettings>>(sp =>
+                Options.Create(
+                    new ApplicationSettings
+                    {
+                        AutomaticallyApplyEfMigrations = false,
+                        LogOutInactiveDeviceDays = 30,
+                        RequireTwoFactorForNewUsers = false,
+                        SiteUrlRootForEmails = "https://example.com/",
+                        UseSameSiteStrictCookies = true
+                    }));
 
             this._tokenServiceMock = new Mock<ITokenService>();
             this._tokenServiceMock.Setup(ts => ts.GenerateRefreshToken()).Returns("refresh-token");
             this._tokenServiceMock.Setup(ts => ts.GenerateAccessTokenAsync(It.IsAny<ApplicationUser>())).ReturnsAsync("access-token");
+            services.AddScoped<ITokenService>(sp => this._tokenServiceMock.Object);
 
             this._emailServiceMock = new Mock<IEmailService>();
+            services.AddScoped<IEmailService>(sp => this._emailServiceMock.Object);
 
             this._notificationServiceMock = new Mock<INotificationService>();
             this._notificationServiceMock.Setup(ns => ns.CreateSystemNotificationForUserAsync(ApplicationRoles.Administrator.Name!, It.IsAny<CreateNotificationRequestDto>()));
-
-            var applicationSettings = Options.Create(
-                new ApplicationSettings
-                {
-                    AutomaticallyApplyEfMigrations = false,
-                    LogOutInactiveDeviceDays = 30,
-                    RequireTwoFactorForNewUsers = false,
-                    SiteUrlRootForEmails = "https://example.com/",
-                    UseSameSiteStrictCookies = true
-                });
+            services.AddScoped<INotificationService>(sp => this._notificationServiceMock.Object);
 
             this._cookieManager = new TestCookieManager();
+            services.AddScoped<ICookieManager>(sp => this._cookieManager);
 
-            TestUserContext userContext = new()
-            {
-                UserId = _userId,
-                IpAddress = "127.0.0.1"
-            };
+            services.AddScoped<IdentityService>();
 
-            this._identityService = new IdentityService(logger, this._userManager, signInManager, this._tokenServiceMock.Object, this._emailServiceMock.Object,
-                this._notificationServiceMock.Object, applicationSettings, this._dbContext, this._cookieManager, userContext);
+            this._serviceProvider = services.BuildServiceProvider();
+            this._dbContext = this._serviceProvider.GetRequiredService<ApplicationDbContext>();
+            this._userManager = this._serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            this._identityService = this._serviceProvider.GetRequiredService<IdentityService>();
         }
 
         [TestCleanup]
@@ -708,6 +713,430 @@ namespace LightNap.Core.Tests.Services
             await this._dbContext.SaveChangesAsync();
 
             // Act
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RevokeDeviceAsync(deviceId));
+        }
+
+        [TestMethod]
+        public async Task RegisterAsync_WithRequireEmailVerification_ShouldNotLogInUser()
+        {
+            // Arrange
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            appSettings.Value.RequireEmailVerification = true;
+
+            var requestDto = new RegisterRequestDto
+            {
+                Email = "newuser@test.com",
+                Password = "NewUserPassword123!",
+                UserName = "NewUser",
+                ConfirmPassword = "NewUserPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice"
+            };
+
+            this._emailServiceMock.Setup(ts => ts.SendEmailVerificationAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>())).Returns(Task.CompletedTask);
+
+            // Act
+            var registeredUser = await this._identityService.RegisterAsync(requestDto);
+
+            // Assert
+            Assert.AreEqual(LoginSuccessType.EmailVerificationRequired, registeredUser.Type);
+            Assert.IsNull(registeredUser.AccessToken);
+
+            var user = await this._userManager.FindByEmailAsync(requestDto.Email);
+            Assert.IsNotNull(user);
+            Assert.IsFalse(user.EmailConfirmed);
+
+            this._emailServiceMock.Verify(ts => ts.SendEmailVerificationAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task LogInAsync_UnverifiedEmailWithRequireEmailVerification_ThrowsError()
+        {
+            // Arrange
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            appSettings.Value.RequireEmailVerification = true;
+
+            var requestDto = new LoginRequestDto
+            {
+                Login = "test@test.com",
+                Password = "ValidPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice",
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Login);
+            user.EmailConfirmed = false;
+            await this._userManager.UpdateAsync(user);
+            await this._userManager.AddPasswordAsync(user, requestDto.Password);
+
+            // Act & Assert
+            var response = await this._identityService.LogInAsync(requestDto);
+            Assert.AreEqual(LoginSuccessType.EmailVerificationRequired, response.Type);
+            Assert.IsNull(response.AccessToken);
+        }
+
+        [TestMethod]
+        public async Task RequestVerificationEmailAsync_ValidEmail_SendsEmail()
+        {
+            // Arrange
+            var requestDto = new SendVerificationEmailRequestDto
+            {
+                Email = "test@test.com"
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            user.EmailConfirmed = false;
+            await this._userManager.UpdateAsync(user);
+
+            string capturedVerificationToken = string.Empty;
+            this._emailServiceMock
+                .Setup(ts => ts.SendEmailVerificationAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Callback<ApplicationUser, string>((user, token) => capturedVerificationToken = token)
+                .Returns(Task.CompletedTask);
+
+            // Act
+            await this._identityService.RequestVerificationEmailAsync(requestDto);
+
+            // Assert
+            this._emailServiceMock.Verify(ts => ts.SendEmailVerificationAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()), Times.Once);
+            Assert.IsFalse(string.IsNullOrEmpty(capturedVerificationToken), "Verification token should be captured.");
+        }
+
+        [TestMethod]
+        public async Task RequestVerificationEmailAsync_InvalidEmail_ThrowsError()
+        {
+            // Arrange
+            var requestDto = new SendVerificationEmailRequestDto
+            {
+                Email = "nonexistent@test.com"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RequestVerificationEmailAsync(requestDto));
+        }
+
+        [TestMethod]
+        public async Task RequestVerificationEmailAsync_AlreadyVerifiedEmail_ThrowsError()
+        {
+            // Arrange
+            var requestDto = new SendVerificationEmailRequestDto
+            {
+                Email = "test@test.com"
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            user.EmailConfirmed = true;
+            await this._userManager.UpdateAsync(user);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RequestVerificationEmailAsync(requestDto));
+        }
+
+        [TestMethod]
+        public async Task VerifyEmailAsync_ValidToken_VerifiesEmail()
+        {
+            // Arrange
+            var requestDto = new SendVerificationEmailRequestDto
+            {
+                Email = "test@test.com"
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", requestDto.Email);
+            user.EmailConfirmed = false;
+            await this._userManager.UpdateAsync(user);
+
+            string verificationToken = string.Empty;
+            this._emailServiceMock
+                .Setup(ts => ts.SendEmailVerificationAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .Callback<ApplicationUser, string>((user, token) => verificationToken = token)
+                .Returns(Task.CompletedTask);
+
+            await this._identityService.RequestVerificationEmailAsync(requestDto);
+
+            var verifyEmailDto = new VerifyEmailRequestDto
+            {
+                Email = requestDto.Email,
+                Code = verificationToken
+            };
+
+            // Act
+            await this._identityService.VerifyEmailAsync(verifyEmailDto);
+
+            // Assert
+            var updatedUser = await this._userManager.FindByEmailAsync(requestDto.Email);
+            Assert.IsNotNull(updatedUser);
+            Assert.IsTrue(updatedUser.EmailConfirmed);
+        }
+
+        [TestMethod]
+        public async Task VerifyEmailAsync_InvalidToken_ThrowsError()
+        {
+            // Arrange
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", "test@test.com");
+            user.EmailConfirmed = false;
+            await this._userManager.UpdateAsync(user);
+
+            var verifyEmailDto = new VerifyEmailRequestDto
+            {
+                Email = "test@test.com",
+                Code = "invalid-token"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.VerifyEmailAsync(verifyEmailDto));
+        }
+
+        [TestMethod]
+        public async Task VerifyCodeAsync_ValidCode_ReturnsAccessToken()
+        {
+            // Arrange
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            appSettings.Value.RequireTwoFactorForNewUsers = true;
+
+            var requestDto = new RegisterRequestDto
+            {
+                Email = "newuser@test.com",
+                Password = "NewUserPassword123!",
+                UserName = "NewUser",
+                ConfirmPassword = "NewUserPassword123!",
+                RememberMe = true,
+                DeviceDetails = "TestDevice"
+            };
+
+            var registeredUser = await this._identityService.RegisterAsync(requestDto);
+            Assert.AreEqual(LoginSuccessType.TwoFactorRequired, registeredUser.Type);
+
+            var user = await this._userManager.FindByEmailAsync(requestDto.Email);
+            var twoFactorCode = await this._userManager.GenerateTwoFactorTokenAsync(user!, "Email");
+
+            var verifyCodeDto = new VerifyCodeRequestDto
+            {
+                Login = requestDto.Email,
+                Code = twoFactorCode,
+                DeviceDetails = "TestDevice",
+                RememberMe = true
+            };
+
+            // Act
+            var accessToken = await this._identityService.VerifyCodeAsync(verifyCodeDto);
+
+            // Assert
+            Assert.IsFalse(string.IsNullOrEmpty(accessToken));
+            var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
+            Assert.IsNotNull(cookie);
+        }
+
+        [TestMethod]
+        public async Task VerifyCodeAsync_InvalidCode_ThrowsError()
+        {
+            // Arrange
+            var verifyCodeDto = new VerifyCodeRequestDto
+            {
+                Login = "test@test.com",
+                Code = "invalid-code",
+                DeviceDetails = "TestDevice",
+                RememberMe = true
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.VerifyCodeAsync(verifyCodeDto));
+        }
+
+        [TestMethod]
+        public async Task GetDevicesAsync_NoDevices_ReturnsEmptyList()
+        {
+            // Arrange
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            // Act
+            var result = await this._identityService.GetDevicesAsync();
+
+            // Assert
+            Assert.HasCount(0, result);
+        }
+
+        [TestMethod]
+        public async Task GetDevicesAsync_ExcludesRevokedDevices()
+        {
+            // Arrange
+            var activeDevice = new RefreshToken
+            {
+                Id = "device1",
+                Token = "token1",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.1",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = "Active Device",
+                UserId = _userId
+            };
+
+            var revokedDevice = new RefreshToken
+            {
+                Id = "device2",
+                Token = "token2",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.2",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = true,
+                Details = "Revoked Device",
+                UserId = _userId
+            };
+
+            this._dbContext.RefreshTokens.AddRange(activeDevice, revokedDevice);
+            await this._dbContext.SaveChangesAsync();
+
+            // Act
+            var result = await this._identityService.GetDevicesAsync();
+
+            // Assert
+            Assert.HasCount(1, result);
+            Assert.AreEqual(activeDevice.Id, result[0].Id);
+        }
+
+        [TestMethod]
+        public async Task PurgeExpiredRefreshTokens_RemovesExpiredTokens()
+        {
+            // Arrange
+            var expiredToken = new RefreshToken
+            {
+                Id = "expired-device",
+                Token = "token",
+                LastSeen = DateTime.UtcNow.AddDays(-10),
+                IpAddress = "192.168.1.1",
+                Expires = DateTime.UtcNow.AddDays(-1),
+                IsRevoked = false,
+                Details = "Expired Device",
+                UserId = _userId
+            };
+
+            var activeToken = new RefreshToken
+            {
+                Id = "active-device",
+                Token = "token",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.2",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = "Active Device",
+                UserId = _userId
+            };
+
+            this._dbContext.RefreshTokens.AddRange(expiredToken, activeToken);
+            await this._dbContext.SaveChangesAsync();
+            this._userContext.LogInAdministrator();
+
+            // Act
+            await this._identityService.PurgeExpiredRefreshTokens();
+
+            // Assert
+            var remainingTokens = this._dbContext.RefreshTokens.ToList();
+            Assert.HasCount(1, remainingTokens);
+            Assert.AreEqual(activeToken.Id, remainingTokens[0].Id);
+        }
+
+        [TestMethod]
+        public async Task PurgeExpiredRefreshTokens_NoExpiredTokens_NoChanges()
+        {
+            // Arrange
+            var activeToken = new RefreshToken
+            {
+                Id = "active-device",
+                Token = "token",
+                LastSeen = DateTime.UtcNow,
+                IpAddress = "192.168.1.1",
+                Expires = DateTime.UtcNow.AddDays(1),
+                IsRevoked = false,
+                Details = "Active Device",
+                UserId = _userId
+            };
+
+            this._dbContext.RefreshTokens.Add(activeToken);
+            await this._dbContext.SaveChangesAsync();
+            this._userContext.LogInAdministrator();
+
+            // Act
+            await this._identityService.PurgeExpiredRefreshTokens();
+
+            // Assert
+            var remainingTokens = this._dbContext.RefreshTokens.ToList();
+            Assert.HasCount(1, remainingTokens);
+        }
+
+        [TestMethod]
+        public async Task ChangeEmailAsync_InvalidEmail_ThrowsError()
+        {
+            // Arrange
+            var changeEmailDto = new ChangeEmailRequestDto
+            {
+                NewEmail = "invalid-email"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.ChangeEmailAsync(changeEmailDto));
+        }
+
+        [TestMethod]
+        public async Task ConfirmEmailChangeAsync_InvalidToken_ThrowsError()
+        {
+            // Arrange
+            await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
+
+            var confirmEmailChangeDto = new ConfirmEmailChangeRequestDto
+            {
+                NewEmail = "newuser@test.com",
+                Code = "invalid-token"
+            };
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.ConfirmEmailChangeAsync(confirmEmailChangeDto));
+        }
+
+        [TestMethod]
+        public async Task NewPasswordAsync_ExpiredToken_ThrowsError()
+        {
+            // Arrange
+            var newPasswordRequestDto = new NewPasswordRequestDto
+            {
+                Email = "test@test.com",
+                DeviceDetails = "TestDevice",
+                Password = "NewPassword123!",
+                RememberMe = true,
+                Token = "expired-token"
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", newPasswordRequestDto.Email);
+            await this._userManager.AddPasswordAsync(user, "OldPassword123!");
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.NewPasswordAsync(newPasswordRequestDto));
+        }
+
+        [TestMethod]
+        public async Task LogInFromMagicLinkEmailAsync_ExpiredToken_ThrowsError()
+        {
+            // Arrange
+            var loginRequest = new LoginRequestDto
+            {
+                Type = LoginType.MagicLink,
+                DeviceDetails = "TestDevice",
+                Login = "test@test.com",
+                Password = "expired-token"
+            };
+
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, "user-id", "UserName", loginRequest.Login);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.LogInAsync(loginRequest));
+        }
+
+        [TestMethod]
+        public async Task RevokeDeviceAsync_NonExistentDevice_ThrowsError()
+        {
+            // Arrange
+            var deviceId = "non-existent-device";
+
+            // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.RevokeDeviceAsync(deviceId));
         }
     }
