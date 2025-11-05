@@ -1,36 +1,38 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-    RoutePipe,
-    setApiErrors,
-    ShowByPermissionsDirective,
-    StaticContentDto,
-    StaticContentReadAccess,
-    StaticContentReadAccesses,
-    StaticContentStatus,
-    StaticContentStatuses,
-    StaticContentSupportedLanguageDto,
-    StaticContentType,
-    StaticContentTypes,
-    ToStringPipe,
-    TypeHelpers,
+  RoutePipe,
+  setApiErrors,
+  ShowByPermissionsDirective,
+  StaticContentDto,
+  StaticContentReadAccess,
+  StaticContentReadAccesses,
+  StaticContentStatus,
+  StaticContentStatuses,
+  StaticContentSupportedLanguageDto,
+  StaticContentType,
+  StaticContentTypes,
+  ToStringPipe,
+  TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
-import { ClaimUsersManagerComponent } from "@core/features/users/components/claim-users-manager/claim-users-manager.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ContentReadAccessPickerComponent } from "@core/features/content/components/content-read-access-picker/content-read-access-picker.component";
 import { ContentStatusPickerComponent } from "@core/features/content/components/content-status-picker/content-status-picker.component";
 import { ContentTypePickerComponent } from "@core/features/content/components/content-type-picker/content-type-picker.component";
-import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { RolesPickerComponent } from "@core/features/users/components/roles-picker/roles-picker.component";
-import { UserLinkComponent } from "@core/features/users/components/user-link/user-link.component";
 import { ContentService } from "@core/features/content/services/content.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
+import { ClaimUsersManagerComponent } from "@core/features/users/components/claim-users-manager/claim-users-manager.component";
+import { RolesPickerComponent } from "@core/features/users/components/roles-picker/roles-picker.component";
+import { UserLinkComponent } from "@core/features/users/components/user-link/user-link.component";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
+import { TabsModule } from "primeng/tabs";
 import { tap } from "rxjs";
 
 @Component({
@@ -53,6 +55,7 @@ import { tap } from "rxjs";
     ClaimUsersManagerComponent,
     ShowByPermissionsDirective,
     ToStringPipe,
+    TabsModule,
   ],
 })
 export class EditComponent {
@@ -74,8 +77,13 @@ export class EditComponent {
 
   errors = signal(new Array<string>());
 
-  content = computed(() =>
-    this.#contentService.getStaticContent(this.key()).pipe(
+  #updateSignal = signal(true);
+
+  pageUrl = signal("");
+
+  content = computed(() => {
+    this.#updateSignal();
+    return this.#contentService.getStaticContent(this.key()).pipe(
       tap(content => {
         if (!content) return;
         this.form.patchValue({
@@ -86,14 +94,23 @@ export class EditComponent {
           editorRoles: content.editorRoles,
           readerRoles: content.readerRoles,
         });
+        this.pageUrl.set(window.location.origin + "/content/" + content.key);
       })
-    )
-  );
+    );
+  });
 
   languages = computed(() => this.#contentService.getSupportedLanguages());
 
   asContent = TypeHelpers.cast<StaticContentDto>;
   asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguageDto>>;
+
+  #previousTabName = "settings";
+
+  constructor() {
+    this.form.controls.key.valueChanges.pipe(takeUntilDestroyed()).subscribe({
+      next: key => this.pageUrl.set(window.location.origin + "/content/" + key),
+    });
+  }
 
   onUpdate() {
     const value = {
@@ -103,10 +120,33 @@ export class EditComponent {
 
     this.#contentService.updateStaticContent(this.key(), value).subscribe({
       next: sc => {
+        this.form.reset();
         this.#toast.success("Content updated successfully.");
-        this.#routeAlias.navigate("edit-content", sc.key);
+        if (sc.key !== this.key()) {
+          this.#routeAlias.navigate("edit-content", sc.key);
+        } else {
+          this.#updateSignal.set(!this.#updateSignal());
+        }
       },
       error: setApiErrors(this.errors),
     });
+  }
+
+  onTabChanged(tabName: any) {
+    if (this.#previousTabName === "settings" && this.form.dirty) {
+      this.#toast.info("You have unsaved changes in the Settings tab.");
+    }
+    this.#previousTabName = tabName;
+  }
+
+  onCopyPageUrl() {
+    navigator.clipboard
+      .writeText(this.pageUrl())
+      .then(() => {
+        this.#toast.success("Page URL copied to clipboard.");
+      })
+      .catch(() => {
+        this.#toast.error("Failed to copy URL to clipboard.");
+      });
   }
 }

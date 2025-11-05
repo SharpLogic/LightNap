@@ -2,107 +2,156 @@
   <ng-template let-contentAny #success>
     @let content = asContent(contentAny);
 
-    <div class="flex flex-wrap gap-2">
-      <p-panel header="Edit Content: {{ key() }}" class="max-w-prose">
+    <p-panel header="Edit Content">
+      <p class="text-sm">
+        Created {{ content.createdDate | date: "medium" }}
+        @if (content.createdByUserId) {
+          <ln-user-link [userId]="content.createdByUserId" />
+        }
+      </p>
+
+      @if (content.lastModifiedDate) {
         <p class="text-sm">
-          Created {{ content.createdDate | date: "medium" }}
-          @if (content.createdByUserId) {
-            <ln-user-link [userId]="content.createdByUserId" />
+          Last Updated {{ content.lastModifiedDate | date: "medium" }} by
+          @if (content.lastModifiedByUserId) {
+            <ln-user-link [userId]="content.lastModifiedByUserId" />
           }
         </p>
+      }
+    </p-panel>
 
-        @if (content.lastModifiedDate) {
-          <p class="text-sm">
-            Last Updated {{ content.lastModifiedDate | date: "medium" }} by
-            @if (content.lastModifiedByUserId) {
-              <ln-user-link [userId]="content.lastModifiedByUserId" />
-            }
-          </p>
-        }
+    <p-tabs value="settings" (valueChange)="onTabChanged($event)" class="mt-2">
+      <p-tablist>
+        <p-tab value="settings">Settings</p-tab>
+        <p-tab value="editors" showByPermissions [roles]="['Administrator', 'ContentEditor']">Editors</p-tab>
+        <p-tab value="readers" showByPermissions [roles]="['Administrator', 'ContentEditor']">Readers</p-tab>
+        <p-tab value="languages">Languages</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="settings">
+          <form [formGroup]="form" (ngSubmit)="onUpdate()">
+            <div class="flex flex-col gap-2">
+              <hr />
 
-        <form [formGroup]="form" (ngSubmit)="onUpdate()">
-          <div class="flex flex-col gap-2">
-            <div class="field">
-              <label for="key" class="text-xl">Key</label>
-              <input id="key" type="text" pInputText formControlName="key" class="w-full" />
-            </div>
-
-            <div class="field">
-              <label for="type" class="text-xl">Type</label>
-              <ln-content-type-picker id="type" formControlName="type" class="w-full" />
-            </div>
-
-            <div class="field">
-              <label for="status" class="text-xl">Status</label>
-              <ln-content-status-picker id="status" formControlName="status" class="w-full" />
-
-              @if (content.statusChangedDate) {
-                <p class="text-sm">
-                  Status last changed {{ content.statusChangedDate | date: "medium" }} by
-                  @if (content.statusChangedByUserId) {
-                    <ln-user-link [userId]="content.statusChangedByUserId" />
-                  }
-                </p>
-              }
-            </div>
-
-            <hr />
-
-            <div class="field">
-              <label for="editorRoles" class="text-xl">Roles That Can Edit</label>
-              <p class="text-sm">Users in Administrator and Content Editor roles can always edit.</p>
-              <ln-roles-picker id="editorRoles" formControlName="editorRoles" class="w-full" />
-            </div>
-
-            <hr />
-
-            <div class="field">
-              <label for="readAccess" class="text-xl">Read Access</label>
-              <ln-content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
-            </div>
-
-            @if (form.controls.readAccess.value === "Explicit") {
               <div class="field">
-                <label for="readerRoles" class="text-xl">Roles That Can Read</label>
-                <p class="text-sm">Users in Administrator and Content Editor roles can always read.</p>
-                <ln-roles-picker id="readerRoles" formControlName="readerRoles" class="w-full" />
+                <label for="key" class="text-xl">Key</label>
+                <p class="text-sm">This is the key used to identify this content item. Will be referenced in the page URL or zone key.</p>
+                <input id="key" type="text" pInputText formControlName="key" class="w-full" />
               </div>
-            }
 
-            <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
-          </div>
-        </form>
+              <hr />
 
-        <ln-error-list [errors]="errors()" />
-      </p-panel>
+              <div class="field">
+                <label for="type" class="text-xl">Type</label>
+                <ln-content-type-picker id="type" formControlName="type" class="w-full" />
 
-      <div class="flex flex-col gap-2">
-        <p-panel header="Explicit Content Editors" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <ln-claim-users-manager type="Content:Editor" [value]="content.id | toString" />
-        </p-panel>
+                @if (form.controls.type.value === "Page") {
+                  <div>
+                    <a [href]="pageUrl()" target="_blank">{{ pageUrl() }}</a>
+                    <p-button
+                      icon="pi pi-copy"
+                      [text]="true"
+                      [rounded]="true"
+                      severity="secondary"
+                      (onClick)="onCopyPageUrl()"
+                      pTooltip="Copy URL"
+                      tooltipPosition="top"
+                    />
+                  </div>
+                }
+              </div>
 
-        <p-panel header="Explicit Content Readers" showByPermissions [roles]="['Administrator', 'ContentEditor']" class="max-w-prose">
-          <ln-claim-users-manager type="Content:Reader" [value]="content.id | toString" />
-        </p-panel>
-      </div>
+              <hr />
 
-      <ln-api-response [apiResponse]="languages()">
-        <ng-template let-languageAny #success>
-          @let languages = asLanguages(languageAny);
-          <p-panel header="Language Contents" class="max-w-fit">
-            <ul>
-              @for (language of languages; track language.languageCode) {
-                <li>
-                  <a [routerLink]="'edit-language' | route: [this.key(), language.languageCode]">
-                    {{ language.languageName }} ({{ language.languageCode }})
-                  </a>
-                </li>
+              <div class="field">
+                <label for="status" class="text-xl">Status</label>
+                <ln-content-status-picker id="status" formControlName="status" class="w-full" />
+
+                @if (content.statusChangedDate) {
+                  <p class="text-sm">
+                    Status last changed {{ content.statusChangedDate | date: "medium" }} by
+                    @if (content.statusChangedByUserId) {
+                      <ln-user-link [userId]="content.statusChangedByUserId" />
+                    }
+                  </p>
+                }
+              </div>
+
+              <hr />
+
+              <div class="field">
+                <label for="editorRoles" class="text-xl">Roles That Can Edit</label>
+                <p class="text-sm">
+                  Users in <span class="font-bold">Administrator</span> and <span class="font-bold">Content Editor</span> roles can always edit.
+                </p>
+                <ln-roles-picker id="editorRoles" formControlName="editorRoles" class="w-full" />
+              </div>
+
+              <hr />
+
+              <div class="field">
+                <label for="readAccess" class="text-xl">Read Access</label>
+                <ln-content-read-access-picker id="readAccess" formControlName="readAccess" class="w-full" />
+              </div>
+
+              @if (form.controls.readAccess.value === "Explicit") {
+                <hr />
+
+                <div class="field">
+                  <label for="readerRoles" class="text-xl">Roles That Can Read</label>
+                  <p class="text-sm">
+                    Users in <span class="font-bold">Administrator</span> and <span class="font-bold">Content Editor</span> roles can always read.
+                  </p>
+                  <ln-roles-picker id="readerRoles" formControlName="readerRoles" class="w-full" />
+                </div>
               }
-            </ul>
-          </p-panel>
-        </ng-template>
-      </ln-api-response>
-    </div>
+
+              <hr />
+
+              <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
+            </div>
+          </form>
+        </p-tabpanel>
+        <p-tabpanel value="editors">
+          <p>
+            Users in the <span class="font-bold">Administrator</span> and <span class="font-bold">Content Editor</span> roles can always edit, as can
+            any roles you specify in the <span class="font-bold">Roles That Can Edit</span> section of the
+            <span class="font-bold">Settings</span> tab.
+          </p>
+          <p>
+            Use this tab to add specific users not in any of those roles that you want to have the ability to edit the settings and languages for this
+            content.
+          </p>
+          <ln-claim-users-manager type="Content:Editor" [value]="content.id | toString" />
+        </p-tabpanel>
+        <p-tabpanel value="readers">
+          <p>
+            If you set <span class="font-bold">Read Access</span> to <span class="font-bold">Explicit</span> in the
+            <span class="font-bold">Settings</span> tab, then only with edit permissions and users added here can read this content.
+          </p>
+          <ln-claim-users-manager type="Content:Reader" [value]="content.id | toString" />
+        </p-tabpanel>
+        <p-tabpanel value="languages">
+          <ln-api-response [apiResponse]="languages()">
+            <ng-template let-languageAny #success>
+              <p>Set the content for different supported languages by clicking the links below.</p>
+
+              @let languages = asLanguages(languageAny);
+              <ul>
+                @for (language of languages; track language.languageCode) {
+                  <li>
+                    <a [routerLink]="'edit-language' | route: [this.key(), language.languageCode]">
+                      {{ language.languageName }} ({{ language.languageCode }})
+                    </a>
+                  </li>
+                }
+              </ul>
+            </ng-template>
+          </ln-api-response>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+    <ln-error-list [errors]="errors()" />
   </ng-template>
   <ng-template #null>
     <p class="text-red-500">Content with key "{{ key() }}" not found.</p>
