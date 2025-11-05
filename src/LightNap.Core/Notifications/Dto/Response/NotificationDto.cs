@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Data.Entities;
+﻿using LightNap.Core.Notifications.Enums;
 
 namespace LightNap.Core.Notifications.Dto.Response
 {

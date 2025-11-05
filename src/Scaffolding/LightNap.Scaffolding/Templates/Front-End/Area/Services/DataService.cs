@@ -51,57 +51,57 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("Request } from \"../models/request/create-");
+            this.Write("RequestDto } from \"../models/request/create-");
             
             #line 12 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
             #line hidden
-            this.Write("-request\";\r\nimport { Search");
+            this.Write("-request-dto\";\r\nimport { Search");
             
             #line 13 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
             
             #line default
             #line hidden
-            this.Write("Request } from \"../models/request/search-");
+            this.Write("RequestDto } from \"../models/request/search-");
             
             #line 13 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabNamePlural));
             
             #line default
             #line hidden
-            this.Write("-request\";\r\nimport { Update");
+            this.Write("-request-dto\";\r\nimport { Update");
             
             #line 14 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write("Request } from \"../models/request/update-");
+            this.Write("RequestDto } from \"../models/request/update-");
             
             #line 14 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
             #line hidden
-            this.Write("-request\";\r\nimport { ");
+            this.Write("-request-dto\";\r\nimport { ");
             
             #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(" } from \"../models/response/");
+            this.Write("Dto } from \"../models/response/");
             
             #line 15 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
             #line hidden
-            this.Write("\";\r\n\r\n@Injectable({\r\n  providedIn: \"root\",\r\n})\r\nexport class DataService {\r\n  #ht" +
-                    "tp = inject(HttpClient);\r\n  #apiUrlRoot = `${inject(API_URL_ROOT)}");
+            this.Write("-dto\";\r\n\r\n@Injectable({\r\n  providedIn: \"root\",\r\n})\r\nexport class DataService {\r\n " +
+                    " #http = inject(HttpClient);\r\n  #apiUrlRoot = `${inject(API_URL_ROOT)}");
             
             #line 22 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalNamePlural));
@@ -136,7 +136,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write(">(`${this.#apiUrlRoot}${");
+            this.Write("Dto>(`${this.#apiUrlRoot}${");
             
             #line 25 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));
@@ -178,15 +178,15 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("Request) {\r\n    return this.#http.post<PagedResponseDto<");
+            this.Write("RequestDto) {\r\n    return this.#http.post<PagedResponseDto<");
             
             #line 31 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(">>(`${this.#apiUrlRoot}search`, request).pipe(\r\n      tap(results => results.data" +
-                    ".forEach(");
+            this.Write("Dto>>(`${this.#apiUrlRoot}search`, request).pipe(\r\n      tap(results => results.d" +
+                    "ata.forEach(");
             
             #line 32 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
@@ -207,14 +207,14 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("Request) {\r\n    return this.#http.post<");
+            this.Write("RequestDto) {\r\n    return this.#http.post<");
             
             #line 37 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(">(`${this.#apiUrlRoot}`, request);\r\n  }\r\n\r\n  update");
+            this.Write("Dto>(`${this.#apiUrlRoot}`, request);\r\n  }\r\n\r\n  update");
             
             #line 40 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
@@ -242,14 +242,14 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write("Request) {\r\n    return this.#http.put<");
+            this.Write("RequestDto) {\r\n    return this.#http.put<");
             
             #line 41 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
             
             #line default
             #line hidden
-            this.Write(">(`${this.#apiUrlRoot}${");
+            this.Write("Dto>(`${this.#apiUrlRoot}${");
             
             #line 41 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Services\DataService.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.IdProperty.CamelName));

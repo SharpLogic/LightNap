@@ -80,10 +80,10 @@ namespace LightNap.Scaffolding.ServiceRunner
                     new(new Controller() { Parameters = templateParameters }, $"{parameters.WebApiProjectPath}/Controllers/{pascalNamePlural}Controller.cs"),
 
                     new(new Helper() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/helpers/{kebabName}.helper.ts"),
-                    new(new CreateRequest() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/create-{kebabName}-request.ts"),
-                    new(new SearchRequest() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/search-{kebabNamePlural}-request.ts"),
-                    new(new UpdateRequest() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/update-{kebabName}-request.ts"),
-                    new(new Response() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/response/{kebabName}.ts"),
+                    new(new CreateRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/create-{kebabName}-request-dto.ts"),
+                    new(new SearchRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/search-{kebabNamePlural}-request-dto.ts"),
+                    new(new UpdateRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/update-{kebabName}-request-dto.ts"),
+                    new(new ResponseDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/response/{kebabName}-dto.ts"),
                     new(new DataService() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/services/data.service.ts"),
                     new(new AreaService() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/services/{kebabName}.service.ts"),
                 };

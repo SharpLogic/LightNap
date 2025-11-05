@@ -6,7 +6,7 @@
         <input id="newEmail" type="text" placeholder="New email address" pInputText formControlName="newEmail" />
       </div>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
 
       <p-button type="submit" label="Change Email" class="w-full" [disabled]="!form.valid" />
     </div>

@@ -1,4 +1,4 @@
-<branded-card>
+<ln-branded-card>
   <span title>Welcome!</span>
   <span subtitle>Sign in to continue</span>
 
@@ -35,7 +35,7 @@
           <a [routerLink]="'reset-password' | route">Forgot password?</a>
         </div>
 
-        <error-list [errors]="errors()" />
+        <ln-error-list [errors]="errors()" />
       </div>
 
       <p-button type="submit" label="Sign In" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
@@ -45,4 +45,4 @@
       </div>
     </div>
   </form>
-</branded-card>
+</ln-branded-card>

@@ -5,18 +5,19 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import {
   AdminUserDto,
-  ApiResponseComponent,
-  ConfirmPopupComponent,
   EmptyPagedResponse,
-  ErrorListComponent,
-  ListItem,
   PagedResponseDto,
+  RoutePipe,
   SearchUsersSortBy,
-  ToastService,
+  SearchUsersSortByListItems,
+  setApiErrors,
   TypeHelpers,
 } from "@core";
-import { AdminUsersService } from "@core";
-import { RoutePipe } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
+import { ToastService } from "@core/services/toast.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
@@ -44,7 +45,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
   ],
 })
 export class UsersComponent {
-  readonly pageSize = 25;
+  readonly pageSize = 10;
 
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
@@ -62,7 +63,7 @@ export class UsersComponent {
   readonly users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: (event.sortField as SearchUsersSortBy) ?? "userName",
+        sortBy: (event.sortField as SearchUsersSortBy) ?? SearchUsersSortBy.UserName,
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
@@ -75,12 +76,7 @@ export class UsersComponent {
     startWith(new EmptyPagedResponse<AdminUserDto>() as PagedResponseDto<AdminUserDto>)
   );
 
-  readonly sortBys = [
-    new ListItem<SearchUsersSortBy>("userName", "User Name", "Sort by user name."),
-    new ListItem<SearchUsersSortBy>("email", "Email", "Sort by email."),
-    new ListItem<SearchUsersSortBy>("createdDate", "Created", "Sort by created date."),
-    new ListItem<SearchUsersSortBy>("lastModifiedDate", "Last Modified", "Sort by last modified date."),
-  ];
+  readonly sortBys = SearchUsersSortByListItems;
 
   readonly asUserResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
@@ -105,7 +101,7 @@ export class UsersComponent {
             this.#toast.success("User deleted successfully.");
             this.#lazyLoadEventSubject.next({ first: 0 });
           },
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });

@@ -1,4 +1,4 @@
-<branded-card>
+<ln-branded-card>
   <span title>Register</span>
   <span subtitle>Let's get started!</span>
 
@@ -43,12 +43,12 @@
         <div class="flex items-center gap-1">
           <p-checkbox inputId="agreedToTerms" formControlName="agreedToTerms" class="mr-2" [binary]="true" />
           <label for="agreedToTerms">I agree to the</label>
-          <a [routerLink]="'terms-and-conditions' | route" target="_blank">Terms and Conditions</a>
+          <a [routerLink]="'view-content' | route: 'terms-and-conditions'" target="_blank">Terms and Conditions</a>
           <span>and</span>
-          <a [routerLink]="'privacy-policy' | route" target="_blank">Privacy Policy</a>
+          <a [routerLink]="'view-content' | route: 'privacy-policy'" target="_blank">Privacy Policy</a>
         </div>
 
-        <error-list [errors]="errors()" />
+        <ln-error-list [errors]="errors()" />
       </div>
 
       <p-button type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
@@ -57,4 +57,4 @@
       </div>
     </div>
   </form>
-</branded-card>
+</ln-branded-card>

@@ -15,7 +15,7 @@
           <div class="flex flex-col gap-2">
 <#      if (Parameters.IdProperty.FrontEndType == "number") { #>
               <label for="<#= Parameters.IdProperty.CamelName #>" class="text-xl"><#= Parameters.IdProperty.Name #></label>
-              <p-inputNumber id="<#= Parameters.IdProperty.CamelName #>" formControlName="<#= Parameters.IdProperty.CamelName #>" styleClass="w-full" />
+              <p-inputNumber id="<#= Parameters.IdProperty.CamelName #>" formControlName="<#= Parameters.IdProperty.CamelName #>" class="w-full" />
 <#	    } else { #>
               <label for="<#= Parameters.IdProperty.CamelName #>" class="text-xl"><#= Parameters.IdProperty.Name #></label>
               <input pInputText id="<#= Parameters.IdProperty.CamelName #>" formControlName="<#= Parameters.IdProperty.CamelName #>" class="w-full" />
@@ -42,10 +42,10 @@
 				    case "float":
 				    case "decimal":
 #>
-        <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" mode="decimal" [minFractionDigits]="2" />
+        <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" mode="decimal" [minFractionDigits]="2" />
 <#                      break;
                     default: #>
-        <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" styleClass="w-full" />
+        <p-inputNumber id="<#= property.CamelName #>" formControlName="<#= property.CamelName #>" class="w-full" />
 <#                  break;
 			    }
                 break;
@@ -57,7 +57,7 @@
       </div>
 <# } #>
 
-      <error-list [errors]="errors" />
+      <ln-error-list [errors]="errors()" />
       <p-button type="submit" label="Create" icon="pi pi-save" severity="success" [disabled]="!form.valid" />
     </div>
   </form>

@@ -1,7 +1,7 @@
-import { Directive, inject, ElementRef, DestroyRef, Renderer2, Input, SimpleChanges } from "@angular/core";
+import { DestroyRef, Directive, ElementRef, inject, Input, Renderer2, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ClaimDto } from "@core/backend-api";
-import { IdentityService } from "@core";
+import { IdentityService } from "@core/services/identity.service";
 import { Subscription } from "rxjs";
 
 @Directive({

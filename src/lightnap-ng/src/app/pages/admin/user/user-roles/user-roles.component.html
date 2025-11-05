@@ -9,12 +9,12 @@
     <ng-template #body let-role>
       <tr>
         <td>
-          <confirm-popup [key]="role.name" />
+          <ln-confirm-popup [key]="role.name" />
           <p-button severity="danger" icon="pi pi-trash" title="Remove user from role" (onClick)="removeRoleClicked($event, role.name)" />
         </td>
         <td>
           <div class="flex flex-col">
-            <a [routerLink]="'admin-role' | route: role.name"> {{ role.name }}</a>
+            <a [routerLink]="'admin-role' | route: role.name"> {{ role.displayName }}</a>
             <span>{{ role.description }}</span>
           </div>
         </td>
@@ -27,23 +27,11 @@
     </ng-template>
   </p-table>
 
-  <api-response [apiResponse]="roles$" errorMessage="Error loading roles" loadingMessage="Loading roles...">
-    <ng-template #success let-roles>
-      <form [formGroup]="addUserToRoleForm" (ngSubmit)="addRole.emit(this.addUserToRoleForm.value.role!)">
-        <div class="flex gap-1">
-          <p-select
-            formControlName="role"
-            [options]="roles"
-            optionLabel="displayName"
-            optionValue="name"
-            placeholder="Select a role"
-            [showClear]="true"
-            emptyFilterMessage="No roles found"
-          />
+  <form [formGroup]="addUserToRoleForm" (ngSubmit)="addRole.emit(this.addUserToRoleForm.value.role!)">
+    <div class="flex gap-1">
+      <ln-role-picker formControlName="role" />
 
-          <p-button severity="success" label="Add user to role" type="submit" [disabled]="!addUserToRoleForm.valid" />
-        </div>
-      </form>
-    </ng-template>
-  </api-response>
+      <p-button severity="success" label="Add user to role" type="submit" [disabled]="!addUserToRoleForm.valid" />
+    </div>
+  </form>
 </div>

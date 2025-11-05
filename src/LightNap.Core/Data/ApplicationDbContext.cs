@@ -1,7 +1,6 @@
 ﻿using LightNap.Core.Data.Comparers;
 using LightNap.Core.Data.Converters;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Profile.Dto.Response;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +20,16 @@ namespace LightNap.Core.Data
         /// Refresh tokens in the DB.
         /// </summary>
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
+        /// <summary>
+        /// Static content in the DB.
+        /// </summary>
+        public DbSet<StaticContent> StaticContents { get; set; } = null!;
+
+        /// <summary>
+        /// Static content language variants in the DB.
+        /// </summary>
+        public DbSet<StaticContentLanguage> StaticContentLanguages { get; set; } = null!;
 
         /// <summary>
         /// User settings in the DB.
@@ -61,6 +70,13 @@ namespace LightNap.Core.Data
                 .WithMany(u => u.RefreshTokens)
                 .HasForeignKey(rt => rt.UserId)
                 .IsRequired();
+
+            builder.Entity<StaticContent>()
+                .HasIndex(sc => sc.Key)
+                .IsUnique();
+
+            builder.Entity<StaticContentLanguage>()
+                .HasIndex(scl => scl.LanguageCode);
         }
 
         /// <inheritdoc />

@@ -26,6 +26,8 @@ namespace LightNap.Core.Services
         public int ExpirationMinutes => this._expirationMinutes;
         private readonly JsonWebTokenHandler _tokenHandler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenService"/> class.
         /// </summary>
         /// <param name="configuration">The configuration settings.</param>
         /// <param name="userManager">The user manager.</param>

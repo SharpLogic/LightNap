@@ -22,7 +22,7 @@ namespace LightNap.Core.Users.Services
         /// <returns>The list of roles.</returns>
         public IList<RoleDto> GetRoles()
         {
-            userContext.AssertAdministrator();
+            userContext.AssertAuthenticated();
 
             return ApplicationRoles.All.ToDtoList();
         }

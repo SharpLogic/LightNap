@@ -13,6 +13,8 @@ using LightNap.Core.Profile.Services;
 using LightNap.Core.Public.Interfaces;
 using LightNap.Core.Public.Services;
 using LightNap.Core.Services;
+using LightNap.Core.StaticContents.Interfaces;
+using LightNap.Core.StaticContents.Services;
 using LightNap.Core.Users.Interfaces;
 using LightNap.Core.Users.Services;
 using LightNap.Core.UserSettings.Interfaces;
@@ -55,6 +57,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<IPublicService, PublicService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IRolesService, RolesService>();
+            services.AddScoped<IStaticContentService, StaticContentService>();
 
             return services;
         }

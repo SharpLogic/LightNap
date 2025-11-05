@@ -5,10 +5,12 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 import { CommonModule } from "@angular/common";
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { BlockUiService, ErrorListComponent } from "@core";
+import { setApiErrors } from "@core";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { BlockUiService } from "@core/services/block-ui.service";
 import { ButtonModule } from "primeng/button";
 import { DatePickerModule } from "primeng/datepicker";
 import { CardModule } from "primeng/card";
@@ -16,7 +18,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { InputNumberModule } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
-import { Create<#= Parameters.PascalName #>Request } from "src/app/<#= Parameters.KebabNamePlural #>/models/request/create-<#= Parameters.KebabName #>-request";
+import { Create<#= Parameters.PascalName #>RequestDto } from "src/app/<#= Parameters.KebabNamePlural #>/models/request/create-<#= Parameters.KebabName #>-request-dto";
 import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.KebabNamePlural #>/services/<#= Parameters.KebabName #>.service";
 
 @Component({
@@ -36,15 +38,15 @@ import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.Keba
   ],
 })
 export class CreateComponent {
-  #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
-  #router = inject(Router);
-  #activeRoute = inject(ActivatedRoute);
-  #fb = inject(FormBuilder);
-  #blockUi = inject(BlockUiService);
+  readonly #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
+  readonly #router = inject(Router);
+  readonly #activeRoute = inject(ActivatedRoute);
+  readonly #fb = inject(FormBuilder);
+  readonly #blockUi = inject(BlockUiService);
 
-  errors = new Array<string>();
+  readonly errors = signal(new Array<string>());
 
-  form = this.#fb.group({
+  readonly form = this.#fb.group({
 	// TODO: Update these fields to match the right parameters.
 <#  if (Parameters.IdProperty.IsRequired) {
         if (Parameters.IdProperty.FrontEndType == "number") { #>
@@ -88,9 +90,9 @@ export class CreateComponent {
   });
 
   createClicked() {
-    this.errors = [];
+    this.errors.set([]);
 
-    const request = <Create<#= Parameters.PascalName #>Request>this.form.value;
+    const request = <Create<#= Parameters.PascalName #>RequestDto>this.form.value;
 
     this.#blockUi.show({message: "Creating..."});
     this.#<#= Parameters.CamelName #>Service
@@ -98,7 +100,7 @@ export class CreateComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: <#= Parameters.CamelName #> => this.#router.navigate([<#= Parameters.CamelName #>.id], { relativeTo: this.#activeRoute.parent }),
-        error: response => (this.errors = response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

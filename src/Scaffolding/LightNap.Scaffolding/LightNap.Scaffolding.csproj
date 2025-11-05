@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Humanizer" Version="2.14.1" />
-    <PackageReference Include="Microsoft.Build" Version="17.14.8" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.Build" Version="17.14.28" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.Build.Locator" Version="1.10.2" />
-    <PackageReference Include="System.CodeDom" Version="9.0.9" />
+    <PackageReference Include="System.CodeDom" Version="9.0.10" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
   </ItemGroup>
 
@@ -111,23 +111,23 @@
       <LastGenOutput>Helper.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
     </None>
-    <None Update="Templates\Front-End\Area\Models\Request\CreateRequest.tt">
-      <LastGenOutput>CreateRequest.cs</LastGenOutput>
+    <None Update="Templates\Front-End\Area\Models\Request\CreateRequestDto.tt">
+      <LastGenOutput>CreateRequestDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
-    <None Update="Templates\Front-End\Area\Models\Request\UpdateRequest.tt">
-      <LastGenOutput>UpdateRequest.cs</LastGenOutput>
+    <None Update="Templates\Front-End\Area\Models\Request\UpdateRequestDto.tt">
+      <LastGenOutput>UpdateRequestDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
-    <None Update="Templates\Front-End\Area\Models\Request\SearchRequest.tt">
-      <LastGenOutput>SearchRequest.cs</LastGenOutput>
+    <None Update="Templates\Front-End\Area\Models\Request\SearchRequestDto.tt">
+      <LastGenOutput>SearchRequestDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
-    <None Update="Templates\Front-End\Area\Models\Response\Response.tt">
-      <LastGenOutput>Response.cs</LastGenOutput>
+    <None Update="Templates\Front-End\Area\Models\Response\ResponseDto.tt">
+      <LastGenOutput>ResponseDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
@@ -243,25 +243,25 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Front-End\Area\Models\Request\CreateRequest.cs">
-      <DependentUpon>CreateRequest.tt</DependentUpon>
+    <Compile Update="Templates\Front-End\Area\Models\Request\CreateRequestDto.cs">
+      <DependentUpon>CreateRequestDto.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Front-End\Area\Models\Request\UpdateRequest.cs">
-      <DependentUpon>UpdateRequest.tt</DependentUpon>
+    <Compile Update="Templates\Front-End\Area\Models\Request\UpdateRequestDto.cs">
+      <DependentUpon>UpdateRequestDto.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Front-End\Area\Models\Request\SearchRequest.cs">
-      <DependentUpon>SearchRequest.tt</DependentUpon>
+    <Compile Update="Templates\Front-End\Area\Models\Request\SearchRequestDto.cs">
+      <DependentUpon>SearchRequestDto.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Update="Templates\Front-End\Area\Models\Response\Response.cs">
+    <Compile Update="Templates\Front-End\Area\Models\Response\ResponseDto.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Response.tt</DependentUpon>
+      <DependentUpon>ResponseDto.tt</DependentUpon>
     </Compile>
     <Compile Update="Templates\Front-End\Area\Services\DataService.cs">
       <DependentUpon>DataService.tt</DependentUpon>

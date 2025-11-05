@@ -15,7 +15,7 @@ namespace LightNap.DataProviders.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
 
             modelBuilder.Entity("LightNap.Core.Data.Entities.ApplicationRole", b =>
                 {
@@ -191,6 +191,103 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("LightNap.Core.Data.Entities.StaticContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("EditorRoles")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ReadAccess")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReaderRoles")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StatusChangedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("StatusChangedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.HasIndex("LastModifiedByUserId");
+
+                    b.HasIndex("StatusChangedByUserId");
+
+                    b.ToTable("StaticContents");
+                });
+
+            modelBuilder.Entity("LightNap.Core.Data.Entities.StaticContentLanguage", b =>
+                {
+                    b.Property<int>("StaticContentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LanguageCode")
+                        .HasMaxLength(16)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedUserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("StaticContentId", "LanguageCode");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("LanguageCode");
+
+                    b.HasIndex("LastModifiedUserId");
+
+                    b.ToTable("StaticContentLanguages");
+                });
+
             modelBuilder.Entity("LightNap.Core.Data.Entities.UserSetting", b =>
                 {
                     b.Property<string>("UserId")
@@ -338,6 +435,50 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("LightNap.Core.Data.Entities.StaticContent", b =>
+                {
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "LastModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedByUserId");
+
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "StatusChangedByUser")
+                        .WithMany()
+                        .HasForeignKey("StatusChangedByUserId");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastModifiedByUser");
+
+                    b.Navigation("StatusChangedByUser");
+                });
+
+            modelBuilder.Entity("LightNap.Core.Data.Entities.StaticContentLanguage", b =>
+                {
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "LastModifiedUser")
+                        .WithMany()
+                        .HasForeignKey("LastModifiedUserId");
+
+                    b.HasOne("LightNap.Core.Data.Entities.StaticContent", "StaticContent")
+                        .WithMany("Languages")
+                        .HasForeignKey("StaticContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("LastModifiedUser");
+
+                    b.Navigation("StaticContent");
+                });
+
             modelBuilder.Entity("LightNap.Core.Data.Entities.UserSetting", b =>
                 {
                     b.HasOne("LightNap.Core.Data.Entities.ApplicationUser", "User")
@@ -407,6 +548,11 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserSettings");
+                });
+
+            modelBuilder.Entity("LightNap.Core.Data.Entities.StaticContent", b =>
+                {
+                    b.Navigation("Languages");
                 });
 #pragma warning restore 612, 618
         }

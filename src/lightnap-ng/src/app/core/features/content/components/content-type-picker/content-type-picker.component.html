@@ -1,0 +1,15 @@
+<p-select
+  [ngModel]="value"
+  (ngModelChange)="onChange($event)"
+  (onBlur)="onTouched()"
+  [options]="options"
+  optionLabel="label"
+  optionValue="value"
+  [disabled]="disabled"
+  placeholder="Select type"
+  class="w-full"
+>
+  <ng-template let-option #item>
+    <ln-dropdown-list-item [listItem]="option" />
+  </ng-template>
+</p-select>

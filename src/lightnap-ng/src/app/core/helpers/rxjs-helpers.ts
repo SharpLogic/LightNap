@@ -1,3 +1,5 @@
+import { WritableSignal } from "@angular/core";
+import { ErrorApiResponse } from "@core/backend-api";
 import { distinctUntilChanged, Observable } from "rxjs";
 
 /**
@@ -9,4 +11,15 @@ import { distinctUntilChanged, Observable } from "rxjs";
 export function distinctUntilJsonChanged<T>() {
   return (source$: Observable<T>) =>
     source$.pipe(distinctUntilChanged((original, incoming) => JSON.stringify(original) === JSON.stringify(incoming)));
+}
+
+/**
+ * Sets API error messages into a writable signal.
+ * @param errorSignal The writable signal to set the error messages into.
+ * @returns A function that takes an ErrorApiResponse and sets its error messages into the provided signal.
+ */
+export function setApiErrors(errorSignal: WritableSignal<string[]>) {
+  return (response: ErrorApiResponse<string>) => {
+    errorSignal.set(response.errorMessages || []);
+  };
 }

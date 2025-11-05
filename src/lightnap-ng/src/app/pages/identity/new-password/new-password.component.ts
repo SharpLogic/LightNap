@@ -1,16 +1,17 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { BlockUiService } from "@core";
+import { LoginSuccessTypes, RoutePipe, setApiErrors } from "@core";
+import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
-import { RouteAliasService, RoutePipe } from "@core";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
-import { BrandedCardComponent } from "@core";
 
 @Component({
   standalone: true,
@@ -51,19 +52,19 @@ export class NewPasswordComponent {
       .subscribe({
         next: result => {
           switch (result.type) {
-            case "AccessToken":
-                this.#identityService.redirectLoggedInUser();
+            case LoginSuccessTypes.AccessToken:
+              this.#identityService.redirectLoggedInUser();
               break;
-            case "TwoFactorRequired":
+            case LoginSuccessTypes.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.email());
               break;
-            case "EmailVerificationRequired":
+            case LoginSuccessTypes.EmailVerificationRequired:
               throw new Error("Email verification should not be required since email was used to set a new password.");
             default:
               throw new Error(`Unexpected LoginSuccessResult.type: '${result.type}'`);
           }
         },
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

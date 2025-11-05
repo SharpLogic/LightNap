@@ -15,6 +15,7 @@ namespace LightNap.WebApi.Controllers
     /// <summary>
     /// Controller for managing users.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController(IUsersService usersService, IRolesService rolesService, IClaimsService claimsService,
@@ -26,6 +27,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userId">The ID of the user to retrieve.</param>
         /// <returns>The user details.</returns>
         /// <response code="200">Returns the user details.</response>
+        [AllowAnonymous]
         [HttpGet("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<PublicUserDto?>), 200)]
         public async Task<ApiResponseDto<PublicUserDto?>> GetUser(string userId)
@@ -39,6 +41,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userName">The username of the user to retrieve.</param>
         /// <returns>The user details.</returns>
         /// <response code="200">Returns the user details.</response>
+        [AllowAnonymous]
         [HttpGet("user-name/{userName}")]
         [ProducesResponseType(typeof(ApiResponseDto<PublicUserDto?>), 200)]
         public async Task<ApiResponseDto<PublicUserDto?>> GetUserByUserName(string userName)
@@ -52,6 +55,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="adminSearchUsersRequest">The search criteria.</param>
         /// <returns>The list of users matching the criteria.</returns>
         /// <response code="200">Returns the list of users.</response>
+        [AllowAnonymous]
         [HttpPost("search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<PublicUserDto>>), 200)]
         [ProducesResponseType(400)]
@@ -66,6 +70,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userIds">The collection of user IDs.</param>
         /// <returns>The list of users matching the provided IDs.</returns>
         /// <response code="200">Returns the list of users.</response>
+        [AllowAnonymous]
         [HttpPost("get-by-ids")]
         [ProducesResponseType(typeof(ApiResponseDto<IList<PublicUserDto>>), 200)]
         [ProducesResponseType(400)]
@@ -82,6 +87,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="adminUpdateUserRequest">The updated user information.</param>
         /// <returns>The updated user details.</returns>
         /// <response code="200">Returns the updated user details.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPut("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<AdminUserDto>), 200)]
         [ProducesResponseType(400)]
@@ -97,6 +103,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user was successfully deleted.</returns>
         /// <response code="200">User successfully deleted.</response>
         /// <response code="400">If the user is an administrator and cannot be deleted.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpDelete("{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         public async Task<ApiResponseDto<bool>> DeleteUser(string userId)
@@ -110,7 +117,9 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <returns>The list of roles.</returns>
         /// <response code="200">Returns the list of roles.</response>
+
         [HttpGet("roles")]
+        [Authorize(Roles = ClaimSecurityConfig.ClaimManagementRoles)]
         [ProducesResponseType(typeof(ApiResponseDto<IList<RoleDto>>), 200)]
         public ApiResponseDto<IList<RoleDto>> GetRoles()
         {
@@ -123,6 +132,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="userId">The ID of the user.</param>
         /// <returns>The list of roles for the user.</returns>
         /// <response code="200">Returns the list of roles.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpGet("{userId}/roles")]
         [ProducesResponseType(typeof(ApiResponseDto<IList<string>>), 200)]
         public async Task<ApiResponseDto<IList<string>>> GetRolesForUser(string userId)
@@ -137,6 +147,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The list of users in the specified role.</returns>
         /// <response code="200">Returns the list of users.</response>
         [HttpGet("roles/{role}")]
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [ProducesResponseType(typeof(ApiResponseDto<IList<AdminUserDto>>), 200)]
         public async Task<ApiResponseDto<IList<AdminUserDto>>> GetUsersInRole(string role)
         {
@@ -151,6 +162,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user was successfully added to the role.</returns>
         /// <response code="200">User successfully added to the role.</response>
         /// <response code="400">If there was an error adding the user to the role.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPost("roles/{role}/{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
@@ -168,6 +180,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user was successfully removed from the role.</returns>
         /// <response code="200">User successfully removed from the role.</response>
         /// <response code="400">If there was an error removing the user from the role.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpDelete("roles/{role}/{userId}")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
@@ -183,6 +196,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="searchClaimsRequest">The search parameters.</param>
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPost("claims/search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<ClaimDto>>), 200)]
         public async Task<ApiResponseDto<PagedResponseDto<ClaimDto>>> SearchClaimsAsync(SearchClaimsRequestDto searchClaimsRequest)
@@ -191,16 +205,31 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Searches claims.
+        /// Searches user claims.
         /// </summary>
         /// <param name="searchUserClaimsRequest">The search parameters.</param>
         /// <returns>The list of matching claims.</returns>
         /// <response code="200">Returns the list of claims.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPost("user-claims/search")]
         [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<UserClaimDto>>), 200)]
         public async Task<ApiResponseDto<PagedResponseDto<UserClaimDto>>> SearchUserClaimsAsync(SearchUserClaimsRequestDto searchUserClaimsRequest)
         {
             return new ApiResponseDto<PagedResponseDto<UserClaimDto>>(await claimsService.SearchUserClaimsAsync(searchUserClaimsRequest));
+        }
+
+        /// <summary>
+        /// Returns users with a specific claim.
+        /// </summary>
+        /// <param name="searchClaimRequestDto">The claim to search.</param>
+        /// <returns>The list of matching claims.</returns>
+        /// <response code="200">Returns the list of claims.</response>
+        [HttpPost("claim-users")]
+        [Authorize(Roles = ClaimSecurityConfig.ClaimManagementRoles)]
+        [ProducesResponseType(typeof(ApiResponseDto<PagedResponseDto<string>>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<string>>> GetUsersWithClaim(SearchClaimRequestDto searchClaimRequestDto)
+        {
+            return new ApiResponseDto<PagedResponseDto<string>>(await claimsService.GetUsersWithClaimAsync(searchClaimRequestDto));
         }
 
         /// <summary>
@@ -212,6 +241,7 @@ namespace LightNap.WebApi.Controllers
         /// <response code="200">Claim successfully added to the user.</response>
         /// <response code="400">If there was an error adding the claim to the user.</response>
         [HttpPost("{userId}/claims")]
+        [Authorize(Roles = ClaimSecurityConfig.ClaimManagementRoles)]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> AddUserClaim(string userId, ClaimDto claim)
@@ -229,6 +259,7 @@ namespace LightNap.WebApi.Controllers
         /// <response code="200">Claim successfully removed from the user.</response>
         /// <response code="400">If there was an error removing the claim from the user.</response>
         [HttpDelete("{userId}/claims")]
+        [Authorize(Roles = ClaimSecurityConfig.ClaimManagementRoles)]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RemoveUserClaim(string userId, ClaimDto claim)
@@ -244,6 +275,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user account was successfully locked.</returns>
         /// <response code="200">User account successfully locked.</response>
         /// <response code="400">If there was an error locking the user account.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPost("{userId}/lock")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
@@ -260,6 +292,7 @@ namespace LightNap.WebApi.Controllers
         /// <returns>True if the user account was successfully unlocked.</returns>
         /// <response code="200">User account successfully unlocked.</response>
         /// <response code="400">If there was an error unlocking the user account.</response>
+        [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPost("{userId}/unlock")]
         [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         [ProducesResponseType(400)]
@@ -269,16 +302,29 @@ namespace LightNap.WebApi.Controllers
             return new ApiResponseDto<bool>(true);
         }
 
+        /// <summary>
+        /// Gets the settings for a user.
+        /// </summary>
+        /// <param name="userId">The ID of the user.</param>
+        /// <returns>The list of user settings.</returns>
         [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpGet("{userId}/settings")]
-        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync(string userId)
+        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettings(string userId)
         {
             return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetUserSettingsAsync(userId));
         }
 
+        /// <summary>
+        /// Updates the settings for a specific user.
+        /// </summary>
+        /// <remarks>This method requires the caller to have the Administrator role. It is intended to be
+        /// used for managing user-specific settings.</remarks>
+        /// <param name="userId">The unique identifier of the user whose settings are being updated.</param>
+        /// <param name="setSettingDto">An object containing the new settings to apply to the user.</param>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing the updated user settings as a <see cref="UserSettingDto"/>.</returns>
         [Authorize(Roles = Constants.Roles.Administrator)]
         [HttpPut("{userId}/settings")]
-        public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync(string userId, [FromBody] SetUserSettingRequestDto setSettingDto)
+        public async Task<ApiResponseDto<UserSettingDto>> SetUserSetting(string userId, [FromBody] SetUserSettingRequestDto setSettingDto)
         {
             return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetUserSettingAsync(userId, setSettingDto));
         }

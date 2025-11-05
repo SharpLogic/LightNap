@@ -4,10 +4,10 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-import { <#= Parameters.PascalName #> } from "../models/response/<#= Parameters.KebabName #>";
+import { <#= Parameters.PascalName #>Dto } from "../models/response/<#= Parameters.KebabName #>-dto";
 
 export class <#= Parameters.PascalName #>Helper {
-  static rehydrate(<#= Parameters.CamelName #>: <#= Parameters.PascalName #>) {
+  static rehydrate(<#= Parameters.CamelName #>: <#= Parameters.PascalName #>Dto) {
     if (!<#= Parameters.CamelName #>) return;
 
 <#  foreach (var property in Parameters.GetProperties) {

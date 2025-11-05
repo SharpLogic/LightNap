@@ -1,4 +1,4 @@
-<api-response [apiResponse]="user$()" errorMessage="Error loading user" loadingMessage="Loading user...">
+<ln-api-response [apiResponse]="user$()" errorMessage="Error loading user" loadingMessage="Loading user...">
   <ng-template #success let-userAny>
     @let user = asUser(userAny);
 
@@ -15,9 +15,9 @@
             <div class="p-panel-subtitle">{{ user.email }}</div>
           </div>
           <div class="flex gap-1">
-            <confirm-popup key="lock" confirmSeverity="danger" confirmIcon="pi pi-lock" />
+            <ln-confirm-popup key="lock" confirmSeverity="danger" confirmIcon="pi pi-lock" />
             <p-button severity="danger" title="Lock user account" (onClick)="lockUserAccount($event)" icon="pi pi-lock" [hidden]="user.lockoutEnd" />
-            <confirm-popup key="unlock" confirmSeverity="success" confirmIcon="pi pi-unlock" />
+            <ln-confirm-popup key="unlock" confirmSeverity="success" confirmIcon="pi pi-unlock" />
             <p-button
               severity="success"
               title="Unlock user account"
@@ -25,7 +25,7 @@
               icon="pi pi-unlock"
               [hidden]="!user.lockoutEnd"
             />
-            <confirm-popup key="delete" />
+            <ln-confirm-popup key="delete" />
             <p-button severity="danger" title="Delete user" (onClick)="deleteUser($event)" icon="pi pi-trash" />
           </div>
         </div>
@@ -42,30 +42,24 @@
             <user-profile [user]="user" />
           </p-tabpanel>
           <p-tabpanel value="roles">
-            <api-response [apiResponse]="userRoles$()" errorMessage="Error loading user roles" loadingMessage="Loading user roles...">
+            <ln-api-response [apiResponse]="userRoles$()" errorMessage="Error loading user roles" loadingMessage="Loading user roles...">
               <ng-template #success let-userRolesAny>
                 @let userRoles = asUserRoles(userRolesAny);
 
                 <user-roles [userRoles]="userRoles ?? []" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
               </ng-template>
-            </api-response>
+            </ln-api-response>
           </p-tabpanel>
           <p-tabpanel value="claims">
-            <api-response [apiResponse]="userClaims$()" errorMessage="Error loading user claims" loadingMessage="Loading user claims...">
-              <ng-template #success let-userClaimsAny>
-                @let userClaims = asUserClaims(userClaimsAny);
-
-                <user-claims [userClaims]="userClaims ?? []" (addClaim)="addClaim($event)" (removeClaim)="removeClaim($event)" />
-              </ng-template>
-            </api-response>
+            <user-claims [userId]="user.id" />
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
   <ng-template #null>
     <p>This user was not found.</p>
   </ng-template>
-</api-response>
+</ln-api-response>

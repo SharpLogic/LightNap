@@ -3,9 +3,13 @@ using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Request;
+using LightNap.Core.StaticContents.Dto.Request;
+using LightNap.Core.StaticContents.Enums;
+using LightNap.Core.StaticContents.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace LightNap.WebApi.Configuration
 {
@@ -24,6 +28,7 @@ namespace LightNap.WebApi.Configuration
     /// <param name="logger">The logger.</param>
     /// <param name="roleManager">The role manager.</param>
     /// <param name="userManager">The user manager.</param>
+    /// <param name="contentService">The static content service.</param>
     /// <param name="seededUserConfigurations">The users to seed.</param>
     /// <param name="applicationSettings">The configured application settings.</param>
     public partial class Seeder(
@@ -31,6 +36,7 @@ namespace LightNap.WebApi.Configuration
         ILogger<Seeder> logger,
         RoleManager<ApplicationRole> roleManager,
         UserManager<ApplicationUser> userManager,
+        IStaticContentService contentService,
         IOptions<Dictionary<string, List<SeededUserConfiguration>>> seededUserConfigurations,
         IOptions<ApplicationSettings> applicationSettings)
     {
@@ -43,8 +49,139 @@ namespace LightNap.WebApi.Configuration
         {
             await this.SeedRolesAsync();
             await this.SeedUsersAsync();
+            await this.SeedStaticContentAsync();
             await this.SeedApplicationContentAsync();
             await this.SeedEnvironmentContentAsync();
+        }
+
+        private async Task SeedStaticContentAsync()
+        {
+            string basePath = Path.Combine(AppContext.BaseDirectory, "StaticContent");
+            if (!Directory.Exists(basePath))
+            {
+                logger.LogWarning("Static content directory not found: '{basePath}'", basePath);
+                return;
+            }
+
+            // Track keys during this scan to detect duplicates in the file system
+            var keyRegistry = new Dictionary<string, (StaticContentType Type, StaticContentReadAccess ReadAccess, string Path)>();
+
+            // Pattern: {languageCode}.{extension}
+            Regex fileNameRegex = new Regex(@"^([a-z]{2})\.([a-z0-9]+)$", RegexOptions.Compiled);
+
+            // Iterate through type folders (zones, pages, others added in future)
+            foreach (var typeDir in Directory.GetDirectories(basePath))
+            {
+                string typeName = Path.GetFileName(typeDir);
+                StaticContentType type = typeName.ToLowerInvariant() switch
+                {
+                    "zones" => StaticContentType.Zone,
+                    "pages" => StaticContentType.Page,
+                    _ => throw new InvalidOperationException($"Invalid static content type directory: '{typeDir}'")
+                };
+
+                // Iterate through read access folders (public, authenticated, explicit)
+                foreach (var accessDir in Directory.GetDirectories(typeDir))
+                {
+                    string accessName = Path.GetFileName(accessDir);
+                    StaticContentReadAccess readAccess = accessName.ToLowerInvariant() switch
+                    {
+                        "public" => StaticContentReadAccess.Public,
+                        "authenticated" => StaticContentReadAccess.Authenticated,
+                        "explicit" => StaticContentReadAccess.Explicit,
+                        _ => throw new InvalidOperationException($"Invalid static content read access directory: '{accessDir}'")
+                    };
+
+                    // Iterate through key folders
+                    foreach (var keyDir in Directory.GetDirectories(accessDir))
+                    {
+                        string key = Path.GetFileName(keyDir);
+
+                        // Validate key format (kebab-case)
+                        if (!Regex.IsMatch(key, @"^[a-z0-9]+(-[a-z0-9]+)*$"))
+                        {
+                            throw new InvalidOperationException($"Invalid static content key directory name: '{key}'. Must be kebab-case.");
+                        }
+
+                        // Check for duplicate keys in the file system
+                        if (keyRegistry.TryGetValue(key, out var existing))
+                        {
+                            throw new InvalidOperationException(
+                                $"Duplicate static content key '{key}' found in file system.\n" +
+                                $"  First location: {existing.Path} (Type: {existing.Type}, Access: {existing.ReadAccess})\n" +
+                                $"  Second location: {keyDir} (Type: {type}, Access: {readAccess})\n" +
+                                $"Each key must appear in exactly one location.");
+                        }
+
+                        // Register this key
+                        keyRegistry[key] = (type, readAccess, keyDir);
+
+                        // Iterate through language files
+                        foreach (var filePath in Directory.GetFiles(keyDir))
+                        {
+                            string fileName = Path.GetFileName(filePath);
+                            Match match = fileNameRegex.Match(fileName);
+
+                            if (!match.Success)
+                            {
+                                logger.LogWarning("Skipping invalid static content file: '{filePath}'. Expected format: {{languageCode}}.{{extension}}", filePath);
+                                continue;
+                            }
+
+                            string languageCode = match.Groups[1].Value;
+                            string extension = match.Groups[2].Value;
+
+                            StaticContentFormat format = extension.ToLowerInvariant() switch
+                            {
+                                "html" => StaticContentFormat.Html,
+                                "md" => StaticContentFormat.Markdown,
+                                "txt" => StaticContentFormat.PlainText,
+                                _ => throw new InvalidOperationException($"Invalid static content format in file: '{filePath}'")
+                            };
+
+                            string content = await File.ReadAllTextAsync(filePath);
+
+                            await this.SeedStaticContentLanguageAsync(key, type, readAccess, languageCode, format, content);
+                        }
+                    }
+                }
+            }
+
+            logger.LogInformation("Seeded {count} static content keys from file system", keyRegistry.Count);
+        }
+
+        private async Task SeedStaticContentLanguageAsync(string key, StaticContentType type, StaticContentReadAccess readAccess,
+            string languageCode, StaticContentFormat format, string content)
+        {
+            var staticContent = await contentService.GetStaticContentAsync(key);
+            if (staticContent is null)
+            {
+                staticContent = await contentService.CreateStaticContentAsync(
+                    new CreateStaticContentDto()
+                    {
+                        Key = key,
+                        Type = type,
+                        Status = StaticContentStatus.Published,
+                        ReadAccess = readAccess
+                    });
+
+                logger.LogInformation("Created static content with key '{key}'", key);
+            }
+
+            var existingLanguage = await contentService.GetStaticContentLanguageAsync(key, languageCode);
+            if (existingLanguage is null)
+            {
+                await contentService.CreateStaticContentLanguageAsync(
+                    staticContent.Key,
+                    languageCode,
+                    new CreateStaticContentLanguageDto()
+                    {
+                        Content = content,
+                        Format = format,
+                    });
+
+                logger.LogInformation("Created static content language '{languageCode}' for key '{key}'", languageCode, key);
+            }
         }
 
         /// <summary>

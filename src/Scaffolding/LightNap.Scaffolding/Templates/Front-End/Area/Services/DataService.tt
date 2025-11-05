@@ -9,10 +9,10 @@ import { Injectable, inject } from "@angular/core";
 import { API_URL_ROOT, PagedResponseDto } from "@core";
 import { tap } from "rxjs";
 import {<#= Parameters.PascalName #>Helper } from "../helpers/<#= Parameters.KebabName #>.helper";
-import { Create<#= Parameters.PascalName #>Request } from "../models/request/create-<#= Parameters.KebabName #>-request";
-import { Search<#= Parameters.PascalNamePlural #>Request } from "../models/request/search-<#= Parameters.KebabNamePlural #>-request";
-import { Update<#= Parameters.PascalName #>Request } from "../models/request/update-<#= Parameters.KebabName #>-request";
-import { <#= Parameters.PascalName #> } from "../models/response/<#= Parameters.KebabName #>";
+import { Create<#= Parameters.PascalName #>RequestDto } from "../models/request/create-<#= Parameters.KebabName #>-request-dto";
+import { Search<#= Parameters.PascalNamePlural #>RequestDto } from "../models/request/search-<#= Parameters.KebabNamePlural #>-request-dto";
+import { Update<#= Parameters.PascalName #>RequestDto } from "../models/request/update-<#= Parameters.KebabName #>-request-dto";
+import { <#= Parameters.PascalName #>Dto } from "../models/response/<#= Parameters.KebabName #>-dto";
 
 @Injectable({
   providedIn: "root",
@@ -22,23 +22,23 @@ export class DataService {
   #apiUrlRoot = `${inject(API_URL_ROOT)}<#= Parameters.PascalNamePlural #>/`;
 
   get<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>) {
-    return this.#http.get<<#= Parameters.PascalName #>>(`${this.#apiUrlRoot}${<#= Parameters.IdProperty.CamelName #>}`).pipe(
+    return this.#http.get<<#= Parameters.PascalName #>Dto>(`${this.#apiUrlRoot}${<#= Parameters.IdProperty.CamelName #>}`).pipe(
       tap(<#= Parameters.CamelName #> => <#= Parameters.PascalName #>Helper.rehydrate(<#= Parameters.CamelName #>))
       );
   }
 
-  search<#= Parameters.PascalNamePlural #>(request: Search<#= Parameters.PascalNamePlural #>Request) {
-    return this.#http.post<PagedResponseDto<<#= Parameters.PascalName #>>>(`${this.#apiUrlRoot}search`, request).pipe(
+  search<#= Parameters.PascalNamePlural #>(request: Search<#= Parameters.PascalNamePlural #>RequestDto) {
+    return this.#http.post<PagedResponseDto<<#= Parameters.PascalName #>Dto>>(`${this.#apiUrlRoot}search`, request).pipe(
       tap(results => results.data.forEach(<#= Parameters.PascalName #>Helper.rehydrate))
     );
   }
 
-  create<#= Parameters.PascalName #>(request: Create<#= Parameters.PascalName #>Request) {
-    return this.#http.post<<#= Parameters.PascalName #>>(`${this.#apiUrlRoot}`, request);
+  create<#= Parameters.PascalName #>(request: Create<#= Parameters.PascalName #>RequestDto) {
+    return this.#http.post<<#= Parameters.PascalName #>Dto>(`${this.#apiUrlRoot}`, request);
   }
 
-  update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>, request: Update<#= Parameters.PascalName #>Request) {
-    return this.#http.put<<#= Parameters.PascalName #>>(`${this.#apiUrlRoot}${<#= Parameters.IdProperty.CamelName #>}`, request);
+  update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>, request: Update<#= Parameters.PascalName #>RequestDto) {
+    return this.#http.put<<#= Parameters.PascalName #>Dto>(`${this.#apiUrlRoot}${<#= Parameters.IdProperty.CamelName #>}`, request);
   }
 
   delete<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>) {

@@ -14,3 +14,9 @@ export type ApiResponseType =
    * Indicates that the API call encountered an unexpected error.
    */
   | "UnexpectedError";
+
+export const ApiResponseTypes = {
+  Success: "Success",
+  Error: "Error",
+  UnexpectedError: "UnexpectedError",
+} as const;

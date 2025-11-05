@@ -1,10 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { RoutePipe, ErrorApiResponse, BrandedCardComponent } from "@core";
-import { LayoutService } from "@core/layout/services/layout.service";
-import { RouteAliasService, ToastService } from "@core";
+import { ErrorApiResponse, RoutePipe } from "@core";
+import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
+import { LayoutService } from "@core/features/layout/services/layout.service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
+import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
 

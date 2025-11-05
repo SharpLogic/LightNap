@@ -41,6 +41,11 @@ namespace LightNap.Core.UserSettings.Services
                 throw new Exception($"The setting '{key}' for user '{userId}' could not be deserialized to type '{typeof(T).FullName}'");
             }
 
+            var definition = UserSettingsConfig.GetActiveSetting(key);
+            if (string.IsNullOrEmpty(definition.DefaultValue))
+            {
+                return default!;
+            }
             return JsonSerializer.Deserialize<T>(UserSettingsConfig.GetActiveSetting(key).DefaultValue)!;
         }
 

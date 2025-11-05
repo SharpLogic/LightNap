@@ -1,0 +1,97 @@
+<ln-api-response [apiResponse]="contents$" errorMessage="Error loading contents" loadingMessage="Loading contents...">
+  <ng-template #success let-contentResultsAny>
+    @let contentResults = asContentResults(contentResultsAny);
+
+    <p-panel header="Manage Contents">
+      <ng-template #icons>
+        <p-button pTooltip="Create New Content" icon="pi pi-plus" severity="success" label="Create" (onClick)="showCreateDialog()" />
+      </ng-template>
+      <form [formGroup]="form" class="my-2">
+        <div class="flex gap-2 flex-wrap">
+          <div class="flex flex-col">
+            <label>Key contains</label>
+            <input pInputText placeholder="Key contains" formControlName="keyContains" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Status</label>
+            <ln-content-status-picker formControlName="status" [showAnyOption]="true" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Type</label>
+            <ln-content-type-picker formControlName="type" [showAnyOption]="true" class="w-60" />
+          </div>
+          <div class="flex flex-col">
+            <label>Read Access</label>
+            <ln-content-read-access-picker formControlName="readAccess" [showAnyOption]="true" class="w-60" />
+          </div>
+        </div>
+      </form>
+
+      <p-table
+        [value]="contentResults.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="contentResults.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadContentsLazy($event)"
+      >
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="Key">Key <p-sortIcon field="Key" /></th>
+            <th pSortableColumn="Type">Type <p-sortIcon field="Type" /></th>
+            <th pSortableColumn="Status">Status <p-sortIcon field="Status" /></th>
+            <th pSortableColumn="ReadAccess">Read Access <p-sortIcon field="ReadAccess" /></th>
+            <th pSortableColumn="CreatedDate">Created <p-sortIcon field="CreatedDate" /></th>
+            <th pSortableColumn="LastModifiedDate">Last Modified <p-sortIcon field="LastModifiedDate" /></th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-contentAny>
+          @let content = asContent(contentAny);
+
+          <tr>
+            <td>
+              <a [routerLink]="'edit-content' | route: [content.key]"> {{ content.key }}</a>
+            </td>
+            <td>
+              {{ content.type }}
+            </td>
+            <td>
+              {{ content.status }}
+            </td>
+            <td>
+              {{ content.readAccess }}
+            </td>
+            <td>
+              {{ content.createdDate | date: "short" }}
+            </td>
+            <td>
+              {{ content.lastModifiedDate | date: "short" }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">
+              <span>There are no matching contents.</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <ln-error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</ln-api-response>
+
+<p-dialog header="Create New Content" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '30rem'}">
+  <form [formGroup]="createForm" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="contentKey">Key</label>
+      <input pInputText id="contentKey" formControlName="key" placeholder="Enter content key" class="w-full" />
+    </div>
+  </form>
+  <ng-template #footer>
+    <p-button label="Create" severity="success" (onClick)="createContent()" [disabled]="createForm.invalid" />
+    <p-button label="Cancel" severity="secondary" (onClick)="hideCreateDialog()" />
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,30 @@
+<ln-api-response [apiResponse]="content()">
+  <ng-template let-contentAny #success>
+    @let publishedContent = asContent(contentAny);
+    @if (publishedContent.canView) {
+      @if (publishedContent.canEdit) {
+        <div class="relative">
+          <a [routerLink]="'edit-content' | route: key()" class="absolute top-1 right-1 z-10 font-bold">[edit]</a>
+        </div>
+      }
+      <div
+        staticContent
+        [content]="publishedContent.content!"
+        [format]="publishedContent.format!"
+        [sanitize]="sanitize()"
+        [showContentStripWarning]="showContentStripWarning()"
+      ></div>
+    } @else if (showAccessWarnings()) {
+      @if (publishedContent.requiresAuthentication) {
+        <p class="text-red-500">You must be logged in to view this content.</p>
+      } @else {
+        <p class="text-red-500">Access to this content is restricted.</p>
+      }
+    }
+  </ng-template>
+  <ng-template #null>
+    <p class="text-red-500">
+      The content key <strong>{{ key() }}</strong> was not found.
+    </p>
+  </ng-template>
+</ln-api-response>

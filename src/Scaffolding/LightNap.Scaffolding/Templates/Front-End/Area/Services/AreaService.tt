@@ -29,7 +29,7 @@ export class <#= Parameters.PascalName #>Service {
     }
 
     update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>, request: Update<#= Parameters.PascalName #>Request) {
-        return this.#dataService.update<#= Parameters.PascalName #>(id, request);
+        return this.#dataService.update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>, request);
     }
 
     delete<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>) {

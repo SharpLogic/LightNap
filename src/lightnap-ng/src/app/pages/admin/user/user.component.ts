@@ -1,9 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, inject, input, OnChanges, signal } from "@angular/core";
+import { Component, inject, input, OnChanges, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { AdminUserDto, AdminUsersService, ClaimDto, ConfirmPopupComponent, RoleDto, RouteAliasService, ToastService, TypeHelpers } from "@core";
+import { AdminUserDto, RoleDto, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
+import { ToastService } from "@core/services/toast.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -43,13 +47,11 @@ export class UserComponent implements OnChanges {
   readonly errors = signal(new Array<string>());
 
   readonly user$ = signal<Observable<AdminUserDto>>(new Observable<AdminUserDto>());
-  readonly userClaims$ = signal<Observable<Array<ClaimDto>>>(new Observable<Array<ClaimDto>>());
   readonly userRoles$ = signal<Observable<Array<RoleDto>>>(new Observable<Array<RoleDto>>());
 
   #userId = "";
 
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
-  readonly asUserClaims = TypeHelpers.cast<Array<ClaimDto>>;
   readonly asUserRoles = TypeHelpers.cast<Array<RoleDto>>;
 
   ngOnChanges() {
@@ -64,7 +66,6 @@ export class UserComponent implements OnChanges {
 
           this.#userId = user.id;
           this.#refreshRoles();
-          this.#refreshClaims();
         })
       )
     );
@@ -72,10 +73,6 @@ export class UserComponent implements OnChanges {
 
   #refreshRoles() {
     this.userRoles$.set(this.adminService.getUserRoles(this.#userId));
-  }
-
-  #refreshClaims() {
-    this.userClaims$.set(this.adminService.getUserClaims(this.#userId));
   }
 
   lockUserAccount(event: any) {
@@ -89,7 +86,7 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.lockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -106,7 +103,7 @@ export class UserComponent implements OnChanges {
       accept: () => {
         this.adminService.unlockUserAccount(this.#userId).subscribe({
           next: () => this.#refreshUser(),
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -126,7 +123,7 @@ export class UserComponent implements OnChanges {
             this.#toast.success("User deleted successfully.");
             this.#routeAlias.navigate("admin-users");
           },
-          error: response => this.errors.set(response.errorMessages),
+          error: setApiErrors(this.errors),
         });
       },
     });
@@ -137,7 +134,7 @@ export class UserComponent implements OnChanges {
 
     this.adminService.removeUserFromRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 
@@ -146,25 +143,7 @@ export class UserComponent implements OnChanges {
 
     this.adminService.addUserToRole(this.#userId, role).subscribe({
       next: () => this.#refreshRoles(),
-      error: response => this.errors.set(response.errorMessages),
-    });
-  }
-
-  removeClaim(claim: ClaimDto) {
-    this.errors.set([]);
-
-    this.adminService.removeUserClaim(this.#userId, claim).subscribe({
-      next: () => this.#refreshClaims(),
-      error: response => this.errors.set(response.errorMessages),
-    });
-  }
-
-  addClaim(claim: ClaimDto) {
-    this.errors.set([]);
-
-    this.adminService.addUserClaim(this.#userId, claim).subscribe({
-      next: () => this.#refreshClaims(),
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 }

@@ -1,4 +1,4 @@
-<api-response [apiResponse]="claims$" errorMessage="Error loading claim" loadingMessage="Loading claim...">
+<ln-api-response [apiResponse]="claims$" errorMessage="Error loading claims" loadingMessage="Loading claims...">
   <ng-template #success let-claimResultsAny>
     @let claimResults = asClaimResults(claimResultsAny);
 
@@ -28,7 +28,7 @@
         [rows]="pageSize"
         [totalRecords]="claimResults.totalCount"
         [lazy]="true"
-        (onLazyLoad)="loadUsersLazy($event)"
+        (onLazyLoad)="loadClaimsLazy($event)"
       >
         <ng-template #header>
           <tr>
@@ -61,7 +61,7 @@
         </ng-template>
       </p-table>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

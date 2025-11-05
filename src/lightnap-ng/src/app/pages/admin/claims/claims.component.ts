@@ -2,9 +2,10 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUsersService, ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe, TypeHelpers } from "@core";
+import { ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
@@ -30,7 +31,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
   ],
 })
 export class ClaimsComponent {
-  readonly pageSize = 25;
+  readonly pageSize = 10;
 
   readonly #adminService = inject(AdminUsersService);
 
@@ -69,7 +70,7 @@ export class ClaimsComponent {
     this.form.valueChanges.pipe(debounceTime(300)).subscribe({ next: () => this.#lazyLoadEventSubject.next({ first: 0 }) });
   }
 
-  loadUsersLazy(event: TableLazyLoadEvent) {
+  loadClaimsLazy(event: TableLazyLoadEvent) {
     this.#lazyLoadEventSubject.next(event);
   }
 }

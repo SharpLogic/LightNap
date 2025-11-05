@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { ApplicationSettingsDto, LayoutConfigDto, UpdateProfileRequestDto } from "@core/backend-api";
+import { UpdateProfileRequestDto, ApplicationSettingsDto, LayoutConfigDto } from "@core/backend-api";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";

@@ -1,21 +1,32 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { BlockUiService, IdentityService } from "@core";
+import { setApiErrors } from "@core";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { InputGroupModule } from "primeng/inputgroup";
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { PanelModule } from 'primeng/panel';
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { PanelModule } from "primeng/panel";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
   standalone: true,
   templateUrl: "./change-password.component.html",
-  imports: [CommonModule, ButtonModule, ErrorListComponent, PasswordModule, ReactiveFormsModule, PanelModule, InputGroupModule, InputGroupAddonModule],
+  imports: [
+    CommonModule,
+    ButtonModule,
+    ErrorListComponent,
+    PasswordModule,
+    ReactiveFormsModule,
+    PanelModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+  ],
 })
 export class ChangePasswordComponent {
   readonly #identityService = inject(IdentityService);
@@ -49,7 +60,7 @@ export class ChangePasswordComponent {
           this.#toast.success("Password changed successfully.");
           this.form.reset();
         },
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

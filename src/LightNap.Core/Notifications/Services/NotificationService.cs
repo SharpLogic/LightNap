@@ -6,6 +6,7 @@ using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
+using LightNap.Core.Notifications.Enums;
 using LightNap.Core.Notifications.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -4,7 +4,6 @@ using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Tests.Utilities;
-using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +27,7 @@ namespace LightNap.Core.Tests.Services
         {
             var services = new ServiceCollection();
             services.AddLogging()
-                .AddLightNapInMemoryDatabase()
+                .AddLightNapInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
                 .AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -38,7 +37,7 @@ namespace LightNap.Core.Tests.Services
             this._userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             this._roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             this._userContext = new TestUserContext();
-            this._userContext.Roles.Add(Constants.Roles.Administrator); // Set the user context to be an administrator for testing purposes.
+            this._userContext.LogInAdministrator();
             this._rolesService = new RolesService(this._userManager, this._dbContext, this._userContext);
         }
 
@@ -49,25 +48,33 @@ namespace LightNap.Core.Tests.Services
             this._dbContext.Dispose();
         }
 
+        #region AddUserToRoleAsync Tests
+
         [TestMethod]
-        public async Task AddUserToRoleAsync_UserAndRoleExist_AddsUserToRole()
+        public async Task AddUserToRoleAsync_ValidUserAndRole_AddsUserToRole()
         {
             // Arrange
             var userId = "test-user-id";
             var role = "test-role";
-            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
             await TestHelper.CreateTestRoleAsync(this._roleManager, role);
 
             // Act
             await this._rolesService.AddUserToRoleAsync(role, userId);
+
+            // Assert
+            var userRoles = await this._userManager.GetRolesAsync(user);
+            Assert.HasCount(1, userRoles);
+            Assert.Contains(role, userRoles);
         }
 
         [TestMethod]
-        public async Task AddUserToRoleAsync_UserDoesNotExist_ThrowsError()
+        public async Task AddUserToRoleAsync_UserDoesNotExist_ThrowsException()
         {
             // Arrange
             var userId = "non-existent-user-id";
             var role = "test-role";
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -77,16 +84,90 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public void GetRoles_ReturnsRoles()
+        public async Task AddUserToRoleAsync_RoleDoesNotExist_ThrowsException()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            var role = "non-existent-role";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<InvalidOperationException>(async () =>
+            {
+                await this._rolesService.AddUserToRoleAsync(role, userId);
+            });
+        }
+
+        #endregion
+
+        #region RemoveUserFromRoleAsync Tests
+
+        [TestMethod]
+        public async Task RemoveUserFromRoleAsync_ValidUserAndRole_RemovesUserFromRole()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            var role = "test-role";
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
+            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            await this._userManager.AddToRoleAsync(user, role);
+            var roles = await this._userManager.GetRolesAsync(user);
+            Assert.HasCount(1, roles);
+
+            // Act
+            await this._rolesService.RemoveUserFromRoleAsync(role, userId);
+
+            // Assert
+            roles = await this._userManager.GetRolesAsync(user);
+            Assert.HasCount(0, roles);
+        }
+
+        [TestMethod]
+        public async Task RemoveUserFromRoleAsync_UserDoesNotExist_ThrowsException()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+            var role = "test-role";
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._rolesService.RemoveUserFromRoleAsync(role, userId);
+            });
+        }
+
+        [TestMethod]
+        public async Task RemoveUserFromRoleAsync_UserNotInRole_ThrowsException()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            var role = "test-role";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+            await TestHelper.CreateTestRoleAsync(this._roleManager, role);
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._rolesService.RemoveUserFromRoleAsync(role, userId);
+            });
+        }
+
+        #endregion
+
+        #region GetRoles Tests
+
+        [TestMethod]
+        public void GetRoles_ReturnsAllRoles()
         {
             // Arrange
             var allRoles = ApplicationRoles.All;
 
             // Act
+            this._userContext.LogIn("logged-in-user-id");
             var roles = this._rolesService.GetRoles();
 
             // Assert
-            Assert.AreEqual(allRoles.Count, roles.Count);
+            Assert.HasCount(allRoles.Count, roles);
 
             for (int i = 0; i < allRoles.Count; i++)
             {
@@ -96,8 +177,12 @@ namespace LightNap.Core.Tests.Services
             }
         }
 
+        #endregion
+
+        #region GetRolesForUserAsync Tests
+
         [TestMethod]
-        public async Task GetRolesForUserAsync_UserExists_ReturnsRoles()
+        public async Task GetRolesForUserAsync_UserWithRoles_ReturnsRoles()
         {
             // Arrange
             var userId = "test-user-id";
@@ -109,14 +194,47 @@ namespace LightNap.Core.Tests.Services
             await this._userManager.AddToRolesAsync(user, roles);
 
             // Act
-            var result = await this._rolesService.GetRolesForUserAsync(userId);
+            var userRoles = await this._rolesService.GetRolesForUserAsync(userId);
 
             // Assert
-            Assert.AreEqual(2, result.Count);
+            Assert.HasCount(2, userRoles);
+            Assert.IsTrue(userRoles.Contains(roles[0]));
+            Assert.IsTrue(userRoles.Contains(roles[1]));
         }
 
         [TestMethod]
-        public async Task GetUsersInRoleAsync_RoleExists_ReturnsUsers()
+        public async Task GetRolesForUserAsync_UserWithNoRoles_ReturnsEmptyList()
+        {
+            // Arrange
+            var userId = "test-user-id";
+            await TestHelper.CreateTestUserAsync(this._userManager, userId);
+
+            // Act
+            var userRoles = await this._rolesService.GetRolesForUserAsync(userId);
+
+            // Assert
+            Assert.HasCount(0, userRoles);
+        }
+
+        [TestMethod]
+        public async Task GetRolesForUserAsync_UserDoesNotExist_ThrowsException()
+        {
+            // Arrange
+            var userId = "non-existent-user-id";
+
+            // Act & Assert
+            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
+            {
+                await this._rolesService.GetRolesForUserAsync(userId);
+            });
+        }
+
+        #endregion
+
+        #region GetUsersInRoleAsync Tests
+
+        [TestMethod]
+        public async Task GetUsersInRoleAsync_RoleWithUsers_ReturnsUsers()
         {
             // Arrange
             var role = "test-role";
@@ -130,28 +248,23 @@ namespace LightNap.Core.Tests.Services
             var users = await this._rolesService.GetUsersInRoleAsync(role);
 
             // Assert
-            Assert.AreEqual(2, users.Count);
+            Assert.HasCount(2, users);
         }
 
         [TestMethod]
-        public async Task RemoveUserFromRoleAsync_UserAndRoleExist_RemovesUserFromRole()
+        public async Task GetUsersInRoleAsync_RoleWithNoUsers_ReturnsEmptyList()
         {
             // Arrange
-            var userId = "test-user-id";
             var role = "test-role";
             await TestHelper.CreateTestRoleAsync(this._roleManager, role);
-            var user = await TestHelper.CreateTestUserAsync(this._userManager, userId);
-            await this._userManager.AddToRoleAsync(user, role);
-            var roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(1, roles.Count);
-            this._userContext.UserId = user.Id;
 
             // Act
-            await this._rolesService.RemoveUserFromRoleAsync(role, userId);
+            var users = await this._rolesService.GetUsersInRoleAsync(role);
 
             // Assert
-            roles = await this._userManager.GetRolesAsync(user);
-            Assert.AreEqual(0, roles.Count);
+            Assert.HasCount(0, users);
         }
+
+        #endregion
     }
 }

@@ -2,14 +2,17 @@ import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
+import { ProfileDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
+import { BlockUiService } from "@core/services/block-ui.service";
+import { IdentityService } from "@core/services/identity.service";
 import { ProfileService } from "@core/services/profile.service";
+import { ToastService } from "@core/services/toast.service";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { finalize, tap } from "rxjs";
-import { IdentityService } from "@core/services/identity.service";
-import { ErrorListComponent, ProfileDto, RoutePipe, TypeHelpers } from "@core";
-import { RouteAliasService, BlockUiService, ToastService } from "@core";
 
 @Component({
   standalone: true,
@@ -42,7 +45,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#toast.success("Profile updated successfully."),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 
@@ -53,7 +56,7 @@ export class IndexComponent {
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: () => this.#routeAlias.navigate("landing"),
-        error: response => this.errors.set(response.errorMessages),
+        error: setApiErrors(this.errors),
       });
   }
 }

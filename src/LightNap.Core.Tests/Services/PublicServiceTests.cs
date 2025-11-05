@@ -24,22 +24,22 @@ namespace LightNap.Core.Tests.Services
         {
             var services = new ServiceCollection();
             services.AddLogging()
-                .AddLightNapInMemoryDatabase()
+                .AddLightNapInMemoryDatabase($"TestDb_{Guid.NewGuid()}")
                 .AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             var serviceProvider = services.BuildServiceProvider();
-            _dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            this._dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-            _publicService = new PublicService();
+            this._publicService = new PublicService();
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            _dbContext.Database.EnsureDeleted();
-            _dbContext.Dispose();
+            this._dbContext.Database.EnsureDeleted();
+            this._dbContext.Dispose();
         }
 
     }

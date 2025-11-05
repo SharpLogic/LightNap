@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Interfaces;
+﻿using LightNap.Core.Configuration;
+using LightNap.Core.Interfaces;
 
 namespace LightNap.Core.Api
 {
@@ -32,7 +33,7 @@ namespace LightNap.Core.Api
         /// Always returns "system" for the system user.
         /// </summary>
         /// <returns>The string "system".</returns>
-        public string GetUserId() => "system";
+        public string GetUserId() => Constants.Identity.SystemUserId;
 
         /// <summary>
         /// Determines whether the user has the specified claim.

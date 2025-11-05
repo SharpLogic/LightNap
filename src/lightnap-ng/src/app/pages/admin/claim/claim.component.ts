@@ -1,16 +1,19 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, signal } from "@angular/core";
+import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
-import { AdminUserDto, AdminUsersService, ConfirmPopupComponent, PeoplePickerComponent, RoutePipe, TypeHelpers } from "@core";
+import { AdminUserDto, ClaimDto, EmptyPagedResponse, PagedResponseDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { ConfirmPopupComponent } from "@core/components/confirm-popup/confirm-popup.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
+import { UserPickerComponent } from "@core/features/users/components/user-picker/user-picker.component";
+import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { InputTextModule } from "primeng/inputtext";
 import { PanelModule } from "primeng/panel";
-import { TableModule } from "primeng/table";
-import { Observable } from "rxjs";
+import { TableLazyLoadEvent, TableModule } from "primeng/table";
+import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -27,10 +30,12 @@ import { Observable } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    PeoplePickerComponent,
+    UserPickerComponent,
   ],
 })
 export class ClaimComponent {
+  readonly pageSize = 10;
+
   readonly #adminService = inject(AdminUsersService);
   readonly #confirmationService = inject(ConfirmationService);
 
@@ -45,18 +50,25 @@ export class ClaimComponent {
 
   readonly errors = signal(new Array<string>());
 
-  readonly usersForClaim$ = signal(new Observable<Array<AdminUserDto>>());
+  readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
+  readonly usersForClaim$ = computed(() =>
+    this.#lazyLoadEventSubject.pipe(
+      switchMap(event =>
+        this.#adminService.getUsersWithClaim({
+          type: this.type(),
+          value: this.value(),
+          pageSize: this.pageSize,
+          pageNumber: (event.first ?? 0) / this.pageSize + 1,
+        })
+      ),
+      // We need to bootstrap the p-table with a response to get the whole process running. We do it this way to fake an empty response
+      // so we can avoid a redundant call to the API.
+      startWith(new EmptyPagedResponse<ClaimDto>())
+    )
+  );
 
-  readonly asUsersForClaim = TypeHelpers.cast<Array<AdminUserDto>>;
+  readonly asUsersForClaimResults = TypeHelpers.cast<PagedResponseDto<AdminUserDto>>;
   readonly asUser = TypeHelpers.cast<AdminUserDto>;
-
-  ngOnChanges() {
-    this.#refreshUsers();
-  }
-
-  #refreshUsers() {
-    this.usersForClaim$.set(this.#adminService.getUsersWithClaim({ type: this.type(), value: this.value() }));
-  }
 
   addUserClaim() {
     this.errors.set([]);
@@ -64,9 +76,9 @@ export class ClaimComponent {
     this.#adminService.addUserClaim(this.form.value.userId!, { type: this.type(), value: this.value() }).subscribe({
       next: () => {
         this.form.reset();
-        this.#refreshUsers();
+        this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize });
       },
-      error: response => this.errors.set(response.errorMessages),
+      error: setApiErrors(this.errors),
     });
   }
 
@@ -80,10 +92,14 @@ export class ClaimComponent {
       key: userId,
       accept: () => {
         this.#adminService.removeUserClaim(userId, { type: this.type(), value: this.value() }).subscribe({
-          next: () => this.#refreshUsers(),
-          error: response => this.errors.set(response.errorMessages),
+          next: () => this.#lazyLoadEventSubject.next({ first: 0, rows: this.pageSize }),
+          error: setApiErrors(this.errors),
         });
       },
     });
+  }
+
+  loadUsersLazy(event: TableLazyLoadEvent) {
+    this.#lazyLoadEventSubject.next(event);
   }
 }

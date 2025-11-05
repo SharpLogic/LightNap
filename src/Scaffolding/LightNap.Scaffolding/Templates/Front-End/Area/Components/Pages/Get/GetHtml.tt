@@ -4,9 +4,10 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-<p-card header="Get">
-  <api-response [apiResponse]="<#= Parameters.CamelName #>$" errorMessage="Error loading" loadingMessage="Loading...">
-    <ng-template #success let-<#= Parameters.CamelName #>>
+<p-card header="Get <#= Parameters.PascalName #>">
+  <ln-api-response [apiResponse]="<#= Parameters.CamelName #>()" errorMessage="Error loading" loadingMessage="Loading...">
+    <ng-template #success let-<#= Parameters.CamelName #>Any>
+      @let <#= Parameters.CamelName #> = as<#= Parameters.PascalName #>(<#= Parameters.CamelName #>Any);
       <div class="flex gap-1 mb-1">
         <p-button [routerLink]="['..']" icon="pi pi-arrow-up" label="See all" />
         <p-button [routerLink]="['..', id(), 'edit']" icon="pi pi-pencil" label="Edit" />
@@ -27,5 +28,5 @@
     <ng-template #null>
       <p class="text-red-500">This item was not found</p>
     </ng-template>
-  </api-response>
+  </ln-api-response>
 </p-card>

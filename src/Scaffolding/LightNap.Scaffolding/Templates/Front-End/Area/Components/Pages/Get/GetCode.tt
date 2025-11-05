@@ -5,13 +5,13 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 import { CommonModule } from "@angular/common";
-import { Component, effect, inject, input } from "@angular/core";
+import { Component, computed, inject, input } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { ApiResponseComponent } from "@core";
+import { TypeHelpers } from "@core";
+import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
-import { Observable } from "rxjs";
-import { <#= Parameters.PascalName #> } from "src/app/<#= Parameters.KebabNamePlural #>/models/response/<#= Parameters.KebabName #>";
+import { <#= Parameters.PascalName #>Dto } from "src/app/<#= Parameters.KebabNamePlural #>/models/response/<#= Parameters.KebabName #>-dto";
 import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.KebabNamePlural #>/services/<#= Parameters.KebabName #>.service";
 
 @Component({
@@ -20,13 +20,13 @@ import { <#= Parameters.PascalName #>Service } from "src/app/<#= Parameters.Keba
   imports: [CommonModule, CardModule, RouterLink, ApiResponseComponent, ButtonModule],
 })
 export class GetComponent {
-  #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
-  errors = new Array<string>();
+  readonly #<#= Parameters.CamelName #>Service = inject(<#= Parameters.PascalName #>Service);
 
   readonly id = input.required<<#= Parameters.IdProperty.FrontEndType #>>();
-  <#= Parameters.CamelName #>$ = new Observable<<#= Parameters.PascalName #>>();
 
-  constructor() {
-    effect(() => this.<#= Parameters.CamelName #>$ = this.#<#= Parameters.CamelName #>Service.get<#= Parameters.PascalName #>(this.id()));
-  }
+  readonly <#= Parameters.CamelName #> = computed(() => this.#<#= Parameters.CamelName #>Service.get<#= Parameters.PascalName #>(this.id()));
+
+  readonly errors = new Array<string>();
+
+  readonly as<#= Parameters.PascalName #> = TypeHelpers.cast<<#= Parameters.PascalName #>Dto>;
 }

@@ -1,5 +1,4 @@
-import { NotificationStatus } from "../../../../notifications/entities/notification-status";
-import { NotificationType } from "../../../../notifications/entities/notification-type";
+import { NotificationStatus, NotificationType } from "@core/features";
 
 /**
  * Represents an application notification.

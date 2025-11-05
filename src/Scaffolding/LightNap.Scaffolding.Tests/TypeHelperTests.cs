@@ -29,7 +29,7 @@ namespace LightNap.Scaffolding.Tests
             List<TypePropertyDetails> result = TypeHelper.GetPropertyDetails(type);
 
             // Assert
-            Assert.AreEqual(9, result.Count);
+            Assert.HasCount(9, result);
             Assert.IsTrue(result.Exists(p => p.Name == "Id" && p.Type == typeof(int)));
             Assert.IsTrue(result.Exists(p => p.Name == "Name" && p.Type == typeof(string)));
             Assert.IsTrue(result.Exists(p => p.Name == "CreatedDate" && p.Type == typeof(DateTime)));

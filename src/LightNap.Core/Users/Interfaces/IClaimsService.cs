@@ -11,6 +11,27 @@ namespace LightNap.Core.Users.Interfaces
     public interface IClaimsService
     {
         /// <summary>
+        /// Retrieves the claims associated with the currently authenticated user.
+        /// </summary>
+        /// <remarks>This method requires the user to be authenticated. If the user is not found or
+        /// authentication fails, an exception is thrown. The returned claims are converted to <see cref="ClaimDto"/>
+        /// objects.</remarks>
+        /// <param name="pagedRequestDto">The paging details for the request.</param>
+        /// <returns>A list of <see cref="ClaimDto"/> objects representing the claims of the authenticated user.</returns>
+        /// <exception cref="UserFriendlyApiException">Thrown if the authenticated user cannot be found.</exception>
+        Task<PagedResponseDto<ClaimDto>> GetMyClaimsAsync(PagedRequestDtoBase pagedRequestDto);
+
+        /// <summary>
+        /// Retrieves a list of user IDs that have the specified claim type and value.
+        /// </summary>
+        /// <remarks>This method ensures that the specified claim type is valid before querying the
+        /// database. The query retrieves distinct user IDs associated with the given claim type and value.</remarks>
+        /// <param name="searchClaimRequestDto">The claim and paging details to get users for.</param>
+        /// <returns>A list of user IDs that match the specified claim type and value. The list will be empty if no users match
+        /// the criteria.</returns>
+        Task<PagedResponseDto<string>> GetUsersWithClaimAsync(SearchClaimRequestDto searchClaimRequestDto);
+
+        /// <summary>
         /// Searches claims.
         /// </summary>
         /// <param name="searchRequest">The search parameters.</param>
@@ -44,5 +65,6 @@ namespace LightNap.Core.Users.Interfaces
         /// <param name="claim">The claim to be removed from the user. Cannot be null.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task RemoveUserClaimAsync(string userId, ClaimDto claim);
+
     }
 }

@@ -1,0 +1,52 @@
+<ln-api-response [apiResponse]="language()">
+  <ng-template let-languageAny #success>
+    @let language = asLanguage(languageAny);
+
+    <div class="flex flex-wrap gap-2">
+      <p-panel header="Edit Content: {{ key() }} ({{ language.languageCode }})" class="w-full">
+        <p class="text-sm">
+          Created {{ language.createdDate | date: "medium" }}
+          @if (language.createdByUserId) {
+            <ln-user-link [userId]="language.createdByUserId" />
+          }
+        </p>
+
+        @if (language.lastModifiedDate) {
+          <p class="text-sm">
+            Last Updated {{ language.lastModifiedDate | date: "medium" }} by
+            @if (language.lastModifiedByUserId) {
+              <ln-user-link [userId]="language.lastModifiedByUserId" />
+            }
+          </p>
+        }
+
+        <form [formGroup]="form" (ngSubmit)="onUpdate()">
+          <div class="flex flex-col gap-2">
+            <div class="field">
+              <label for="format" class="text-xl">Format</label>
+              <ln-content-format-picker id="format" formControlName="format" class="w-full" />
+            </div>
+
+            <div class="field">
+              <label for="content" class="text-xl">Content</label>
+              <textarea id="content" pTextarea formControlName="content" class="w-full" [rows]="20"></textarea>
+            </div>
+
+            <p-button type="submit" label="Save" [disabled]="!form.valid || form.pristine" />
+          </div>
+        </form>
+
+        <ln-error-list [errors]="errors()" />
+      </p-panel>
+
+      <div>
+        <h2>Preview</h2>
+        <div staticContent [format]="form.controls.format.value" [content]="form.controls.content.value"></div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #null>
+    <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>
+    <p-button label="Create Language Content" (onClick)="onCreate()" />
+  </ng-template>
+</ln-api-response>

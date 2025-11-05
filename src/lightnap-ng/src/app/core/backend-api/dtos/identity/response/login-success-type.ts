@@ -8,3 +8,9 @@
  * @property {"TwoFactorRequired"} TwoFactorRequired - Indicates that the login was successful but two-factor authentication is required.
  */
 export type LoginSuccessType = "AccessToken" | "EmailVerificationRequired" | "TwoFactorRequired";
+
+export const LoginSuccessTypes = {
+    AccessToken: "AccessToken",
+    EmailVerificationRequired: "EmailVerificationRequired",
+    TwoFactorRequired: "TwoFactorRequired",
+} as const;

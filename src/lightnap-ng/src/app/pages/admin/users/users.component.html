@@ -1,4 +1,4 @@
-<api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
+<ln-api-response [apiResponse]="users$" errorMessage="Error loading users" loadingMessage="Loading users...">
   <ng-template #success let-resultsAny>
     @let results = asUserResults(resultsAny);
 
@@ -24,10 +24,10 @@
         <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th pSortableColumn="userName">User Name <p-sortIcon field="userName"></p-sortIcon></th>
-            <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-            <th pSortableColumn="createdDate">Created <p-sortIcon field="createdDate"></p-sortIcon></th>
-            <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate"></p-sortIcon></th>
+            <th pSortableColumn="userName">User Name <p-sortIcon field="userName" /></th>
+            <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+            <th pSortableColumn="createdDate">Created <p-sortIcon field="createdDate" /></th>
+            <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate" /></th>
           </tr>
         </ng-template>
         <ng-template #body let-userAny>
@@ -35,7 +35,7 @@
 
           <tr>
             <td>
-              <confirm-popup [key]="user.id" />
+              <ln-confirm-popup [key]="user.id" />
               <p-button severity="danger" icon="pi pi-trash" title="Delete user" (onClick)="deleteUser($event, user.id)" />
             </td>
             <td>
@@ -58,7 +58,7 @@
         </ng-template>
       </p-table>
 
-      <error-list [errors]="errors()" />
+      <ln-error-list [errors]="errors()" />
     </p-panel>
   </ng-template>
-</api-response>
+</ln-api-response>

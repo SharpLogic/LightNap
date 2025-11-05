@@ -18,9 +18,9 @@
         /// </summary>
         /// <param name="errors">The collection of error messages to be returned to the end user.</param>
         /// <param name="innerException">The optional inner exception to be logged but not returned to the end user.</param>
-        public UserFriendlyApiException(IEnumerable<string> errors, Exception? innerException = null) : this(errors.First(), innerException)
+        public UserFriendlyApiException(IEnumerable<string> errors, Exception? innerException = null) : this(errors?.FirstOrDefault() ?? "No error messages provided", innerException)
         {
-            this.Errors = errors;
+            this.Errors = errors ?? [this.Message];
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
         /// <param name="innerException">The optional inner exception to be logged but not returned to the end user.</param>
         public UserFriendlyApiException(string error, Exception? innerException = null) : base(error, innerException)
         {
-            this.Errors = new List<string> { error };
+            this.Errors = [error];
         }
     }
 }

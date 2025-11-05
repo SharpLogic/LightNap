@@ -35,14 +35,14 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write(" } from \"../models/response/");
+            this.Write("Dto } from \"../models/response/");
             
             #line 7 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Helpers\Helper.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.KebabName));
             
             #line default
             #line hidden
-            this.Write("\";\r\n\r\nexport class ");
+            this.Write("-dto\";\r\n\r\nexport class ");
             
             #line 9 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Helpers\Helper.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.PascalName));
@@ -63,7 +63,7 @@ namespace LightNap.Scaffolding.Templates
             
             #line default
             #line hidden
-            this.Write(") {\r\n    if (!");
+            this.Write("Dto) {\r\n    if (!");
             
             #line 11 "C:\Users\edkai\source\repos\SharpLogic\LightNap\src\Scaffolding\LightNap.Scaffolding\Templates\Front-End\Area\Helpers\Helper.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(Parameters.CamelName));

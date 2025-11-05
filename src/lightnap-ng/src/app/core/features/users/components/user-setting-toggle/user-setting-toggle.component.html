@@ -1,0 +1,8 @@
+<ln-api-response [apiResponse]="setting()">
+  <ng-template #success let-value>
+    <div class="flex gap-1">
+      <p-toggleSwitch [ngModel]="value" (onChange)="onToggle($any($event))" />
+      <label for="toggle" class="font-semibold">{{ label() }}</label>
+    </div>
+  </ng-template>
+</ln-api-response>

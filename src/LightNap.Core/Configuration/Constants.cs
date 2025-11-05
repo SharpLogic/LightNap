@@ -14,6 +14,12 @@
             /// The purpose string used to create and validate magic link tokens.
             /// </summary>
             public const string MagicLinkTokenPurpose = "MagicLink";
+
+            /// <summary>
+            /// The hardcoded user ID for system-generated actions. This will not map to a user in the database,
+            /// so it needs to be accounted for wherever user IDs are used that may be the system, such as content creation.
+            /// </summary>
+            public const string SystemUserId = "system";
         }
 
         /// <summary>
@@ -25,6 +31,11 @@
             /// The name of the administrator role.
             /// </summary>
             public const string Administrator = "Administrator";
+
+            /// <summary>
+            /// The name of the content editor role.
+            /// </summary>
+            public const string ContentEditor = "ContentEditor";
         }
 
         /// <summary>
@@ -32,6 +43,15 @@
         /// </summary>
         public static class Claims
         {
+            /// <summary>
+            /// The name of the static content editor claim.
+            /// </summary>
+            public const string ContentEditor = "Content:Editor";
+
+            /// <summary>
+            /// The name of the static content reader claim.
+            /// </summary>
+            public const string ContentReader = "Content:Reader";
         }
 
         /// <summary>
@@ -43,6 +63,7 @@
             public const int MaxPasswordLength = 256;
             public const int MaxDeviceDetailsLength = 512;
             public const int MaxPasswordResetTokenLength = 512;
+            public const int MaxStaticContentKeyLength = 64;
             public const int MaxUserNameLength = 32;
             public const int MaxVerificationCodeLength = 512;
         }
