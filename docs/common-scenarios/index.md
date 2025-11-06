@@ -38,6 +38,10 @@ Implement fine-grained permissions using ASP.NET claims. This guide covers claim
 
 Create new types of in-app notifications to keep users informed about events and activities. Learn how to trigger notifications from backend services and display them in the Angular UI.
 
+### [Adding User Settings](./adding-user-settings)
+
+Implement user-specific settings and preferences that persist across sessions. This guide covers the full stack from backend storage to frontend controls, demonstrating how to add boolean, numeric, and string settings using the ProfileService and PrimeNG components.
+
 ## Frontend Customization
 
 ### [Working With Angular Routes](./using-route-alias)
