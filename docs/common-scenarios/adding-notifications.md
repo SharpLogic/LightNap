@@ -26,61 +26,79 @@ By default, LightNap includes core notification infrastructure. Adding a new not
 
 ## Understanding the Notification Entity
 
-The notification system is built on a `Notification` entity stored in the database. Each notification typically contains:
+The notification system is built on a `Notification` entity stored in the database. Each notification contains:
 
 - **Id**: Unique identifier for the notification
 - **UserId**: The ID of the user who should receive the notification
-- **Type**: A string identifier for the notification type (e.g., "WelcomeMessage", "NewComment", "SystemAlert")
-- **Title**: A short, descriptive title
-- **Message**: The detailed notification message
-- **IsRead**: Boolean indicating whether the user has read the notification
-- **CreatedAt**: Timestamp when the notification was created
-- **Link**: Optional URL or route to navigate to when the notification is clicked
+- **Type**: A notification type identifier (e.g., "NewComment", "SystemAlert", "RoleChanged")
+- **Status**: The read status of the notification (Unread, Read, Archived)
+- **Timestamp**: When the notification was created
+- **Data**: A flexible dictionary containing notification-specific metadata
+
+The `Data` property is key to the notification system's flexibility. Instead of hardcoding paths or URLs, store metadata that allows the frontend to determine the appropriate routing and presentation. For example, a "NewComment" notification should include a `commentId` and `postId` rather than a fixed URL path.
 
 ## Backend Implementation
 
 ### Step 1: Understand the Notification Service
 
-The `INotificationService` in `LightNap.Core/Notifications/Interfaces` provides methods for creating and managing notifications. The typical interface includes:
+The `INotificationService` in `LightNap.Core/Notifications/Interfaces` provides methods for creating and managing notifications. Key methods include:
 
 ```csharp
 public interface INotificationService
 {
-    Task<NotificationDto> CreateNotificationAsync(CreateNotificationDto dto);
-    Task<PagedResponse<NotificationDto>> GetUserNotificationsAsync(
-        string userId,
-        SearchNotificationsDto searchDto);
-    Task MarkAsReadAsync(string notificationId, string userId);
-    Task DeleteNotificationAsync(string notificationId, string userId);
-    Task<int> GetUnreadCountAsync(string userId);
+    // Create notification for a specific user
+    Task CreateSystemNotificationForUserAsync(string userId, CreateNotificationRequestDto requestDto);
+
+    // Create notifications for all users in a role
+    Task CreateSystemNotificationForRoleAsync(string role, CreateNotificationRequestDto requestDto);
+
+    // Create notifications for all users with a specific claim
+    Task CreateSystemNotificationForClaimAsync(ClaimDto claim, CreateNotificationRequestDto requestDto);
+
+    // Search and retrieve notifications
+    Task<NotificationSearchResultsDto> SearchNotificationsAsync(string userId, SearchNotificationsRequestDto requestDto);
+
+    // Mark notifications as read
+    Task MarkAsReadAsync(int id);
+    Task MarkAllAsReadAsync(string userId);
 }
 ```
 
-### Step 2: Create a Notification in Your Service
+### Step 2: Define Notification Type Constants
+
+To maintain consistency and avoid typos, create constants for your notification types:
+
+Create or update a constants file in `LightNap.Core/Configuration/Constants.cs`:
+
+```csharp
+public static class NotificationTypes
+{
+    public const string WelcomeMessage = "WelcomeMessage";
+    public const string NewComment = "NewComment";
+    public const string SystemAlert = "SystemAlert";
+    public const string ProfileUpdated = "ProfileUpdated";
+    public const string RoleChanged = "RoleChanged";
+    // Add more notification types as needed
+}
+```
+
+### Step 3: Create a Notification in Your Service
 
 To add a new notification type, inject `INotificationService` into your application service and call it when the triggering event occurs. For example, let's create a "Welcome" notification when a user completes registration:
 
 1. Open the service where you want to trigger the notification (e.g., `IdentityService.cs` in `LightNap.Core/Identity/Services`).
 
-2. Inject `INotificationService` into the constructor:
+2. Inject `INotificationService`. LightNap's built-in services use primary constructors, so an example looks like:
 
     ```csharp
-    public class IdentityService : IIdentityService
-    {
-        private readonly INotificationService _notificationService;
-        private readonly UserManager<ApplicationUser> _userManager;
+    public class IdentityService(
+        INotificationService notificationService,
+        UserManager<ApplicationUser> userManager
         // ... other dependencies
-
-        public IdentityService(
-            INotificationService notificationService,
-            UserManager<ApplicationUser> userManager,
-            // ... other dependencies
-        )
-        {
-            this._notificationService = notificationService;
-            this._userManager = userManager;
-            // ... initialize other dependencies
-        }
+    ) : IIdentityService
+    {
+        // Services are automatically available as fields via the primary constructor
+        // You can reference them as notificationService, userManager, etc.
     }
     ```
 
@@ -91,21 +109,23 @@ To add a new notification type, inject `INotificationService` into your applicat
     {
         // Existing registration logic...
 
-        var result = await this._userManager.CreateAsync(user, dto.Password);
+        var result = await userManager.CreateAsync(user, dto.Password);
 
         if (result.Succeeded)
         {
             // Existing post-registration logic...
 
-            // Create welcome notification
-            await this._notificationService.CreateNotificationAsync(new CreateNotificationDto
-            {
-                UserId = user.Id,
-                Type = "WelcomeMessage",
-                Title = "Welcome to LightNap!",
-                Message = $"Hi {user.UserName}, welcome to our application! We're excited to have you on board.",
-                Link = "/profile" // Optional: link to profile page
-            });
+            // Create welcome notification with metadata
+            await notificationService.CreateSystemNotificationForUserAsync(
+                user.Id,
+                new CreateNotificationRequestDto
+                {
+                    Type = NotificationTypes.WelcomeMessage,
+                    Data = new Dictionary<string, object>
+                    {
+                        { "registrationDate", DateTime.UtcNow }
+                    }
+                });
 
             // Continue with remaining logic...
         }
@@ -114,36 +134,67 @@ To add a new notification type, inject `INotificationService` into your applicat
     }
     ```
 
-### Step 3: Define Notification Type Constants
+## Using Metadata Effectively
 
-To maintain consistency and avoid typos, create constants for your notification types:
+The `Data` dictionary in `CreateNotificationRequestDto` should contain metadata that allows the frontend to construct appropriate routing and display logic, rather than hardcoded paths or complete messages.
 
-1. Create or update a constants file in `LightNap.Core/Configuration/Constants.cs`:
+### Best Practices for Notification Data
 
-    ```csharp
-    public static class NotificationTypes
+**Use Entity IDs, Not Paths:**
+
+```csharp
+// Good - Provides metadata for flexible routing and client can load related data if/when needed
+await notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
     {
-        public const string WelcomeMessage = "WelcomeMessage";
-        public const string NewComment = "NewComment";
-        public const string SystemAlert = "SystemAlert";
-        public const string ProfileUpdated = "ProfileUpdated";
-        public const string RoleChanged = "RoleChanged";
-        // Add more notification types as needed
-    }
-    ```
-
-2. Use the constants in your code:
-
-    ```csharp
-    await this._notificationService.CreateNotificationAsync(new CreateNotificationDto
-    {
-        UserId = user.Id,
-        Type = NotificationTypes.WelcomeMessage,
-        Title = "Welcome to LightNap!",
-        Message = $"Hi {user.UserName}, welcome to our application!",
-        Link = "/profile"
+        Type = NotificationTypes.NewComment,
+        Data = new Dictionary<string, object>
+        {
+            { "commentId", comment.Id },
+        }
     });
-    ```
+
+// Avoid - Hardcoded data and paths that can't adapt to routing changes
+await notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
+    {
+        Type = NotificationTypes.NewComment,
+        Data = new Dictionary<string, object>
+        {
+            { "title", "New Comment" },
+            { "message", "John commented on your post" },
+            { "link", "/posts/123/comments/456" } // Hardcoded path
+        }
+    });
+```
+
+**Include Contextual Information:**
+
+```csharp
+// Role change notification with full context since it cannot be easily loaded on-demand later on
+await notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
+    {
+        Type = NotificationTypes.RoleChanged,
+        Data = new Dictionary<string, object>
+        {
+            { "oldRole", "User" },
+            { "newRole", "Moderator" },
+            { "changedBy", adminUserName },
+            { "changedAt", DateTime.UtcNow }
+        }
+    });
+```
+
+The frontend can then use this metadata to:
+
+- Construct localized messages based on the user's language preference
+- Route to the appropriate page using route aliases or dynamic routing
+- Display rich notification UI with avatars, previews, and action buttons
+- Apply different styling based on notification type and context
 
 ## Targeting Notifications by Role or Claim
 
@@ -151,28 +202,28 @@ Instead of sending notifications to a specific user, you can target groups of us
 
 ```csharp
 // Notify all users in a role
-await this._notificationService.CreateSystemNotificationForRoleAsync(
-    "Administrator",
+await notificationService.CreateSystemNotificationForRoleAsync(
+    Constants.Roles.Administrator,
     new CreateNotificationRequestDto
     {
         Type = NotificationTypes.AdminAnnouncement,
         Data = new Dictionary<string, object>
         {
             { "title", "System Maintenance" },
-            { "message", "Scheduled maintenance tonight at 10 PM." }
+            { "message", "Scheduled maintenance tonight at 10 PM." },
+            { "scheduledTime", "2024-03-15T22:00:00Z" }
         }
     });
 
 // Notify all users with a specific claim
-await this._notificationService.CreateSystemNotificationForClaimAsync(
-    new ClaimDto { Type = "Feature", Value = "BetaAccess" },
+await notificationService.CreateSystemNotificationForClaimAsync(
+    new ClaimDto { Type = Constants.Claims.ContentEditor, Value = contentId.ToString() },
     new CreateNotificationRequestDto
     {
-        Type = NotificationTypes.FeatureUpdate,
+        Type = NotificationTypes.ModerationRequested,
         Data = new Dictionary<string, object>
         {
-            { "title", "New Beta Feature Available" },
-            { "message", "Check out the new feature we just released!" }
+            { "contentId", contentId.ToString() },
         }
     });
 ```
@@ -398,22 +449,24 @@ public async Task CreateWelcomeNotification_ShouldSucceed()
 {
     // Arrange
     var userId = "test-user-id";
-    var notificationDto = new CreateNotificationDto
+    var requestDto = new CreateNotificationRequestDto
     {
-        UserId = userId,
         Type = NotificationTypes.WelcomeMessage,
-        Title = "Welcome!",
-        Message = "Welcome to the application",
-        Link = "/profile"
+        Data = new Dictionary<string, object>
+        {
+            { "userName", "testuser" }
+        }
     };
 
     // Act
-    var result = await _notificationService.CreateNotificationAsync(notificationDto);
+    await _notificationService.CreateSystemNotificationForUserAsync(userId, requestDto);
 
     // Assert
-    Assert.IsNotNull(result);
-    Assert.AreEqual(NotificationTypes.WelcomeMessage, result.Type);
-    Assert.AreEqual(userId, result.UserId);
+    var notifications = await _dbContext.Notifications
+        .Where(n => n.UserId == userId)
+        .ToListAsync();
+    Assert.AreEqual(1, notifications.Count);
+    Assert.AreEqual(NotificationTypes.WelcomeMessage, notifications[0].Type);
 }
 ```
 
@@ -532,7 +585,7 @@ public async Task<ApiResponseDto<LoginResponseDto>> RegisterAsync(RegisterReques
 
     try
     {
-        await this._notificationService.CreateNotificationAsync(new CreateNotificationDto
+        await notificationService.CreateNotificationAsync(new CreateNotificationDto
         {
             UserId = user.Id,
             Type = NotificationTypes.WelcomeMessage,
@@ -551,19 +604,27 @@ public async Task<ApiResponseDto<LoginResponseDto>> RegisterAsync(RegisterReques
 }
 ```
 
-### 3. Keep Messages Concise
+### 3. Use Metadata, Not Hardcoded Content
 
-Notification messages should be brief and actionable:
+Store entity IDs and contextual data rather than fully-formed messages or paths:
 
 ```csharp
-// Good - Clear and concise
-Title = "New Comment"
-Message = "John Doe replied to your post."
-Link = "/posts/123/comments"
+// Good - Metadata allows frontend flexibility
+Data = new Dictionary<string, object>
+{
+    { "commentId", 456 },
+    { "postId", 123 },
+    { "authorName", "John Doe" },
+    { "commentPreview", "Great article! I especially..." }
+}
 
-// Bad - Too verbose
-Title = "You have received a new comment notification"
-Message = "Hi there! We wanted to let you know that another user has taken the time to write a thoughtful response to one of your recent posts on the platform..."
+// Avoid - Hardcoded content limits flexibility
+Data = new Dictionary<string, object>
+{
+    { "title", "New Comment" },
+    { "message", "John Doe replied to your post." },
+    { "link", "/posts/123/comments" }
+}
 ```
 
 ### 4. Implement Notification Expiration
@@ -584,22 +645,32 @@ public async Task CleanupExpiredNotificationsAsync()
 }
 ```
 
-### 5. Provide Clear Navigation
+### 5. Include Relevant Entity IDs
 
-When including links in notifications, ensure they navigate to relevant content:
+Provide the IDs needed for the frontend to construct appropriate routes:
 
 ```csharp
-// Good - Specific and relevant
-await _notificationService.CreateNotificationAsync(new CreateNotificationDto
-{
-    Type = NotificationTypes.NewComment,
-    Title = "New Comment",
-    Message = $"{commenterName} replied to your post.",
-    Link = $"/posts/{postId}/comments/{commentId}" // Direct link to the comment
-});
+// Good - Provides all context needed for routing
+await _notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
+    {
+        Type = NotificationTypes.NewComment,
+        Data = new Dictionary<string, object>
+        {
+            { "commentId", commentId },
+            { "postId", postId },
+            { "commenterName", commenterName },
+            { "commentPreview", commentText.Substring(0, 50) }
+        }
+    });
 
-// Less ideal - Generic link
-Link = "/posts" // User has to find the post themselves
+// Less ideal - Missing context
+Data = new Dictionary<string, object>
+{
+    { "message", "Someone commented on your post" }
+    // Frontend can't navigate to the specific comment
+}
 ```
 
 ### 6. Batch Notifications Wisely
@@ -611,40 +682,43 @@ For high-frequency events, consider batching notifications to avoid overwhelming
 // Create a single notification with aggregated information
 if (newLikeCount >= 10)
 {
-    await _notificationService.CreateNotificationAsync(new CreateNotificationDto
-    {
-        Type = NotificationTypes.PostEngagement,
-        Title = "Your post is popular!",
-        Message = $"Your post has received {newLikeCount} likes.",
-        Link = $"/posts/{postId}"
-    });
+    await _notificationService.CreateSystemNotificationForUserAsync(
+        userId,
+        new CreateNotificationRequestDto
+        {
+            Type = NotificationTypes.PostEngagement,
+            Data = new Dictionary<string, object>
+            {
+                { "postId", postId },
+                { "likeCount", newLikeCount },
+                { "threshold", 10 }
+            }
+        });
 }
 ```
 
 ### 7. Localization Support
 
-For multi-language applications, consider storing notification templates with localization support:
+For multi-language applications, let the frontend handle localization by providing raw data:
 
 ```csharp
-public async Task CreateLocalizedNotificationAsync(
-    string userId,
-    string type,
-    string languageCode,
-    Dictionary<string, string> parameters)
-{
-    var title = _localizer[$"Notification.{type}.Title", languageCode];
-    var message = string.Format(
-        _localizer[$"Notification.{type}.Message", languageCode],
-        parameters["userName"]);
-
-    await _notificationService.CreateNotificationAsync(new CreateNotificationDto
+// Backend provides raw data
+await _notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
     {
-        UserId = userId,
-        Type = type,
-        Title = title,
-        Message = message
+        Type = NotificationTypes.WelcomeMessage,
+        Data = new Dictionary<string, object>
+        {
+            { "userName", userName },
+            { "registrationDate", DateTime.UtcNow }
+        }
     });
-}
+
+// Frontend uses notification type + data to construct localized message:
+// - English: "Welcome, John! You joined on Nov 5, 2025."
+// - Spanish: "¡Bienvenido, John! Te uniste el 5 de nov de 2025."
+// - French: "Bienvenue, John ! Vous avez rejoint le 5 nov 2025."
 ```
 
 ### 8. User Preferences
