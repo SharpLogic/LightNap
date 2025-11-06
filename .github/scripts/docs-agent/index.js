@@ -102,26 +102,114 @@ async function main() {
 }
 
 /**
- * Get recent changes from the last commit
+ * Get recent changes from the last commit or compare with previous commit
  */
 async function getRecentChanges() {
+  console.log(`🔍 Fetching commit: ${COMMIT_SHA}`);
+
   const { data: commit } = await octokit.repos.getCommit({
     owner: OWNER,
     repo: REPO,
     ref: COMMIT_SHA,
   });
 
+  console.log(`📊 Total files in commit: ${commit.files?.length || 0}`);
+  console.log(`📋 Commit message: ${commit.commit.message}`);
+  console.log(`👥 Parents: ${commit.parents?.length || 0}`);
+
+  if (commit.files) {
+    console.log(`📁 All files changed:`, commit.files.map(f => f.filename));
+  }
+
+  let allChangedFiles = commit.files || [];
+
+  // If this is a merge commit with no files, or if we have very few files,
+  // try to get changes by comparing with the previous commit
+  if (allChangedFiles.length === 0 || (commit.parents?.length > 1 && allChangedFiles.length < 5)) {
+    console.log(`🔄 Merge commit detected or no files found, comparing with previous commit...`);
+
+    try {
+      // Compare current commit with its first parent (usually the previous main branch state)
+      const baseRef = commit.parents?.[0]?.sha || `${COMMIT_SHA}~1`;
+      console.log(`📊 Comparing ${COMMIT_SHA} with ${baseRef}`);
+
+      const { data: comparison } = await octokit.repos.compareCommits({
+        owner: OWNER,
+        repo: REPO,
+        base: baseRef,
+        head: COMMIT_SHA,
+      });
+
+      console.log(`📊 Comparison found ${comparison.files?.length || 0} changed files`);
+      allChangedFiles = comparison.files || [];
+
+      if (allChangedFiles.length > 0) {
+        console.log(`📁 Files from comparison:`, allChangedFiles.map(f => f.filename));
+      }
+    } catch (error) {
+      console.warn(`⚠️  Could not compare commits:`, error.message);
+
+      // Fallback: get recent commits and analyze their changes
+      console.log(`🔄 Fallback: analyzing recent commits...`);
+      try {
+        const { data: recentCommits } = await octokit.repos.listCommits({
+          owner: OWNER,
+          repo: REPO,
+          sha: COMMIT_SHA,
+          per_page: 5,
+        });
+
+        console.log(`📊 Found ${recentCommits.length} recent commits`);
+
+        // Get files from the most recent non-merge commits
+        for (const recentCommit of recentCommits.slice(0, 3)) {
+          if (recentCommit.parents.length === 1) { // Not a merge commit
+            const { data: commitDetail } = await octokit.repos.getCommit({
+              owner: OWNER,
+              repo: REPO,
+              ref: recentCommit.sha,
+            });
+
+            if (commitDetail.files && commitDetail.files.length > 0) {
+              console.log(`📁 Adding ${commitDetail.files.length} files from commit ${recentCommit.sha.substring(0, 7)}`);
+              allChangedFiles.push(...commitDetail.files);
+            }
+          }
+        }
+
+        // Remove duplicates based on filename
+        const uniqueFiles = allChangedFiles.filter((file, index, self) =>
+          index === self.findIndex(f => f.filename === file.filename)
+        );
+        allChangedFiles = uniqueFiles;
+        console.log(`📊 Total unique files after deduplication: ${allChangedFiles.length}`);
+      } catch (fallbackError) {
+        console.warn(`⚠️  Fallback strategy also failed:`, fallbackError.message);
+      }
+    }
+  }
+
   // Filter to only include source code files, exclude docs
-  const codeFiles = commit.files.filter((file) => {
+  const codeFiles = allChangedFiles.filter((file) => {
     const path = file.filename;
-    return (
+    const isIncluded = (
       (path.startsWith("src/") || path.startsWith("Scaffolding/")) &&
       !path.includes("/bin/") &&
       !path.includes("/obj/") &&
       !path.includes("node_modules") &&
       !path.startsWith("docs/")
     );
+
+    if (isIncluded) {
+      console.log(`✅ Including: ${path}`);
+    } else {
+      console.log(`❌ Excluding: ${path}`);
+    }
+
+    return isIncluded;
   });
+
+  console.log(`🔍 Found ${codeFiles.length} source code files after filtering`);
 
   // Get file contents for changed files
   const changes = [];
@@ -154,6 +242,7 @@ async function getRecentChanges() {
     }
   }
 
+  console.log(`📊 Returning ${changes.length} file changes`);
   return changes;
 }
 

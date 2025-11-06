@@ -3,7 +3,7 @@ name: Automated Documentation Agent
 on:
   push:
     branches:
-      - main
+      - docs-workflow
     paths:
       - 'src/**'
       - 'Scaffolding/**'
