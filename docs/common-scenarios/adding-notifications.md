@@ -35,7 +35,7 @@ The notification system is built on a `Notification` entity stored in the databa
 - **Timestamp**: When the notification was created
 - **Data**: A flexible dictionary containing notification-specific metadata
 
-The `Data` property is key to the notification system's flexibility. Instead of hardcoding paths or URLs, store metadata that allows the frontend to determine the appropriate routing and presentation. For example, a "NewComment" notification should include a `commentId` and `postId` rather than a fixed URL path.
+The `Data` property is key to the notification system's flexibility. Instead of hardcoding paths or URLs, store metadata that allows the frontend to determine the appropriate routing and presentation. For example, a "NewComment" notification should include a `commentId` rather than a fixed URL path to the comment.
 
 ## Backend Implementation
 
@@ -206,12 +206,11 @@ await notificationService.CreateSystemNotificationForRoleAsync(
     Constants.Roles.Administrator,
     new CreateNotificationRequestDto
     {
-        Type = NotificationTypes.AdminAnnouncement,
+        Type = NotificationTypes.SystemMaintenance,
         Data = new Dictionary<string, object>
         {
-            { "title", "System Maintenance" },
-            { "message", "Scheduled maintenance tonight at 10 PM." },
-            { "scheduledTime", "2024-03-15T22:00:00Z" }
+            { "scheduledTime", "2024-03-15T22:00:00Z" },
+            { "estimatedDuration", "2 hours" }
         }
     });
 
@@ -223,7 +222,7 @@ await notificationService.CreateSystemNotificationForClaimAsync(
         Type = NotificationTypes.ModerationRequested,
         Data = new Dictionary<string, object>
         {
-            { "contentId", contentId.ToString() },
+            { "contentId", contentId }
         }
     });
 ```
@@ -245,7 +244,16 @@ The notification functionality on the frontend is organized as follows:
 
 ### Step 1: Understand the Frontend DTOs
 
-The frontend DTOs mirror the backend DTOs and are typically located in `app/core/backend-api/notifications/dtos`. The notification interface includes properties for the notification's id, type, title, message, optional link, read status, and creation timestamp.
+The frontend DTOs mirror the backend DTOs and are typically located in `app/core/backend-api/notifications/dtos`. The notification interface includes properties that map to the backend entity:
+
+- **id**: Unique identifier for the notification
+- **userId**: The ID of the user who received the notification
+- **type**: Notification type identifier (e.g., "WelcomeMessage", "NewComment")
+- **status**: Read status (Unread, Read, Archived)
+- **timestamp**: When the notification was created
+- **data**: Dictionary containing notification-specific metadata
+
+The frontend application interprets the `type` and `data` properties to construct appropriate UI presentation, routing, and user messages.
 
 ### Step 2: Using the Notification Service
 
@@ -282,6 +290,7 @@ Notifications are typically displayed in a bell icon menu in the application hea
 ```typescript
 // In your header or notification panel component
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NotificationService } from '@core/notifications/services/notification.service';
 import { Notification } from '@core/backend-api/notifications/dtos/response/notification';
 import { Observable } from 'rxjs';
@@ -299,17 +308,17 @@ import { Observable } from 'rxjs';
         <div
           *ngFor="let notification of (notifications$ | async)"
           class="notification-item"
-          [class.unread]="!notification.isRead"
-          (click)="markAsRead(notification)">
+          [class.unread]="notification.status === 'Unread'"
+          (click)="handleNotificationClick(notification)">
 
           <div class="notification-icon" [attr.data-type]="notification.type">
             <i [class]="getNotificationIcon(notification.type)"></i>
           </div>
 
           <div class="notification-content">
-            <h4>{{ notification.title }}</h4>
-            <p>{{ notification.message }}</p>
-            <span class="notification-time">{{ notification.createdAt | date: 'short' }}</span>
+            <h4>{{ getNotificationTitle(notification) }}</h4>
+            <p>{{ getNotificationMessage(notification) }}</p>
+            <span class="notification-time">{{ notification.timestamp | date: 'short' }}</span>
           </div>
         </div>
       </div>
@@ -320,22 +329,26 @@ export class NotificationPanelComponent implements OnInit {
   notifications$!: Observable<Notification[]>;
   unreadCount$!: Observable<number>;
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.notifications$ = this.notificationService.watchNotifications$();
     this.unreadCount$ = this.notificationService.watchUnreadCount$();
   }
 
-  markAsRead(notification: Notification): void {
-    if (!notification.isRead) {
+  handleNotificationClick(notification: Notification): void {
+    // Mark as read if unread
+    if (notification.status === 'Unread') {
       this.notificationService.markAsRead(notification.id).subscribe();
     }
 
-    // Navigate to link if provided
-    if (notification.link) {
-      // Use your routing service to navigate
-      this.router.navigate([notification.link]);
+    // Navigate based on notification type and data
+    const route = this.getNotificationRoute(notification);
+    if (route) {
+      this.router.navigate([route]);
     }
   }
 
@@ -348,6 +361,49 @@ export class NotificationPanelComponent implements OnInit {
       'RoleChanged': 'pi pi-shield'
     };
     return iconMap[type] || 'pi pi-bell';
+  }
+
+  getNotificationTitle(notification: Notification): string {
+    // Construct title based on notification type
+    switch (notification.type) {
+      case 'WelcomeMessage':
+        return 'Welcome!';
+      case 'NewComment':
+        return 'New Comment';
+      case 'RoleChanged':
+        return 'Role Updated';
+      default:
+        return 'Notification';
+    }
+  }
+
+  getNotificationMessage(notification: Notification): string {
+    // Construct message from notification type and data
+    switch (notification.type) {
+      case 'WelcomeMessage':
+        return 'Welcome to the application!';
+      case 'NewComment':
+        return `You have a new comment`;
+      case 'RoleChanged':
+        const oldRole = notification.data['oldRole'] || 'Unknown';
+        const newRole = notification.data['newRole'] || 'Unknown';
+        return `Your role changed from ${oldRole} to ${newRole}`;
+      default:
+        return 'You have a new notification';
+    }
+  }
+
+  getNotificationRoute(notification: Notification): string | null {
+    // Construct route based on notification type and data
+    switch (notification.type) {
+      case 'NewComment':
+        const commentId = notification.data['commentId'];
+        return commentId ? `/comments/${commentId}` : null;
+      case 'ProfileUpdated':
+        return '/profile';
+      default:
+        return null;
+    }
   }
 }
 ```
@@ -490,9 +546,9 @@ public async Task UserRegistration_ShouldCreateWelcomeNotification()
     var result = await _identityService.RegisterAsync(registerDto);
 
     // Assert
-    var notifications = await _notificationService.GetUserNotificationsAsync(
+    var notifications = await _notificationService.SearchNotificationsAsync(
         result.Result.UserId,
-        new SearchNotificationsDto { PageSize = 10 }
+        new SearchNotificationsRequestDto { PageSize = 10 }
     );
 
     Assert.IsTrue(notifications.Items.Any(n => n.Type == NotificationTypes.WelcomeMessage));
@@ -521,19 +577,21 @@ describe('NotificationService', () => {
   it('should fetch notifications', () => {
     const mockNotifications: Notification[] = [
       {
-        id: '1',
+        id: 1,
         userId: 'user1',
         type: 'WelcomeMessage',
-        title: 'Welcome',
-        message: 'Welcome to the app',
-        isRead: false,
-        createdAt: new Date()
+        status: 'Unread',
+        timestamp: new Date(),
+        data: {
+          registrationDate: new Date().toISOString()
+        }
       }
     ];
 
-    service.getNotifications().subscribe(notifications => {
+    service.watchNotifications$().subscribe(notifications => {
       expect(notifications.length).toBe(1);
       expect(notifications[0].type).toBe('WelcomeMessage');
+      expect(notifications[0].status).toBe('Unread');
     });
 
     const req = httpMock.expectOne('/api/users/me/notifications');
@@ -560,18 +618,22 @@ Always use constants for notification types to maintain consistency and avoid ty
 
 ```csharp
 // Good
-await _notificationService.CreateNotificationAsync(new CreateNotificationDto
-{
-    Type = NotificationTypes.WelcomeMessage,
-    // ...
-});
+await _notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
+    {
+        Type = NotificationTypes.WelcomeMessage,
+        Data = new Dictionary<string, object>()
+    });
 
 // Bad - prone to typos
-await _notificationService.CreateNotificationAsync(new CreateNotificationDto
-{
-    Type = "WelcomeMessage",
-    // ...
-});
+await _notificationService.CreateSystemNotificationForUserAsync(
+    userId,
+    new CreateNotificationRequestDto
+    {
+        Type = "WelcomeMessage",
+        Data = new Dictionary<string, object>()
+    });
 ```
 
 ### 2. Implement Error Handling
@@ -585,14 +647,16 @@ public async Task<ApiResponseDto<LoginResponseDto>> RegisterAsync(RegisterReques
 
     try
     {
-        await notificationService.CreateNotificationAsync(new CreateNotificationDto
-        {
-            UserId = user.Id,
-            Type = NotificationTypes.WelcomeMessage,
-            Title = "Welcome to LightNap!",
-            Message = $"Hi {user.UserName}, welcome to our application!",
-            Link = "/profile"
-        });
+        await notificationService.CreateSystemNotificationForUserAsync(
+            user.Id,
+            new CreateNotificationRequestDto
+            {
+                Type = NotificationTypes.WelcomeMessage,
+                Data = new Dictionary<string, object>
+                {
+                    { "registrationDate", DateTime.UtcNow }
+                }
+            });
     }
     catch (Exception ex)
     {
@@ -613,14 +677,15 @@ Store entity IDs and contextual data rather than fully-formed messages or paths:
 Data = new Dictionary<string, object>
 {
     { "commentId", 456 },
-    { "postId", 123 },
-    { "authorName", "John Doe" },
-    { "commentPreview", "Great article! I especially..." }
 }
 
-// Avoid - Hardcoded content limits flexibility
+// Avoid - Everything else can be easily loaded at runtime based on the comment ID
 Data = new Dictionary<string, object>
 {
+    { "commentId", 456 },
+    { "postId", 123 },
+    { "authorName", "John Doe" },
+    { "commentPreview", "Great article! I especially..." },
     { "title", "New Comment" },
     { "message", "John Doe replied to your post." },
     { "link", "/posts/123/comments" }
@@ -645,35 +710,7 @@ public async Task CleanupExpiredNotificationsAsync()
 }
 ```
 
-### 5. Include Relevant Entity IDs
-
-Provide the IDs needed for the frontend to construct appropriate routes:
-
-```csharp
-// Good - Provides all context needed for routing
-await _notificationService.CreateSystemNotificationForUserAsync(
-    userId,
-    new CreateNotificationRequestDto
-    {
-        Type = NotificationTypes.NewComment,
-        Data = new Dictionary<string, object>
-        {
-            { "commentId", commentId },
-            { "postId", postId },
-            { "commenterName", commenterName },
-            { "commentPreview", commentText.Substring(0, 50) }
-        }
-    });
-
-// Less ideal - Missing context
-Data = new Dictionary<string, object>
-{
-    { "message", "Someone commented on your post" }
-    // Frontend can't navigate to the specific comment
-}
-```
-
-### 6. Batch Notifications Wisely
+### 5. Batch Notifications Wisely
 
 For high-frequency events, consider batching notifications to avoid overwhelming users:
 
@@ -697,7 +734,7 @@ if (newLikeCount >= 10)
 }
 ```
 
-### 7. Localization Support
+### 6. Localization Support
 
 For multi-language applications, let the frontend handle localization by providing raw data:
 
@@ -721,7 +758,7 @@ await _notificationService.CreateSystemNotificationForUserAsync(
 // - French: "Bienvenue, John ! Vous avez rejoint le 5 nov 2025."
 ```
 
-### 8. User Preferences
+### 7. User Preferences
 
 Allow users to control which notifications they receive:
 
@@ -744,7 +781,16 @@ public async Task<bool> ShouldCreateNotificationAsync(
 // Use before creating notification
 if (await ShouldCreateNotificationAsync(userId, NotificationTypes.NewComment))
 {
-    await _notificationService.CreateNotificationAsync(/* ... */);
+    await _notificationService.CreateSystemNotificationForUserAsync(
+        userId,
+        new CreateNotificationRequestDto
+        {
+            Type = NotificationTypes.NewComment,
+            Data = new Dictionary<string, object>
+            {
+                { "commentId", commentId }
+            }
+        });
 }
 ```
 
