@@ -1,8 +1,8 @@
 /*
  * Settings keys used in the application.
  */
-export type UserSettingKeys = "BrowserSettings";
+export type UserSettingKey = "BrowserSettings";
 
-export const UserSettingKey = {
+export const UserSettingKeys = {
   BrowserSettings: "BrowserSettings",
 } as const;

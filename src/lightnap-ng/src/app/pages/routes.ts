@@ -1,4 +1,4 @@
-import { AppRoute, RoleName } from "@core";
+import { AppRoute, RoleNames } from "@core";
 import { AppLayoutComponent } from "@core/features/layout/components/layouts/app-layout/app-layout.component";
 import { PublicLayoutComponent } from "@core/features/layout/components/layouts/public-layout/public-layout.component";
 import { loggedInGuard } from "@core/guards/logged-in.guard";
@@ -24,7 +24,7 @@ export const Routes: AppRoute[] = [
   {
     path: "admin",
     component: AppLayoutComponent,
-    canActivate: [loggedInGuard, roleGuard(RoleName.Administrator)],
+    canActivate: [loggedInGuard, roleGuard(RoleNames.Administrator)],
     children: [{ path: "", data: { breadcrumb: "Admin" }, children: AdminRoutes }],
   },
   { path: "content", data: { breadcrumb: "Content" }, children: ContentRoutes },

@@ -1,9 +1,9 @@
 /*
  * Static content types used for sorting static contents.
  */
-export type StaticContentSortBys = "Key" | "Status" | "Type" | "ReadAccess" | "CreatedDate" | "LastModifiedDate";
+export type StaticContentSortBy = "Key" | "Status" | "Type" | "ReadAccess" | "CreatedDate" | "LastModifiedDate";
 
-export const StaticContentSortBy = {
+export const StaticContentSortBys = {
     Key: "Key",
     Status: "Status",
     Type: "Type",

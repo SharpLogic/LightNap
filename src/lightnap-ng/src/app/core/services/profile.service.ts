@@ -1,6 +1,13 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { LayoutConfigDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto, UserSettingKey, UserSettingKeys } from "@core/backend-api";
+import {
+  LayoutConfigDto,
+  SetUserSettingRequestDto,
+  UpdateProfileRequestDto,
+  UserSettingDto,
+  UserSettingKey,
+  UserSettingKeys,
+} from "@core/backend-api";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { filter, map, Observable, of, shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";
@@ -82,7 +89,7 @@ export class ProfileService {
     return this.#settings$;
   }
 
-  getSetting<T>(key: UserSettingKeys, defaultValue?: T) {
+  getSetting<T>(key: UserSettingKey, defaultValue?: T) {
     return this.getSettings().pipe(
       map(settings => {
         const setting = settings.find(s => s.key === key);
@@ -103,7 +110,7 @@ export class ProfileService {
    * @param {ApplicationSettingsDto} applicationSettings - The new application setting to be updated.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  setSetting<T>(key: UserSettingKeys, value: T) {
+  setSetting<T>(key: UserSettingKey, value: T) {
     return this.#dataService
       .setSetting(<SetUserSettingRequestDto>{
         key,
@@ -118,7 +125,7 @@ export class ProfileService {
   }
 
   getStyleSettings() {
-    return this.getSetting<LayoutConfigDto>(UserSettingKey.BrowserSettings, this.#defaultBrowserSettings);
+    return this.getSetting<LayoutConfigDto>(UserSettingKeys.BrowserSettings, this.#defaultBrowserSettings);
   }
 
   /**
@@ -133,7 +140,7 @@ export class ProfileService {
         if (JSON.stringify(styleSettings) === JSON.stringify(layoutConfig)) {
           return of(layoutConfig);
         }
-        return this.setSetting(UserSettingKey.BrowserSettings, layoutConfig);
+        return this.setSetting(UserSettingKeys.BrowserSettings, layoutConfig);
       })
     );
   }

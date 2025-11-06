@@ -1,6 +1,6 @@
 import { Directive, effect, ElementRef, inject, input, Renderer2, SecurityContext } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { StaticContentFormats } from "@core/backend-api";
+import { StaticContentFormat } from "@core/backend-api";
 import { Marked } from "marked";
 
 @Directive({
@@ -12,7 +12,7 @@ export class StaticContentDirective {
   readonly #renderer = inject(Renderer2);
 
   readonly content = input.required<string>();
-  readonly format = input.required<StaticContentFormats>();
+  readonly format = input.required<StaticContentFormat>();
   readonly sanitize = input<boolean>(false);
   readonly showContentStripWarning = input<boolean>(false);
 

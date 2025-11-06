@@ -1,5 +1,5 @@
 export type NotificationType = "AdministratorNewUserRegistration";
 
-export const NotificationType = {
+export const NotificationTypes = {
     AdministratorNewUserRegistration: "AdministratorNewUserRegistration",
 } as const;

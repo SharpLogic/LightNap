@@ -1,13 +1,13 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectModule } from "primeng/select";
+import { StaticContentReadAccess, StaticContentReadAccesses, StaticContentReadAccessListItems } from "@core/backend-api";
 import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
-import { StaticContentReadAccess, StaticContentReadAccesses, StaticContentReadAccessListItems } from "@core/backend-api/static-content-read-accesses";
 import { ListItem } from "@core/models/list-item";
+import { SelectModule } from "primeng/select";
 
 @Component({
-  selector: 'ln-content-read-access-picker',
-  templateUrl: './content-read-access-picker.component.html',
+  selector: "ln-content-read-access-picker",
+  templateUrl: "./content-read-access-picker.component.html",
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
@@ -20,27 +20,27 @@ import { ListItem } from "@core/models/list-item";
 export class ContentReadAccessPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentReadAccesses | null = StaticContentReadAccess.Explicit;
+  value: StaticContentReadAccess | null = StaticContentReadAccesses.Explicit;
   disabled = false;
 
   get options() {
     const baseOptions = StaticContentReadAccessListItems;
 
     if (this.showAnyOption()) {
-      return [new ListItem<StaticContentReadAccesses>(null!, "Any", "Don't filter by read access."), ...baseOptions];
+      return [new ListItem<StaticContentReadAccess | null>(null, "Any", "Don't filter by read access."), ...baseOptions];
     }
 
     return baseOptions;
   }
 
-  onChange: (value: StaticContentReadAccesses | null) => void = () => {};
+  onChange: (value: StaticContentReadAccess | null) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: StaticContentReadAccesses | null): void {
+  writeValue(value: StaticContentReadAccess | null): void {
     this.value = value;
   }
 
-  registerOnChange(fn: (value: StaticContentReadAccesses | null) => void): void {
+  registerOnChange(fn: (value: StaticContentReadAccess | null) => void): void {
     this.onChange = fn;
   }
 

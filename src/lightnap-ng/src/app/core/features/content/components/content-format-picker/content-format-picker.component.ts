@@ -20,27 +20,27 @@ import { SelectModule } from "primeng/select";
 export class ContentFormatPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentFormats | null = StaticContentFormat.Html;
+  value: StaticContentFormat | null = StaticContentFormats.Html;
   disabled = false;
 
   get options() {
     const baseOptions = StaticContentFormatListItems;
 
     if (this.showAnyOption()) {
-      return [new ListItem<StaticContentFormats | null>(null, "Any", "Don't filter by format."), ...baseOptions];
+      return [new ListItem<StaticContentFormat | null>(null, "Any", "Don't filter by format."), ...baseOptions];
     }
 
     return baseOptions;
   }
 
-  onChange: (value: StaticContentFormats | null) => void = () => {};
+  onChange: (value: StaticContentFormat | null) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: StaticContentFormats | null): void {
+  writeValue(value: StaticContentFormat | null): void {
     this.value = value;
   }
 
-  registerOnChange(fn: (value: StaticContentFormats | null) => void): void {
+  registerOnChange(fn: (value: StaticContentFormat | null) => void): void {
     this.onChange = fn;
   }
 

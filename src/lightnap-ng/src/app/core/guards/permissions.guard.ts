@@ -1,12 +1,12 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot } from "@angular/router";
-import { ClaimDto, RoleNames, RouteTemplateHelpers } from "@core";
+import { ClaimDto, RoleName, RouteTemplateHelpers } from "@core";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
 import { map, take } from "rxjs";
 
 export function permissionsGuard(
-  roles: RoleNames | Array<RoleNames>,
+  roles: RoleName | Array<RoleName>,
   claims: ClaimDto | Array<ClaimDto>,
   guardOptions?: { redirectTo?: Array<object> }
 ) {

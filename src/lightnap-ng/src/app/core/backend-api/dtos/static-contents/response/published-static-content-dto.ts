@@ -1,4 +1,4 @@
-import { StaticContentFormats } from "@core/backend-api/static-content-formats";
+import { StaticContentFormat } from "@core/backend-api/static-content-format";
 
 /**
  * Static content for rendering.
@@ -12,5 +12,5 @@ export interface PublishedStaticContentDto {
     /**
      * The format of the content.
      */
-    format: StaticContentFormats;
+    format: StaticContentFormat;
 }

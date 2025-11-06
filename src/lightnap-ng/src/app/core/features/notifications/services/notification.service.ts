@@ -1,14 +1,14 @@
 import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-  ApiResponseDto,
-  LatestNotifications,
-  NotificationDto,
-  NotificationItem,
-  NotificationSearchResults,
-  NotificationStatus,
-  NotificationType,
-  SearchNotificationsRequestDto,
+    ApiResponseDto,
+    LatestNotifications,
+    NotificationDto,
+    NotificationItem,
+    NotificationSearchResults,
+    NotificationStatus,
+    NotificationTypes,
+    SearchNotificationsRequestDto
 } from "@core";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
@@ -112,7 +112,7 @@ export class NotificationService {
     };
 
     switch (notification.type) {
-      case NotificationType.AdministratorNewUserRegistration:
+      case NotificationTypes.AdministratorNewUserRegistration:
         return this.#adminService.getUser(notification.data.userId).pipe(
           map(user => {
             // User may have been deleted since the notification was created

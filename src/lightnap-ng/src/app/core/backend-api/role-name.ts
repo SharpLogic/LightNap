@@ -3,9 +3,9 @@
  * development easier. However, it's important to note that the backend is the source of truth for role
  * names and permissions. For example, the admin UI loads the roles from the backend when providing options.
  */
-export type RoleNames = "Administrator" | "ContentEditor";
+export type RoleName = "Administrator" | "ContentEditor";
 
-export const RoleName = {
+export const RoleNames = {
   Administrator: "Administrator",
   ContentEditor: "ContentEditor",
 } as const;

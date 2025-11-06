@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LightNap.WebApi.Controllers
 {
     [ApiController]
-    [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
+    [Authorize]
     [Route("api/[controller]")]
     public class ContentController(IStaticContentService staticContentService) : ControllerBase
     {
@@ -28,6 +28,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
         public async Task<ApiResponseDto<StaticContentDto>> CreateStaticContentAsync(CreateStaticContentDto createDto)
         {
             return new ApiResponseDto<StaticContentDto>(await staticContentService.CreateStaticContentAsync(createDto));
@@ -40,6 +41,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         [HttpPost("search")]
+        [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
         public async Task<ApiResponseDto<PagedResponseDto<StaticContentDto>>> SearchStaticContentAsync(SearchStaticContentRequestDto searchDto)
         {
             return new ApiResponseDto<PagedResponseDto<StaticContentDto>>(await staticContentService.SearchStaticContentAsync(searchDto));

@@ -1,9 +1,9 @@
 /*
  * Static content visibilities for the current user's status.
  */
-export type StaticContentUserVisibilities = "RequiresAuthentication" | "Restricted" | "Reader" | "Editor";
+export type StaticContentUserVisibility = "RequiresAuthentication" | "Restricted" | "Reader" | "Editor";
 
-export const StaticContentUserVisibility = {
+export const StaticContentUserVisibilities = {
   RequiresAuthentication: "RequiresAuthentication",
   Restricted: "Restricted",
   Reader: "Reader",

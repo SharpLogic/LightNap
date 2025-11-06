@@ -39,7 +39,7 @@ export class EditLanguageComponent {
 
   form = this.#fb.group({
     content: this.#fb.nonNullable.control(""),
-    format: this.#fb.nonNullable.control<StaticContentFormats>(StaticContentFormat.Html, [Validators.required]),
+    format: this.#fb.nonNullable.control<StaticContentFormat>(StaticContentFormats.Html, [Validators.required]),
   });
 
   errors = signal(new Array<string>());

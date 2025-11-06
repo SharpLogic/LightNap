@@ -4,19 +4,19 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-  RoutePipe,
-  setApiErrors,
-  ShowByPermissionsDirective,
-  StaticContentDto,
-  StaticContentReadAccess,
-  StaticContentReadAccesses,
-  StaticContentStatus,
-  StaticContentStatuses,
-  StaticContentSupportedLanguageDto,
-  StaticContentType,
-  StaticContentTypes,
-  ToStringPipe,
-  TypeHelpers,
+    RoutePipe,
+    setApiErrors,
+    ShowByPermissionsDirective,
+    StaticContentDto,
+    StaticContentReadAccess,
+    StaticContentReadAccesses,
+    StaticContentStatus,
+    StaticContentStatuses,
+    StaticContentSupportedLanguageDto,
+    StaticContentType,
+    StaticContentTypes,
+    ToStringPipe,
+    TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
@@ -68,9 +68,9 @@ export class EditComponent {
 
   form = this.#fb.group({
     key: this.#fb.nonNullable.control("", [Validators.required]),
-    status: this.#fb.nonNullable.control<StaticContentStatuses>(StaticContentStatus.Draft, [Validators.required]),
-    type: this.#fb.nonNullable.control<StaticContentTypes>(StaticContentType.Page, [Validators.required]),
-    readAccess: this.#fb.nonNullable.control<StaticContentReadAccesses>(StaticContentReadAccess.Explicit, [Validators.required]),
+    status: this.#fb.nonNullable.control<StaticContentStatus>(StaticContentStatuses.Draft, [Validators.required]),
+    type: this.#fb.nonNullable.control<StaticContentType>(StaticContentTypes.Page, [Validators.required]),
+    readAccess: this.#fb.nonNullable.control<StaticContentReadAccess>(StaticContentReadAccesses.Explicit, [Validators.required]),
     editorRoles: this.#fb.nonNullable.control(""),
     readerRoles: this.#fb.nonNullable.control(""),
   });
@@ -115,7 +115,7 @@ export class EditComponent {
   onUpdate() {
     const value = {
       ...this.form.getRawValue(),
-      readerRoles: this.form.value.readAccess === StaticContentReadAccess.Explicit ? this.form.value.readerRoles : undefined,
+      readerRoles: this.form.value.readAccess === StaticContentReadAccesses.Explicit ? this.form.value.readerRoles : undefined,
     };
 
     this.#contentService.updateStaticContent(this.key(), value).subscribe({

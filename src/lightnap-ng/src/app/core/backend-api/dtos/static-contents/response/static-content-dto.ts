@@ -1,16 +1,14 @@
-import { StaticContentReadAccesses } from "@core/backend-api/static-content-read-accesses";
-import { StaticContentStatuses } from "@core/backend-api/static-content-statuses";
-import { StaticContentTypes } from "@core/backend-api/static-content-types";
+import { StaticContentReadAccess, StaticContentStatus, StaticContentType } from "@core";
 
 /**
  * Static content details.
  */
 export interface StaticContentDto {
   id: number;
-  type: StaticContentTypes;
+  type: StaticContentType;
   key: string;
-  status: StaticContentStatuses;
-  readAccess: StaticContentReadAccesses;
+  status: StaticContentStatus;
+  readAccess: StaticContentReadAccess;
   editorRoles?: string;
   readerRoles?: string;
   createdDate: Date;

@@ -1,4 +1,4 @@
-import { AppRoute, RoleName } from "@core";
+import { AppRoute, RoleNames } from "@core";
 import { AppLayoutComponent } from "@core/features/layout/components/layouts/app-layout/app-layout.component";
 import { PublicLayoutComponent } from "@core/features/layout/components/layouts/public-layout/public-layout.component";
 import { editPageGuard } from "@core/guards/edit-page.guard";
@@ -12,7 +12,7 @@ export const Routes: AppRoute[] = [
     children: [
       {
         path: "",
-        canActivate: [permissionsGuard([RoleName.Administrator, RoleName.ContentEditor], [])],
+        canActivate: [permissionsGuard([RoleNames.Administrator, RoleNames.ContentEditor], [])],
         data: { alias: "manage-content" },
         title: "Manage Content",
         loadComponent: () => import("./manage/manage.component").then(m => m.ManageComponent),

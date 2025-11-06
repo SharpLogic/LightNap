@@ -1,13 +1,13 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectModule } from "primeng/select";
+import { StaticContentStatus, StaticContentStatuses, StaticContentStatusListItems } from "@core/backend-api";
 import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
-import { StaticContentStatus, StaticContentStatuses, StaticContentStatusListItems } from "@core/backend-api/static-content-statuses";
 import { ListItem } from "@core/models/list-item";
+import { SelectModule } from "primeng/select";
 
 @Component({
-  selector: 'ln-content-status-picker',
-  templateUrl: './content-status-picker.component.html',
+  selector: "ln-content-status-picker",
+  templateUrl: "./content-status-picker.component.html",
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
@@ -20,27 +20,27 @@ import { ListItem } from "@core/models/list-item";
 export class ContentStatusPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentStatuses | null = StaticContentStatus.Draft;
+  value: StaticContentStatus | null = StaticContentStatuses.Draft;
   disabled = false;
 
   get options() {
     const baseOptions = StaticContentStatusListItems;
 
     if (this.showAnyOption()) {
-      return [new ListItem<StaticContentStatuses | null>(null, "Any", "Don't filter by status."), ...baseOptions];
+      return [new ListItem<StaticContentStatus | null>(null, "Any", "Don't filter by status."), ...baseOptions];
     }
 
     return baseOptions;
   }
 
-  onChange: (value: StaticContentStatuses | null) => void = () => {};
+  onChange: (value: StaticContentStatus | null) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: StaticContentStatuses | null): void {
+  writeValue(value: StaticContentStatus | null): void {
     this.value = value;
   }
 
-  registerOnChange(fn: (value: StaticContentStatuses | null) => void): void {
+  registerOnChange(fn: (value: StaticContentStatus | null) => void): void {
     this.onChange = fn;
   }
 

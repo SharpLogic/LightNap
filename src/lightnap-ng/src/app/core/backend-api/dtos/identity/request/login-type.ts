@@ -1,9 +1,9 @@
 /**
  * Indicates the type of login field used in a login request.
  */
-export type LoginTypes = "Email" | "UserName" | "MagicLink" | "Unknown";
+export type LoginType = "Email" | "UserName" | "MagicLink" | "Unknown";
 
-export const LoginType = {
+export const LoginTypes = {
     Email: "Email",
     UserName: "UserName",
     MagicLink: "MagicLink",

@@ -2,7 +2,7 @@
   <ng-template let-contentAny #success>
     @let content = asContent(contentAny);
 
-    <p-panel header="Edit Content">
+    <p-panel header="Edit Content: {{ content.key }}">
       <p class="text-sm">
         Created {{ content.createdDate | date: "medium" }}
         @if (content.createdByUserId) {

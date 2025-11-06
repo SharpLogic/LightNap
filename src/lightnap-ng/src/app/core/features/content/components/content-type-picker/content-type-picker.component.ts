@@ -1,13 +1,13 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SelectModule } from "primeng/select";
+import { StaticContentType, StaticContentTypeListItems, StaticContentTypes } from "@core";
 import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
-import { StaticContentType, StaticContentTypeListItems, StaticContentTypes } from "@core/backend-api/static-content-types";
 import { ListItem } from "@core/models/list-item";
+import { SelectModule } from "primeng/select";
 
 @Component({
-  selector: 'ln-content-type-picker',
-  templateUrl: './content-type-picker.component.html',
+  selector: "ln-content-type-picker",
+  templateUrl: "./content-type-picker.component.html",
   imports: [SelectModule, FormsModule, DropdownListItemComponent],
   providers: [
     {
@@ -20,27 +20,27 @@ import { ListItem } from "@core/models/list-item";
 export class ContentTypePickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentTypes | null = StaticContentType.Page;
+  value: StaticContentType | null = StaticContentTypes.Page;
   disabled = false;
 
   get options() {
     const baseOptions = StaticContentTypeListItems;
 
     if (this.showAnyOption()) {
-      return [new ListItem<StaticContentTypes | null>(null, "Any", "Don't filter by type."), ...baseOptions];
+      return [new ListItem<StaticContentType | null>(null, "Any", "Don't filter by type."), ...baseOptions];
     }
 
     return baseOptions;
   }
 
-  onChange: (value: StaticContentTypes | null) => void = () => {};
+  onChange: (value: StaticContentType | null) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(value: StaticContentTypes | null): void {
+  writeValue(value: StaticContentType | null): void {
     this.value = value;
   }
 
-  registerOnChange(fn: (value: StaticContentTypes | null) => void): void {
+  registerOnChange(fn: (value: StaticContentType | null) => void): void {
     this.onChange = fn;
   }
 

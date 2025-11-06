@@ -59,9 +59,9 @@ export class ManageComponent {
 
   readonly form = this.#fb.group({
     keyContains: this.#fb.nonNullable.control(""),
-    status: this.#fb.control<StaticContentStatuses | null>(null),
-    readAccess: this.#fb.control<StaticContentReadAccesses | null>(null),
-    type: this.#fb.control<StaticContentTypes | null>(null),
+    status: this.#fb.control<StaticContentStatus | null>(null),
+    readAccess: this.#fb.control<StaticContentReadAccess | null>(null),
+    type: this.#fb.control<StaticContentType | null>(null),
   });
 
   createDialogVisible = false;
@@ -81,7 +81,7 @@ export class ManageComponent {
         type: this.form.value.type ?? undefined,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
-        sortBy: (event.sortField as StaticContentSortBys) ?? StaticContentSortBy.Key,
+        sortBy: (event.sortField as StaticContentSortBy) ?? StaticContentSortBys.Key,
         reverseSort: event.sortOrder === -1,
       })
     ),
@@ -116,9 +116,9 @@ export class ManageComponent {
     this.#contentService
       .createStaticContent({
         key: this.createForm.value.key!,
-        type: StaticContentType.Page,
-        status: StaticContentStatus.Draft,
-        readAccess: StaticContentReadAccess.Explicit,
+        type: StaticContentTypes.Page,
+        status: StaticContentStatuses.Draft,
+        readAccess: StaticContentReadAccesses.Explicit,
       })
       .subscribe({
         next: () => this.#lazyLoadEventSubject.next({ first: 0 }),

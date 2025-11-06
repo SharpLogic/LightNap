@@ -1,4 +1,5 @@
-import { NotificationStatus, NotificationType } from "@core/features";
+import { NotificationType } from "@core/backend-api/notification-type";
+import { NotificationStatus } from "@core/features";
 
 /**
  * Represents an application notification.

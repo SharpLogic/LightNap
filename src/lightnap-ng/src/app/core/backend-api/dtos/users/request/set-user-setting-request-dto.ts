@@ -1,9 +1,9 @@
-import { UserSettingKeys } from "@core/backend-api/user-setting-keys";
+import { UserSettingKey } from "@core";
 
 /**
  * Request for setting a user setting.
  */
 export interface SetUserSettingRequestDto {
-  key: UserSettingKeys;
+  key: UserSettingKey;
   value: string;
 }
