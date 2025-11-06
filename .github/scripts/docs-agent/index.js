@@ -294,15 +294,15 @@ Provide your analysis as JSON.`;
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
-      temperature: 0.7,
+      temperature: 0.2,
       response_format: { type: "json_object" },
     });
     analysis = JSON.parse(response.choices[0].message.content);
   } else if (AI_PROVIDER === "anthropic") {
     const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-5",
       max_tokens: 4096,
-      temperature: 0.7,
+      temperature: 0.2,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
     });
