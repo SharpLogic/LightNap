@@ -1,0 +1,59 @@
+name: Automated Documentation Agent
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'Scaffolding/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: "docs-agent"
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-update-docs:
+    # This workflow is DISABLED by default
+    # To enable: Set repository variable RUN_DOCS_AGENT to 'true'
+    if: vars.RUN_DOCS_AGENT == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need previous commit for comparison
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: .github/scripts/docs-agent
+        run: npm install
+
+      - name: Run documentation agent
+        working-directory: .github/scripts/docs-agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AI_PROVIDER: ${{ vars.AI_PROVIDER || 'openai' }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          BASE_BRANCH: main
+        run: node index.js
+
+      - name: Summary
+        run: |
+          echo "## 🤖 Documentation Agent Execution Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The documentation agent has analyzed recent code changes." >> $GITHUB_STEP_SUMMARY
+          echo "If documentation updates are needed, a pull request has been created." >> $GITHUB_STEP_SUMMARY

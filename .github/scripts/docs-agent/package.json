@@ -1,0 +1,19 @@
+{
+  "name": "lightnap-docs-agent",
+  "version": "1.0.0",
+  "description": "Automated documentation agent for LightNap",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@octokit/rest": "^21.0.0",
+    "openai": "^4.73.1",
+    "js-yaml": "^4.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

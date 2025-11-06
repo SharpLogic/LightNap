@@ -38,6 +38,17 @@ Automatically build and deploy this Jekyll-based documentation site to GitHub Pa
 1. Enable GitHub Pages for your repository using "GitHub Actions" as the source
 2. Set repository variable `RUN_BUILD_AND_DEPLOY_DOCS` to `true`
 
+### [Automated Documentation Agent](./automated-docs-agent)
+
+An AI-powered agent that analyzes code changes and proposes documentation updates. After merges to main that modify source code, the agent evaluates what documentation needs to be added, updated, or removed and creates a pull request with the proposed changes.
+
+**Activation**:
+
+1. Create an API key and add it as repository secret
+   - `OPENAI_API_KEY` for OpenAI
+   - `ANTHROPIC_API_KEY` for Anthropic
+2. Set repository variable `RUN_DOCS_AGENT` to `true`
+
 ## Workflow Architecture
 
 The workflows follow a staged approach:
@@ -49,7 +60,7 @@ graph LR
     C -->|Yes| D[Create Artifact]
     C -->|No| E[Notify Failure]
     D --> F[Deploy to Azure]
-    
+
     G[Docs Push] --> H[Build Docs]
     H --> I[Deploy to GitHub Pages]
 ```
