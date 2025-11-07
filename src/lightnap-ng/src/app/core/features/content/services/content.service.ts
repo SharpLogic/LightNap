@@ -32,18 +32,34 @@ export class ContentService {
    * Gets the user's preferred language. If empty or auto-detect, returns browser language or default fallback.
    */
   #getPreferredLanguageCode(): Observable<string> {
-    return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, '').pipe(
-      map(preferredLanguage => {
-        // If user has selected a specific language, use it
-        if (preferredLanguage && preferredLanguage.length > 0) {
-          return preferredLanguage;
+    return this.#identityService.watchLoggedIn$().pipe(
+      take(1),
+      switchMap(isLoggedIn => {
+        if (!isLoggedIn) {
+          // User is not logged in, use browser language or fallback
+          const browserLang = navigator.language.split('-')[0];
+          return of(browserLang || 'en');
         }
 
-        // Auto-detect from browser
-        const browserLang = navigator.language.split('-')[0];
-        return browserLang || 'en';
-      }),
-      catchError(() => of('en'))
+        // User is logged in, get their preferred language setting
+        return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, '').pipe(
+          map(preferredLanguage => {
+            // If user has selected a specific language, use it
+            if (preferredLanguage && preferredLanguage.length > 0) {
+              return preferredLanguage;
+            }
+
+            // Auto-detect from browser
+            const browserLang = navigator.language.split('-')[0];
+            return browserLang || 'en';
+          }),
+          catchError(() => {
+            // If getting user settings fails, fallback to browser language
+            const browserLang = navigator.language.split('-')[0];
+            return of(browserLang || 'en');
+          })
+        );
+      })
     );
   }
 
