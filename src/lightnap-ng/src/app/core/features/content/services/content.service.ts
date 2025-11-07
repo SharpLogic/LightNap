@@ -1,5 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { ExtendedMap } from "@core";
+import { UserSettingKeys } from "@core/backend-api/user-setting-key";
 import {
     CreateStaticContentDto,
     CreateStaticContentLanguageDto,
@@ -9,8 +10,9 @@ import {
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
 import { IdentityService } from "@core/services/identity.service";
+import { ProfileService } from "@core/services/profile.service";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
-import { map, Observable, shareReplay, switchMap, take, tap } from "rxjs";
+import { catchError, map, Observable, of, shareReplay, switchMap, take, tap } from "rxjs";
 import { PublishedContent } from "../entities";
 
 @Injectable({
@@ -19,11 +21,31 @@ import { PublishedContent } from "../entities";
 export class ContentService {
   #dataService = inject(ContentDataService);
   #identityService = inject(IdentityService);
+  #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
 
   #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
+
+  /**
+   * Gets the user's preferred language. If empty or auto-detect, returns browser language or default fallback.
+   */
+  #getPreferredLanguageCode(): Observable<string> {
+    return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, '').pipe(
+      map(preferredLanguage => {
+        // If user has selected a specific language, use it
+        if (preferredLanguage && preferredLanguage.length > 0) {
+          return preferredLanguage;
+        }
+
+        // Auto-detect from browser
+        const browserLang = navigator.language.split('-')[0];
+        return browserLang || 'en';
+      }),
+      catchError(() => of('en'))
+    );
+  }
 
   getPublishedStaticContent(key: string, languageCode: string) {
     const cacheKey = `${key}:${languageCode}`;
@@ -36,6 +58,16 @@ export class ContentService {
         ),
         shareReplay({ bufferSize: 1, refCount: false })
       )
+    );
+  }
+
+  /**
+   * Gets published static content using the user's preferred language setting.
+   * Falls back to browser language detection if no preference is set.
+   */
+  getPublishedStaticContentWithPreferredLanguage(key: string): Observable<PublishedContent | null> {
+    return this.#getPreferredLanguageCode().pipe(
+      switchMap(languageCode => this.getPublishedStaticContent(key, languageCode))
     );
   }
 
