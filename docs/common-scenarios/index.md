@@ -34,6 +34,10 @@ Implement fine-grained permissions using ASP.NET claims. This guide covers claim
 
 ## Features
 
+### [Managing Content](./managing-content)
+
+Learn how to create, edit, and publish content using LightNap's built-in Content Management System. This comprehensive guide covers zones, pages, multilingual content, access control, and frontend integration.
+
 ### [Adding In-App Notification Types](./adding-notifications)
 
 Create new types of in-app notifications to keep users informed about events and activities. Learn how to trigger notifications from backend services and display them in the Angular UI.

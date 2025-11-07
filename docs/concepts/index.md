@@ -18,6 +18,12 @@ Understand how LightNap is organized, including the .NET backend projects, Angul
 
 Learn about LightNap's standardized REST API response format, including how errors are handled, HTTP status codes are used, and how the frontend automatically processes API responses.
 
+## Core Features
+
+### [Content Management System](./content-management)
+
+Explore LightNap's built-in CMS that enables administrators and content editors to create, manage, and publish multilingual static content. Learn about pages, zones, access control, and frontend integration.
+
 ## Authentication & Security
 
 ### [Authentication & Tokens](./authentication)
