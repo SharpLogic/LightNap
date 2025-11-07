@@ -19,6 +19,11 @@ namespace LightNap.Core.Configuration
                     "",
                     UserSettingAccessLevel.UserReadWrite,
                     true),
+                new UserSettingDefinition(
+                    Constants.UserSettingKeys.PreferredLanguage,
+                    "",
+                    UserSettingAccessLevel.UserReadWrite,
+                    true),
             ];
 
         /// <summary>

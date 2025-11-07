@@ -97,6 +97,11 @@
             /// and we just store and return the data it sends.
             /// </summary>
             public const string BrowserSettings = "BrowserSettings";
+
+            /// <summary>
+            /// The user's preferred language code for content. Can be empty for auto-detection from browser.
+            /// </summary>
+            public const string PreferredLanguage = "PreferredLanguage";
         }
 
     }

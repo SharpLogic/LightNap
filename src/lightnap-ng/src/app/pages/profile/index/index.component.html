@@ -19,6 +19,18 @@
 
         <form [formGroup]="form" (ngSubmit)="updateProfile()" autocomplete="off">
           <div class="flex flex-col w-80 gap-5">
+            <div class="flex flex-col gap-1">
+              <label for="preferredLanguage" class="font-semibold">Preferred Language</label>
+              <p-select 
+                id="preferredLanguage" 
+                formControlName="preferredLanguage" 
+                [options]="supportedLanguages()" 
+                optionLabel="label" 
+                optionValue="value" 
+                placeholder="Select a language"
+                class="w-full" />
+            </div>
+
             <ln-error-list [errors]="errors()" />
             <p-button type="submit" label="Update Profile" styleClass="w-full" [disabled]="!form.valid || !form.dirty" />
           </div>
