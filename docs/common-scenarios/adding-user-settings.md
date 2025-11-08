@@ -7,7 +7,7 @@ nav_order: 900
 
 # {{ page.title }}
 
-LightNap includes infrastructure for implementing a flexible user settings system that allows users to store and manage their personal preferences. This article demonstrates how to add a new user setting by walking through the process of implementing a boolean setting for optional cookie consent.
+LightNap includes infrastructure for implementing a flexible user settings system that allows users to store and manage their personal preferences. This article demonstrates how to add a new user setting by walking through the `PreferredLanguage` setting—a comprehensive example that showcases integration with other services, automatic fallback logic, and reusable UI components.
 
 - TOC
 {:toc}
@@ -54,9 +54,13 @@ To maintain consistency and avoid typos, create constants for your setting keys.
 ```csharp
 public static class UserSettingKeys
 {
-    public const string OptionalCookiesEnabled = "OptionalCookiesEnabled";
-    public const string EmailNotifications = "EmailNotifications";
-    public const string Theme = "Theme";
+    public const string BrowserSettings = "BrowserSettings";
+
+    /// <summary>
+    /// The user's preferred language code for content. Can be empty for auto-detection from browser.
+    /// </summary>
+    public const string PreferredLanguage = "PreferredLanguage";
+
     // Add more setting keys as needed
 }
 ```
@@ -72,10 +76,15 @@ Since user settings can be any key-value pair, LightNap uses a registry to track
 private static readonly UserSettingDefinition[] _allSettings =
     [
         new UserSettingDefinition(
-            // The key from your constants
             Constants.UserSettingKeys.BrowserSettings,
-            // The default value in JSON or an empty string for null
             "",
+            UserSettingAccessLevel.UserReadWrite,
+            true),
+        new UserSettingDefinition(
+            // The key from your constants
+            Constants.UserSettingKeys.PreferredLanguage,
+            // The default value in JSON - empty string for auto-detect
+            "\"\"",
             // Who can read and edit this setting
             UserSettingAccessLevel.UserReadWrite,
             // True if the setting is active, false if archived
@@ -87,25 +96,31 @@ This approach provides several benefits:
 
 - **Centralized Documentation**: All settings are documented in one place
 - **Default Values**: Each setting has a clearly defined default value
+- **Security**: Only registered settings can be stored, preventing database stuffing attacks
 - **API Documentation**: Can be exposed through an endpoint for frontend consumption
 
 ### Step 3: Reading User Settings
 
-To read a user setting in your backend service, inject `IUserSettingsService` and call the appropriate method. Using the setting definitions approach ensures you always get the correct default value:
+To read a user setting in your backend service, inject `IUserSettingsService` and call the `GetUserSettingAsync` method. This automatically handles access to the setting definitions to ensure you always get the correct JSON deserialization and default value:
 
 ```csharp
 public class MyService(
     IUserSettingsService userSettingsService,
     IUserContext userContext
-) : IMyService
+)
 {
-    public async Task<bool> GetOptionalCookiesEnabledAsync()
+    public async Task<string> GetPreferredLanguageAsync()
     {
         var userId = userContext.GetUserId();
-        return await userSettingsService.GetUserSettingAsync<bool>(
+        var preferredLanguage = await userSettingsService.GetUserSettingAsync<string>(
             userId,
-            Constants.UserSettingKeys.OptionalCookiesEnabled
+            Constants.UserSettingKeys.PreferredLanguage
         );
+
+        // Empty string means auto-detect from browser
+        return string.IsNullOrEmpty(preferredLanguage)
+            ? GetBrowserLanguage()
+            : preferredLanguage;
     }
 }
 ```
@@ -115,15 +130,15 @@ public class MyService(
 Settings are typically updated by the user through the frontend, but you can also set them programmatically:
 
 ```csharp
-public async Task SetOptionalCookiesEnabledAsync(bool enabled)
+public async Task SetPreferredLanguageAsync(string languageCode)
 {
     var userId = userContext.GetUserId();
     await userSettingsService.SetUserSettingAsync(
         userId,
         new SetUserSettingRequestDto
         {
-          Key = Constants.UserSettingKeys.OptionalCookiesEnabled,
-          Value = enabled.ToString(),
+          Key = Constants.UserSettingKeys.PreferredLanguage,
+          Value = languageCode,
         }
     );
 }
@@ -131,29 +146,37 @@ public async Task SetOptionalCookiesEnabledAsync(bool enabled)
 
 ### Step 5: Using Settings to Control Application Behavior
 
-Here's a practical example of checking a user setting before performing an action:
+The `PreferredLanguage` setting demonstrates a sophisticated use case with automatic fallback logic. The `ContentService` in the frontend uses this setting to determine which language content to display:
 
-```csharp
-public async Task<ApiResponseDto<AnalyticsDto>> GetUserAnalyticsAsync()
-{
-    var userId = userContext.GetUserId();
+```typescript
+#getPreferredLanguageCode(): Observable<string> {
+  return this.#identityService.watchLoggedIn$().pipe(
+    take(1),
+    switchMap(isLoggedIn => {
+      if (!isLoggedIn) return of(this.#getBrowserLanguageCode());
 
-    // Check if user has enabled optional cookies
-    var optionalCookiesEnabled = await GetOptionalCookiesEnabledAsync();
-
-    if (!optionalCookiesEnabled)
-    {
-        // Return minimal analytics or skip tracking
-        return new ApiResponseDto<AnalyticsDto>
-        {
-            Result = new AnalyticsDto { Enabled = false }
-        };
-    }
-
-    // Proceed with full analytics
-    // ...
+      return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, "").pipe(
+        map(preferredLanguage => {
+          // If user has set a preference, use it
+          if (preferredLanguage?.length > 0) return preferredLanguage;
+          // Otherwise fall back to browser language
+          return this.#getBrowserLanguageCode();
+        }),
+        catchError(() => of(this.#getBrowserLanguageCode()))
+      );
+    })
+  );
 }
 ```
+
+This pattern demonstrates:
+
+- **Graceful Fallbacks**: Empty setting falls back to browser detection
+- **Error Handling**: Service failures don't break the user experience
+- **Authentication Awareness**: Different behavior for logged-in vs anonymous users
+
+{: .note }
+Accessing settings should only be done after the initial browser handshake has completed during the app load. This will ensure that the authentication token is available when requesting settings. Use `IdentityService.watchLoggedIn$().pipe(take(1))` in cases where you don't know if that initial token retrieval will have completed yet.
 
 ## Frontend Implementation
 
@@ -161,20 +184,18 @@ User settings on the frontend are accessed through the **`ProfileService`**, whi
 
 ### Step 1: Define Setting Keys
 
-Keep the frontend setting keys file at ``app/core/backend-api/user-setting-key.ts` up to date.
+Keep the frontend setting keys file at `app/core/backend-api/user-setting-key.ts` up to date with your backend constants:
 
 ```typescript
 /*
  * Settings keys used in the application.
  */
-export type UserSettingKey = "BrowserSettings" | "OptionalCookiesEnabled" | "ItemsPerPage";
+export type UserSettingKey = "BrowserSettings" | "PreferredLanguage";
 
 export const UserSettingKeys = {
   BrowserSettings: "BrowserSettings",
-  OptionalCookiesEnabled: "OptionalCookiesEnabled",
-  ItemsPerPage: "ItemsPerPage",
+  PreferredLanguage: "PreferredLanguage",
 } as const;
-
 ```
 
 ### Step 2: Understanding ProfileService for Settings
@@ -197,35 +218,67 @@ The `ProfileService` automatically handles type conversion when retrieving value
 #### Example: Getting typed settings with defaults
 
 ```typescript
-// Boolean setting
-this.profileService.getSetting<boolean>(UserSettingKeys.OptionalCookiesEnabled, false)
-  .subscribe(enabled => {
-    this.optionalCookiesEnabled = enabled!;
+// String setting with empty string default (for auto-detect)
+this.profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, "")
+  .subscribe(language => {
+    this.preferredLanguage = language || this.getBrowserLanguage();
   });
 
-// Number setting
-this.profileService.getSetting<number>(UserSettingKeys.ItemsPerPage, 10)
-  .subscribe(itemsPerPage => {
-    this.itemsPerPage = itemsPerPage!;
-  });
+// The ProfileService handles JSON deserialization automatically
 ```
 
-### Step 3: Using the UserSettingToggleComponent
+### Step 3: Using Reusable Setting Components
 
-LightNap provides the `UserSettingToggleComponent`, a standalone component that allows the user to set or clear a boolean setting. The component is a smart control that integrates directly with the API, so all you need to do is give it a key and a label and the functionality and persistence is all handled internally.
+LightNap provides reusable components for common setting UI patterns. For the `PreferredLanguage` setting, we use `UserSettingSelectComponent`, which handles select dropdowns with automatic persistence:
+
+#### Creating a Custom Setting Component
+
+The `PreferredLanguageSelectComponent` demonstrates how to create a specialized component that wraps `UserSettingSelectComponent`:
+
+```typescript
+@Component({
+  selector: "ln-preferred-language-select",
+  standalone: true,
+  templateUrl: "./preferred-language-select.component.html",
+  imports: [CommonModule, UserSettingSelectComponent, ApiResponseComponent],
+})
+export class PreferredLanguageSelectComponent {
+  readonly #contentService = inject(ContentService);
+
+  readonly supportedLanguages = signal(
+    this.#contentService
+      .getSupportedLanguages()
+      .pipe(map(languages => [
+        new ListItem("", "Auto-detect"),
+        ...languages.map(lang => new ListItem(lang.languageCode, lang.languageName))
+      ]))
+  );
+}
+```
+
+#### Template Usage
 
 ```html
-<div class="setting-section">
-  <h3>Privacy Settings</h3>
-
-  <div class="setting-item">
-    <ln-user-setting-toggle
-      key="OptionalCookiesEnabled"
-      label="Enable Optional Cookies"
-      />
-  </div>
-</div>
+<ln-api-response [apiResponse]="supportedLanguages()">
+  <ng-template #success let-supportedLanguages>
+    <ln-user-setting-select
+      key="PreferredLanguage"
+      label="Preferred Language"
+      [options]="supportedLanguages"
+      [defaultValue]="null" />
+  </ng-template>
+</ln-api-response>
 ```
+
+This pattern demonstrates:
+
+- **Service Integration**: Fetching options from `ContentService`
+- **Dynamic Options**: Building option lists with `ListItem`
+- **Auto-detect Support**: Including an empty value for automatic detection
+- **Reusability**: The component can be used anywhere in the application
+
+  {: .note }
+  For more details on creating reusable form components like this, see [Reusable Form Components](./reusable-form-components).
 
 ## Additional Resources
 
@@ -266,6 +319,7 @@ graph TD
 
 ## See Also
 
+- [Reusable Form Components](./reusable-form-components) - Creating composable form components
 - [Adding Entities](./adding-entities) - Creating database entities
 - [Adding Profile Fields](./adding-profile-fields) - User-specific data
 - [Working With Roles](./working-with-roles) - User permissions

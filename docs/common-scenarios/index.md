@@ -44,7 +44,11 @@ Create new types of in-app notifications to keep users informed about events and
 
 ### [Adding User Settings](./adding-user-settings)
 
-Implement user-specific settings and preferences that persist across sessions. This guide covers the full stack from backend storage to frontend controls, demonstrating how to add boolean, numeric, and string settings using the ProfileService and PrimeNG components.
+Implement user-specific settings and preferences that persist across sessions. This comprehensive guide walks through adding the PreferredLanguage setting, demonstrating service integration, automatic fallback logic, and browser language detection.
+
+### [Reusable Form Components](./reusable-form-components)
+
+Learn the architectural pattern for creating reusable form components in LightNap. This guide explores the layered component approach using SelectListItemComponent, UserSettingSelectComponent, and domain-specific wrappers to build type-safe, composable UI elements with minimal boilerplate.
 
 ## Frontend Customization
 

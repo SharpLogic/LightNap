@@ -12,6 +12,7 @@ import OpenAI from "openai";
 import Anthropic from "@anthropic-ai/sdk";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +45,14 @@ if (AI_PROVIDER === "openai") {
     );
   }
   anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
+}
+
+/**
+ * Load a prompt from the prompts directory
+ */
+function loadPrompt(filename) {
+  const promptPath = path.join(__dirname, "prompts", filename);
+  return fs.readFileSync(promptPath, "utf-8");
 }
 
 /**
@@ -294,44 +303,7 @@ async function getDocsStructure() {
  * Use AI to analyze changes and propose documentation updates
  */
 async function analyzeChangesAndProposeUpdates(changes, docsStructure) {
-  const systemPrompt = `You are an expert technical documentation analyst for the LightNap starter kit.
-
-LightNap is an ASP.NET Core + Angular starter kit with the following architecture:
-- Backend: .NET 9, Entity Framework Core, ASP.NET Identity
-- Frontend: Angular 20, PrimeNG components
-- Features: User authentication, roles/claims, notifications, user settings, profile management
-
-The documentation is organized into:
-1. **getting-started/**: Setup and configuration guides
-2. **concepts/**: Architecture and design patterns
-3. **common-scenarios/**: How-to guides for extending the application
-
-Your task is to analyze code changes and determine what documentation updates are needed. Focus on:
-- New extensibility patterns (like notifications, user settings)
-- New features that developers might want to extend
-- Changes to existing patterns that affect documentation
-- Breaking changes that need to be documented
-- New common scenarios that should be documented
-
-For each change, determine:
-1. Whether documentation updates are needed (be conservative - not every code change needs doc updates)
-2. Which documentation file(s) should be updated
-3. The specific changes needed (additions, modifications, or new files)
-
-Return your analysis as a JSON object with this structure:
-{
-  "summary": "Brief summary of what changed and why docs need updating",
-  "updates": [
-    {
-      "file": "docs/path/to/file.md",
-      "action": "edit|create|delete",
-      "reason": "Why this update is needed",
-      "changes": "Specific markdown content changes or new content"
-    }
-  ]
-}
-
-If no documentation updates are needed, return: { "summary": "No documentation updates needed", "updates": [] }`;
+  const systemPrompt = loadPrompt("analysis-system.md");
 
   const changesDescription = changes
     .map((change) => {
@@ -353,24 +325,25 @@ ${
     })
     .join("\n");
 
+  // Create a map for easy lookup
+  const docsMap = {};
+  docsStructure.forEach((doc) => {
+    docsMap[doc.path] = doc.content;
+  });
+
   const docsDescription = docsStructure
     .map((doc) => {
       return `File: ${doc.path}\nPreview: ${doc.content.substring(
         0,
-        300
-      )}...\n---`;
+        500
+      )}${doc.content.length > 500 ? "...[truncated]" : ""}\n---`;
     })
     .join("\n");
 
-  const userPrompt = `Analyze these code changes and propose documentation updates:
-
-## Code Changes:
-${changesDescription}
-
-## Existing Documentation Structure:
-${docsDescription}
-
-Provide your analysis as JSON.`;
+  const userPromptTemplate = loadPrompt("analysis-user.md");
+  const userPrompt = userPromptTemplate
+    .replace("{CHANGES_DESCRIPTION}", changesDescription)
+    .replace("{DOCS_DESCRIPTION}", docsDescription);
 
   console.log("🤔 Consulting AI for documentation analysis...");
 
@@ -390,7 +363,7 @@ Provide your analysis as JSON.`;
   } else if (AI_PROVIDER === "anthropic") {
     const response = await anthropic.messages.create({
       model: "claude-sonnet-4-5",
-      max_tokens: 4096,
+      max_tokens: 8192,
       temperature: 0.2,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
@@ -405,6 +378,73 @@ Provide your analysis as JSON.`;
   }
 
   console.log(`💡 Analysis: ${analysis.summary}`);
+
+  // For files that need editing, make a second AI call with full file content
+  if (analysis.updates && analysis.updates.length > 0) {
+    const editsNeeded = analysis.updates.filter((u) => u.action === "edit");
+
+    if (editsNeeded.length > 0) {
+      console.log(
+        `📝 ${editsNeeded.length} files need editing, getting full content for updates...`
+      );
+
+      for (const edit of editsNeeded) {
+        const existingDoc = docsStructure.find((d) => d.path === edit.file);
+
+        if (existingDoc) {
+          console.log(`🔄 Generating complete update for ${edit.file}...`);
+
+          const editSystemPrompt = loadPrompt("edit-system.md");
+          const editUserTemplate = loadPrompt("edit-user.md");
+          const editPrompt = editUserTemplate
+            .replace("{FILE_PATH}", edit.file)
+            .replace("{REASON}", edit.reason)
+            .replace("{CURRENT_CONTENT}", existingDoc.content)
+            .replace("{CHANGES_DESCRIPTION}", changesDescription);
+
+          let updatedContent;
+
+          if (AI_PROVIDER === "openai") {
+            const editResponse = await openai.chat.completions.create({
+              model: "gpt-4o",
+              messages: [
+                { role: "system", content: editSystemPrompt },
+                { role: "user", content: editPrompt },
+              ],
+              temperature: 0.2,
+            });
+            updatedContent = editResponse.choices[0].message.content;
+          } else if (AI_PROVIDER === "anthropic") {
+            const editResponse = await anthropic.messages.create({
+              model: "claude-sonnet-4-5",
+              max_tokens: 8192,
+              temperature: 0.2,
+              system: editSystemPrompt,
+              messages: [{ role: "user", content: editPrompt }],
+            });
+            updatedContent = editResponse.content[0].text;
+          }
+
+          // Remove any markdown code fences if the AI added them despite instructions
+          updatedContent = updatedContent
+            .replace(/^```markdown\n/, "")
+            .replace(/^```\n/, "")
+            .replace(/\n```$/, "");
+
+          // Update the changes field with the complete content
+          edit.changes = updatedContent;
+
+          console.log(
+            `✅ Generated ${updatedContent.length} characters for ${edit.file}`
+          );
+        } else {
+          console.warn(
+            `⚠️  Could not find existing content for ${edit.file}, skipping detailed update`
+          );
+        }
+      }
+    }
+  }
 
   return analysis;
 }
