@@ -880,3 +880,5 @@ While this article focuses on in-app notifications, LightNap also supports email
 - **Email Notifications**: For critical alerts that should reach users even when they're not actively using the application
 
 Many applications send both types for important events like security alerts or critical system notifications.
+
+For a comprehensive guide on implementing email notifications, see [Adding Backend Email Scenarios](./adding-email-scenarios).

@@ -42,6 +42,10 @@ Learn how to create, edit, and publish content using LightNap's built-in Content
 
 Create new types of in-app notifications to keep users informed about events and activities. Learn how to trigger notifications from backend services and display them in the Angular UI.
 
+### [Adding Backend Email Scenarios](./adding-email-scenarios)
+
+Implement new transactional email scenarios using T4 templates and the email service. This comprehensive guide walks through creating email templates, adding service methods, and following best practices for reliable email delivery.
+
 ### [Adding User Settings](./adding-user-settings)
 
 Implement user-specific settings and preferences that persist across sessions. This comprehensive guide walks through adding the PreferredLanguage setting, demonstrating service integration, automatic fallback logic, and browser language detection.
