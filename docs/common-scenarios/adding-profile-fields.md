@@ -270,4 +270,5 @@ If you'd like to continue the exercise to implement these new properties for use
 
 - [Adding Entities](./adding-entities) - Working with Entity Framework models
 - [Adding In-App Notification Types](./adding-notifications) - Another example of working with entities and DTOs
+- [Reusable Form Components](./reusable-form-components) - Creating composable form components
 - [Solution & Project Structure](../concepts/project-structure) - Understanding the data flow pattern
