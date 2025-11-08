@@ -1,16 +1,18 @@
 import { inject, Injectable } from "@angular/core";
 import { ExtendedMap } from "@core";
+import { UserSettingKeys } from "@core/backend-api/user-setting-key";
 import {
-    CreateStaticContentDto,
-    CreateStaticContentLanguageDto,
-    SearchStaticContentRequestDto,
-    UpdateStaticContentDto,
-    UpdateStaticContentLanguageDto,
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  SearchStaticContentRequestDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
 import { IdentityService } from "@core/services/identity.service";
+import { ProfileService } from "@core/services/profile.service";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
-import { map, Observable, shareReplay, switchMap, take, tap } from "rxjs";
+import { catchError, map, Observable, of, shareReplay, switchMap, take, tap } from "rxjs";
 import { PublishedContent } from "../entities";
 
 @Injectable({
@@ -19,13 +21,51 @@ import { PublishedContent } from "../entities";
 export class ContentService {
   #dataService = inject(ContentDataService);
   #identityService = inject(IdentityService);
+  #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
 
   #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
 
-  getPublishedStaticContent(key: string, languageCode: string) {
+  /**
+   * Gets the browser's default language code.
+   * @returns The browser's default language code or "en" if not detectable.
+   */
+  #getBrowserLanguageCode(): string {
+    const browserLang = navigator.language.split("-")[0];
+    return browserLang || "en";
+  }
+
+  /**
+   * Gets the user's preferred language. If empty or auto-detect, returns browser language or default fallback.
+   */
+  #getPreferredLanguageCode(): Observable<string> {
+    return this.#identityService.watchLoggedIn$().pipe(
+      take(1),
+      switchMap(isLoggedIn => {
+        if (!isLoggedIn) return of(this.#getBrowserLanguageCode());
+
+        return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, "").pipe(
+          map(preferredLanguage => {
+            if (preferredLanguage?.length > 0) return preferredLanguage;
+            return this.#getBrowserLanguageCode();
+          }),
+          catchError(() => of(this.#getBrowserLanguageCode()))
+        );
+      })
+    );
+  }
+
+  getPublishedStaticContent(key: string, languageCode: string | null = null) {
+    if (languageCode?.length) return this.#getPublishedStaticContentWithLanguage(key, languageCode);
+
+    return this.#getPreferredLanguageCode().pipe(
+      switchMap(resolvedLanguageCode => this.#getPublishedStaticContentWithLanguage(key, resolvedLanguageCode))
+    );
+  }
+
+  #getPublishedStaticContentWithLanguage(key: string, languageCode: string) {
     const cacheKey = `${key}:${languageCode}`;
 
     return this.#publishedContentCache.getOrSetDefault(cacheKey, () =>

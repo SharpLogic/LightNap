@@ -16,7 +16,7 @@ import { StaticContentDirective } from "../../directives/static-content.directiv
 export class ZoneComponent {
   readonly #contentService = inject(ContentService);
   readonly key = input.required<string>();
-  readonly languageCode = input("en");
+  readonly languageCode = input("");
   readonly sanitize = input(false);
   readonly showContentStripWarning = input(false);
   readonly showAccessWarnings = input(false);

@@ -3,12 +3,12 @@ import { Component, Input, signal } from "@angular/core";
 import { ListItem } from "@core/models/list-item";
 
 @Component({
-    selector: 'ln-dropdown-list-item',
-    templateUrl: './dropdown-list-item.component.html',
+    selector: 'ln-select-list-item',
+    templateUrl: './select-list-item.component.html',
     imports: [],
     standalone: true,
 })
-export class DropdownListItemComponent {
+export class SelectListItemComponent {
     @Input() label = signal("");
     @Input() description = signal<string | undefined>("");
 
