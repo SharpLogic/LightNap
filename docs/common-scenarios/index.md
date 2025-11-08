@@ -10,6 +10,10 @@ This section provides practical, step-by-step guides for common development task
 
 ## Data & Persistence
 
+### [Backend Seeding](./backend-seeding)
+
+Understand how LightNap's automatic seeding system works on application startup, including support for environment-specific seeders that enable safe development data without production deployment risks.
+
 ### [Adding Entities](./adding-entities)
 
 Learn how to add new database entities using Entity Framework, including creating entity classes, updating the DbContext, and generating migrations.

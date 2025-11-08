@@ -76,10 +76,10 @@ export class SelectListItemComponent {
 
 ```html
 <div class="inline-block mx-1 w-full">
-  <span class="m-0">{{ label() }}</span>
+  <span class="m-0">{% raw %}{{ label() }}{% endraw %}</span>
   @if (description(); as description) {
     <p class="m-0 whitespace-nowrap text-ellipsis overflow-hidden">
-      {{ description }}
+      {% raw %}{{ description }}{% endraw %}
     </p>
   }
 </div>
