@@ -10,6 +10,10 @@ This section provides practical, step-by-step guides for common development task
 
 ## Data & Persistence
 
+### [Backend Seeding](./backend-seeding)
+
+Understand how LightNap's automatic seeding system works on application startup, including support for environment-specific seeders that enable safe development data without production deployment risks.
+
 ### [Adding Entities](./adding-entities)
 
 Learn how to add new database entities using Entity Framework, including creating entity classes, updating the DbContext, and generating migrations.
@@ -41,6 +45,10 @@ Learn how to create, edit, and publish content using LightNap's built-in Content
 ### [Adding In-App Notification Types](./adding-notifications)
 
 Create new types of in-app notifications to keep users informed about events and activities. Learn how to trigger notifications from backend services and display them in the Angular UI.
+
+### [Adding Backend Email Scenarios](./adding-email-scenarios)
+
+Implement new transactional email scenarios using T4 templates and the email service. This comprehensive guide walks through creating email templates, adding service methods, and following best practices for reliable email delivery.
 
 ### [Adding User Settings](./adding-user-settings)
 
