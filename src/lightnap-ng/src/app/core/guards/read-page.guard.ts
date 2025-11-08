@@ -19,7 +19,7 @@ export const readPageGuard = (next: ActivatedRouteSnapshot, state: RouterStateSn
   return identityService.watchLoggedIn$().pipe(
     take(1),
     switchMap(_ =>
-      contentService.getPublishedStaticContent(key, "en").pipe(
+      contentService.getPublishedStaticContent(key, "").pipe(
         map(content => {
           if (!content) return createUrlTreeFromSnapshot(next, routeAliasService.getRoute("not-found"));
           if (content.canView) return true;

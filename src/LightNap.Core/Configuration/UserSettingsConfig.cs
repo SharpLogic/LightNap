@@ -21,7 +21,7 @@ namespace LightNap.Core.Configuration
                     true),
                 new UserSettingDefinition(
                     Constants.UserSettingKeys.PreferredLanguage,
-                    "",
+                    "\"\"",
                     UserSettingAccessLevel.UserReadWrite,
                     true),
             ];

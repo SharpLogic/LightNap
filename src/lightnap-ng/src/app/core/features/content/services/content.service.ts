@@ -2,11 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import { ExtendedMap } from "@core";
 import { UserSettingKeys } from "@core/backend-api/user-setting-key";
 import {
-    CreateStaticContentDto,
-    CreateStaticContentLanguageDto,
-    SearchStaticContentRequestDto,
-    UpdateStaticContentDto,
-    UpdateStaticContentLanguageDto,
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  SearchStaticContentRequestDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
 } from "@core/backend-api/dtos/static-contents";
 import { ContentDataService } from "@core/backend-api/services/content-data.service";
 import { IdentityService } from "@core/services/identity.service";
@@ -29,41 +29,43 @@ export class ContentService {
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
 
   /**
+   * Gets the browser's default language code.
+   * @returns The browser's default language code or "en" if not detectable.
+   */
+  #getBrowserLanguageCode(): string {
+    const browserLang = navigator.language.split("-")[0];
+    return browserLang || "en";
+  }
+
+  /**
    * Gets the user's preferred language. If empty or auto-detect, returns browser language or default fallback.
    */
   #getPreferredLanguageCode(): Observable<string> {
     return this.#identityService.watchLoggedIn$().pipe(
       take(1),
       switchMap(isLoggedIn => {
-        if (!isLoggedIn) {
-          // User is not logged in, use browser language or fallback
-          const browserLang = navigator.language.split('-')[0];
-          return of(browserLang || 'en');
-        }
+        if (!isLoggedIn) return of(this.#getBrowserLanguageCode());
 
-        // User is logged in, get their preferred language setting
-        return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, '').pipe(
+        return this.#profileService.getSetting<string>(UserSettingKeys.PreferredLanguage, "").pipe(
           map(preferredLanguage => {
-            // If user has selected a specific language, use it
-            if (preferredLanguage && preferredLanguage.length > 0) {
-              return preferredLanguage;
-            }
-
-            // Auto-detect from browser
-            const browserLang = navigator.language.split('-')[0];
-            return browserLang || 'en';
+            if (preferredLanguage?.length > 0) return preferredLanguage;
+            return this.#getBrowserLanguageCode();
           }),
-          catchError(() => {
-            // If getting user settings fails, fallback to browser language
-            const browserLang = navigator.language.split('-')[0];
-            return of(browserLang || 'en');
-          })
+          catchError(() => of(this.#getBrowserLanguageCode()))
         );
       })
     );
   }
 
-  getPublishedStaticContent(key: string, languageCode: string) {
+  getPublishedStaticContent(key: string, languageCode: string | null = null) {
+    if (languageCode?.length) return this.#getPublishedStaticContentWithLanguage(key, languageCode);
+
+    return this.#getPreferredLanguageCode().pipe(
+      switchMap(resolvedLanguageCode => this.#getPublishedStaticContentWithLanguage(key, resolvedLanguageCode))
+    );
+  }
+
+  #getPublishedStaticContentWithLanguage(key: string, languageCode: string) {
     const cacheKey = `${key}:${languageCode}`;
 
     return this.#publishedContentCache.getOrSetDefault(cacheKey, () =>
@@ -74,16 +76,6 @@ export class ContentService {
         ),
         shareReplay({ bufferSize: 1, refCount: false })
       )
-    );
-  }
-
-  /**
-   * Gets published static content using the user's preferred language setting.
-   * Falls back to browser language detection if no preference is set.
-   */
-  getPublishedStaticContentWithPreferredLanguage(key: string): Observable<PublishedContent | null> {
-    return this.#getPreferredLanguageCode().pipe(
-      switchMap(languageCode => this.getPublishedStaticContent(key, languageCode))
     );
   }
 

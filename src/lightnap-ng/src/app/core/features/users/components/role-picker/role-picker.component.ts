@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, forwardRef, inject } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
+import { SelectListItemComponent } from "@core/components/select-list-item/select-list-item.component";
 import { ListItem } from "@core/models/list-item";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
 import { SelectModule } from "primeng/select";
@@ -10,7 +10,7 @@ import { map } from "rxjs";
 @Component({
   selector: "ln-role-picker",
   templateUrl: "./role-picker.component.html",
-  imports: [CommonModule, SelectModule, FormsModule, DropdownListItemComponent],
+  imports: [CommonModule, SelectModule, FormsModule, SelectListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

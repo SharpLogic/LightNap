@@ -1,14 +1,14 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { StaticContentType, StaticContentTypeListItems, StaticContentTypes } from "@core";
-import { DropdownListItemComponent } from "@core/components/dropdown-list-item/dropdown-list-item.component";
+import { SelectListItemComponent } from "@core/components/select-list-item/select-list-item.component";
 import { ListItem } from "@core/models/list-item";
 import { SelectModule } from "primeng/select";
 
 @Component({
   selector: "ln-content-type-picker",
   templateUrl: "./content-type-picker.component.html",
-  imports: [SelectModule, FormsModule, DropdownListItemComponent],
+  imports: [SelectModule, FormsModule, SelectListItemComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
