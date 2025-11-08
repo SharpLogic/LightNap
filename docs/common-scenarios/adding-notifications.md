@@ -301,7 +301,7 @@ import { Observable } from 'rxjs';
     <div class="notification-panel">
       <div class="notification-header">
         <h3>Notifications</h3>
-        <span class="badge" *ngIf="(unreadCount$ | async) as count">{{ count }}</span>
+        <span class="badge" *ngIf="(unreadCount$ | async) as count">{% raw %}{{ count }}{% endraw %}</span>
       </div>
 
       <div class="notification-list">
@@ -316,9 +316,9 @@ import { Observable } from 'rxjs';
           </div>
 
           <div class="notification-content">
-            <h4>{{ getNotificationTitle(notification) }}</h4>
-            <p>{{ getNotificationMessage(notification) }}</p>
-            <span class="notification-time">{{ notification.timestamp | date: 'short' }}</span>
+            <h4>{% raw %}{{ getNotificationTitle(notification) }}{% endraw %}</h4>
+            <p>{% raw %}{{ getNotificationMessage(notification) }}{% endraw %}</p>
+            <span class="notification-time">{% raw %}{{ notification.timestamp | date: 'short' }}{% endraw %}</span>
           </div>
         </div>
       </div>
