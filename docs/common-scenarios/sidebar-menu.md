@@ -11,13 +11,13 @@ The sidebar menu system provides a dynamic, role-based navigation structure that
 
 ## How It Works
 
-The `MenuService` uses reactive programming with RxJS to monitor user state and automatically refresh the menu when authentication or role status changes. The service watches three key states:
+The `MenuService` uses Angular signals to reactively monitor user state and automatically refresh the menu when authentication or role status changes. The service watches three key states:
 
 1. **Login Status** - Whether the user is authenticated
 2. **Content Editor Status** - Whether the user has the `Administrator` or `ContentEditor` role
 3. **Admin Status** - Whether the user has the `Administrator` role
 
-These states are combined using `combineLatest` with a 100ms debounce to efficiently handle multiple simultaneous state changes. When any state changes, the `#refreshMenuItems` method rebuilds the menu tree.
+These states are converted to signals using `toSignal()` and combined using a `computed()` signal that rebuilds the menu tree whenever any state changes.
 
 ## Default Menu Structure
 
@@ -62,83 +62,80 @@ Visible only to users with the `Administrator` role:
 To add a new menu item to an existing section, update the appropriate menu items array in `menu.service.ts`:
 
 ```typescript
-#loggedInMenuItems = new Array<MenuItem>({
-  label: "Profile",
-  items: [
-    { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile") },
-    { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("devices") },
-    { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") },
-    // Add your new item here
-    { label: "Settings", icon: "pi pi-fw pi-cog", routerLink: this.#routeAlias.getRoute("user-settings") },
-  ],
-});
+readonly #loggedInMenuItems: MenuItem[] = [
+  {
+    label: "Profile",
+    expanded: true,
+    items: [
+      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile"), routerLinkActiveOptions: { exact: true } },
+      { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("devices") },
+      { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") },
+      // Add your new item here
+      { label: "Settings", icon: "pi pi-fw pi-cog", routerLink: this.#routeAlias.getRoute("user-settings") },
+    ],
+  },
+];
 ```
 
 {: .note}
-Menu items use [PrimeNG's MenuItem](https://primeng.org/menu) model. Icons follow PrimeNG's icon conventions (see [PrimeIcons](https://primeng.org/icons) for available options).
+Menu items use [PrimeNG's MenuItem](https://primeng.org/menu) model. Icons follow PrimeNG's icon conventions (see [PrimeIcons](https://primeng.org/icons) for available options). The `expanded: true` property controls whether the menu section is expanded by default.
 
 ### Adding New Menu Sections
 
 To add a completely new menu section (e.g., for a "Moderator" role):
 
-1. **Define the menu items array** as a private field:
+1. **Define the menu items array** as a private readonly field:
 
     ```typescript
-    #moderatorMenuItems = new Array<MenuItem>({
-      label: "Moderation",
-      items: [
-        { label: "Reports", icon: "pi pi-fw pi-flag", routerLink: this.#routeAlias.getRoute("moderator-reports") },
-        { label: "Review Queue", icon: "pi pi-fw pi-list", routerLink: this.#routeAlias.getRoute("moderator-queue") },
-      ],
+    readonly #moderatorMenuItems: MenuItem[] = [
+      {
+        label: "Moderation",
+        expanded: true,
+        items: [
+          { label: "Reports", icon: "pi pi-fw pi-flag", routerLink: this.#routeAlias.getRoute("moderator-reports") },
+          { label: "Review Queue", icon: "pi pi-fw pi-list", routerLink: this.#routeAlias.getRoute("moderator-queue") },
+        ],
+      },
+    ];
+    ```
+
+2. **Add a signal to track the role**:
+
+    ```typescript
+    readonly #isModeratorLoggedIn = toSignal(
+      this.#identityService.watchUserRole$(RoleNames.Moderator),
+      { initialValue: false }
+    );
+    ```
+
+3. **Include the section in the `menuItems` computed signal**:
+
+    ```typescript
+    readonly menuItems = computed(() => {
+      const items: MenuItem[] = [];
+
+      // Always include default items
+      items.push(...this.#defaultMenuItems);
+
+      // Add role-based items
+      if (this.#isLoggedIn()) {
+        items.push(...this.#loggedInMenuItems);
+      }
+
+      if (this.#isContentEditorLoggedIn()) {
+        items.push(...this.#contentMenuItems);
+      }
+
+      if (this.#isModeratorLoggedIn()) {
+        items.push(...this.#moderatorMenuItems);
+      }
+
+      if (this.#isAdminLoggedIn()) {
+        items.push(...this.#adminMenuItems);
+      }
+
+      return items;
     });
-    ```
-
-2. **Add a state tracking field**:
-
-    ```typescript
-    #isModeratorLoggedIn = false;
-    ```
-
-3. **Watch the role in the constructor**:
-
-    ```typescript
-    combineLatest([
-      this.#identityService.watchLoggedIn$().pipe(tap(isLoggedIn => (this.#isLoggedIn = isLoggedIn))),
-      this.#identityService
-        .watchAnyUserRole$([RoleNames.Administrator, RoleNames.ContentEditor])
-        .pipe(tap(isContentEditorLoggedIn => (this.#isContentEditorLoggedIn = isContentEditorLoggedIn))),
-      this.#identityService.watchUserRole$(RoleNames.Administrator).pipe(tap(isAdminLoggedIn => (this.#isAdminLoggedIn = isAdminLoggedIn))),
-      // Add your new role watch
-      this.#identityService.watchUserRole$(RoleNames.Moderator).pipe(tap(isModeratorLoggedIn => (this.#isModeratorLoggedIn = isModeratorLoggedIn))),
-    ])
-      .pipe(takeUntilDestroyed(), debounceTime(100))
-      .subscribe({ next: () => this.#refreshMenuItems() });
-    ```
-
-4. **Include the section in `#refreshMenuItems`**:
-
-    ```typescript
-    #refreshMenuItems() {
-      var menuItems = [...this.#defaultMenuItems];
-
-      if (this.#isLoggedIn) {
-        menuItems.push(...this.#loggedInMenuItems);
-      }
-
-      if (this.#isContentEditorLoggedIn) {
-        menuItems.push(...this.#contentMenuItems);
-      }
-
-      if (this.#isModeratorLoggedIn) {
-        menuItems.push(...this.#moderatorMenuItems);
-      }
-
-      if (this.#isAdminLoggedIn) {
-        menuItems.push(...this.#adminMenuItems);
-      }
-
-      this.#menuItemSubject.next(menuItems);
-    }
     ```
 
 ### Using Route Aliases
@@ -151,6 +148,21 @@ Menu items should use the `RouteAliasService` to resolve routes rather than hard
 
 See [Working With Angular Routes](./using-route-alias) for more information on route aliases.
 
+### Router Link Active Options
+
+For menu items that should only be highlighted when the exact route is active (not child routes), use the `routerLinkActiveOptions` property:
+
+```typescript
+{ 
+  label: "Home", 
+  icon: "pi pi-fw pi-home", 
+  routerLink: this.#routeAlias.getRoute("user-home"), 
+  routerLinkActiveOptions: { exact: true } 
+}
+```
+
+Without this option, the menu item will be highlighted when any child route is active.
+
 ### Checking Multiple Roles
 
 The `IdentityService` provides two methods for role checking:
@@ -161,52 +173,97 @@ The `IdentityService` provides two methods for role checking:
 For example, to show a menu section to users with either `Administrator` or `ContentEditor` roles:
 
 ```typescript
-this.#identityService
-  .watchAnyUserRole$([RoleNames.Administrator, RoleNames.ContentEditor])
-  .pipe(tap(hasRole => (this.#hasContentRole = hasRole)))
+readonly #isContentEditorLoggedIn = toSignal(
+  this.#identityService.watchAnyUserRole$([RoleNames.Administrator, RoleNames.ContentEditor]),
+  { initialValue: false }
+);
 ```
 
 ## Advanced Scenarios
 
 ### Conditional Menu Items
 
-To show/hide specific items within a section based on additional conditions, you can dynamically build the items array in `#refreshMenuItems`:
+To show/hide specific items within a section based on additional conditions, you can create separate signals and use them in the computed signal:
 
 ```typescript
-#refreshMenuItems() {
-  var menuItems = [...this.#defaultMenuItems];
+readonly #userHasPassword = toSignal(
+  this.#identityService.watchUserHasPassword$(),
+  { initialValue: false }
+);
 
-  if (this.#isLoggedIn) {
+readonly menuItems = computed(() => {
+  const items: MenuItem[] = [];
+
+  items.push(...this.#defaultMenuItems);
+
+  if (this.#isLoggedIn()) {
     const profileItems = [
-      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile") },
+      { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile"), routerLinkActiveOptions: { exact: true } },
       { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("devices") },
     ];
 
     // Conditionally add password change option
-    if (this.#userHasPassword) {
-      profileItems.push({ label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") });
+    if (this.#userHasPassword()) {
+      profileItems.push({ 
+        label: "Change Password", 
+        icon: "pi pi-fw pi-lock", 
+        routerLink: this.#routeAlias.getRoute("change-password") 
+      });
     }
 
-    menuItems.push({ label: "Profile", items: profileItems });
+    items.push({ label: "Profile", expanded: true, items: profileItems });
   }
 
   // ... rest of menu building logic
-}
+
+  return items;
+});
 ```
 
 ### Navigation-Based Menu Items
 
-You can subscribe to router events to show menu sections based on the current route. Inject the `Router` and watch for navigation events in the constructor:
+You can create signals based on router events to show menu sections based on the current route. Inject the `Router` and use `toSignal()` with router events:
 
 ```typescript
-this.#router.events
-  .pipe(
+readonly #currentRoute = toSignal(
+  this.#router.events.pipe(
     filter(event => event instanceof NavigationEnd),
-    takeUntilDestroyed()
-  )
-  .subscribe(() => {
-    // Check current route and update menu accordingly
-  });
+    map(() => this.#router.url)
+  ),
+  { initialValue: this.#router.url }
+);
+
+readonly menuItems = computed(() => {
+  const items: MenuItem[] = [];
+  
+  // Use this.#currentRoute() to conditionally include menu sections
+  
+  return items;
+});
+```
+
+## Menu Component Structure
+
+The menu is rendered using PrimeNG's `PanelMenu` component in the `AppSidebarComponent`. The component simply binds to the `menuItems` signal from the `MenuService`:
+
+```typescript
+@Component({
+  selector: "ln-app-sidebar",
+  templateUrl: "./app-sidebar.component.html",
+  imports: [PanelMenuModule],
+})
+export class AppSidebarComponent {
+  readonly #menuService = inject(MenuService);
+  readonly menuItems = this.#menuService.menuItems;
+}
+```
+
+The template uses the PrimeNG `p-panelMenu` component with the `[multiple]="true"` option to allow multiple sections to be expanded simultaneously:
+
+```html
+<div class="layout-sidebar menu-container">
+  <p-panelMenu [model]="menuItems()" [multiple]="true" />
+</div>
 ```
 
 ## See Also
