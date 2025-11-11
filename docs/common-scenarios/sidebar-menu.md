@@ -153,11 +153,11 @@ See [Working With Angular Routes](./using-route-alias) for more information on r
 For menu items that should only be highlighted when the exact route is active (not child routes), use the `routerLinkActiveOptions` property:
 
 ```typescript
-{ 
-  label: "Home", 
-  icon: "pi pi-fw pi-home", 
-  routerLink: this.#routeAlias.getRoute("user-home"), 
-  routerLinkActiveOptions: { exact: true } 
+{
+  label: "Home",
+  icon: "pi pi-fw pi-home",
+  routerLink: this.#routeAlias.getRoute("user-home"),
+  routerLinkActiveOptions: { exact: true }
 }
 ```
 
@@ -178,6 +178,9 @@ readonly #isContentEditorLoggedIn = toSignal(
   { initialValue: false }
 );
 ```
+
+{: .note }
+A similar technique can be used to determine the visibility of menu items based on user claims.
 
 ## Advanced Scenarios
 
@@ -204,10 +207,10 @@ readonly menuItems = computed(() => {
 
     // Conditionally add password change option
     if (this.#userHasPassword()) {
-      profileItems.push({ 
-        label: "Change Password", 
-        icon: "pi pi-fw pi-lock", 
-        routerLink: this.#routeAlias.getRoute("change-password") 
+      profileItems.push({
+        label: "Change Password",
+        icon: "pi pi-fw pi-lock",
+        routerLink: this.#routeAlias.getRoute("change-password")
       });
     }
 
@@ -235,9 +238,9 @@ readonly #currentRoute = toSignal(
 
 readonly menuItems = computed(() => {
   const items: MenuItem[] = [];
-  
+
   // Use this.#currentRoute() to conditionally include menu sections
-  
+
   return items;
 });
 ```
