@@ -1,144 +1,45 @@
 /* Sidebar styles */
 .layout-sidebar {
-    position: fixed;
-    width: 20rem;
-    height: calc(100vh - 8rem);
-    z-index: 999;
-    overflow-y: auto;
-    user-select: none;
-    top: 6rem;
-    left: 2rem;
-    transition:
-        transform var(--layout-section-transition-duration),
-        left var(--layout-section-transition-duration);
-    background-color: var(--surface-overlay);
-    border-radius: var(--content-border-radius);
-    padding: 0.5rem 1.5rem;
+  position: fixed;
+  width: 20rem;
+  height: calc(100vh - 8rem);
+  z-index: 999;
+  overflow-y: auto;
+  user-select: none;
+  top: 6rem;
+  left: 2rem;
+  transition:
+    transform var(--layout-section-transition-duration),
+    left var(--layout-section-transition-duration);
+  background-color: var(--surface-overlay);
+  border-radius: var(--content-border-radius);
+  padding: 0;
 }
 
-.layout-menu {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
+.menu-container {
+  .p-panelmenu * {
+    border: none !important;
+    margin: 0 !important;
+  }
 
-.layout-root-menuitem > .layout-menuitem-root-text {
-    font-size: 0.857rem;
+  .p-panelmenu-header-content {
     text-transform: uppercase;
+  }
+
+  .p-panelmenu-item-link-active,
+  .p-panelmenu-item-link-active .p-panelmenu-item-icon {
     font-weight: 700;
-    color: var(--text-color);
-    margin: 0.75rem 0;
-}
+    color: var(--primary-color) !important;
+  }
 
-.layout-root-menuitem > a {
-    display: none;
-}
+  .p-panelmenu-item-link ul a:hover {
+    background-color: var(--surface-hover);
+    border-radius: var(--content-border-radius);
+  }
 
-.layout-menu a {
-    user-select: none;
-}
-
-.layout-menu a.active-menuitem > .layout-submenu-toggler {
-    transform: rotate(-180deg);
-}
-
-.layout-menu li.active-menuitem > a .layout-submenu-toggler {
-    transform: rotate(-180deg);
-}
-
-.layout-menu ul {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-}
-
-.layout-menu ul a {
-    display: flex;
-    align-items: center;
-    position: relative;
-    outline: 0 none;
-    color: var(--text-color);
-    cursor: pointer;
+  .p-panelmenu ul a {
     padding: 0.75rem 1rem;
     border-radius: var(--content-border-radius);
-    transition:
-        background-color var(--element-transition-duration),
-        box-shadow var(--element-transition-duration);
-}
-
-.layout-menu ul a .layout-menuitem-icon {
-    margin-right: 0.5rem;
-}
-
-.layout-menu ul a .layout-submenu-toggler {
-    font-size: 75%;
-    margin-left: auto;
-    transition: transform var(--element-transition-duration);
-}
-
-.layout-menu ul a.active-route {
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-.layout-menu ul a:hover {
-    background-color: var(--surface-hover);
-}
-
-.layout-menu ul a:focus {
-    outline-width: var(--focus-ring-width);
-    outline-style: var(--focus-ring-style);
-    outline-color: var(--focus-ring-color);
-    outline-offset: var(--focus-ring-offset);
-    box-shadow: var(--focus-ring-shadow);
-    transition: box-shadow var(--transition-duration), outline-color var(--transition-duration);
-}
-
-.layout-menu ul ul {
-    overflow: hidden;
-    border-radius: var(--content-border-radius);
-}
-
-.layout-menu ul ul li a {
-    margin-left: 1rem;
-}
-
-.layout-menu ul ul li ul li a {
-    margin-left: 2rem;
-}
-
-.layout-menu ul ul li ul li ul li a {
-    margin-left: 2.5rem;
-}
-
-.layout-menu ul ul li ul li ul li ul li a {
-    margin-left: 3rem;
-}
-
-.layout-menu ul ul li ul li ul li ul li ul li a {
-    margin-left: 3.5rem;
-}
-
-.layout-menu ul ul li ul li ul li ul li ul li ul li a {
-    margin-left: 4rem;
-}
-
-.layout-submenu-enter-from,
-.layout-submenu-leave-to {
-    max-height: 0;
-}
-
-.layout-submenu-enter-to,
-.layout-submenu-leave-from {
-    max-height: 1000px;
-}
-
-.layout-submenu-leave-active {
-    overflow: hidden;
-    transition: max-height 0.45s cubic-bezier(0, 1, 0, 1);
-}
-
-.layout-submenu-enter-active {
-    overflow: hidden;
-    transition: max-height 1s ease-in-out;
+    border: 1px solid transparent !important;
+  }
 }
