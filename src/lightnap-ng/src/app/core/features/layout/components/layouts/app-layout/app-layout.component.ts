@@ -7,11 +7,12 @@ import { filter } from "rxjs";
 import { AppFooterComponent } from "../../controls/app-footer/app-footer.component";
 import { AppSidebarComponent } from "../../controls/app-sidebar/app-sidebar.component";
 import { AppTopBarComponent } from "../../controls/app-top-bar/app-top-bar.component";
+import { BreadcrumbComponent } from "../../controls/breadcrumb/breadcrumb.component";
 
 @Component({
   selector: "ln-app-layout",
   templateUrl: "./app-layout.component.html",
-  imports: [CommonModule, AppTopBarComponent, AppSidebarComponent, RouterModule, AppFooterComponent],
+  imports: [CommonModule, AppTopBarComponent, AppSidebarComponent, RouterModule, AppFooterComponent, BreadcrumbComponent],
 })
 export class AppLayoutComponent {
   menuOutsideClickListener: any;

@@ -9,27 +9,39 @@ export const Routes: AppRoute[] = [
   {
     path: "",
     component: AppLayoutComponent,
+    data: { breadcrumb: "Content" },
     children: [
       {
         path: "",
         canActivate: [permissionsGuard([RoleNames.Administrator, RoleNames.ContentEditor], [])],
-        data: { alias: "manage-content" },
+        data: { alias: "manage-content", breadcrumb: "" },
         title: "Manage Content",
         loadComponent: () => import("./manage/manage.component").then(m => m.ManageComponent),
       },
       {
         path: "edit/:key",
-        data: { alias: "edit-content" },
-        canActivate: [editPageGuard],
-        title: "Edit Content",
-        loadComponent: () => import("./edit/edit.component").then(m => m.EditComponent),
-      },
-      {
-        path: "edit/:key/:languageCode",
-        data: { alias: "edit-language" },
-        canActivate: [editPageGuard],
-        title: "Edit Language",
-        loadComponent: () => import("./edit-language/edit-language.component").then(m => m.EditLanguageComponent),
+        data: {
+          breadcrumb: route => route.params["key"] || "Edit",
+        },
+        children: [
+          {
+            path: "",
+            data: { alias: "edit-content", breadcrumb: "" },
+            canActivate: [editPageGuard],
+            title: "Edit Content",
+            loadComponent: () => import("./edit/edit.component").then(m => m.EditComponent),
+          },
+          {
+            path: ":languageCode",
+            data: {
+              alias: "edit-language",
+              breadcrumb: route => route.params["languageCode"] || "Language",
+            },
+            canActivate: [editPageGuard],
+            title: "Edit Language",
+            loadComponent: () => import("./edit-language/edit-language.component").then(m => m.EditLanguageComponent),
+          },
+        ],
       },
     ],
   },
