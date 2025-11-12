@@ -24,6 +24,10 @@ Learn about LightNap's standardized REST API response format, including how erro
 
 Explore LightNap's built-in CMS that enables administrators and content editors to create, manage, and publish multilingual static content. Learn about pages, zones, access control, and frontend integration.
 
+### [Breadcrumb Navigation](./breadcrumb-navigation)
+
+Learn about LightNap's breadcrumb navigation system that automatically generates navigation trails based on route configuration, supporting both static labels and dynamic content from route parameters.
+
 ## Authentication & Security
 
 ### [Authentication & Tokens](./authentication)

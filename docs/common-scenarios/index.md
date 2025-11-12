@@ -67,3 +67,7 @@ Understand LightNap's route alias system that makes it easier to manage and refa
 ### [Updating the Sidebar Menu](./sidebar-menu)
 
 Customize the sidebar navigation menu to add new sections, items, and role-based visibility.
+
+### [Configuring Breadcrumbs](./configuring-breadcrumbs)
+
+Learn how to configure breadcrumb navigation in your Angular routes. This guide covers static breadcrumbs, dynamic breadcrumbs using route parameters, and best practices for creating intuitive navigation hierarchies.
