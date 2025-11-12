@@ -4,7 +4,7 @@ export const Routes: AppRoute[] = [
   {
     path: "",
     title: "Admin | Home",
-    data: { alias: "admin-home", breadcrumb: "Dashboard" },
+    data: { alias: "admin-home", breadcrumb: "" },
     loadComponent: () => import("./index/index.component").then(m => m.IndexComponent),
   },
   {
@@ -20,7 +20,10 @@ export const Routes: AppRoute[] = [
       {
         path: "users/:userName",
         title: "Admin | User",
-        data: { alias: "admin-user", breadcrumb: "User Details" },
+        data: {
+          alias: "admin-user",
+          breadcrumb: (route) => route.params["userName"] || "User Details"
+        },
         loadComponent: () => import("./user/user.component").then(m => m.UserComponent),
       },
     ],
@@ -38,7 +41,10 @@ export const Routes: AppRoute[] = [
       {
         path: "roles/:role",
         title: "Admin | Role",
-        data: { alias: "admin-role", breadcrumb: "Role Details" },
+        data: {
+          alias: "admin-role",
+          breadcrumb: (route) => route.params["role"] || "Role Details"
+        },
         loadComponent: () => import("./role/role.component").then(m => m.RoleComponent),
       },
     ],
@@ -56,7 +62,14 @@ export const Routes: AppRoute[] = [
       {
         path: "claims/:type/:value",
         title: "Admin | Claim",
-        data: { alias: "admin-claim", breadcrumb: "Claim Details" },
+        data: {
+          alias: "admin-claim",
+          breadcrumb: (route) => {
+            const type = route.params["type"];
+            const value = route.params["value"];
+            return type && value ? `${type}: ${value}` : "Claim Details";
+          }
+        },
         loadComponent: () => import("./claim/claim.component").then(m => m.ClaimComponent),
       },
     ],

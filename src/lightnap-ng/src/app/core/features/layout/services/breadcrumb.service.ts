@@ -19,12 +19,8 @@ export class BreadcrumbService {
     });
   }
 
-  #createBreadcrumbs(route: ActivatedRouteSnapshot, url: string = "", breadcrumbs: MenuItem[] = [], isLast = true): MenuItem[] {
+  #createBreadcrumbs(route: ActivatedRouteSnapshot, url: string = "", breadcrumbs: MenuItem[] = []): MenuItem[] {
     const children: ActivatedRouteSnapshot[] = route.children;
-
-    if (children.length === 0) {
-      return breadcrumbs;
-    }
 
     for (const child of children) {
       const routeURL: string = child.url.map(segment => segment.path).join("/");
@@ -32,21 +28,20 @@ export class BreadcrumbService {
         url += `/${routeURL}`;
       }
 
-      const label = child.data["breadcrumb"];
-      if (label) {
-        const item: MenuItem = { label };
-
-        // Mark the previous breadcrumb as not last (so it gets a link)
-        if (breadcrumbs.length > 0 && isLast) {
-          breadcrumbs[breadcrumbs.length - 1].routerLink = breadcrumbs[breadcrumbs.length - 1]["_url"];
-        }
-
-        // Store the URL temporarily to use if this isn't the last item
-        item["_url"] = url;
+      const breadcrumbData = child.data["breadcrumb"];
+      if (breadcrumbData) {
+        // Support both static strings and dynamic functions
+        const label = typeof breadcrumbData === "function" ? breadcrumbData(child) : breadcrumbData;
+        const item: MenuItem = { label, routerLink: url };
         breadcrumbs.push(item);
       }
 
-      return this.#createBreadcrumbs(child, url, breadcrumbs, true);
+      return this.#createBreadcrumbs(child, url, breadcrumbs);
+    }
+
+    // Remove routerLink from the last breadcrumb (current page)
+    if (breadcrumbs.length > 0) {
+      delete breadcrumbs[breadcrumbs.length - 1].routerLink;
     }
 
     return breadcrumbs;

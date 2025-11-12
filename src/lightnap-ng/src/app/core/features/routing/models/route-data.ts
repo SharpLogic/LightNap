@@ -1,3 +1,4 @@
+import { ActivatedRouteSnapshot } from "@angular/router";
 import { RouteAlias } from "./route-alias";
 
 /**
@@ -12,6 +13,7 @@ export interface RouteData {
 
     /**
      * An optional breadcrumb label for the route.
+     * Can be a static string or a function that receives the route snapshot and returns a string.
      */
-    breadcrumb?: string;
+    breadcrumb?: string | ((route: ActivatedRouteSnapshot) => string);
 }
