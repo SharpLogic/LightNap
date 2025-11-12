@@ -86,7 +86,18 @@
                         "karmaConfig": "karma.conf.js",
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": ["src/styles.css"],
-                        "scripts": []
+                        "scripts": [],
+                        "codeCoverage": false
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "codeCoverage": true,
+                            "codeCoverageExclude": [
+                                "src/testing/**",
+                                "src/**/*.spec.ts",
+                                "src/environments/**"
+                            ]
+                        }
                     }
                 }
             }
