@@ -1,0 +1,19 @@
+<p-breadcrumb class="max-w-full mb-2 block" [model]="breadcrumbItems()" [home]="homeItem">
+  <ng-template #item let-menuItemAny>
+    @let menuItem = asMenuItem(menuItemAny);
+    @if (menuItem.routerLink) {
+      <a [routerLink]="menuItem.routerLink">
+        @if (menuItem.icon) {
+          <i [ngClass]="menuItem.icon" class="mr-2"></i>
+        }
+        {{ menuItem.label }}
+      </a>
+    } @else {
+      @if (menuItem.icon) {
+        <i [ngClass]="menuItem.icon" class="mr-2"></i>
+      }
+      <span>{{ menuItem.label }}</span>
+    }
+  </ng-template>
+  <ng-template #separator> / </ng-template>
+</p-breadcrumb>
