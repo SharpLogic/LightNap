@@ -129,15 +129,15 @@ export class MockIdentityService {
     return roleNames.some(role => this.hasUserRole(role));
   }
 
-  get watchLoggedIn$(): Observable<boolean> {
+  watchLoggedIn$(): Observable<boolean> {
     return this.loggedInSubject$.asObservable();
   }
 
-  get watchLoggedInRoles$(): Observable<string[]> {
+  watchLoggedInRoles$(): Observable<string[]> {
     return this.loggedInRolesSubject$.asObservable();
   }
 
-  get watchLoggedInClaims$(): Observable<Map<string, string[]>> {
+  watchLoggedInClaims$(): Observable<Map<string, string[]>> {
     return this.loggedInClaimsSubject$.asObservable();
   }
 
@@ -147,5 +147,55 @@ export class MockIdentityService {
 
   watchAnyUserRole$(roleNames: string[]): Observable<boolean> {
     return of(this.hasAnyUserRole(roleNames));
+  }
+
+  watchUserPermission$(roles: string[], claims: any[]): Observable<boolean> {
+    // Return an observable that watches for changes in roles/claims
+    return new Observable<boolean>(subscriber => {
+      const checkPermission = () => {
+        const hasRole = roles.length === 0 || this.hasAnyUserRole(roles);
+        const hasClaim = claims.length === 0 || this.hasAnyUserClaim(claims);
+        subscriber.next(hasRole || hasClaim);
+      };
+
+      // Check immediately
+      checkPermission();
+
+      // Subscribe to changes in roles and claims
+      const rolesSub = this.loggedInRolesSubject$.subscribe(() => checkPermission());
+      const claimsSub = this.loggedInClaimsSubject$.subscribe(() => checkPermission());
+
+      return () => {
+        rolesSub.unsubscribe();
+        claimsSub.unsubscribe();
+      };
+    });
+  }
+
+  setRedirectUrl(url: string): void {
+    // Mock implementation - can track this if needed
+  }
+
+  /**
+   * Convenience method to set user roles only
+   */
+  setUserRoles(roles: string[]): void {
+    this.mockRoles = roles;
+    this.loggedInSubject$.next(true);
+    this.loggedInRolesSubject$.next(roles);
+  }
+
+  /**
+   * Convenience method to set user claims only
+   */
+  setUserClaims(claims: ClaimDto[]): void {
+    this.mockClaims.clear();
+    claims.forEach(claim => {
+      const existing = this.mockClaims.get(claim.type) || [];
+      existing.push(claim.value);
+      this.mockClaims.set(claim.type, existing);
+    });
+    this.loggedInSubject$.next(true);
+    this.loggedInClaimsSubject$.next(this.mockClaims);
   }
 }

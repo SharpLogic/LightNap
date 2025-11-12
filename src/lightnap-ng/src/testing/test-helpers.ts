@@ -77,13 +77,24 @@ export function createHttpError(status: number, message: string = 'Error'): any 
  * Create a mock ActivatedRouteSnapshot
  */
 export function createMockActivatedRouteSnapshot(overrides?: any): any {
-  return {
+  const mockSnapshot: any = {
     params: {},
     queryParams: {},
     data: {},
     url: [],
+    parent: null,
+    root: null,
+    pathFromRoot: [],
+    children: [],
     ...overrides,
   };
+  
+  // Set root to self if no parent
+  if (!mockSnapshot.root) {
+    mockSnapshot.root = mockSnapshot;
+  }
+  
+  return mockSnapshot;
 }
 
 /**

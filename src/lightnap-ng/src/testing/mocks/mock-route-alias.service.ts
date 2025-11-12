@@ -27,6 +27,10 @@ export class MockRouteAliasService {
     return `/mock/${alias}`;
   }
 
+  getRoute(alias: string): string[] {
+    return ['/', alias];
+  }
+
   reset(): void {
     this.lastNavigatedAlias = undefined;
     this.lastNavigatedPath = undefined;
