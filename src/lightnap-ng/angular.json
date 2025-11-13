@@ -99,6 +99,23 @@
                             ]
                         }
                     }
+                },
+                "e2e": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "lightnap-ng:serve",
+                        "watch": true,
+                        "headless": false
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "lightnap-ng:serve:production"
+                        },
+                        "ci": {
+                            "watch": false,
+                            "headless": true
+                        }
+                    }
                 }
             }
         }

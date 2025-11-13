@@ -91,21 +91,21 @@ import {
   MockIdentityService,
   MockToastService,
   MockRouteAliasService,
-  
+
   // Builders
   IdentityDtoBuilder,
   UserDtoBuilder,
   PagedResponseBuilder,
-  
+
   // Matchers
   addCustomMatchers,
-  
+
   // Helpers
   firstValueFrom,
   createSpyObj,
   queryByCss,
   clickElement,
-  
+
   // Module
   SharedTestingModule,
 } from 'src/testing';
@@ -354,7 +354,7 @@ describe('MyComponent', () => {
 
   it('should show success message on submit', () => {
     clickElement(fixture, 'button[type="submit"]');
-    
+
     expect(mockToast.hasMessage('success')).toBe(true);
   });
 });
@@ -386,19 +386,19 @@ describe('MyGuard', () => {
 
   it('should allow access for authenticated users', () => {
     mockIdentity.setLoggedIn('token');
-    
+
     const route = createMockActivatedRouteSnapshot();
     const result = guard.canActivate(route, null as any);
-    
+
     expect(result).toBe(true);
   });
 
   it('should deny access for unauthenticated users', () => {
     mockIdentity.setLoggedOut();
-    
+
     const route = createMockActivatedRouteSnapshot();
     const result = guard.canActivate(route, null as any);
-    
+
     expect(result).toBe(false);
   });
 });
@@ -505,10 +505,10 @@ describe('MyDirective', () => {
    it('should do something', () => {
      // Arrange - set up test data
      const input = 'test';
-     
+
      // Act - execute the code
      const result = service.doSomething(input);
-     
+
      // Assert - verify the result
      expect(result).toBe('expected');
    });
@@ -522,7 +522,7 @@ describe('MyDirective', () => {
    ```typescript
    // Good
    it('should return empty array when no users exist', () => {});
-   
+
    // Bad
    it('test users', () => {});
    ```
@@ -574,7 +574,7 @@ describe('MyDirective', () => {
        it('should login', () => {});
        it('should logout', () => {});
      });
-     
+
      describe('authorization', () => {
        it('should check permissions', () => {});
      });
@@ -711,7 +711,7 @@ describe('LoginComponent', () => {
     );
 
     // Act
-    setInputValue(fixture, 'input[name="userName"]', 'testuser');
+    setInputValue(fixture, 'input[name="login"]', 'testuser');
     setInputValue(fixture, 'input[name="password"]', 'password123');
     clickElement(fixture, 'button[type="submit"]');
 
@@ -726,7 +726,7 @@ describe('LoginComponent', () => {
     );
 
     // Act
-    setInputValue(fixture, 'input[name="userName"]', 'wronguser');
+    setInputValue(fixture, 'input[name="login"]', 'wronguser');
     setInputValue(fixture, 'input[name="password"]', 'wrongpass');
     clickElement(fixture, 'button[type="submit"]');
 
@@ -752,7 +752,7 @@ describe('IdentityService', () => {
 
   beforeEach(() => {
     addCustomMatchers(); // Enable custom matchers
-    
+
     mockData = new MockIdentityDataService();
     TestBed.configureTestingModule({
       providers: [
@@ -760,7 +760,7 @@ describe('IdentityService', () => {
         { provide: IdentityDataService, useValue: mockData },
       ],
     });
-    
+
     service = TestBed.inject(IdentityService);
   });
 
