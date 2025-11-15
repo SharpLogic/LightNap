@@ -1,7 +1,7 @@
 <div class="min-h-screen">
   <div class="bg-surface-0 dark:bg-surface-900 mb-4 shadow h-20 flex justify-center">
     <div class="container h-full px-4 flex items-center justify-between">
-      <a class="flex items-center ml-6 h-10 hover:no-underline" [routerLink]="'landing' | route">
+      <a data-cy="landing-link" class="flex items-center ml-6 h-10 hover:no-underline" [routerLink]="'landing' | route">
         <img
           src="assets/images/logos/logo-{{ layoutService.isDarkTheme() ? 'dark' : 'light' }}.png"
           alt="{{ layoutService.appName }} Logo"
@@ -10,12 +10,12 @@
       </a>
       <div class="flex items-center justify-between gap-2">
         @if (loggedIn$ | async) {
-          <p-button pRipple label="App" [routerLink]="'user-home' | route" [rounded]="true" severity="primary" />
+          <p-button data-cy="app-link" pRipple label="App" [routerLink]="'user-home' | route" [rounded]="true" severity="primary" />
           <!-- Could not get (onClick) to work here. Revisit at some point. -->
-          <p-button pRipple label="Logout" (click)="logOutClicked()" [rounded]="true" [text]="true" />
+          <p-button data-cy="logout-link" pRipple label="Logout" (click)="logOutClicked()" [rounded]="true" [text]="true" />
         } @else {
-          <p-button pRipple label="Login" [routerLink]="'login' | route" [rounded]="true" [text]="true" />
-          <p-button pRipple label="Register" [routerLink]="'register' | route" [rounded]="true" severity="primary" />
+          <p-button data-cy="login-link" pRipple label="Login" [routerLink]="'login' | route" [rounded]="true" [text]="true" />
+          <p-button data-cy="register-link" pRipple label="Register" [routerLink]="'register' | route" [rounded]="true" severity="primary" />
         }
       </div>
     </div>

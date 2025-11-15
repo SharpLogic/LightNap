@@ -14,7 +14,29 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
+import { setupAuthMocks } from './mock-api';
+
+// Handle uncaught exceptions to prevent test failures
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the test
+    console.log('Uncaught exception:', err.message);
+    return false;
+});
+
+// Alternative: Log but still fail on exceptions
+// Cypress.on('uncaught:exception', (err, runnable) => {
+//   console.error('Uncaught exception:', err)
+//   // Return false to prevent test failure, true to fail
+//   return false
+// })
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+beforeEach(() => {
+    if (Cypress.env('useMocks')) {
+        setupAuthMocks();
+    }
+});

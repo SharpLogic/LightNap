@@ -3,18 +3,18 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import {
-    ChangeEmailRequestDto,
-    ChangePasswordRequestDto,
-    ClaimDto,
-    ConfirmChangeEmailRequestDto,
-    LoginRequestDto,
-    NewPasswordRequestDto,
-    RegisterRequestDto,
-    ResetPasswordRequestDto,
-    SendMagicLinkEmailRequestDto,
-    SendVerificationEmailRequestDto,
-    VerifyCodeRequestDto,
-    VerifyEmailRequestDto,
+  ChangeEmailRequestDto,
+  ChangePasswordRequestDto,
+  ClaimDto,
+  ConfirmChangeEmailRequestDto,
+  LoginRequestDto,
+  NewPasswordRequestDto,
+  RegisterRequestDto,
+  ResetPasswordRequestDto,
+  SendMagicLinkEmailRequestDto,
+  SendVerificationEmailRequestDto,
+  VerifyCodeRequestDto,
+  VerifyEmailRequestDto,
 } from "@core/backend-api";
 import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";

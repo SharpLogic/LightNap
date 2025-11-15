@@ -59,7 +59,6 @@ export class LoginComponent {
 
   logIn() {
     this.#blockUi.show({ message: "Logging in..." });
-
     this.#identityService
       .logIn({
         login: this.form.value.login!,

@@ -1,6 +1,6 @@
 /**
  * Builder for identity-related DTOs
- * 
+ *
  * Provides fluent API for creating test identity data
  */
 
