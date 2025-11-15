@@ -12,14 +12,14 @@
 
 // Custom command to login
 Cypress.Commands.add('login', (email: string, password: string) => {
-    //cy.session([email, password], () => {
-    cy.visit('/identity/login');
-    cy.get('[data-cy="login-username"]').should('be.visible');
-    cy.get('[data-cy="login-username"]').type(email);
-    cy.get('[data-cy="login-password"]').type(password);
-    cy.get('[data-cy="login-submit"]').click();
-    cy.url().should('not.include', '/identity/login');
-    //});
+    cy.session([email, password], () => {
+        cy.visit('/identity/login');
+        cy.get('[data-cy="login-username"]').should('be.visible');
+        cy.get('[data-cy="login-username"]').type(email);
+        cy.get('[data-cy="login-password"]').type(password);
+        cy.get('[data-cy="login-submit"]').click();
+        cy.url().should('not.include', '/identity/login');
+    });
 });
 
 Cypress.Commands.add('loginRegularUser', () => {
@@ -31,10 +31,7 @@ Cypress.Commands.add('loginAdministrator', () => {
 });
 
 Cypress.Commands.add('loginContentEditor', () => {
-    cy.login(
-        'contenteditor@lightnap.sharplogic.com',
-        'contenteditorpassword',
-    );
+    cy.login('contenteditor@lightnap.sharplogic.com', 'contenteditorpassword');
 });
 
 Cypress.Commands.add('setupContentMocks', () => {

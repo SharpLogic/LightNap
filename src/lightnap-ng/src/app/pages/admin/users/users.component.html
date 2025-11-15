@@ -24,10 +24,10 @@
         <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th pSortableColumn="userName">User Name <p-sortIcon field="userName" /></th>
-            <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
-            <th pSortableColumn="createdDate">Created <p-sortIcon field="createdDate" /></th>
-            <th pSortableColumn="lastModifiedDate">Last Modified <p-sortIcon field="lastModifiedDate" /></th>
+            <th pSortableColumn="userName" data-cy="user-name-header">User Name <p-sortIcon field="userName" /></th>
+            <th pSortableColumn="email" data-cy="email-header">Email <p-sortIcon field="email" /></th>
+            <th pSortableColumn="createdDate" data-cy="created-header">Created <p-sortIcon field="createdDate" /></th>
+            <th pSortableColumn="lastModifiedDate" data-cy="last-modified-header">Last Modified <p-sortIcon field="lastModifiedDate" /></th>
           </tr>
         </ng-template>
         <ng-template #body let-userAny>

@@ -1,5 +1,8 @@
 describe('Content Management', () => {
     beforeEach(() => {
+        if (Cypress.env('useMocks')) {
+            cy.setupContentMocks();
+        }
         cy.loginContentEditor();
         cy.visit('/content');
     });
@@ -23,7 +26,7 @@ describe('Content Management', () => {
         cy.get('form, [formGroup]').should('be.visible');
 
         // Verify key filter input exists (main search functionality)
-        cy.get('input[type="text"]').should('be.visible');
+        cy.get('input[pinputtext]').should('be.visible');
     });
 
     it('should display create content button', () => {
