@@ -51,16 +51,16 @@ export function setupAuthMocks() {
                     ['Administrator'],
             });
         } else if (
-            login === 'contentmanager@lightnap.sharplogic.com' &&
-            password === 'contentmanagerpassword'
+            login === 'contenteditor@lightnap.sharplogic.com' &&
+            password === 'contenteditorpassword'
         ) {
             token = createAccessToken(
-                'contentmanager-user-id',
-                'ContentManagerUser',
+                'contenteditor-user-id',
+                'ContentEditorUser',
                 login,
                 {
                     'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
-                        ['ContentManager'],
+                        ['ContentEditor'],
                 },
             );
         }
@@ -159,4 +159,51 @@ export function setupAuthMocks() {
             result: {},
         },
     }).as('getProfile');
+
+    // Content management mocks
+    cy.intercept('POST', '**/api/content/search', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                data: [
+                    {
+                        key: 'sample-page',
+                        type: 'Page',
+                        status: 'Published',
+                        readAccess: 'Public',
+                        createdDate: '2024-01-01T00:00:00Z',
+                        lastModifiedDate: '2024-01-01T00:00:00Z',
+                    },
+                    {
+                        key: 'another-page',
+                        type: 'Page',
+                        status: 'Draft',
+                        readAccess: 'Explicit',
+                        createdDate: '2024-01-02T00:00:00Z',
+                        lastModifiedDate: '2024-01-02T00:00:00Z',
+                    },
+                ],
+                pageNumber: 1,
+                pageSize: 10,
+                totalCount: 2,
+                totalPages: 1,
+            },
+        },
+    }).as('searchContent');
+
+    cy.intercept('POST', '**/api/content', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                key: 'new-content',
+                type: 'Page',
+                status: 'Draft',
+                readAccess: 'Explicit',
+                createdDate: '2024-01-03T00:00:00Z',
+                lastModifiedDate: '2024-01-03T00:00:00Z',
+            },
+        },
+    }).as('createContent');
 }

@@ -21,11 +21,6 @@ describe('Authentication', () => {
         cy.get('[data-cy="login-password"]').type('wrongpassword');
         cy.get('[data-cy="login-submit"]').click();
 
-        // Wait for the API response
-        if (Cypress.env('useMocks')) {
-            cy.wait('@loginRequest');
-        }
-
         cy.get('.p-message-error, [data-cy="error-message"]').should(
             'be.visible',
         );

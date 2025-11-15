@@ -30,10 +30,10 @@ Cypress.Commands.add('loginAdministrator', () => {
     cy.login('admin@lightnap.sharplogic.com', 'adminpassword');
 });
 
-Cypress.Commands.add('loginContentManager', () => {
+Cypress.Commands.add('loginContentEditor', () => {
     cy.login(
-        'contentmanager@lightnap.sharplogic.com',
-        'contentmanagerpassword',
+        'contenteditor@lightnap.sharplogic.com',
+        'contenteditorpassword',
     );
 });
 
@@ -46,13 +46,7 @@ Cypress.Commands.add('logout', () => {
 
 // Custom command to check if user is logged in
 Cypress.Commands.add('isLoggedIn', () => {
-    if (Cypress.env('useMocks')) {
-        return cy
-            .getCookie('refreshToken', { domain: 'localhost' })
-            .then((cookie) => !!cookie && cookie.value !== '');
-    } else {
-        return cy.getCookie('refreshToken').then((cookie) => !!cookie);
-    }
+    return cy.getCookie('refreshToken').then((cookie) => !!cookie);
 });
 
 // Custom command to check if user is logged in
@@ -71,7 +65,7 @@ declare global {
             login(email: string, password: string): Chainable<void>;
             loginRegularUser(): Chainable<void>;
             loginAdministrator(): Chainable<void>;
-            loginContentManager(): Chainable<void>;
+            loginContentEditor(): Chainable<void>;
             logout(): Chainable<void>;
             isLoggedIn(): Chainable<boolean>;
             shouldBeLoggedIn(): Chainable<void>;
