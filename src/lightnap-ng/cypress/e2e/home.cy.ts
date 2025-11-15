@@ -34,6 +34,6 @@ describe('Home Page', () => {
         cy.login('test@example.com', 'testpassword');
         cy.visit('/');
         cy.get('[data-cy="logout-link"]').click();
-        cy.url().should('eq', Cypress.config().baseUrl + '/');
+        cy.shouldBeLoggedOut();
     });
 });
