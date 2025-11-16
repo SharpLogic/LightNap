@@ -95,4 +95,4 @@ The `apiResponse` parameter must be an observable of the type you want to use in
 ## See Also
 
 - [Solution & Project Structure](./project-structure) - Understanding the overall architecture
-- [Adding In-App Notification Types](../common-scenarios/adding-notifications) - Example of using API responses with notifications
+- [Adding In-App Notification Types](../development-guide/features/adding-notifications) - Example of using API responses with notifications

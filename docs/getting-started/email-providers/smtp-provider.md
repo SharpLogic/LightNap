@@ -2,22 +2,79 @@
 title: SMTP Provider
 layout: home
 parent: Email Providers
-nav_order: 100
+nav_order: 10
 ---
 
 # {{ page.title }}
 
-The SMTP email provider uses the configured SMTP settings to send email.
+The SMTP email provider sends emails through any SMTP-compatible server, including popular services like SendGrid, Mailgun, Gmail, and Office 365.
 
 ## Configuration
 
-To use the SMTP provider you will need to [configure `Email` in `appsettings.json`](../configuring-application-settings) or your deployment host with:
+Update the `Email` section in `appsettings.json`:
 
-- `Provider` set to `Smtp`.
-- `Smtp.Host` set to the SMTP host.
-- `Smtp.Port` set to the SMTP port.
-- `Smtp.EnableSsl` set to `true` to use SSL.
-- `Smtp.User` set to the SMTP username.
-- `Smtp.Password` set to the SMTP password.
-- `Smtp.FromEmail` set to the email to use for outbound messages.
-- `Smtp.FromDisplayName` set to the display name to use for outbound messages.
+```json
+{
+  "Email": {
+    "Provider": "Smtp",
+    "FromEmail": "noreply@example.com",
+    "FromDisplayName": "LightNap App",
+    "Smtp": {
+      "Host": "smtp.sendgrid.net",
+      "Port": 587,
+      "EnableSsl": true,
+      "User": "apikey",
+      "Password": "your-sendgrid-api-key"
+    }
+  }
+}
+```
+
+### Common SMTP Configurations
+
+#### SendGrid
+```json
+{
+  "Smtp": {
+    "Host": "smtp.sendgrid.net",
+    "Port": 587,
+    "EnableSsl": true,
+    "User": "apikey",
+    "Password": "your-api-key"
+  }
+}
+```
+
+#### Gmail
+```json
+{
+  "Smtp": {
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSsl": true,
+    "User": "your-email@gmail.com",
+    "Password": "your-app-password"
+  }
+}
+```
+
+#### Office 365
+```json
+{
+  "Smtp": {
+    "Host": "smtp.office365.com",
+    "Port": 587,
+    "EnableSsl": true,
+    "User": "your-email@company.com",
+    "Password": "your-password"
+  }
+}
+```
+
+## Best Practices
+
+- Use app-specific passwords for Gmail
+- Enable 2FA on email accounts
+- Use dedicated SMTP services for production
+- Monitor delivery rates and bounce rates
+- Configure SPF/DKIM records for better deliverability

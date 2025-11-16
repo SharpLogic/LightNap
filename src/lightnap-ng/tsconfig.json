@@ -20,6 +20,8 @@
         "paths": {
             "@core": ["src/app/core"],
             "@core/*": ["src/app/core/*"],
+            "@testing": ["src/testing"],
+            "@testing/*": ["src/testing/*"]
         }
     },
     "angularCompilerOptions": {

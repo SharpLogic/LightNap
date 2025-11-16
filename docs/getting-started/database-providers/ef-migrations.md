@@ -2,7 +2,7 @@
 title: Entity Framework Migrations
 layout: home
 parent: Database Providers
-nav_order: 400
+nav_order: 40
 ---
 
 # {{ page.title }}

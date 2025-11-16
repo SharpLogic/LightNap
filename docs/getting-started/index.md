@@ -57,5 +57,5 @@ Configure how LightNap sends transactional emails for password resets, email ver
 Once you have LightNap running:
 
 1. Review the [Concepts](../concepts) section to understand the architecture
-2. Explore [Common Scenarios](../common-scenarios) for practical implementation guides
-3. Check out the [GitHub Actions Workflows](../github-actions-workflows) for CI/CD setup
+2. Explore [Development Guide](../development-guide) for practical implementation guides
+3. Check out the [Deployment & CI/CD](../deployment-and-cicd) for CI/CD setup

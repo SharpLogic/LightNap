@@ -1,4 +1,4 @@
-<p-breadcrumb class="max-w-full mb-2 block" [model]="breadcrumbItems()" [home]="homeItem">
+<p-breadcrumb data-cy="breadcrumb" class="max-w-full mb-2 block" [model]="breadcrumbItems()" [home]="homeItem">
   <ng-template #item let-menuItemAny>
     @let menuItem = asMenuItem(menuItemAny);
     @if (menuItem.routerLink) {

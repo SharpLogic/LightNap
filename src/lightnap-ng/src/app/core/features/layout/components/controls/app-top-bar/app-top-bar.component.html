@@ -1,10 +1,10 @@
-<div class="layout-topbar">
+<div class="layout-topbar" data-cy="main-navigation">
   <div class="layout-topbar-logo-container">
-    <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+    <button data-cy="menu-toggle" class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
       <i class="pi pi-bars"></i>
     </button>
 
-    <a class="flex items-center ml-6 h-10 hover:no-underline" [routerLink]="'landing' | route">
+    <a data-cy="logo-link" class="flex items-center ml-6 h-10 hover:no-underline" [routerLink]="'landing' | route">
       <img
         src="assets/images/logos/logo-{{ layoutService.isDarkTheme() ? 'dark' : 'light' }}.png"
         alt="LightNap Logo"
@@ -15,11 +15,12 @@
 
   <div class="layout-topbar-actions">
     <div class="layout-config-menu">
-      <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+      <button data-cy="theme-toggle" type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
         <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
       </button>
       <div class="relative">
         <button
+          data-cy="config-menu"
           class="layout-topbar-action layout-topbar-action-highlight"
           pStyleClass="@next"
           enterFromClass="hidden"
@@ -35,6 +36,7 @@
     </div>
 
     <button
+      data-cy="mobile-menu"
       class="layout-topbar-menu-button layout-topbar-action"
       pStyleClass="@next"
       enterFromClass="hidden"
@@ -46,11 +48,11 @@
       <i class="pi pi-ellipsis-v"></i>
     </button>
 
-    <div class="layout-topbar-menu hidden lg:block">
+    <div class="layout-topbar-menu hidden lg:block" data-cy="desktop-menu">
       <div class="layout-topbar-menu-content">
         <ln-notifications-button />
 
-        <button type="button" class="layout-topbar-action" [routerLink]="'profile' | route">
+        <button data-cy="profile-link" type="button" class="layout-topbar-action" [routerLink]="'profile' | route">
           <i class="pi pi-user"></i>
           <span>Profile</span>
         </button>

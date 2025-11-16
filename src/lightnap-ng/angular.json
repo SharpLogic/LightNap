@@ -70,7 +70,8 @@
                             "buildTarget": "lightnap-ng:build:production"
                         },
                         "development": {
-                            "buildTarget": "lightnap-ng:build:development"
+                            "buildTarget": "lightnap-ng:build:development",
+                            "proxyConfig": "proxy.conf.json"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -86,7 +87,35 @@
                         "karmaConfig": "karma.conf.js",
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": ["src/styles.css"],
-                        "scripts": []
+                        "scripts": [],
+                        "codeCoverage": false
+                    },
+                    "configurations": {
+                        "coverage": {
+                            "codeCoverage": true,
+                            "codeCoverageExclude": [
+                                "src/testing/**",
+                                "src/**/*.spec.ts",
+                                "src/environments/**"
+                            ]
+                        }
+                    }
+                },
+                "e2e": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "lightnap-ng:serve",
+                        "watch": true,
+                        "headless": false
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "lightnap-ng:serve:production"
+                        },
+                        "ci": {
+                            "watch": false,
+                            "headless": true
+                        }
                     }
                 }
             }

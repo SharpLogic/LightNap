@@ -99,7 +99,7 @@ The frontend provides guards and directives to make it easier to tailor the user
 - `showLoggedIn` and `hideLoggedIn` will show or hide an element based on the user's logged-in status.
 - `showByPermissions` and `showByPermissions` will show or hide an element based on the user's roles and/or claims.
 
-See [working with roles](../common-scenarios/working-with-roles#using-roles-on-the-frontend) or [working with claims](../common-scenarios/custom-claims.md) for more details on using these to evaluate roles or claims.
+See [working with roles](../development-guide/security-authorization/working-with-roles#using-roles-on-the-frontend) or [working with claims](../development-guide/security-authorization/working-with-custom-claims) for more details on using these to evaluate roles or claims.
 
 ## Managing Refresh Tokens/Devices
 

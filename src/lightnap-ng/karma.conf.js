@@ -27,7 +27,20 @@ module.exports = function (config) {
       coverageReporter: {
         dir: require("path").join(__dirname, "./coverage/lightnap-ng"),
         subdir: ".",
-        reporters: [{ type: "html" }, { type: "text-summary" }, { type: "lcov" }],
+        reporters: [
+          { type: "html" },
+          { type: "text-summary" },
+          { type: "lcov" },
+          { type: "json-summary" }
+        ],
+        check: {
+          global: {
+            statements: 45,
+            branches: 25,
+            functions: 40,
+            lines: 42,
+          },
+        },
       },
       reporters: ["progress", "kjhtml"],
       browsers: ["Chrome"],
