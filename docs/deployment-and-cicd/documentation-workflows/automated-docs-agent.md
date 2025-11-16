@@ -1,8 +1,8 @@
 ---
 title: Automated Documentation Agent
 layout: home
-parent: GitHub Actions Workflows
-nav_order: 400
+parent: Documentation Workflows
+nav_order: 10
 ---
 
 # {{ page.title }}
@@ -296,7 +296,7 @@ When making code changes that affect extensibility patterns:
 
 Structure your documentation to help the agent:
 
-1. **Consistent sections** - Use similar structure across similar docs (like common-scenarios articles)
+1. **Consistent sections** - Use similar structure across similar docs (like development-guide articles)
 2. **Clear titles** - Descriptive titles help the agent identify which docs to update
 3. **Code examples** - Include examples showing the patterns you want to document
 4. **Metadata** - Use frontmatter consistently (title, parent, nav_order)
@@ -524,7 +524,7 @@ Contributions are welcome:
 - [GitHub Actions Workflows Overview](./index)
 - [Build, Test, and Publish Workflow](./build-test-publish)
 - [GitHub Pages Deployment](./github-pages)
-- [Common Scenarios](../common-scenarios/index) - Examples of what the agent documents
+- [Development Guide](../development-guide/index) - Examples of what the agent documents
 
 ## See Also
 

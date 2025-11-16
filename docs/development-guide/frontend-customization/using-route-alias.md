@@ -1,8 +1,8 @@
 ---
 title: Working With Angular Routes
 layout: home
-parent: Common Scenarios
-nav_order: 600
+parent: Frontend Customization
+nav_order: 10
 ---
 
 # {{ page.title }}

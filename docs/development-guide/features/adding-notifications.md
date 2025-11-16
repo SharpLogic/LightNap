@@ -1,8 +1,8 @@
 ---
 title: Adding In-App Notification Types
 layout: home
-parent: Common Scenarios
-nav_order: 800
+parent: Features
+nav_order: 20
 ---
 
 # {{ page.title }}

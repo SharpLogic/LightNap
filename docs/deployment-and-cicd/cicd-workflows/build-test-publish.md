@@ -1,8 +1,8 @@
 ---
 title: Build, Test, and Publish
 layout: home
-parent: GitHub Actions Workflows
-nav_order: 100
+parent: CI/CD Workflows
+nav_order: 10
 ---
 
 # {{ page.title }}

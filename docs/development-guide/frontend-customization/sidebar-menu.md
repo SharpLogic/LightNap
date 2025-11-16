@@ -1,8 +1,8 @@
 ---
 title: Updating the Sidebar Menu
 layout: home
-parent: Common Scenarios
-nav_order: 700
+parent: Frontend Customization
+nav_order: 20
 ---
 
 # {{ page.title }}

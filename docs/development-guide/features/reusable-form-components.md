@@ -1,8 +1,8 @@
 ---
 title: Reusable Form Components
 layout: home
-parent: Common Scenarios
-nav_order: 950
+parent: Features
+nav_order: 50
 ---
 
 # {{ page.title }}

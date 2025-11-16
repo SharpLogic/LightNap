@@ -1,8 +1,8 @@
 ---
 title: Adding Profile Fields
 layout: home
-parent: Common Scenarios
-nav_order: 500
+parent: Data & Persistence
+nav_order: 30
 ---
 
 # {{ page.title }}

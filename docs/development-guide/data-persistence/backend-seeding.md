@@ -1,8 +1,8 @@
 ---
 title: Backend Seeding
 layout: home
-parent: Common Scenarios
-nav_order: 150
+parent: Data & Persistence
+nav_order: 10
 ---
 
 # {{ page.title }}

@@ -1,8 +1,8 @@
 ---
-title: GitHub Actions Workflows
-description: Overview of the workflows provided in the repo
+title: Deployment & CI/CD
+description: Overview of deployment and CI/CD workflows
 layout: home
-nav_order: 500
+nav_order: 400
 ---
 
 # {{ page.title }}
@@ -11,13 +11,13 @@ LightNap includes pre-configured GitHub Actions workflows for continuous integra
 
 ## CI/CD Workflows
 
-### [Build, Test, and Publish](./build-test-publish)
+### [Build, Test, and Publish](./cicd-workflows/build-test-publish)
 
 The foundation CI workflow that builds both the .NET backend and Angular frontend, runs all tests, and packages the application as an artifact for deployment. This workflow triggers on commits to the `main` branch that modify the `src` folder.
 
 **Activation**: Set repository variable `RUN_BUILD_TEST_PUBLISH` to `true`.
 
-### [Deploy to Azure App Service](./deploy-to-azure)
+### [Deploy to Azure App Service](./cicd-workflows/deploy-to-azure)
 
 Automatically deploy LightNap to Azure App Service after a successful build. This workflow takes the artifact from the Build, Test, and Publish workflow and deploys it to your Azure environment.
 
@@ -29,7 +29,7 @@ Automatically deploy LightNap to Azure App Service after a successful build. Thi
 
 ## Documentation Workflows
 
-### [Deploy to GitHub Pages](./github-pages)
+### [Deploy to GitHub Pages](./documentation-workflows/github-pages)
 
 Automatically build and deploy this Jekyll-based documentation site to GitHub Pages whenever changes are committed to the `docs` folder on the `main` branch.
 
@@ -38,7 +38,7 @@ Automatically build and deploy this Jekyll-based documentation site to GitHub Pa
 1. Enable GitHub Pages for your repository using "GitHub Actions" as the source
 2. Set repository variable `RUN_BUILD_AND_DEPLOY_DOCS` to `true`
 
-### [Automated Documentation Agent](./automated-docs-agent)
+### [Automated Documentation Agent](./documentation-workflows/automated-docs-agent)
 
 An AI-powered agent that analyzes code changes and proposes documentation updates. After merges to main that modify source code, the agent evaluates what documentation needs to be added, updated, or removed and creates a pull request with the proposed changes.
 
@@ -48,6 +48,12 @@ An AI-powered agent that analyzes code changes and proposes documentation update
    - `OPENAI_API_KEY` for OpenAI
    - `ANTHROPIC_API_KEY` for Anthropic
 2. Set repository variable `RUN_DOCS_AGENT` to `true`
+
+## Testing in CI/CD
+
+### [Testing in CI/CD](./testing-in-cicd)
+
+Learn how tests are integrated into the CI/CD pipeline, including running unit and E2E tests, generating coverage reports, and handling test failures.
 
 ## Workflow Architecture
 

@@ -1,8 +1,8 @@
 ---
 title: Scaffolding From an Entity
 layout: home
-parent: Common Scenarios
-nav_order: 200
+parent: Data & Persistence
+nav_order: 40
 ---
 
 # {{ page.title }}

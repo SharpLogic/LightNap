@@ -1,8 +1,8 @@
 ---
 title: Adding Entities
 layout: home
-parent: Common Scenarios
-nav_order: 100
+parent: Data & Persistence
+nav_order: 20
 ---
 
 # {{ page.title }}

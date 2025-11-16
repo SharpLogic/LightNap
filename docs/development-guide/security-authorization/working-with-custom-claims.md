@@ -1,8 +1,8 @@
 ---
 title: Working With Custom Claims
 layout: home
-parent: Common Scenarios
-nav_order: 400
+parent: Security & Authorization
+nav_order: 20
 ---
 
 # {{ page.title }}

@@ -1,20 +1,36 @@
 ---
 title: In-Memory Provider
-layout: home
 parent: Database Providers
-nav_order: 300
+layout: home
+nav_order: 30
 ---
 
 # {{ page.title }}
 
-An in-memory database provider is included in the project to make it easier to develop and test the solution. Since the data itself is reset across sessions, it's not suitable for production use.
+LightNap supports an in-memory database provider for development, testing, and rapid prototyping.
 
 ## Configuration
 
-To use the In-Memory provider you will need to [configure `appsettings.json`](../application-configuration) or your deployment host with:
+Update `appsettings.json`:
 
-- `DatabaseProvider` set to `InMemory`.
+```json
+{
+  "DatabaseProvider": "InMemory"
+}
+```
 
-## Migrations
+No connection string is required.
 
-You don't need to worry about migrations with the in-memory provider. When the app restarts, the database is reset. It's a convenient option to work with during development while designing the EF data model.
+## Usage
+
+- Data is lost when the application restarts
+- Perfect for unit testing and integration tests
+- Fast startup with no external dependencies
+- Useful for development and prototyping
+
+## Best Practices
+
+- Use for automated testing
+- Ideal for CI/CD pipelines
+- Great for feature development before database design
+- Not suitable for production or data persistence needs

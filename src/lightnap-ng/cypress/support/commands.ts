@@ -29,7 +29,7 @@ Cypress.Commands.add('logInRegularUser', () => {
 });
 
 Cypress.Commands.add('logInAdministrator', () => {
-    logIn('admin@lightnap.sharplogic.com', 'adminpassword');
+    logIn('admin@admin.com', 'A2m!nPassword');
 });
 
 Cypress.Commands.add('logInContentEditor', () => {

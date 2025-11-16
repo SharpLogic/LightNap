@@ -1,8 +1,8 @@
 ---
 title: Adding Backend Email Scenarios
 layout: home
-parent: Common Scenarios
-nav_order: 850
+parent: Features
+nav_order: 30
 ---
 
 # {{ page.title }}

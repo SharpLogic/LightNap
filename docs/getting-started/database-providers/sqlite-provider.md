@@ -1,21 +1,51 @@
 ---
-title: SQLite Data Provider
-layout: home
+title: SQLite Provider
 parent: Database Providers
-nav_order: 200
+layout: home
+nav_order: 20
 ---
 
 # {{ page.title }}
 
-The `LightNap.DataProviders.Sqlite` project contains the migrations for a SQLite database. This project should never need to be manually edited as the migrations are handled by the `dotnet ef migrations` commands.
+LightNap supports SQLite as a lightweight, file-based database provider using Entity Framework Core.
+
+## Prerequisites
+
+- No additional software required (SQLite is embedded)
 
 ## Configuration
 
-To use the SQLite provider you will need to [configure `appsettings.json`](../application-configuration) or your deployment host with:
+Update `appsettings.json`:
 
-- `DatabaseProvider` set to `Sqlite`.
-- `DefaultConnection` set to the connection string.
+```json
+{
+  "DatabaseProvider": "Sqlite",
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=LightNap.db"
+  }
+}
+```
+
+## Initial Setup
+
+1. Update connection string in `appsettings.json`
+2. Run the application - database file and migrations will be created automatically
 
 ## Migrations
 
-When the entity model changes it will be necessary to [create and apply a migration](./ef-migrations).
+SQLite migrations are stored in `src/LightNap.DataProviders.Sqlite/Migrations/`.
+
+To create a new migration:
+
+```bash
+cd src
+dotnet ef migrations add MigrationName --project LightNap.DataProviders.Sqlite --startup-project LightNap.WebApi
+```
+
+## Best Practices
+
+- Use for development and small deployments
+- Database file is portable and can be committed to version control
+- No server process required
+- Good for testing and demos
+- Consider file locking limitations for concurrent access

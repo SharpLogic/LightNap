@@ -30,7 +30,7 @@ There are four Web API controllers by default. They are organized from the persp
 
 2. **UsersController** (`/api/users`): Covers user administration features, such as searching users, managing roles & claims, deleting users, and so on.
 
-3. **MeController** (`/api/users/me`): Covers logged-in user features, such as setting profile data, managing devices & settings, and [in-app notifications](../common-scenarios/adding-notifications).
+3. **MeController** (`/api/users/me`): Covers logged-in user features, such as setting profile data, managing devices & settings, and [in-app notifications](../development-guide/features/adding-notifications).
 
 4. **PublicController** (`/api/public`): Covers business features intended for any user, including those who are not logged in. This infrastructure is provided as a series of stubs to be extended for the application scenario.
 
@@ -72,15 +72,27 @@ The `backend-api` folder that contains REST API integration services and DTOs.
 - `helpers`: Helper classes for rehydrating data pulled down from the backend, which is usually just `Date` objects.
 - `services`: Thin layers to wrap backend HTTP requests. If you add or update endpoints on existing backend controllers, update them here as well. It's recommended that these data services never be used directly by application code, but are rather accessed through an application service described below.
 
-There are also a variety of application services that are exposed in the `services` folder or from the `services` folders under functional areas, such as the `notifications` or `users` folder. Some of these wrap the data services in the `backend-api` folder and are the recommended way to access those features from application code. This level of abstraction provides a better way to handle pre- and post-processing of requests and responses, as well as to compose or otherwise translate raw DTOs into more sophisticated entities. Learn more about [adding notification types](../common-scenarios/adding-notifications).
+There are also a variety of application services that are exposed in the `services` folder or from the `services` folders under functional areas, such as the `notifications` or `users` folder. Some of these wrap the data services in the `backend-api` folder and are the recommended way to access those features from application code. This level of abstraction provides a better way to handle pre- and post-processing of requests and responses, as well as to compose or otherwise translate raw DTOs into more sophisticated entities. Learn more about [adding notification types](../development-guide/features/adding-notifications).
 
 #### The `pages` Folder
 
-The `pages` folder contains a hierarchy of area pages for the application. While they don't need to map exactly to application routes, they generally do. For example, `src/pages/admin/index` contains the view rendered at the route `/admin`. Each area folder is organized with its own `routes.ts` defining route details for its pages. Check out the [route alias concept](../common-scenarios/using-route-alias) used by LightNap.
+The `pages` folder contains a hierarchy of area pages for the application. While they don't need to map exactly to application routes, they generally do. For example, `src/pages/admin/index` contains the view rendered at the route `/admin`. Each area folder is organized with its own `routes.ts` defining route details for its pages. Check out the [route alias concept](../development-guide/frontend-customization/using-route-alias) used by LightNap.
+
+#### The `testing` Folder
+
+The `testing` folder contains utilities and helpers for testing the Angular application.
+
+- `builders`: Factory functions for creating test data objects.
+- `mocks`: Mock services and data for isolating components during testing.
+- `matchers`: Custom Jasmine matchers for assertions.
+- `test-helpers.ts`: Common testing utilities and setup functions.
+- `test.module.ts`: A testing module with common providers.
+
+This structure supports comprehensive unit and integration testing throughout the application.
 
 ## Scaffolder
 
-There is also a `Scaffolding` folder that contains the source to [the scaffolder tool](../common-scenarios/scaffolding). It is not necessary to build or run this as part of the LightNap solution.
+There is also a `Scaffolding` folder that contains the source to [the scaffolder tool](../development-guide/data-persistence/scaffolding). It is not necessary to build or run this as part of the LightNap solution.
 
 ## Data Flow
 

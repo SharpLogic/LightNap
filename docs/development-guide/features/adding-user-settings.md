@@ -1,8 +1,8 @@
 ---
 title: Adding User Settings
 layout: home
-parent: Common Scenarios
-nav_order: 900
+parent: Features
+nav_order: 40
 ---
 
 # {{ page.title }}

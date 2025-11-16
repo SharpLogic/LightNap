@@ -1,8 +1,8 @@
 ---
 title: Working With Roles
 layout: home
-parent: Common Scenarios
-nav_order: 300
+parent: Security & Authorization
+nav_order: 10
 ---
 
 # {{ page.title }}

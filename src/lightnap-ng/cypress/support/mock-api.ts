@@ -44,8 +44,8 @@ export function setupAuthMocks() {
         if (login === 'test@example.com' && password === 'testpassword') {
             token = createAccessToken('test-user-id', 'TestUser', login);
         } else if (
-            login === 'admin@lightnap.sharplogic.com' &&
-            password === 'adminpassword'
+            login === 'admin@admin.com' &&
+            password === 'A2m!nPassword'
         ) {
             token = createAccessToken('admin-user-id', 'AdminUser', login, {
                 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
@@ -219,7 +219,7 @@ export function setupAdminMocks() {
                     {
                         id: 'user-1',
                         userName: 'admin',
-                        email: 'admin@lightnap.sharplogic.com',
+                        email: 'admin@admin.com',
                         createdDate: '2024-01-01T00:00:00Z',
                         lastModifiedDate: '2024-01-01T00:00:00Z',
                         lockoutEnd: null,

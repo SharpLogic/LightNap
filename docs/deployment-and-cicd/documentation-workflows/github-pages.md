@@ -1,8 +1,8 @@
 ---
 title: Deploy to GitHub Pages
 layout: home
-parent: GitHub Actions Workflows
-nav_order: 1000
+parent: Documentation Workflows
+nav_order: 20
 ---
 
 # {{ page.title }}

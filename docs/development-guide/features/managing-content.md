@@ -1,8 +1,8 @@
 ---
 title: Managing Content
-layout: default
-parent: Common Scenarios
-nav_order: 410
+layout: home
+parent: Features
+nav_order: 10
 ---
 
 # Managing Content

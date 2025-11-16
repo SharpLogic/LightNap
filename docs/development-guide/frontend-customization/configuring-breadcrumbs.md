@@ -1,8 +1,8 @@
 ---
 title: Configuring Breadcrumbs
 layout: home
-parent: Common Scenarios
-av_order: 750
+parent: Frontend Customization
+nav_order: 30
 ---
 
 # {{ page.title }}
@@ -32,7 +32,7 @@ export const Routes: AppRoute[] = [
   {
     path: 'settings',
     title: 'Settings',
-    data: { 
+    data: {
       alias: 'settings',
       breadcrumb: 'Settings'  // Static breadcrumb label
     },
@@ -50,7 +50,7 @@ To prevent a route from adding a breadcrumb, use an empty string:
 ```typescript
 {
   path: '',
-  data: { 
+  data: {
     alias: 'home',
     breadcrumb: ''  // No breadcrumb for this route
   },

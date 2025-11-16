@@ -62,7 +62,7 @@ LightNap sends emails for:
 - **Two-Factor Authentication** - When users log in with 2FA enabled
 - **Custom Notifications** - You can extend the email service for your own scenarios
 
-For a comprehensive guide on adding custom email scenarios, see [Adding Backend Email Scenarios](../../common-scenarios/adding-email-scenarios)
+For a comprehensive guide on adding custom email scenarios, see [Adding Backend Email Scenarios](../../development-guide/features/adding-email-scenarios)
 
 ## Choosing a Provider
 

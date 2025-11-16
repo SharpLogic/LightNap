@@ -1,8 +1,8 @@
 ---
 title: Deploy to Azure App Service
 layout: home
-parent: GitHub Actions Workflows
-nav_order: 200
+parent: CI/CD Workflows
+nav_order: 20
 ---
 
 # {{ page.title }}

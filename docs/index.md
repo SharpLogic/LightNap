@@ -21,7 +21,7 @@ LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) is a full stack star
 - **Angular**: Frontend framework for building dynamic user interfaces.
 - **PrimeNG**: Rich set of UI components for Angular.
 - **Tailwind**: Utility-first CSS framework.
-- **Scaffolding**: [Generate complete infrastructure and UI](./common-scenarios/scaffolding) from a single entity class.
+- **Scaffolding**: [Generate complete infrastructure and UI](./development-guide/data-persistence/scaffolding) from a single entity class.
 
 Check out [the docs](https://lightnap.sharplogic.com).
 
