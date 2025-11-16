@@ -7,22 +7,23 @@
       <div class="flex flex-col gap-5">
         <div class="flex flex-col gap-2">
           <label for="userName" class="text-xl">User Name</label>
-          <input id="userName" type="text" placeholder="User Name" pInputText formControlName="userName" />
+          <input id="userName" data-cy="register-username" type="text" placeholder="User Name" pInputText formControlName="userName" />
         </div>
 
         <div class="flex flex-col gap-2">
           <label for="email" class="text-xl">Email</label>
-          <input id="email" type="text" placeholder="Email address" pInputText formControlName="email" />
+          <input id="email" data-cy="register-email" type="text" placeholder="Email address" pInputText formControlName="email" />
         </div>
 
         <div class="flex flex-col gap-2">
           <label for="password" class="text-xl">Password</label>
-          <p-password formControlName="password" class="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
+          <p-password data-cy="register-password" formControlName="password" class="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
         </div>
 
         <div class="flex flex-col gap-2">
           <label for="confirmPassword" class="text-xl">Confirm Password</label>
           <p-password
+            data-cy="register-confirm-password"
             formControlName="confirmPassword"
             styleClass="w-full"
             inputStyleClass="w-full"
@@ -34,26 +35,26 @@
 
         <div class="flex items-center justify-between">
           <div class="flex gap-2">
-            <p-checkbox inputId="rememberMe" formControlName="rememberMe" [binary]="true" />
+            <p-checkbox data-cy="register-remember-me" inputId="rememberMe" formControlName="rememberMe" [binary]="true" />
             <label for="rememberMe">Remember Me</label>
           </div>
           <a [routerLink]="'reset-password' | route">Forgot password?</a>
         </div>
 
         <div class="flex items-center gap-1">
-          <p-checkbox inputId="agreedToTerms" formControlName="agreedToTerms" class="mr-2" [binary]="true" />
+          <p-checkbox data-cy="register-agreed-to-terms" inputId="agreedToTerms" formControlName="agreedToTerms" class="mr-2" [binary]="true" />
           <label for="agreedToTerms">I agree to the</label>
           <a [routerLink]="'view-content' | route: 'terms-and-conditions'" target="_blank">Terms and Conditions</a>
           <span>and</span>
           <a [routerLink]="'view-content' | route: 'privacy-policy'" target="_blank">Privacy Policy</a>
         </div>
 
-        <ln-error-list [errors]="errors()" />
+        <ln-error-list data-cy="register-errors" [errors]="errors()" />
       </div>
 
-      <p-button type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
+      <p-button data-cy="register-submit" type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
       <div class="flex flex-col mt-6">
-        <a [routerLink]="'login' | route">I already have an account</a>
+        <a data-cy="register-login-link" [routerLink]="'login' | route">I already have an account</a>
       </div>
     </div>
   </form>

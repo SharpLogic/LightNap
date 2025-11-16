@@ -24,14 +24,14 @@ describe('Home Page', () => {
     });
 
     it('should allow navigation to public landing page', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.visit('/');
         cy.get('[data-cy="landing-link"]').click();
         cy.url().should('eq', Cypress.config().baseUrl + '/');
     });
 
     it('should allow navigation to logout', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.visit('/');
         cy.get('[data-cy="logout-link"]').click();
         cy.shouldBeLoggedOut();

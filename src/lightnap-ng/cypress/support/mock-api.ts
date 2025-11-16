@@ -24,9 +24,10 @@ export function createAccessToken(
 
 export function setupAuthMocks() {
     cy.intercept('GET', '**/api/identity/access-token', (req) => {
-        const cookieValue = req.headers['cookie']
-            ?.toString()
-            .match(/refreshToken=([^;]+)/)?.[1] || '';
+        const cookieValue =
+            req.headers['cookie']
+                ?.toString()
+                .match(/refreshToken=([^;]+)/)?.[1] || '';
         req.reply({
             statusCode: 200,
             body: {
@@ -159,4 +160,126 @@ export function setupAuthMocks() {
             result: {},
         },
     }).as('getProfile');
+}
+export function setupContentMocks() {
+    cy.intercept('POST', '**/api/content/search', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                data: [
+                    {
+                        key: 'sample-page',
+                        type: 'Page',
+                        status: 'Published',
+                        readAccess: 'Public',
+                        createdDate: '2024-01-01T00:00:00Z',
+                        lastModifiedDate: '2024-01-01T00:00:00Z',
+                    },
+                    {
+                        key: 'another-page',
+                        type: 'Page',
+                        status: 'Draft',
+                        readAccess: 'Explicit',
+                        createdDate: '2024-01-02T00:00:00Z',
+                        lastModifiedDate: '2024-01-02T00:00:00Z',
+                    },
+                ],
+                pageNumber: 1,
+                pageSize: 10,
+                totalCount: 2,
+                totalPages: 1,
+            },
+        },
+    }).as('searchContent');
+
+    cy.intercept('POST', '**/api/content', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                key: 'new-content',
+                type: 'Page',
+                status: 'Draft',
+                readAccess: 'Explicit',
+                createdDate: '2024-01-03T00:00:00Z',
+                lastModifiedDate: '2024-01-03T00:00:00Z',
+            },
+        },
+    }).as('createContent');
+}
+
+export function setupAdminMocks() {
+    cy.intercept('POST', '**/api/users/search', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                data: [
+                    {
+                        id: 'user-1',
+                        userName: 'admin',
+                        email: 'admin@lightnap.sharplogic.com',
+                        createdDate: '2024-01-01T00:00:00Z',
+                        lastModifiedDate: '2024-01-01T00:00:00Z',
+                        lockoutEnd: null,
+                    },
+                    {
+                        id: 'user-2',
+                        userName: 'contenteditor',
+                        email: 'contenteditor@lightnap.sharplogic.com',
+                        createdDate: '2024-01-02T00:00:00Z',
+                        lastModifiedDate: '2024-01-02T00:00:00Z',
+                        lockoutEnd: null,
+                    },
+                ],
+                pageNumber: 1,
+                pageSize: 10,
+                totalCount: 2,
+                totalPages: 1,
+            },
+        },
+    }).as('getUsers');
+
+    cy.intercept('GET', '**/api/users/roles', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: [
+                {
+                    name: 'Administrator',
+                    displayName: 'Administrator',
+                    description: 'Full administrative access to the system',
+                },
+                {
+                    name: 'ContentEditor',
+                    displayName: 'Content Editor',
+                    description: 'Can manage content in the system',
+                },
+            ],
+        },
+    }).as('getRoles');
+
+    cy.intercept('POST', '**/api/users/claims/search', {
+        statusCode: 200,
+        body: {
+            type: 'Success',
+            result: {
+                data: [
+                    {
+                        type: 'Content:Reader',
+                        value: 'sample-page',
+                    },
+                    {
+                        type: 'Content:Editor',
+                        value: 'another-page',
+                    },
+                ],
+                pageNumber: 1,
+                pageSize: 10,
+                totalCount: 2,
+                totalPages: 1,
+            },
+        },
+    }).as('getClaims');
 }

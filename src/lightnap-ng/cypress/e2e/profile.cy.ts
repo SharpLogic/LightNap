@@ -8,15 +8,25 @@ describe('Profile Management', () => {
         cy.url().should('include', '/identity/login');
     });
 
+    it('should display profile sidebar menu after logging in', () => {
+        cy.logInRegularUser();
+        cy.visit('/profile');
+        const subMenus = cy.get(
+            '[data-cy="sidebar-menu"] > div[data-pc-section="panel"]',
+        );
+        subMenus.should('have.length.greaterThan', 1);
+        subMenus.last().should('contain.text', 'Profile');
+    });
+
     it('should display user profile information when authenticated', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.visit('/profile');
         cy.url().should('include', '/profile');
         cy.get('body').should('be.visible');
     });
 
     it('should allow logout from profile page', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.visit('/profile');
         cy.get('[data-cy="profile-logout"]').click();
         cy.shouldBeLoggedOut();

@@ -3,22 +3,22 @@ describe('Admin Panel', () => {
         if (Cypress.env('useMocks')) {
             cy.setupAdminMocks();
         }
-        cy.loginAdministrator();
+        cy.logInAdministrator();
         cy.visit('/admin');
     });
 
     it('should display the admin dashboard', () => {
         // Verify breadcrumb shows "Admin"
-        cy.get('.p-breadcrumb').should('contain', 'Admin');
+        cy.get('[data-cy="breadcrumb"]').should('contain', 'Admin');
 
         // Verify we're on the admin page
         cy.url().should('include', '/admin');
     });
 
-    it('should display admin navigation menu', () => {
-        // Check if admin menu items are visible (this depends on your menu implementation)
-        // You might need to adjust these selectors based on your actual menu structure
-        cy.get('body').should('be.visible'); // Basic check that page loaded
+    it('should display admin sidebar menu', () => {
+        const subMenus = cy.get('[data-cy="sidebar-menu"] > div[data-pc-section="panel"]');
+        subMenus.should('have.length.greaterThan', 3);
+        subMenus.last().should('contain.text', 'Admin');
     });
 
     describe('Users Management', () => {
@@ -28,11 +28,11 @@ describe('Admin Panel', () => {
 
         it('should display users management page', () => {
             // Verify breadcrumb shows "Admin > Users"
-            cy.get('.p-breadcrumb').should('contain', 'Admin');
-            cy.get('.p-breadcrumb').should('contain', 'Users');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Admin');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Users');
 
             // Verify the manage users panel is visible
-            cy.get('.p-panel').contains('Manage Users').should('be.visible');
+            cy.get('[data-cy="manage-users-panel"]').should('be.visible');
         });
 
         it('should display users table with proper headers', () => {
@@ -47,8 +47,8 @@ describe('Admin Panel', () => {
 
         it('should display user filter controls', () => {
             // Verify filter inputs are present (the form structure may vary)
-            cy.get('input[placeholder="User Name"]').should('be.visible');
-            cy.get('input[placeholder="Email"]').should('be.visible');
+            cy.get('[data-cy="user-name-filter"]').should('be.visible');
+            cy.get('[data-cy="email-filter"]').should('be.visible');
         });
 
         it('should load user data', () => {
@@ -75,11 +75,11 @@ describe('Admin Panel', () => {
 
         it('should display roles management page', () => {
             // Verify breadcrumb shows "Admin > Roles"
-            cy.get('.p-breadcrumb').should('contain', 'Admin');
-            cy.get('.p-breadcrumb').should('contain', 'Roles');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Admin');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Roles');
 
             // Verify the manage roles panel is visible
-            cy.get('.p-panel').contains('Manage Roles').should('be.visible');
+            cy.get('[data-cy="manage-roles-panel"]').should('be.visible');
         });
 
         it('should display roles table with proper headers', () => {
@@ -116,11 +116,11 @@ describe('Admin Panel', () => {
 
         it('should display claims management page', () => {
             // Verify breadcrumb shows "Admin > Claims"
-            cy.get('.p-breadcrumb').should('contain', 'Admin');
-            cy.get('.p-breadcrumb').should('contain', 'Claims');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Admin');
+            cy.get('[data-cy="breadcrumb"]').should('contain', 'Claims');
 
             // Verify the manage claims panel is visible (assuming it has a similar structure)
-            cy.get('body').should('be.visible'); // Basic check that page loaded
+            cy.get('[data-cy="search-claims-panel"]').should('be.visible');
 
             // Wait for claims to load (if mocks are enabled)
             if (Cypress.env('useMocks')) {

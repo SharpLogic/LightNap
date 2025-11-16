@@ -2,7 +2,7 @@
   <ng-template #success let-rolesAny>
     @let roles = asRoles(rolesAny);
 
-    <p-panel header="Manage Roles">
+    <p-panel data-cy="manage-roles-panel" header="Manage Roles">
       <p-table [value]="roles">
         <ng-template #header>
           <tr>

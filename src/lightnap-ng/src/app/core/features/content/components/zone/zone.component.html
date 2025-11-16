@@ -4,7 +4,7 @@
     @if (publishedContent.canView) {
       @if (publishedContent.canEdit) {
         <div class="relative">
-          <a [routerLink]="'edit-content' | route: key()" class="absolute top-1 right-1 z-10 font-bold">[edit]</a>
+          <a [routerLink]="'edit-content' | route: key()" class="absolute top-1 right-1 z-10 font-bold" data-cy="edit-content-link">[edit]</a>
         </div>
       }
       <div

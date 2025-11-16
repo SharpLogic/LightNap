@@ -28,21 +28,64 @@ describe('Authentication', () => {
 
     it('should login successfully with valid credentials', () => {
         cy.shouldBeLoggedOut();
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.shouldBeLoggedIn();
         cy.url().should('not.include', '/identity/login');
     });
 
     it('should logout successfully', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.logout();
         cy.shouldBeLoggedOut();
         cy.url().should('not.include', '/profile');
     });
 
     it('should maintain login state across page reloads', () => {
-        cy.login('test@example.com', 'testpassword');
+        cy.logInRegularUser();
         cy.reload();
         cy.shouldBeLoggedIn();
+    });
+
+    it('should not enable registration button unless all form requirements are met', () => {
+        cy.visit('/identity/register');
+
+        // Initially disabled
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.disabled');
+
+        // Fill userName
+        cy.get('[data-cy="register-username"]').type('testuser');
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.disabled');
+
+        // Fill email
+        cy.get('[data-cy="register-email"]').type('test@example.com');
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.disabled');
+
+        // Fill password
+        cy.get('[data-cy="register-password"]')
+            .find('input')
+            .type('password123');
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.disabled');
+
+        // Fill confirmPassword
+        cy.get('[data-cy="register-confirm-password"]')
+            .find('input')
+            .type('password123');
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.disabled');
+
+        // Check agreedToTerms
+        cy.get('[data-cy="register-agreed-to-terms"]').find('input').check();
+        cy.get('[data-cy="register-submit"]')
+            .find('button')
+            .should('be.enabled');
     });
 });

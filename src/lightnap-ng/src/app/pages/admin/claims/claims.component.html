@@ -2,20 +2,20 @@
   <ng-template #success let-claimResultsAny>
     @let claimResults = asClaimResults(claimResultsAny);
 
-    <p-panel header="Search Claims">
+    <p-panel data-cy="search-claims-panel" header="Search Claims">
       <form [formGroup]="form" class="my-2">
         <div class="flex gap-1">
           <div class="flex flex-col">
-            <input pInputText placeholder="Type" formControlName="type" />
+            <input data-cy="claim-type-filter" pInputText placeholder="Type" formControlName="type" />
             <div class="flex items-end">
-              <p-checkBox inputId="typeExact" formControlName="typeExact" [binary]="true" class="mt-2" />
+              <p-checkBox data-cy="type-exact-checkbox" inputId="typeExact" formControlName="typeExact" [binary]="true" class="mt-2" />
               <label for="typeExact" class="ml-2">Exact match</label>
             </div>
           </div>
           <div class="flex flex-col">
-            <input pInputText placeholder="Value" formControlName="value" />
+            <input data-cy="claim-value-filter" pInputText placeholder="Value" formControlName="value" />
             <div class="flex items-end">
-              <p-checkBox inputId="valueExact" formControlName="valueExact" [binary]="true" class="mt-2" />
+              <p-checkBox data-cy="value-exact-checkbox" inputId="valueExact" formControlName="valueExact" [binary]="true" class="mt-2" />
               <label for="valueExact" class="ml-2">Exact match</label>
             </div>
           </div>
