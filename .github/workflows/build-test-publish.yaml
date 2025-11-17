@@ -50,7 +50,7 @@ jobs:
 
       - name: Run front-end tests
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm run test:ci -- --watch=false --browsers=ChromeHeadless
 
       - name: Build front-end app and deploy into back-end site
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
