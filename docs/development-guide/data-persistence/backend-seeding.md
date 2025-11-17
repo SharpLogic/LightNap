@@ -63,23 +63,131 @@ Use this for seeding data that is essential to your application regardless of wh
 
 ### 5. Seed Environment Content (`SeedEnvironmentContentAsync`)
 
-Calls the optional `SeedEnvironmentContent()` partial method, which can be implemented in environment-specific files like `Seeder.Development.cs`.
+Executes environment-specific seeding logic based on the current hosting environment. This method directly implements seeding for different environments:
+
+- **Development** - Test data for local development
+- **E2e** - Data required for end-to-end testing
+- **Staging** - Staging-specific data that mimics production
+- **Production** - Production-specific initialization (use sparingly)
+
+### 6. Seed Local Content (`SeedLocalContentAsync`)
+
+Calls the optional `SeedLocalContent()` partial method, which can be implemented in `Seeder.Local.cs` for developer-specific local seeding that should not be committed to source control.
 
 ## Environment-Specific Seeding
 
-One of the key features of LightNap's seeding system is support for environment-specific seeding through **partial classes**. This allows you to include development data without risking it being deployed to production.
+LightNap's seeding system supports environment-specific seeding through direct methods in the `Seeder` class. This allows you to include development and testing data without risking it being deployed to production.
 
 ### How It Works
 
-The `Seeder` class is declared as `partial` and includes an optional partial method:
+The `SeedEnvironmentContentAsync` method checks the current hosting environment and calls the appropriate seeding method:
 
 ```csharp
-partial void SeedEnvironmentContent();
+public async Task SeedEnvironmentContentAsync()
+{
+    var environment = serviceProvider.GetRequiredService<IHostEnvironment>();
+
+    if (environment.EnvironmentName == "Development")
+    {
+        await this.SeedDevelopmentContentAsync();
+    }
+    else if (environment.EnvironmentName == "E2e")
+    {
+        await this.SeedE2eContentAsync();
+    }
+    else if (environment.EnvironmentName == "Staging")
+    {
+        await this.SeedStagingContentAsync();
+    }
+    else if (environment.EnvironmentName == "Production")
+    {
+        await this.SeedProductionContentAsync();
+    }
+}
 ```
 
-You can implement this method in a separate file with a conditional build symbol:
+### Environment-Specific Methods
 
-#### Seeder.Development.cs
+Each environment has its own private method in the `Seeder` class:
+
+#### SeedDevelopmentContentAsync
+
+```csharp
+private async Task SeedDevelopmentContentAsync()
+{
+    logger.LogInformation("Seeding Development environment content");
+
+    // Add Development-specific seeding logic here
+    // This is for data that should be committed to source control
+    // and useful for most/all developers working on this project
+
+    logger.LogInformation("Seeded Development environment content");
+}
+```
+
+#### SeedE2eContentAsync
+
+```csharp
+private async Task SeedE2eContentAsync()
+{
+    logger.LogInformation("Seeding E2E test content");
+
+    // Seed data required for end-to-end tests
+    await contentService.CreateStaticContentAsync(
+        new CreateStaticContentDto()
+        {
+            Key = "e2e-test-page",
+            Type = StaticContentType.Page,
+            Status = StaticContentStatus.Published,
+            ReadAccess = StaticContentReadAccess.Public
+        }
+    );
+
+    logger.LogInformation("Seeded E2E test content");
+}
+```
+
+#### SeedStagingContentAsync
+
+```csharp
+private async Task SeedStagingContentAsync()
+{
+    logger.LogInformation("Seeding Staging environment content");
+
+    // Add Staging-specific seeding logic here
+
+    logger.LogInformation("Seeded Staging environment content");
+}
+```
+
+#### SeedProductionContentAsync
+
+```csharp
+private async Task SeedProductionContentAsync()
+{
+    logger.LogInformation("Seeding Production environment content");
+
+    // Add Production-specific seeding logic here
+
+    logger.LogInformation("Seeded Production environment content");
+}
+```
+
+## Local-Only Seeding
+
+For developer-specific seeding that should not be committed to source control, LightNap provides a partial method pattern through `Seeder.Local.cs`.
+
+### How It Works
+
+The `Seeder` class includes an optional partial method:
+
+```csharp
+partial void SeedLocalContent();
+```
+
+You can implement this method in a separate file that is excluded from source control:
+
+#### Seeder.Local.cs
 
 ```csharp
 namespace LightNap.WebApi.Configuration
@@ -88,17 +196,17 @@ namespace LightNap.WebApi.Configuration
     {
         private ApplicationDbContext _db = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-        partial void SeedEnvironmentContent()
+        partial void SeedLocalContent()
         {
-            this.SeedEnvironmentContentInternalAsync().Wait();
+            this.SeedLocalContentInternalAsync().Wait();
         }
 
-        private async Task SeedEnvironmentContentInternalAsync()
+        private async Task SeedLocalContentInternalAsync()
         {
-            // Seed sample data for development/testing
+            // Seed local-only data for your specific development scenario
             if (!_db.SomeEntities.Any())
             {
-                _db.SomeEntities.Add(new SomeEntity { Name = "Test Data" });
+                _db.SomeEntities.Add(new SomeEntity { Name = "Local Test Data" });
                 await _db.SaveChangesAsync();
             }
         }
@@ -106,16 +214,8 @@ namespace LightNap.WebApi.Configuration
 }
 ```
 
-### Environment File Examples
-
-You can create different seeder files for each environment:
-
-- **Seeder.Development.cs** - Test users, sample data, mock content
-- **Seeder.Staging.cs** - Staging-specific data that mimics production
-- **Seeder.Production.cs** - Production-specific initialization (use sparingly)
-
 {: .note }
-Only include the appropriate seeder file in your build configuration for each environment. Never deploy development seeders to production.
+`Seeder.Local.cs` is in the default `.gitignore` to prevent it from being committed to source control. This allows each developer to maintain their own local seeding logic without affecting others.
 
 ## System User Context
 
@@ -149,16 +249,16 @@ var seeder = seederServiceProvider.GetRequiredService<Seeder>();
 await seeder.SeedAsync();
 ```
 
-## Accessing Services in Environment Seeders
+## Accessing Services in Seeders
 
-The `Seeder` class uses constructor injection to access dependencies. In your environment-specific seeder, you can access services through the `serviceProvider` parameter:
+The `Seeder` class uses constructor injection to access dependencies. You can access services through the `serviceProvider` parameter:
 
 ```csharp
 public partial class Seeder
 {
     private ApplicationDbContext _db = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-    partial void SeedEnvironmentContent()
+    private async Task SeedDevelopmentContentAsync()
     {
         // Access other services as needed
         var notificationService = serviceProvider.GetRequiredService<INotificationService>();
@@ -177,12 +277,14 @@ public partial class Seeder
 - **Log your actions** - Use the injected `ILogger` to track seeding progress
 - **Version your seed data** - Consider adding version checks for complex migrations
 - **Test thoroughly** - Run your seeders multiple times to ensure idempotency
+- **Use environment methods** - Add environment-specific logic directly to the appropriate method
+- **Use Seeder.Local.cs** - Keep developer-specific seeding separate and untracked
 
 ### Don'ts
 
 - **Don't assume order** - Roles are processed alphabetically, not in definition order
 - **Don't seed sensitive data** - Use configuration for passwords and secrets
-- **Don't deploy development seeders** - Use build conditions to exclude them
+- **Don't commit Seeder.Local.cs** - Keep it in `.gitignore` to prevent accidental commits
 - **Don't skip error handling** - Seeding failures should stop application startup
 - **Don't create too much data** - Large seed operations slow down startup
 
@@ -191,11 +293,12 @@ public partial class Seeder
 Here's an example of seeding complex related data in a development environment:
 
 ```csharp
-private async Task SeedEnvironmentContentInternalAsync()
+private async Task SeedDevelopmentContentAsync()
 {
+    logger.LogInformation("Seeding Development environment content");
+
     // Reference existing seeded users by email
     // Note: Use appsettings.json SeededUsers configuration to create test users
-    // rather than calling GetOrCreateUserAsync() here. See the Seeding Users guide.
     var admin = await _db.Users.FirstOrDefaultAsync(u => u.Email == "admin@lightnap.azurewebsites.net");
     var user1 = await _db.Users.FirstOrDefaultAsync(u => u.Email == "user1@site.com");
 
@@ -236,6 +339,8 @@ private async Task SeedEnvironmentContentInternalAsync()
         );
         await _db.SaveChangesAsync();
     }
+
+    logger.LogInformation("Seeded Development environment content");
 }
 ```
 
@@ -260,9 +365,9 @@ Ensure that:
 
 Verify that:
 
-1. The file is included in the build configuration
-2. The partial method signature matches exactly
-3. Build conditions are correct for your environment
+1. The environment name matches exactly (case-sensitive)
+2. The appropriate method is implemented in the `Seeder` class
+3. The hosting environment is configured correctly in `launchSettings.json` or deployment settings
 
 ### Performance Issues
 

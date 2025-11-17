@@ -56,8 +56,8 @@ describe('Feature Name', () => {
 ```typescript
 it('should login successfully', () => {
   cy.visit('/identity/login');
-  cy.get('[data-cy="login-username"]').type('user@example.com');
-  cy.get('[data-cy="login-password"]').type('password');
+  cy.get('[data-cy="login-username"]').type('E2eRegularUser');
+  cy.get('[data-cy="login-password"]').type('P@ssw0rd');
   cy.get('[data-cy="login-submit"]').click();
 
   cy.url().should('not.include', '/identity/login');
@@ -124,12 +124,6 @@ it('should allow admin to access restricted area', () => {
 
 ## Running E2E Tests
 
-Before running E2E tests, make sure you have the frontend development server running.
-
-```bash
-npm run start
-```
-
 ### With Mocks
 
 ```bash
@@ -146,8 +140,48 @@ npm run e2e:mocks:open
 
 Opens Cypress Test Runner with mocks for interactive test development.
 
+### Against Live Backend
+
+To run tests against a live backend, you need to start both the frontend and backend servers.
+
+#### Starting the Backend
+
+Start the backend in E2E mode, which seeds test users and content:
+
+```bash
+npm run e2e:backend
+```
+
+This runs the backend with the `E2e` launch profile, which:
+- Uses the E2E environment configuration
+- Seeds test users with credentials:
+  - **E2eRegularUser** / P@ssw0rd (regular user)
+  - **E2eAdmin** / P@ssw0rd (administrator)
+  - **E2eContentEditor** / P@ssw0rd (content editor)
+- Seeds E2E-specific test content
+
+#### Starting the Frontend
+
+In a separate terminal, start the frontend development server:
+
+```bash
+npm run start
+```
+
+#### Running Tests
+
+Once both servers are running, execute tests against the live backend:
+
+```bash
+# Headless mode
+npm run e2e
+
+# Interactive mode
+npm run e2e:open
+```
+
 {: .note }
-You can also run `npm run e2e` or `npm run e2e:open` to run against a live backend. Use the [seeding support](../../development-guide/data-persistence/backend-seeding) to automatically configure backends for different environments.
+The E2E environment uses [backend seeding](../../development-guide/data-persistence/backend-seeding) to automatically configure test users and content. This ensures a consistent test environment across different machines and CI/CD pipelines.
 
 ### CI Mode
 
@@ -156,6 +190,18 @@ npm run e2e:ci
 ```
 
 Runs tests with mocks, recording, and parallel execution for CI environments.
+
+## Test Credentials
+
+When running tests against a live backend, use these seeded credentials:
+
+| User | Username | Password | Roles |
+|------|----------|----------|-------|
+| Regular User | E2eRegularUser | P@ssw0rd | - |
+| Administrator | E2eAdmin | P@ssw0rd | Administrator |
+| Content Editor | E2eContentEditor | P@ssw0rd | ContentEditor |
+
+These credentials are automatically seeded when the backend runs in E2E mode.
 
 ## Test Organization
 
@@ -210,12 +256,20 @@ env: {
 }
 ```
 
+### Mock vs Live Backend
+
+The custom commands automatically handle differences between mocked and live backends:
+
+- **With mocks**: Uses Cypress sessions to cache login state for faster test execution
+- **Live backend**: Skips session caching to properly handle refresh token cookie updates
+
 ## Best Practices
 
 ### Test Data Management
 - Use fixtures for static data
 - Seed test data programmatically when needed
 - Clean up data between tests
+- Use the E2E environment for consistent test data
 
 ### Selector Strategy
 - Prefer `data-cy` attributes over CSS selectors
@@ -265,3 +319,8 @@ env: {
 - Avoid fixed waits, use assertions instead
 - Ensure proper element loading
 - Check for async operations completion
+
+**Backend connection issues**
+- Verify backend is running with `npm run e2e:backend`
+- Check that backend is using port 7266 (default E2E configuration)
+- Ensure frontend proxy is configured correctly
