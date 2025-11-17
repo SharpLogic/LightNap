@@ -122,7 +122,7 @@ namespace LightNap.Core.Tests.Services
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 {
                     _ = new TokenService(configuration, userManager, roleManager);
                 });
