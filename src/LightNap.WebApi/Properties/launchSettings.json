@@ -3,7 +3,7 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "swagger/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -28,6 +28,16 @@
       },
       "publishAllPorts": true,
       "useSSL": true
+    },
+    "E2e": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger/index.html",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "E2e"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7266"
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

@@ -1,5 +1,4 @@
 export function createAccessToken(
-    userId: string,
     userName: string,
     email: string,
     overrides = {},
@@ -7,11 +6,9 @@ export function createAccessToken(
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const payload = btoa(
         JSON.stringify({
-            sub: userId,
-            email: email,
             exp: Math.floor(Date.now() / 1000) + 3600,
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier':
-                userId,
+                userName,
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name':
                 userName,
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress':
@@ -41,29 +38,18 @@ export function setupAuthMocks() {
         const { login, password } = req.body;
 
         let token = null;
-        if (login === 'test@example.com' && password === 'testpassword') {
-            token = createAccessToken('test-user-id', 'TestUser', login);
-        } else if (
-            login === 'admin@admin.com' &&
-            password === 'A2m!nPassword'
-        ) {
-            token = createAccessToken('admin-user-id', 'AdminUser', login, {
+        if (login === 'E2eRegularUser' && password === 'P@ssw0rd') {
+            token = createAccessToken('E2eRegularUser', login);
+        } else if (login === 'E2eAdmin' && password === 'P@ssw0rd') {
+            token = createAccessToken('E2eAdmin', login, {
                 'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
                     ['Administrator'],
             });
-        } else if (
-            login === 'contenteditor@lightnap.sharplogic.com' &&
-            password === 'contenteditorpassword'
-        ) {
-            token = createAccessToken(
-                'contenteditor-user-id',
-                'ContentEditorUser',
-                login,
-                {
-                    'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
-                        ['ContentEditor'],
-                },
-            );
+        } else if (login === 'E2eContentEditor' && password === 'P@ssw0rd') {
+            token = createAccessToken('E2eContentEditor', login, {
+                'http://schemas.microsoft.com/ws/2008/06/identity/claims/role':
+                    ['ContentEditor'],
+            });
         }
 
         if (token) {
@@ -217,17 +203,25 @@ export function setupAdminMocks() {
             result: {
                 data: [
                     {
-                        id: 'user-1',
-                        userName: 'admin',
-                        email: 'admin@admin.com',
+                        id: 'E2eRegularUser',
+                        userName: 'E2eRegularUser',
+                        email: 'E2eRegularUser@lightnap.azurwebsites.net',
+                        createdDate: '2024-01-02T00:00:00Z',
+                        lastModifiedDate: '2024-01-02T00:00:00Z',
+                        lockoutEnd: null,
+                    },
+                    {
+                        id: 'E2eAdmin',
+                        userName: 'E2eAdmin',
+                        email: 'E2EAdmin@lightnap.azurwebsites.net',
                         createdDate: '2024-01-01T00:00:00Z',
                         lastModifiedDate: '2024-01-01T00:00:00Z',
                         lockoutEnd: null,
                     },
                     {
-                        id: 'user-2',
-                        userName: 'contenteditor',
-                        email: 'contenteditor@lightnap.sharplogic.com',
+                        id: 'E2eContentEditor',
+                        userName: 'E2eContentEditor',
+                        email: 'E2eContentEditor@lightnap.azurwebsites.net',
                         createdDate: '2024-01-02T00:00:00Z',
                         lastModifiedDate: '2024-01-02T00:00:00Z',
                         lockoutEnd: null,

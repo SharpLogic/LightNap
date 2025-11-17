@@ -55,8 +55,8 @@ describe('Admin Panel', () => {
             // Verify the users table is present
             cy.get('p-table').should('be.visible');
 
-            // Verify user data is loaded (mocked data has 2 users)
-            cy.get('p-table tbody tr').should('have.length', 2);
+            // Verify user data is loaded (will always have at least 3 records)
+            cy.get('p-table tbody tr').should('have.length.greaterThan', 2);
 
             // Verify the structure of the first row
             cy.get('p-table tbody tr')
@@ -96,8 +96,8 @@ describe('Admin Panel', () => {
             // Verify the roles table is present
             cy.get('p-table').should('be.visible');
 
-            // Verify role data is loaded (mocked data has 2 roles)
-            cy.get('p-table tbody tr').should('have.length', 2);
+            // Verify role data is loaded (mocked data has at least 2 records)
+            cy.get('p-table tbody tr').should('have.length.greaterThan', 1);
 
             // Verify the structure of the first row
             cy.get('p-table tbody tr')
