@@ -112,7 +112,7 @@ The application will open at `http://localhost:4200`.
 
 ### 4. Login with Default Credentials
 
-- Email: `admin@admin.com`
+- Email: `admin@lightnap.azurewebsites.net`
 - Password: `A2m!nPassword`
 
 ---

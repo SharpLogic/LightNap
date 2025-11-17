@@ -28,7 +28,7 @@ POST {{_hostAddress}}/api/identity/login
 Content-Type: application/json
 
 {
-  "email": "admin@admin.com",
+  "email": "admin@lightnap.azurewebsites.net",
   "password": "A2m!nPassword",
   "rememberMe": false,
   "deviceDetails": "VS REST Client Login"

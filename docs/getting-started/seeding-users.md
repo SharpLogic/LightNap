@@ -23,7 +23,7 @@ For example, the default configuration looks like this:
 "SeededUsers": {
   "Administrator": [
     {
-      "Email": "admin@admin.com",
+      "Email": "admin@lightnap.azurewebsites.net",
       "UserName": "admin",
       "Password": "A2m!nPassword"
     }
@@ -50,14 +50,14 @@ For example, here is a way to configure a new user that will be both an administ
 "SeededUsers": {
   "Administrator": [
     {
-      "Email": "admin@admin.com",
+      "Email": "admin@lightnap.azurewebsites.net",
       "UserName": "admin",
       "Password": "A2m!nPassword"
     }
   ],
   "Moderator": [
     {
-      "Email": "admin@admin.com"
+      "Email": "admin@lightnap.azurewebsites.net"
     }
   ]
 }
