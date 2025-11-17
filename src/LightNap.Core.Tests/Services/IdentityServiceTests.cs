@@ -71,7 +71,6 @@ namespace LightNap.Core.Tests.Services
                         LogOutInactiveDeviceDays = 30,
                         RequireTwoFactorForNewUsers = false,
                         SiteUrlRootForEmails = "https://example.com/",
-                        UseSameSiteStrictCookies = true
                     }));
 
             this._tokenServiceMock = new Mock<ITokenService>();

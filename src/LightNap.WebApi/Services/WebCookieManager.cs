@@ -22,7 +22,7 @@ namespace LightNap.WebApi.Services
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = applicationSettings.Value.UseSameSiteStrictCookies ? SameSiteMode.Strict : SameSiteMode.None
+                SameSite = SameSiteMode.Strict,
             };
 
             if (isPersistent)
