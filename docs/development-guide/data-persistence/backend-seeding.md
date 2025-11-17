@@ -131,7 +131,7 @@ private async Task SeedDevelopmentContentAsync()
 private async Task SeedE2eContentAsync()
 {
     logger.LogInformation("Seeding E2E test content");
-    
+
     // Seed data required for end-to-end tests
     await contentService.CreateStaticContentAsync(
         new CreateStaticContentDto()
@@ -142,7 +142,7 @@ private async Task SeedE2eContentAsync()
             ReadAccess = StaticContentReadAccess.Public
         }
     );
-    
+
     logger.LogInformation("Seeded E2E test content");
 }
 ```
@@ -215,7 +215,7 @@ namespace LightNap.WebApi.Configuration
 ```
 
 {: .note }
-Add `Seeder.Local.cs` to your `.gitignore` file to prevent it from being committed to source control. This allows each developer to maintain their own local seeding logic without affecting others.
+`Seeder.Local.cs` is in the default `.gitignore` to prevent it from being committed to source control. This allows each developer to maintain their own local seeding logic without affecting others.
 
 ## System User Context
 
@@ -284,7 +284,7 @@ public partial class Seeder
 
 - **Don't assume order** - Roles are processed alphabetically, not in definition order
 - **Don't seed sensitive data** - Use configuration for passwords and secrets
-- **Don't commit Seeder.Local.cs** - Add it to `.gitignore` to keep it local
+- **Don't commit Seeder.Local.cs** - Keep it in `.gitignore` to prevent accidental commits
 - **Don't skip error handling** - Seeding failures should stop application startup
 - **Don't create too much data** - Large seed operations slow down startup
 
