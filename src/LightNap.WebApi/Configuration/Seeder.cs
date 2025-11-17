@@ -19,12 +19,13 @@ namespace LightNap.WebApi.Configuration
     /// </summary>
     /// <remarks>The <see cref="Seeder"/> class is responsible for seeding roles, users, and other application
     /// content into the database. It supports both baseline seeding (e.g., roles and administrators) and
-    /// environment-specific seeding through the use of a partial method. To customize environment-specific seeding,
-    /// implement the <see cref="SeedEnvironmentContent"/> method in a partial class (e.g., Seeder.Development.cs). 
+    /// environment-specific seeding. Environment-specific logic is handled directly in <see cref="SeedEnvironmentContentAsync"/>. 
     /// This class relies on several dependencies, including <see cref="RoleManager{T}"/>, <see cref="UserManager{T}"/>,
     /// and <see cref="ApplicationDbContext"/>, to perform its operations. It also uses configuration options to
-    /// determine the users and roles to seed.</remarks>
-    /// <param name="serviceProvider">A service provider to pull in dependencies from environment-specific classes like Seeder.Development.cs.</param>
+    /// determine the users and roles to seed. You may also implement a Seeder.Local.cs that is not included in source control
+    /// for scenarios (like your local development environment) where you want to seed for a specific scenario that is not
+    /// committed.</remarks>
+    /// <param name="serviceProvider">A service provider to pull in dependencies.</param>
     /// <param name="logger">The logger.</param>
     /// <param name="roleManager">The role manager.</param>
     /// <param name="userManager">The user manager.</param>
@@ -52,6 +53,7 @@ namespace LightNap.WebApi.Configuration
             await this.SeedStaticContentAsync();
             await this.SeedApplicationContentAsync();
             await this.SeedEnvironmentContentAsync();
+            await this.SeedLocalContentAsync();
         }
 
         private async Task SeedStaticContentAsync()
@@ -313,26 +315,100 @@ namespace LightNap.WebApi.Configuration
         private Task SeedApplicationContentAsync()
 #pragma warning restore CA1822 // Mark members as static
         {
-            // TODO: Add any seeding code you want run every time the app loads in any environment. For environment-specific seeding, see SeedEnvironmentContent().
+            // TODO: Add any seeding code you want run every time the app loads in any environment. For environment-specific seeding, see SeedEnvironmentContentAsync().
 
             return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Seeds content in the application based on the implementation of a SeedEnvironmentContent partial method in the class. To use this, add a Seeder 
-        /// partial class (like Seeder.Development.cs) that implements the private method SeedEnvironmentContent(). It runs after SeedApplicationContentAsync()
+        /// Seeds content in the application based on the environment.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        public async Task SeedEnvironmentContentAsync()
+        {
+            var environment = serviceProvider.GetRequiredService<IHostEnvironment>();
+
+            if (environment.EnvironmentName == "Development")
+            {
+                await this.SeedDevelopmentContentAsync();
+            }
+            else if (environment.EnvironmentName == "E2e")
+            {
+                await this.SeedE2eContentAsync();
+            }
+            else if (environment.EnvironmentName == "Staging")
+            {
+                await this.SeedStagingContentAsync();
+            }
+            else if (environment.EnvironmentName == "Production")
+            {
+                await this.SeedProductionContentAsync();
+            }
+            else
+            {
+                logger.LogWarning("No environment-specific seeding defined for environment '{environmentName}'", environment.EnvironmentName);
+            }
+            // Add more environments as needed
+        }
+
+        private async Task SeedE2eContentAsync()
+        {
+            logger.LogInformation("Seeding E2E test content");
+            await contentService.CreateStaticContentAsync(
+                new CreateStaticContentDto()
+                {
+                    Key = "e2e-test-page",
+                    Type = StaticContentType.Page,
+                    Status = StaticContentStatus.Published,
+                    ReadAccess = StaticContentReadAccess.Public
+                }                );
+            logger.LogInformation("Seeded E2E test content");
+        }
+
+        private async Task SeedDevelopmentContentAsync()
+        {
+            logger.LogInformation("Seeding Development environment content");
+
+            // Add Development-specific seeding logic here. Note that this is intended to be Development environment content
+            // that is committed to source control and useful for most/all developers working on this project. For local-only
+            // seeding important for the task at hand, consider implementing a Seeder.Local.cs, which is run after environment seeding.
+
+            logger.LogInformation("Seeded Development environment content");
+        }
+
+        private async Task SeedStagingContentAsync()
+        {
+            logger.LogInformation("Seeding Staging environment content");
+
+            // Add Staging-specific seeding logic here
+
+            logger.LogInformation("Seeded Staging environment content");
+        }
+
+        private async Task SeedProductionContentAsync()
+        {
+            logger.LogInformation("Seeding Production environment content");
+
+            // Add Production-specific seeding logic here
+
+            logger.LogInformation("Seeded Production environment content");
+        }
+
+        /// <summary>
+        /// Seeds content in the application based on the implementation of a SeedLocalContent partial method in the class. To use this, add a Seeder 
+        /// partial class (Seeder.Local.cs) that implements the private method SeedLocalContent(). It runs after SeedEnvironmentContentAsync()
         /// and is always executed on load if it exists.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public Task SeedEnvironmentContentAsync()
+        public Task SeedLocalContentAsync()
         {
-            this.SeedEnvironmentContent();
+            this.SeedLocalContent();
             return Task.CompletedTask;
         }
 
         /// <summary>
-        /// Optional partial to implement in a new class (like Seeder.Development.cs) to seed environment-specific content.
+        /// Optional partial to implement in a new class (Seeder.Local.cs) to seed local content.
         /// </summary>
-        partial void SeedEnvironmentContent();
+        partial void SeedLocalContent();
     }
 }

@@ -13,27 +13,38 @@
 import { setupAdminMocks, setupContentMocks } from './mock-api';
 
 // Custom command to login
-function logIn(email: string, password: string) {
-    cy.session([email, password], () => {
-        cy.visit('/identity/login');
-        cy.get('[data-cy="login-username"]').should('be.visible');
-        cy.get('[data-cy="login-username"]').type(email);
-        cy.get('[data-cy="login-password"]').type(password);
-        cy.get('[data-cy="login-submit"]').click();
-        cy.url().should('not.include', '/identity/login');
-    });
+function logIn(login: string, password: string) {
+    if (Cypress.env('useMocks')) {
+        // If mocking, we can use the Cypress session to cache login state
+        cy.session([login, password], () => {
+            logInInternal(login, password);
+        });
+    } else {
+        // If running live we can't use the session because it will mess with the way
+        // refresh token cookies are updated every time you request a new access token
+        logInInternal(login, password);
+    }
+}
+
+function logInInternal(login: string, password: string) {
+    cy.visit('/identity/login');
+    cy.get('[data-cy="login-username"]').should('be.visible');
+    cy.get('[data-cy="login-username"]').type(login);
+    cy.get('[data-cy="login-password"]').type(password);
+    cy.get('[data-cy="login-submit"]').click();
+    cy.url().should('not.include', '/identity/login');
 }
 
 Cypress.Commands.add('logInRegularUser', () => {
-    logIn('test@example.com', 'testpassword');
+    logIn('E2eRegularUser', 'P@ssw0rd');
 });
 
 Cypress.Commands.add('logInAdministrator', () => {
-    logIn('admin@admin.com', 'A2m!nPassword');
+    logIn('E2eAdmin', 'P@ssw0rd');
 });
 
 Cypress.Commands.add('logInContentEditor', () => {
-    logIn('contenteditor@lightnap.sharplogic.com', 'contenteditorpassword');
+    logIn('E2eContentEditor', 'P@ssw0rd');
 });
 
 Cypress.Commands.add('setupContentMocks', () => {

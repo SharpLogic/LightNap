@@ -196,7 +196,7 @@ private async Task SeedEnvironmentContentInternalAsync()
     // Reference existing seeded users by email
     // Note: Use appsettings.json SeededUsers configuration to create test users
     // rather than calling GetOrCreateUserAsync() here. See the Seeding Users guide.
-    var admin = await _db.Users.FirstOrDefaultAsync(u => u.Email == "admin@admin.com");
+    var admin = await _db.Users.FirstOrDefaultAsync(u => u.Email == "admin@lightnap.azurewebsites.net");
     var user1 = await _db.Users.FirstOrDefaultAsync(u => u.Email == "user1@site.com");
 
     if (admin == null || user1 == null)
