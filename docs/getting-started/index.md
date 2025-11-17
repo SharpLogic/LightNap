@@ -52,6 +52,10 @@ Configure how LightNap sends transactional emails for password resets, email ver
 - **[SMTP Provider](./email-providers/smtp-provider)** - Production email via SMTP servers
 - **[Log To Console Provider](./email-providers/log-to-console-provider)** - Development email logging
 
+### [API / Swagger](./swagger)
+
+Explore the API surface via Swagger UI and learn how to authorize with a JWT so you can test protected endpoints interactively.
+
 ## Next Steps
 
 Once you have LightNap running:

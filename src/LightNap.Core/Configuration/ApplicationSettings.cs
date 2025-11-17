@@ -29,10 +29,5 @@
         /// The root URL for emails sent by the site.
         /// </summary>
         public required string SiteUrlRootForEmails { get; set; }
-
-        /// <summary>
-        /// True to use SameSite strict cookies. Set to false if you are debugging an Angular UI from a different base URL.
-        /// </summary>
-        public bool UseSameSiteStrictCookies { get; set; }
     }
 }

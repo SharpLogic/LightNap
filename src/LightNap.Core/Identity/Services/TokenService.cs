@@ -46,7 +46,15 @@ namespace LightNap.Core.Services
 
             this._issuer = this._configuration.GetRequiredSetting("Jwt:Issuer");
             this._audience = this._configuration.GetRequiredSetting("Jwt:Audience");
-            this._expirationMinutes = int.Parse(this._configuration.GetRequiredSetting("Jwt:ExpirationMinutes"));
+            var expirationSetting = this._configuration.GetRequiredSetting("Jwt:ExpirationMinutes");
+
+            if (!int.TryParse(expirationSetting, out var expirationParsed))
+            {
+                throw new ArgumentException("Invalid configuration: 'Jwt:ExpirationMinutes' must be an integer.");
+            }
+            if (expirationParsed < 5) { throw new ArgumentOutOfRangeException("Invalid configuration: 'Jwt:ExpirationMinutes' must be at least 5."); }
+            this._expirationMinutes = expirationParsed;
+
             this._tokenHandler = new JsonWebTokenHandler();
         }
 
