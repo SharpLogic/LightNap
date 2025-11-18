@@ -29,6 +29,7 @@ export default defineConfig({
 ```
 
 Key settings:
+
 - **baseUrl**: Application URL for tests
 - **Timeouts**: Generous timeouts for reliable execution
 - **Viewport**: Consistent screen size across tests
@@ -153,6 +154,7 @@ npm run e2e:backend
 ```
 
 This runs the backend with the `E2e` launch profile, which:
+
 - Uses the E2E environment configuration
 - Seeds test users with credentials:
   - **E2eRegularUser** / P@ssw0rd (regular user)
@@ -189,7 +191,13 @@ The E2E environment uses [backend seeding](../../development-guide/data-persiste
 npm run e2e:ci
 ```
 
-Runs tests with mocks, recording, and parallel execution for CI environments.
+Runs tests in CI mode with recording and parallel execution for Cypress Dashboard. This task now runs against a live backend by default (no mocking) to get realistic end-to-end coverage.
+
+If you prefer to run CI-style tests against mocked responses, use the `e2e:mocks` script or set the `useMocks` env variable explicitly in your CI pipeline. For example:
+
+```bash
+npx cross-env useMocks=true npm run e2e:ci
+```
 
 ## Test Credentials
 
@@ -203,11 +211,14 @@ When running tests against a live backend, use these seeded credentials:
 
 These credentials are automatically seeded when the backend runs in E2E mode.
 
+{: .note }
+The backend now includes an `appsettings.E2e.json` file that seeds a set of test users and simple content for E2E runs; this is consumed when you start the backend with the E2e launch profile (see `Documentation -> Getting Started -> Application Configuration`).
+
 ## Test Organization
 
 ### File Structure
 
-```
+```tree
 cypress/
 ├── e2e/
 │   ├── authentication.cy.ts
@@ -266,27 +277,32 @@ The custom commands automatically handle differences between mocked and live bac
 ## Best Practices
 
 ### Test Data Management
+
 - Use fixtures for static data
 - Seed test data programmatically when needed
 - Clean up data between tests
 - Use the E2E environment for consistent test data
 
 ### Selector Strategy
+
 - Prefer `data-cy` attributes over CSS selectors
 - Avoid brittle selectors like `.class:nth-child(3)`
 - Use descriptive data attributes
 
 ### Test Isolation
+
 - Each test should be independent
 - Use `beforeEach` for common setup
 - Avoid test interdependencies
 
 ### Performance
+
 - Use API mocking for faster execution
 - Group related tests in the same spec file
 - Parallel execution in CI
 
 ### Debugging
+
 - Use `cy.debug()` and `cy.pause()` during development
 - Check screenshots/videos on failures
 - Use `cy.log()` for debugging output
@@ -295,32 +311,38 @@ The custom commands automatically handle differences between mocked and live bac
 
 ### Common Issues
 
-**Tests fail intermittently**
+#### Tests fail intermittently
+
 - Increase timeouts in `cypress.config.ts`
 - Use `cy.wait()` for async operations
 - Check for race conditions
 
-**Element not found**
+#### Element not found
+
 - Verify `data-cy` attributes exist
 - Check if element is rendered after navigation
 - Use `cy.get()` with timeout options
 
-**API calls not intercepted**
+#### API calls not intercepted
+
 - Ensure intercept is set before the action
 - Check URL patterns match exactly
 - Use `cy.intercept()` with wildcards
 
-**Slow test execution**
+#### Slow test execution
+
 - Enable API mocking
 - Reduce viewport size if not needed
 - Use `cy.intercept()` to stub slow endpoints
 
-**Flaky tests**
+#### Flaky tests
+
 - Avoid fixed waits, use assertions instead
 - Ensure proper element loading
 - Check for async operations completion
 
-**Backend connection issues**
+#### Backend connection issues
+
 - Verify backend is running with `npm run e2e:backend`
 - Check that backend is using port 7266 (default E2E configuration)
 - Ensure frontend proxy is configured correctly

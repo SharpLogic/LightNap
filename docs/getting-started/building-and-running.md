@@ -9,9 +9,8 @@ nav_order: 100
 
 ## Prerequisites
 
-- .NET 9 SDK
-- Node.js and npm
-- Angular CLI
+- .NET 10 SDK
+- Node.js and npm (Node 20.19+ or later recommended)
 
 ## Installation
 
@@ -98,7 +97,7 @@ npm run e2e:open        # Interactive mode with live backend
 npm run e2e:mocks:open  # Interactive mode with mocked backend
 npm run e2e             # Headless mode with live backend
 npm run e2e:mocks       # Headless mode with mocked backend
-npm run e2e:ci          # CI mode with recording
+npm run e2e:ci          # CI mode with recording (runs against a live backend by default)
 ```
 
 ### Test Coverage

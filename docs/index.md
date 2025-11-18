@@ -1,12 +1,12 @@
 ---
-title: Home
+title: LightNap
 layout: home
 nav_order: 100
 ---
 
 # {{ page.title }}
 
-# LightNap — Full-stack starting kit for modern SPAs 🚀
+# Full-stack starter kit for modern SPAs 🚀
 
 LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) bundles a pragmatic set of tools and patterns to build production-ready single page applications fast. If you want authentication, notifications, scaffolding and a modern front-end experience without wiring everything from scratch, LightNap is for you.
 
@@ -18,24 +18,24 @@ LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) bundles a pragmatic 
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/sharplogic/LightNap.git
-cd LightNap
-```
+   ```bash
+   git clone https://github.com/sharplogic/LightNap.git
+   cd LightNap
+   ```
 
-1. Run the backend
+2. Run the backend
 
-```bash
-dotnet run --project LightNap.WebApi
-```
+   ```bash
+   dotnet run --project LightNap.WebApi
+   ```
 
-1. Start the Angular frontend (in a separate terminal)
+3. Start the Angular frontend (in a separate terminal)
 
-```bash
-cd src/lightnap-ng
-npm install
-ng serve
-```
+   ```bash
+   cd src/lightnap-ng
+   npm install
+   ng serve
+   ```
 
 Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net) — visit it to see features in action.
 
@@ -73,10 +73,6 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 
 We welcome PRs and contributions — check the repo, open issues, or add documentation. Find sample walk-throughs on our YouTube channel and try the demo to get a feel for the code.
 
--- Demo: [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net)
--- Docs: [https://lightnap.sharplogic.com](https://lightnap.sharplogic.com)
--- YouTube: [https://www.youtube.com/@LightNap](https://www.youtube.com/@LightNap)
-
----
-
-If you want help shaping the docs or visual polish (badges, icons, or images for the hero), tell me what style you prefer and I’ll add it.
+- Demo: [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net)
+- Docs: [https://lightnap.sharplogic.com](https://lightnap.sharplogic.com)
+- YouTube: [https://www.youtube.com/@LightNap](https://www.youtube.com/@LightNap)
