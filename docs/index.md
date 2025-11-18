@@ -6,25 +6,77 @@ nav_order: 100
 
 # {{ page.title }}
 
-# LightNap
+# LightNap — Full-stack starting kit for modern SPAs 🚀
 
-LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) is a full stack starter kit designed to provide a boost to Single Page Applications (SPA). It includes built-in support for ASP.NET Identity, JWT token management, and administrative features for managing identity, offering a solid foundation to be extended for any application scenario.
+LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) bundles a pragmatic set of tools and patterns to build production-ready single page applications fast. If you want authentication, notifications, scaffolding and a modern front-end experience without wiring everything from scratch, LightNap is for you.
 
-## Features
+> Quick highlights: Lightweight starter, secure defaults, extensible scaffolding, and helpful CI/CD docs — ready to jump-start your project.
 
-- **.NET Web API**: Backend services built with .NET.
-- **SQL Server, SQLite, and In-Memory**: Data provider implementations for SQL Server, SQLite, and in-memory databases.
-- **ASP.NET Identity**: Out-of-the-box support for user authentication and authorization, including end-to-end support for roles and claims.
-- **JWT Token Management**: Secure token-based authentication.
-- **Identity Management**: Administrative features for managing user roles and permissions.
-- **In-App Notifications**: Built-in notification system for delivering real-time alerts to users.
-- **Angular**: Frontend framework for building dynamic user interfaces.
-- **PrimeNG**: Rich set of UI components for Angular.
-- **Tailwind**: Utility-first CSS framework.
-- **Scaffolding**: [Generate complete infrastructure and UI](./development-guide/data-persistence/scaffolding) from a single entity class.
+---
 
-Check out [the docs](https://lightnap.sharplogic.com).
+## Quick start — Try LightNap in 3 steps
 
-Check out [the YouTube channel](https://www.youtube.com/@LightNap).
+1. Clone the repository
 
-Check out [the baseline demo site](https://lightnap.azurewebsites.net).
+```bash
+git clone https://github.com/sharplogic/LightNap.git
+cd LightNap
+```
+
+1. Run the backend
+
+```bash
+dotnet run --project LightNap.WebApi
+```
+
+1. Start the Angular frontend (in a separate terminal)
+
+```bash
+cd src/lightnap-ng
+npm install
+ng serve
+```
+
+Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net) — visit it to see features in action.
+
+---
+
+## Why choose LightNap? ✅
+
+- Works with .NET and modern Angular UI (PrimeNG + Tailwind) out-of-the-box.
+- Built-in auth with ASP.NET Identity + JWT for secure session handling.
+- Flexible persistence: SQL Server, SQLite, or in-memory for quick experiments.
+- Production-ready patterns (scaffolding, seed data, notification system, and more).
+
+---
+
+## Key features — At a glance ✨
+
+- **Authentication & Authorization:** Roles, claims, and user management ready in the admin UI.
+- **APIs & OpenAPI (Swagger):** Quickly inspect and test backend endpoints during development.
+- **Notifications:** In-app notifications and a backend notification service for system alerts.
+- **Scaffolder:** Auto-generate backend entities and front-end UI from a single entity definition.
+- **E2E & CI/CD:** Cypress-based end-to-end tests with guidance for workflows and GitHub Actions.
+
+---
+
+## Learn more
+
+- Getting started guide: [Building & running the project](./getting-started/building-and-running)
+- Scaffolding & development: [Scaffolding docs](./development-guide/data-persistence/scaffolding)
+- Security and roles: [Security & authorization](./security-authorization)
+- Testing & CI/CD: [Testing in CI/CD](./deployment-and-cicd/testing-in-cicd)
+
+---
+
+## Contribute & Community
+
+We welcome PRs and contributions — check the repo, open issues, or add documentation. Find sample walk-throughs on our YouTube channel and try the demo to get a feel for the code.
+
+-- Demo: [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net)
+-- Docs: [https://lightnap.sharplogic.com](https://lightnap.sharplogic.com)
+-- YouTube: [https://www.youtube.com/@LightNap](https://www.youtube.com/@LightNap)
+
+---
+
+If you want help shaping the docs or visual polish (badges, icons, or images for the hero), tell me what style you prefer and I’ll add it.
