@@ -9,8 +9,9 @@
 # Local development seeder logic.
 /src/LightNap.WebApi/Configuration/Seeder.Local.cs
 
-# Configuration files
+# Configuration files, except for e2e
 appsettings.*.json
+!appsettings.E2e.json
 
 # User-specific files
 *.rsuser
