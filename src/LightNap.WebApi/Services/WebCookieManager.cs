@@ -7,7 +7,7 @@ namespace LightNap.WebApi.Services
     /// <summary>
     /// Manages web cookies.
     /// </summary>
-    public class WebCookieManager(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationSettings> applicationSettings) : ICookieManager
+    public class WebCookieManager(IHttpContextAccessor httpContextAccessor) : ICookieManager
     {
         /// <summary>
         /// Sets a cookie with the specified key and value.

@@ -52,8 +52,22 @@ At this time, the scaffolder is provided in source form in the `src/Scaffolding`
 ```bash
   cd src
   dotnet build ./Scaffolding
-  .\Scaffolding\LightNap.Scaffolding\bin\Debug\net9.0\LightNap.Scaffolding.exe TestEntity
+  .\Scaffolding\LightNap.Scaffolding\bin\Debug\net10.0\LightNap.Scaffolding.exe TestEntity
 ```
+
+### Scaffolder options
+
+The scaffolder accepts additional CLI options to customize output. The commonly-used options are:
+
+- `--namespace` — The C# namespace for the generated entities (default: `LightNap.Core.Data.Entities`).
+- `--src-path` — Path to the repository `src` directory (default: `./`).
+- `--core-project` — Core project name (default: `LightNap.Core`).
+- `--web-api-project` — Web API project name (default: `LightNap.WebApi`).
+- `--angular-project` — Angular app name (default: `lightnap-ng`).
+- `--skip-components` — Skip generating Angular components (default: `false`).
+- `--overwrite` — Overwrite existing files automatically (default: `false`).
+
+These match the options exposed by the newest scaffolder experience added in this branch.
 
 {: .note }
 The script above is run from the repo's main `src` directory to cleanly align with the default parameters. You can override most of these parameters if needed.
@@ -118,7 +132,7 @@ public static IServiceCollection AddApplicationServices(this IServiceCollection 
   ...
 ```
 
-Now you can [build and run](../getting-started/building-and-running) the backend.
+Now you can [build and run](../../getting-started/building-and-running) the backend.
 
 ### Registering the Area Routes in the Angular Frontend
 
@@ -141,7 +155,7 @@ children: [
   ...
 ```
 
-Now you can [build and run](../getting-started/building-and-running) the frontend. You can access the new area at a URL like `http://localhost:4200/test-entities`.
+Now you can [build and run](../../getting-started/building-and-running) the frontend. You can access the new area at a URL like `http://localhost:4200/test-entities`.
 
 ## Undoing the Scaffolder
 
@@ -154,5 +168,5 @@ The scaffolder does not support updating existing files. It will exit without ma
 ## See Also
 
 - [Adding Entities](./adding-entities) - Manual process for adding entities
-- [Adding In-App Notification Types](./adding-notifications) - Example of implementing a feature without scaffolding
-- [Solution & Project Structure](../concepts/project-structure) - Understanding the architecture
+- [Adding In-App Notification Types](../features/adding-notifications) - Example of implementing a feature without scaffolding
+- [Solution & Project Structure](../../concepts/project-structure) - Understanding the architecture

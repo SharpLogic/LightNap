@@ -5,9 +5,9 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 import { inject, Injectable } from "@angular/core";
-import { Create<#= Parameters.PascalName #>Request } from "../models/request/create-<#= Parameters.KebabName #>-request";
-import { Search<#= Parameters.PascalNamePlural #>Request } from "../models/request/search-<#= Parameters.KebabNamePlural #>-request";
-import { Update<#= Parameters.PascalName #>Request } from "../models/request/update-<#= Parameters.KebabName #>-request";
+import { Create<#= Parameters.PascalName #>RequestDto } from "../models/request/create-<#= Parameters.KebabName #>-request-dto";
+import { Search<#= Parameters.PascalNamePlural #>RequestDto } from "../models/request/search-<#= Parameters.KebabNamePlural #>-request-dto";
+import { Update<#= Parameters.PascalName #>RequestDto } from "../models/request/update-<#= Parameters.KebabName #>-request-dto";
 import { DataService } from "./data.service";
 
 @Injectable({
@@ -20,15 +20,15 @@ export class <#= Parameters.PascalName #>Service {
         return this.#dataService.get<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>);
     }
 
-    search<#= Parameters.PascalNamePlural #>(request: Search<#= Parameters.PascalNamePlural #>Request) {
+    search<#= Parameters.PascalNamePlural #>(request: Search<#= Parameters.PascalNamePlural #>RequestDto) {
         return this.#dataService.search<#= Parameters.PascalNamePlural #>(request);
     }
 
-    create<#= Parameters.PascalName #>(request: Create<#= Parameters.PascalName #>Request) {
+    create<#= Parameters.PascalName #>(request: Create<#= Parameters.PascalName #>RequestDto) {
         return this.#dataService.create<#= Parameters.PascalName #>(request);
     }
 
-    update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>, request: Update<#= Parameters.PascalName #>Request) {
+    update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>: <#= Parameters.IdProperty.FrontEndType #>, request: Update<#= Parameters.PascalName #>RequestDto) {
         return this.#dataService.update<#= Parameters.PascalName #>(<#= Parameters.IdProperty.CamelName #>, request);
     }
 

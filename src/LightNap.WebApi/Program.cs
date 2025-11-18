@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,13 +27,15 @@ builder.Services.AddControllers().AddJsonOptions((options) =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddSwaggerGen(options =>
 {
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+    options.IncludeXmlComments(xmlPath);
+
     // Add JWT auth to Swagger
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    string securityDefinitionName = "Bearer";
+    options.AddSecurityDefinition(securityDefinitionName, new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header token using the Bearer scheme. Example: \"Bearer {paste this token}\"",
         Name = "Authorization",
@@ -43,15 +45,10 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    // Require the Bearer token for all operations (adds the Authorize button in Swagger UI)
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            new string[] {}
-        }
+        [new OpenApiSecuritySchemeReference(securityDefinitionName, document)] = []
     });
 });
 
