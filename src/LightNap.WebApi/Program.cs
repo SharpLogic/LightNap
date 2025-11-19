@@ -1,23 +1,15 @@
-using LightNap.Core.Api;
 using LightNap.Core.Configuration;
-using LightNap.Core.Data;
 using LightNap.Core.Hubs;
-using LightNap.Core.Interfaces;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.AspNetCore.SignalR;
 using StackExchange.Redis;
-using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,37 +57,42 @@ builder.Services.AddDatabaseServices(builder.Configuration)
 
 // Configure HybridCache conditionally
 var cacheConfig = builder.Configuration.GetSection("Cache");
-bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
 builder.Services.AddHybridCache(options =>
 {
     options.DefaultEntryOptions = new HybridCacheEntryOptions
     {
-        Expiration = TimeSpan.FromMinutes(cacheConfig.GetValue<int>("LocalExpirationMinutes"))
+        Expiration = TimeSpan.FromMinutes(cacheConfig.GetValue<int>("ExpirationMinutes"))
     };
 });
 
-// Configure distributed cache if in distributed mode
+// Configure distributed services and SignalR if in distributed mode
+bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
 if (useDistributed)
 {
+    string redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnection));
     builder.Services.AddStackExchangeRedisCache(options =>
     {
-        options.Configuration = builder.Configuration.GetConnectionString("Redis");
+        options.Configuration = redisConnection;
     });
+
+    builder.Services.AddSignalR()
+        .AddJsonProtocol(jsonOptions =>
+        {
+            jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        })
+        .AddStackExchangeRedis(options =>
+        {
+            options.Configuration = ConfigurationOptions.Parse(redisConnection);
+        });
 }
-
-// Configure SignalR with optional backplane
-var signalR = builder.Services.AddSignalR()
-    .AddJsonProtocol(jsonOptions =>
-    {
-        jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
-
-if (useDistributed)
+else
 {
-    signalR.AddStackExchangeRedis(options =>
-    {
-        options.Configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379");
-    });
+    builder.Services.AddSignalR()
+        .AddJsonProtocol(jsonOptions =>
+        {
+            jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
 }
 
 var app = builder.Build();
