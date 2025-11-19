@@ -17,6 +17,7 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.AspNetCore.SignalR;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -157,31 +158,11 @@ var logger = services.GetService<ILogger<Program>>() ?? throw new Exception($"Lo
 
 try
 {
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    var applicationSettings = services.GetRequiredService<IOptions<ApplicationSettings>>();
-    if (applicationSettings.Value.AutomaticallyApplyEfMigrations && context.Database.IsRelational())
-    {
-        await context.Database.MigrateAsync();
-    }
-
-    // We want to use dependency injection for the Seeder class, but we need to replace the IUserContext service with SystemUserContext for seeding purposes.
-    var seederServiceCollection = new ServiceCollection();
-    foreach (var descriptor in builder.Services.Where(descriptor => descriptor.ServiceType != typeof(IUserContext)))
-    {
-        seederServiceCollection.Add(descriptor);
-    }
-    seederServiceCollection.AddScoped<IUserContext, SystemUserContext>();
-    seederServiceCollection.AddScoped<Seeder>();
-
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-    using var seederServiceProvider = seederServiceCollection.BuildServiceProvider();
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-    var seeder = seederServiceProvider.GetRequiredService<Seeder>();
-    await seeder.SeedAsync();
+    await services.InitializeDatabaseAsync(builder.Services, useDistributed, logger);
 }
 catch (Exception ex)
 {
-    logger.LogError(ex, "An error occurred during migration and/or seeding");
+    logger.LogError(ex, "An error occurred during database initialization");
     throw;
 }
 
