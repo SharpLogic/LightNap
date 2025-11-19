@@ -10,6 +10,7 @@ using LightNap.Core.StaticContents.Enums;
 using LightNap.Core.StaticContents.Interfaces;
 using LightNap.Core.StaticContents.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
@@ -18,7 +19,7 @@ namespace LightNap.Core.StaticContents.Services
     /// <summary>
     /// Service implementation for managing static content and language variants.
     /// </summary>
-    public class StaticContentService(ApplicationDbContext db, IUserContext userContext, ILogger<StaticContentService> logger) : IStaticContentService
+    public class StaticContentService(ApplicationDbContext db, IUserContext userContext, ILogger<StaticContentService> logger, HybridCache cache) : IStaticContentService
     {
         /// <summary>
         /// Tests if the current user is a global content administrator.
@@ -97,17 +98,33 @@ namespace LightNap.Core.StaticContents.Services
         /// <returns></returns>
         private async Task<PublishedStaticContentDto?> GetPublishedStaticContentInternalAsync(string key, string languageCode)
         {
-            var content = await db.StaticContentLanguages
-                .Where(scl => scl.LanguageCode == languageCode && scl.StaticContent!.Key == key)
-                .Select(scl => scl.ToPublishedDto())
-                .FirstOrDefaultAsync();
-
-            if (content is null && languageCode != StaticContentConfig.DefaultLanguageCode)
+            return await cache.GetOrCreateAsync($"published-content-internal:{key}:{languageCode}", async _ =>
             {
-                return await this.GetPublishedStaticContentInternalAsync(key, StaticContentConfig.DefaultLanguageCode);
-            }
+                var content = await db.StaticContentLanguages
+                    .Where(scl => scl.LanguageCode == languageCode && scl.StaticContent!.Key == key)
+                    .Select(scl => scl.ToPublishedDto())
+                    .FirstOrDefaultAsync();
 
-            return content;
+                if (content is null && languageCode != StaticContentConfig.DefaultLanguageCode)
+                {
+                    return await this.GetPublishedStaticContentInternalAsync(key, StaticContentConfig.DefaultLanguageCode);
+                }
+
+                return content;
+            });
+        }
+
+        /// <summary>
+        /// Invalidates the cache for all published language variants of the specified static content.
+        /// </summary>
+        /// <param name="staticContentId">The ID of the static content.</param>
+        /// <param name="key">The key of the static content.</param>
+        private async Task InvalidatePublishedContentCacheAsync(int staticContentId, string key)
+        {
+            foreach (var lang in StaticContentConfig.SupportedLanguages)
+            {
+                await cache.RemoveAsync($"published-content-internal:{key}:{lang.LanguageCode}");
+            }
         }
 
         /// <summary>
@@ -272,6 +289,10 @@ namespace LightNap.Core.StaticContents.Services
             updateDto.UpdateEntity(staticContent, userContext.GetUserId());
             db.StaticContents.Update(staticContent);
             await db.SaveChangesAsync();
+
+            // Invalidate cache for all language variants of this content
+            await this.InvalidatePublishedContentCacheAsync(staticContent.Id, key);
+
             return staticContent.ToDto();
         }
 
@@ -283,6 +304,9 @@ namespace LightNap.Core.StaticContents.Services
             this.AssertContentAdministrator();
 
             var staticContent = await db.StaticContents.FirstOrDefaultAsync(sc => sc.Key == key) ?? throw new UserFriendlyApiException($"Static content with key '{key}' not found.");
+
+            // Invalidate cache for all language variants before deletion
+            await this.InvalidatePublishedContentCacheAsync(staticContent.Id, key);
 
             db.StaticContents.Remove(staticContent);
             await db.SaveChangesAsync();
@@ -365,6 +389,10 @@ namespace LightNap.Core.StaticContents.Services
             updateDto.UpdateEntity(staticContentLanguage);
             db.StaticContentLanguages.Update(staticContentLanguage);
             await db.SaveChangesAsync();
+
+            // Invalidate cache for this specific language variant
+            await cache.RemoveAsync($"published-content-internal:{key}:{languageCode}");
+
             return staticContentLanguage.ToDto();
         }
 
@@ -381,6 +409,9 @@ namespace LightNap.Core.StaticContents.Services
             var staticContentLanguage =
                 await db.StaticContentLanguages.FirstOrDefaultAsync(scl => scl.StaticContentId == staticContent.Id && scl.LanguageCode == languageCode)
                     ?? throw new UserFriendlyApiException($"Static content language with key '{key}' and language '{languageCode}' not found.");
+
+            // Invalidate cache for this language variant
+            await cache.RemoveAsync($"published-content-internal:{key}:{languageCode}");
 
             db.StaticContentLanguages.Remove(staticContentLanguage);
             await db.SaveChangesAsync();

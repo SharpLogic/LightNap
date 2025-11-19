@@ -5,6 +5,7 @@ using LightNap.Core.StaticContents.Dto.Response;
 using LightNap.Core.StaticContents.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace LightNap.WebApi.Controllers
 {
@@ -22,6 +23,7 @@ namespace LightNap.WebApi.Controllers
 
         [HttpGet("supported-languages")]
         [AllowAnonymous]
+        [OutputCache(Duration = 3600)]
         public ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguage>> GetSupportedLanguages()
         {
             return new ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguage>>(staticContentService.GetSupportedLanguages());

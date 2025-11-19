@@ -15,7 +15,6 @@ export class NotificationHubService {
       accessTokenFactory: () => this.#identityService.getToken() || "",
     })
     .withAutomaticReconnect()
-    .configureLogging(LogLevel.Information)
     .build();
   #notificationSubject = new Subject<NotificationDto>();
 
