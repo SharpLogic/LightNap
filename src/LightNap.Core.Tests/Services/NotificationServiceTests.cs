@@ -2,15 +2,19 @@ using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
+using LightNap.Core.Hubs;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
+using LightNap.Core.Notifications.Dto.Response;
 using LightNap.Core.Notifications.Enums;
 using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Notifications.Services;
 using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using System.Security.Claims;
 
 namespace LightNap.Core.Tests.Services
@@ -24,6 +28,7 @@ namespace LightNap.Core.Tests.Services
         private ApplicationDbContext _dbContext;
         private TestUserContext _userContext;
         private INotificationService _notificationService;
+        private Mock<IHubContext<NotificationsHub>> _hubContextMock;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -38,6 +43,15 @@ namespace LightNap.Core.Tests.Services
 
             this._userContext = new TestUserContext();
             services.AddScoped<IUserContext>(sp => this._userContext);
+
+            // Mock IHubContext<NotificationsHub>
+            this._hubContextMock = new Mock<IHubContext<NotificationsHub>>();
+            var mockClients = new Mock<IHubClients>();
+            var mockGroup = new Mock<IClientProxy>();
+            mockClients.Setup(clients => clients.Group(It.IsAny<string>())).Returns(mockGroup.Object);
+            this._hubContextMock.Setup(hub => hub.Clients).Returns(mockClients.Object);
+            services.AddScoped<IHubContext<NotificationsHub>>(sp => this._hubContextMock.Object);
+
             services.AddScoped<INotificationService, NotificationService>();
 
             var serviceProvider = services.BuildServiceProvider();

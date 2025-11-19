@@ -9,6 +9,7 @@ import { LayoutConfigDto } from "@core/backend-api";
 import { API_URL_ROOT } from "@core/helpers";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { AppTopBarComponent } from "./app-top-bar.component";
+import { MessageService } from "primeng/api";
 
 describe("AppTopBarComponent", () => {
   let mockLayoutService: any;
@@ -51,6 +52,7 @@ describe("AppTopBarComponent", () => {
         { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: LayoutService, useValue: mockLayoutService },
         { provide: RouteAliasService, useClass: MockRouteAliasService },
+        MessageService,
       ],
     }).compileComponents();
   });

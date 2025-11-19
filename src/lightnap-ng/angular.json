@@ -70,8 +70,7 @@
                             "buildTarget": "lightnap-ng:build:production"
                         },
                         "development": {
-                            "buildTarget": "lightnap-ng:build:development",
-                            "proxyConfig": "proxy.conf.json"
+                            "buildTarget": "lightnap-ng:build:development"
                         }
                     },
                     "defaultConfiguration": "development"

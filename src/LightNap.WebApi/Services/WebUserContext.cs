@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Configuration;
+using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
 using LightNap.WebApi.Extensions;
 

@@ -11,10 +11,12 @@ import {
     SearchNotificationsRequestDto
 } from "@core";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
+import { NotificationHubService } from "@core/backend-api/services/notification-hub.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { RequestPollingManager } from "@core/helpers";
 import { IdentityService } from "@core/services/identity.service";
+import { ToastService } from "@core/services/toast.service";
 import { ReplaySubject, combineLatest, finalize, forkJoin, map, of, switchMap, tap } from "rxjs";
 
 @Injectable({
@@ -25,23 +27,31 @@ export class NotificationService {
   #identityService = inject(IdentityService);
   #adminService = inject(AdminUsersService);
   #routeAlias = inject(RouteAliasService);
+  #toastService = inject(ToastService);
+  #hubService = inject(NotificationHubService);
 
   #notifications?: Array<NotificationItem>;
   #notificationsSubject = new ReplaySubject<Array<NotificationItem>>(1);
   #unreadCountSubject = new ReplaySubject<number>(1);
-  #pollingManager = new RequestPollingManager(() => this.#requestLatestNotifications(), 15 * 1000);
+  #unreadCount = 0;
+  #pollingManager = new RequestPollingManager(() => this.#requestLatestNotifications(), 5 * 60 * 1000);
 
   constructor() {
+    this.#hubService.notifications$.subscribe(notification => this.#onNotificationReceived(notification));
+
     this.#identityService
       .watchLoggedIn$()
       .pipe(takeUntilDestroyed())
       .subscribe({
         next: loggedIn => {
           if (loggedIn) {
-            this.#pollingManager.startPolling();
+            this.#hubService.startConnection().catch(err => console.error('Error starting SignalR connection:', err));
+            this.#pollingManager.startPolling(); // Keep polling as fallback
           } else {
+            this.#hubService.stopConnection().catch(err => console.error('Error stopping SignalR connection:', err));
             this.#notifications = undefined;
             this.#notificationsSubject.next([]);
+            this.#unreadCount = 0;
             this.#unreadCountSubject.next(0);
             this.#pollingManager.stopPolling();
           }
@@ -51,7 +61,10 @@ export class NotificationService {
 
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
     return this.#dataService.searchNotifications(searchNotificationsRequest).pipe(
-      tap(results => this.#unreadCountSubject.next(results.unreadCount)),
+      tap(results => {
+        this.#unreadCount = results.unreadCount;
+        this.#unreadCountSubject.next(results.unreadCount);
+      }),
       switchMap(results =>
         this.#loadNotificationItems(results.data).pipe(map(notifications => <NotificationSearchResults>{ ...results, notifications }))
       )
@@ -62,6 +75,21 @@ export class NotificationService {
     return combineLatest([this.#notificationsSubject, this.#unreadCountSubject]).pipe(
       map(([notifications, unreadCount]) => <LatestNotifications>{ notifications, unreadCount })
     );
+  }
+
+  #onNotificationReceived(notification: NotificationDto) {
+    this.#loadNotificationItem(notification).subscribe({
+      next: item => {
+        if (item) {
+          this.#notifications = [item, ...(this.#notifications || [])];
+          this.#notificationsSubject.next(this.#notifications);
+          this.#unreadCount++;
+          this.#unreadCountSubject.next(this.#unreadCount);
+          this.#toastService.info(item.title, item.description);
+        }
+      },
+      error: err => console.error('Error processing received notification:', err)
+    });
   }
 
   #requestLatestNotifications() {

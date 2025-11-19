@@ -362,6 +362,15 @@ export class IdentityService {
   }
 
   /**
+   * @method getToken
+   * @description Returns the current access token.
+   * @returns {string | undefined} The access token if the user is logged in, otherwise undefined.
+   */
+  getToken() {
+    return this.#token;
+  }
+
+  /**
    * @method isTokenExpired
    * @description Checks if the current token is expired.
    * @returns {boolean} True if the token is expired, false otherwise.

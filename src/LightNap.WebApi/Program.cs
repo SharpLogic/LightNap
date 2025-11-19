@@ -1,17 +1,15 @@
-using LightNap.Core.Api;
 using LightNap.Core.Configuration;
-using LightNap.Core.Data;
-using LightNap.Core.Interfaces;
+using LightNap.Core.Hubs;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Hybrid;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +55,46 @@ builder.Services.AddDatabaseServices(builder.Configuration)
     .AddApplicationServices()
     .AddIdentityServices(builder.Configuration);
 
+// Configure HybridCache conditionally
+var cacheConfig = builder.Configuration.GetSection("Cache");
+builder.Services.AddHybridCache(options =>
+{
+    options.DefaultEntryOptions = new HybridCacheEntryOptions
+    {
+        Expiration = TimeSpan.FromMinutes(cacheConfig.GetValue<int>("ExpirationMinutes"))
+    };
+});
+
+// Configure distributed services and SignalR if in distributed mode
+bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
+if (useDistributed)
+{
+    string redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnection));
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConnection;
+    });
+
+    builder.Services.AddSignalR()
+        .AddJsonProtocol(jsonOptions =>
+        {
+            jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        })
+        .AddStackExchangeRedis(options =>
+        {
+            options.Configuration = ConfigurationOptions.Parse(redisConnection);
+        });
+}
+else
+{
+    builder.Services.AddSignalR()
+        .AddJsonProtocol(jsonOptions =>
+        {
+            jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -79,7 +117,12 @@ app.UseCors(policy =>
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseWebSockets();
+
 app.MapControllers();
+
+// Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
+app.MapHub<NotificationsHub>("/api/hubs/notifications");
 
 // We need the wwwroot folder so we can append the "browser" folder the Angular app deploys to. We then need to configure the app to serve the Angular deployment,
 // which includes appropriate deep links. However, if you're using a fresh clone then you won't have a wwwroot folder until you build the Angular app and WebRootPath
@@ -112,31 +155,11 @@ var logger = services.GetService<ILogger<Program>>() ?? throw new Exception($"Lo
 
 try
 {
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    var applicationSettings = services.GetRequiredService<IOptions<ApplicationSettings>>();
-    if (applicationSettings.Value.AutomaticallyApplyEfMigrations && context.Database.IsRelational())
-    {
-        await context.Database.MigrateAsync();
-    }
-
-    // We want to use dependency injection for the Seeder class, but we need to replace the IUserContext service with SystemUserContext for seeding purposes.
-    var seederServiceCollection = new ServiceCollection();
-    foreach (var descriptor in builder.Services.Where(descriptor => descriptor.ServiceType != typeof(IUserContext)))
-    {
-        seederServiceCollection.Add(descriptor);
-    }
-    seederServiceCollection.AddScoped<IUserContext, SystemUserContext>();
-    seederServiceCollection.AddScoped<Seeder>();
-
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-    using var seederServiceProvider = seederServiceCollection.BuildServiceProvider();
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
-    var seeder = seederServiceProvider.GetRequiredService<Seeder>();
-    await seeder.SeedAsync();
+    await services.InitializeDatabaseAsync(builder.Services, useDistributed, logger);
 }
 catch (Exception ex)
 {
-    logger.LogError(ex, "An error occurred during migration and/or seeding");
+    logger.LogError(ex, "An error occurred during database initialization");
     throw;
 }
 

@@ -13,7 +13,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { API_URL_ROOT } from "@core/helpers";
 import { MenuService } from "@core/features/layout/services/menu.service";
 import { BreadcrumbService } from "@core/features/layout/services/breadcrumb.service";
-import { MenuItem } from "primeng/api";
+import { MenuItem, MessageService } from "primeng/api";
 
 describe("AppLayoutComponent", () => {
   let component: AppLayoutComponent;
@@ -86,6 +86,7 @@ describe("AppLayoutComponent", () => {
         { provide: RouteAliasService, useClass: MockRouteAliasService },
         { provide: MenuService, useValue: mockMenuService },
         { provide: BreadcrumbService, useValue: mockBreadcrumbService },
+        MessageService,
       ],
     }).compileComponents();
 
