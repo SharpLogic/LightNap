@@ -1,6 +1,7 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Data;
+using LightNap.Core.Hubs;
 using LightNap.Core.Interfaces;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
@@ -12,6 +13,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.AspNetCore.SignalR;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +61,36 @@ builder.Services.AddDatabaseServices(builder.Configuration)
     .AddApplicationServices()
     .AddIdentityServices(builder.Configuration);
 
+// Configure HybridCache conditionally
+var cacheConfig = builder.Configuration.GetSection("Cache");
+bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
+builder.Services.AddHybridCache(options =>
+{
+    options.DefaultEntryOptions = new HybridCacheEntryOptions
+    {
+        Expiration = TimeSpan.FromMinutes(cacheConfig.GetValue<int>("LocalExpirationMinutes"))
+    };
+});
+
+// Configure distributed cache if in distributed mode
+if (useDistributed)
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    });
+}
+
+// Configure SignalR with optional backplane
+var signalR = builder.Services.AddSignalR();
+if (useDistributed)
+{
+    signalR.AddStackExchangeRedis(options =>
+    {
+        options.Configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379");
+    });
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -80,6 +114,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationsHub>("/notificationsHub");
 
 // We need the wwwroot folder so we can append the "browser" folder the Angular app deploys to. We then need to configure the app to serve the Angular deployment,
 // which includes appropriate deep links. However, if you're using a fresh clone then you won't have a wwwroot folder until you build the Angular app and WebRootPath

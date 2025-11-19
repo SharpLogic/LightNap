@@ -2,6 +2,7 @@ using LightNap.Core.Api;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
+using LightNap.Core.Hubs;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
@@ -9,6 +10,7 @@ using LightNap.Core.Notifications.Dto.Response;
 using LightNap.Core.Notifications.Enums;
 using LightNap.Core.Notifications.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LightNap.Core.Notifications.Services
@@ -16,7 +18,7 @@ namespace LightNap.Core.Notifications.Services
     /// <summary>  
     /// Service for managing user notifications.
     /// </summary>  
-    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext) : INotificationService
+    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext, IHubContext<NotificationsHub> hubContext) : INotificationService
     {
         /// <summary>
         /// Creates a notification for a specific user.
@@ -31,7 +33,9 @@ namespace LightNap.Core.Notifications.Services
             db.Notifications.Add(notification);
             await db.SaveChangesAsync();
 
-            // TODO: Send notification to SignalR
+            // Send notification to SignalR
+            var notificationDto = notification.ToDto();
+            await hubContext.Clients.Group($"user:{userId}").SendAsync("ReceiveNotification", notificationDto);
         }
 
         /// <summary>
