@@ -17,6 +17,31 @@ In a production deployment it is preferable to define these settings in a secure
 
 See the options for configuring [application settings](./configuring-application-settings).
 
+## Cache
+
+LightNap uses hybrid caching for performance optimization. Configure cache settings in the `Cache` section of `appsettings.json`.
+
+| Setting | Purpose |
+|---------|---------|
+| `ExpirationMinutes` | The default expiration time for cached items in minutes. |
+
+## Distributed Backend Support
+
+LightNap supports running multiple backend instances for scalability and high availability. When enabled, Redis is used for distributed caching and SignalR backplane.
+
+To enable distributed mode:
+
+1. Set `UseDistributedMode` to `true` in the application settings.
+2. Configure the Redis connection string in the `ConnectionStrings` section:
+
+   ```json
+   "ConnectionStrings": {
+     "Redis": "your-redis-connection-string"
+   }
+   ```
+
+In distributed mode, database migrations and seeding are coordinated across instances using Redis-based locking to prevent conflicts.
+
 ## Database
 
 See the options for configuring the [database provider](./database-providers) to use.

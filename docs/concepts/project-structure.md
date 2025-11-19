@@ -20,6 +20,8 @@ The backend is developed on .NET using C#. `LightNap.sln` includes the projects 
 - `LightNap.MaintenanceService`: .NET console project to run maintenance tasks.
 - `LightNap.WebApi`: .NET Web API project.
 
+LightNap supports distributed deployment with multiple backend instances. When `UseDistributedMode` is enabled in the configuration, Redis is used for distributed caching and SignalR backplane to coordinate between instances.
+
 ### Endpoints
 
 The `LightNap.WebApi` project is a thin layer that exposes REST API endpoints and provides a layer of configuration and authorization. Each controller endpoint hands off the request to a core service method after performing initial validation, so there should be no real business logic contained in this project.
