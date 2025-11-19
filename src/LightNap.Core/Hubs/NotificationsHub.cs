@@ -1,5 +1,7 @@
+using LightNap.Core.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace LightNap.Core.Hubs;
 
@@ -15,7 +17,7 @@ public class NotificationsHub : Hub
     public override async Task OnConnectedAsync()
     {
         // Optionally, add the user to a group based on their ID
-        var userId = Context.User?.Identity?.Name;
+        var userId = (Context.User as ClaimsPrincipal)?.GetUserId();
         if (!string.IsNullOrEmpty(userId))
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"user:{userId}");

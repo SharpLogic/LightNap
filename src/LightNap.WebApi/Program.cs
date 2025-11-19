@@ -16,6 +16,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.AspNetCore.SignalR;
 using StackExchange.Redis;
+using Microsoft.AspNetCore.Http.Connections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +83,12 @@ if (useDistributed)
 }
 
 // Configure SignalR with optional backplane
-var signalR = builder.Services.AddSignalR();
+var signalR = builder.Services.AddSignalR()
+    .AddJsonProtocol(jsonOptions =>
+    {
+        jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 if (useDistributed)
 {
     signalR.AddStackExchangeRedis(options =>
@@ -113,8 +119,12 @@ app.UseCors(policy =>
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseWebSockets();
+
 app.MapControllers();
-app.MapHub<NotificationsHub>("/notificationsHub");
+
+// Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
+app.MapHub<NotificationsHub>("/api/hubs/notifications");
 
 // We need the wwwroot folder so we can append the "browser" folder the Angular app deploys to. We then need to configure the app to serve the Angular deployment,
 // which includes appropriate deep links. However, if you're using a fresh clone then you won't have a wwwroot folder until you build the Angular app and WebRootPath

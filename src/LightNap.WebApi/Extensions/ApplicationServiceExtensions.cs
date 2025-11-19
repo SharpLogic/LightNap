@@ -147,6 +147,24 @@ namespace LightNap.WebApi.Extensions
                     ValidAudience = configuration.GetRequiredSetting("Jwt:Audience"),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetRequiredSetting("Jwt:Key")))
                 };
+
+                // This event is needed to allow the JWT token to be passed in the query string for SignalR hub connections
+                // (which cannot set headers).
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // Check if the request path matches a hub endpoint
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/api/hubs"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             services.AddAuthorization(options =>

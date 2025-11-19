@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace LightNap.WebApi.Extensions
+namespace LightNap.Core.Extensions
 {
     /// <summary>
     /// Extension methods for ClaimsPrincipal.

@@ -3,6 +3,7 @@ const PROXY_CONFIG = {
     target: "https://lightnap.azurewebsites.net",
     secure: true,
     changeOrigin: true,
+    ws: true,
   }
 };
 
