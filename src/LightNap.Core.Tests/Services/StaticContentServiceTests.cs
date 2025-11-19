@@ -36,6 +36,8 @@ namespace LightNap.Core.Tests.Services
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddHybridCache();
+
             this._userContext = new TestUserContext();
             services.AddScoped<IUserContext>(sp => this._userContext);
             services.AddScoped<StaticContentService>();
