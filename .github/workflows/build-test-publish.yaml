@@ -1,7 +1,7 @@
 name: Build, Test, and Publish
 
 env:
-  DOTNET_VERSION: '9'
+  DOTNET_VERSION: '10'
   NODE_VERSION: '22'
   ANGULAR_PROJECT_NAME: 'lightnap-ng'
 
