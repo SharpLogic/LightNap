@@ -26,7 +26,7 @@ Send emails through any SMTP-compatible email server, including popular services
 
 ### [Log To Console Provider](./log-to-console-provider)
 
-Logs email content to the console instead of actually sending emails. Perfect for development and testing when you need to verify email content without setting up an SMTP server.
+Logs email content to the console instead of actually sending emails. Perfect for development and testing when you need to verify email content without setting up an SMTP server. This is the **default provider**.
 
 **Best For**: Local development, testing, demos
 
@@ -39,7 +39,7 @@ Email providers are configured in `appsettings.json` under the `Email` node:
 ```json
 {
   "Email": {
-    "Provider": "Smtp", // or "LogToConsole"
+    "Provider": "LogToConsole", // or "Smtp"
     "FromEmail": "noreply@example.com",
     "FromDisplayName": "LightNap App",
     "SiteUrlRootForLinks": "https://yourdomain.com/",
