@@ -1,6 +1,8 @@
-﻿using LightNap.Core.Email.Interfaces;
+﻿using LightNap.Core.Configuration;
+using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Extensions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
@@ -16,13 +18,13 @@ namespace LightNap.Core.Email.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="SmtpEmailSender"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration to use for setting up the SMTP client.</param>
-        public SmtpEmailSender(IConfiguration configuration)
+        /// <param name="smtpSettings">The SMTP settings.</param>
+        public SmtpEmailSender(SmtpSettings smtpSettings)
         {
-            this._smtpClient = new SmtpClient(configuration.GetRequiredSetting("Email:Smtp:Host"), int.Parse(configuration.GetRequiredSetting("Email:Smtp:Port")))
+            this._smtpClient = new SmtpClient(smtpSettings.Host, smtpSettings.Port)
             {
-                Credentials = new NetworkCredential(configuration.GetRequiredSetting("Email:Smtp:User"), configuration.GetRequiredSetting("Email:Smtp:Password")),
-                EnableSsl = bool.Parse(configuration.GetRequiredSetting("Email:Smtp:EnableSsl"))
+                Credentials = new NetworkCredential(smtpSettings.User, smtpSettings.Password),
+                EnableSsl = smtpSettings.EnableSsl
             };
         }
 
