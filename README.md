@@ -98,7 +98,7 @@ dotnet run
 
 The API will be available at `https://localhost:7227` (or check console output).
 
-> **Note:** The backend runs with an in-memory database by default. See [Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html) to configure SQL Server or SQLite.
+> **Note:** The backend runs with a SQLite database by default and logs emails to the console for development. See [Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html) to configure SQL Server, email providers, or other settings.
 
 ### 3. Start the Frontend
 
@@ -114,8 +114,13 @@ The application will open at `http://localhost:4200`.
 
 ### 4. Login with Default Credentials
 
-- Email: `admin@lightnap.azurewebsites.net`
-- Password: `A2m!nPassword`
+The application comes with three pre-seeded user accounts for testing:
+
+| Role           | Email                                      | Password   | Description                                                       |
+| -------------- | ------------------------------------------ | ---------- | ----------------------------------------------------------------- |
+| Administrator  | `Admin@lightnap.azurewebsites.net`         | `P@ssw0rd` | Full access to manage users, roles, and system settings.          |
+| Content Editor | `ContentEditor@lightnap.azurewebsites.net` | `P@ssw0rd` | Can manage CMS aspects of the site.                               |
+| Regular User   | `RegularUser@lightnap.azurewebsites.net`   | `P@ssw0rd` | Basic user with limited access for standard application features. |
 
 ---
 

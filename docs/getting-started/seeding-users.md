@@ -46,6 +46,7 @@ For example, the default configuration looks like this:
 ```
 
 This example demonstrates seeding three different types of users:
+
 - An `Administrator` user with full administrative privileges
 - A `ContentEditor` user with content editing capabilities
 - A `RegularUser` with no special role assignments (indicated by the empty string `""` key)
