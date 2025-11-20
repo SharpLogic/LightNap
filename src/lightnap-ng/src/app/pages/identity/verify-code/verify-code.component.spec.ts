@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { API_URL_ROOT, APP_NAME } from "@core/helpers";
+import { APP_NAME } from "@core/helpers";
 
 describe("VerifyCodeComponent", () => {
   let component: VerifyCodeComponent;
@@ -36,7 +36,6 @@ describe("VerifyCodeComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideHttpClient(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         { provide: BlockUiService, useValue: mockBlockUiService },
@@ -46,10 +45,10 @@ describe("VerifyCodeComponent", () => {
 
     fixture = TestBed.createComponent(VerifyCodeComponent);
     component = fixture.componentInstance;
-    
+
     // Set required input
     fixture.componentRef.setInput("login", "test@example.com");
-    
+
     mockRouteAliasService = TestBed.inject(RouteAliasService) as unknown as MockRouteAliasService;
     fixture.detectChanges();
   });

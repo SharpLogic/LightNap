@@ -8,7 +8,7 @@ import { ChangePasswordComponent } from "./change-password.component";
 import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { ToastService } from "@core/services/toast.service";
-import { API_URL_ROOT, APP_NAME } from "@core/helpers";
+import { APP_NAME } from "@core/helpers";
 
 describe("ChangePasswordComponent", () => {
   let component: ChangePasswordComponent;
@@ -40,7 +40,6 @@ describe("ChangePasswordComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideHttpClient(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         { provide: BlockUiService, useValue: mockBlockUiService },

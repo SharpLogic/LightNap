@@ -3,7 +3,6 @@ using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Email.Templates;
 using LightNap.Core.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
@@ -15,16 +14,10 @@ namespace LightNap.Core.Email.Services
     /// <remarks>
     /// Initializes a new instance of the <see cref="DefaultEmailService"/> class.
     /// </remarks>
-    /// <param name="configuration">The configuration to use for setting up the default email service.</param>
+    /// <param name="emailSettings">The email settings.</param>
     /// <param name="emailSender">The email sending service.</param>
-    /// <param name="applicationSettings">The application settings to use for the email service.</param>
-    public class DefaultEmailService(IConfiguration configuration, IEmailSender emailSender, IOptions<ApplicationSettings> applicationSettings) : IEmailService
+    public class DefaultEmailService(IOptions<EmailSettings> emailSettings, IEmailSender emailSender) : IEmailService
     {
-        private readonly string _fromEmail = configuration.GetRequiredSetting("Email:FromEmail");
-        private readonly string _fromDisplayName = configuration.GetRequiredSetting("Email:FromDisplayName");
-        private readonly string _siteUrlRoot = applicationSettings.Value.SiteUrlRootForEmails;
-
-
         /// <summary>
         /// Sends an email asynchronously.
         /// </summary>
@@ -43,7 +36,7 @@ namespace LightNap.Core.Email.Services
         public async Task SendMailAsync(ApplicationUser user, string subject, string body)
         {
             await emailSender.SendMailAsync(
-                new MailMessage(new MailAddress(this._fromEmail, this._fromDisplayName), new MailAddress(user.Email!, user.UserName))
+                new MailMessage(new MailAddress(emailSettings.Value.FromEmail, emailSettings.Value.FromDisplayName), new MailAddress(user.Email!, user.UserName))
                 {
                     Subject = subject,
                     Body = body,
@@ -62,8 +55,8 @@ namespace LightNap.Core.Email.Services
             await this.SendMailAsync(user, "Reset your password",
                 new ResetPasswordTemplate()
                 {
-                    FromDisplayName = this._fromDisplayName,
-                    SiteUrlRoot = this._siteUrlRoot,
+                    FromDisplayName = emailSettings.Value.FromDisplayName,
+                    SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                     Token = token,
                     User = user
                 }.TransformText());
@@ -78,12 +71,12 @@ namespace LightNap.Core.Email.Services
         public async Task SendChangeEmailAsync(ApplicationUser user, string newEmail, string token)
         {
             await emailSender.SendMailAsync(
-                new MailMessage(this._fromEmail, newEmail, "Confirm your email change",
+                new MailMessage(emailSettings.Value.FromEmail, newEmail, "Confirm your email change",
                     new ChangeEmailTemplate()
                     {
-                        FromDisplayName = this._fromDisplayName,
+                        FromDisplayName = emailSettings.Value.FromDisplayName,
                         NewEmail = newEmail,
-                        SiteUrlRoot = this._siteUrlRoot,
+                        SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                         Token = token,
                         User = user
                     }.TransformText()));
@@ -100,8 +93,8 @@ namespace LightNap.Core.Email.Services
             await this.SendMailAsync(user, "Confirm your email",
                 new ConfirmEmailTemplate()
                 {
-                    FromDisplayName = this._fromDisplayName,
-                    SiteUrlRoot = this._siteUrlRoot,
+                    FromDisplayName = emailSettings.Value.FromDisplayName,
+                    SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                     Token = token,
                     User = user
                 }.TransformText());
@@ -117,8 +110,8 @@ namespace LightNap.Core.Email.Services
             await this.SendMailAsync(user, "Welcome to our site",
                 new RegistrationWelcomeTemplate()
                 {
-                    FromDisplayName = this._fromDisplayName,
-                    SiteUrlRoot = this._siteUrlRoot,
+                    FromDisplayName = emailSettings.Value.FromDisplayName,
+                    SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                     User = user
                 }.TransformText());
         }
@@ -135,8 +128,8 @@ namespace LightNap.Core.Email.Services
                 new TwoFactorTemplate()
                 {
                     Code = code,
-                    FromDisplayName = this._fromDisplayName,
-                    SiteUrlRoot = this._siteUrlRoot,
+                    FromDisplayName = emailSettings.Value.FromDisplayName,
+                    SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                     User = user
                 }.TransformText());
         }
@@ -152,8 +145,8 @@ namespace LightNap.Core.Email.Services
             await this.SendMailAsync(user, "Your login link",
                 new MagicLinkTemplate()
                 {
-                    FromDisplayName = this._fromDisplayName,
-                    SiteUrlRoot = this._siteUrlRoot,
+                    FromDisplayName = emailSettings.Value.FromDisplayName,
+                    SiteUrlRoot = emailSettings.Value.SiteUrlRootForLinks,
                     Token = token,
                     User = user
                 }.TransformText());

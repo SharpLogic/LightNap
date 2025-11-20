@@ -10,10 +10,30 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
 using StackExchange.Redis;
+using LightNap.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<ApplicationSettings>(builder.Configuration.GetSection("ApplicationSettings"));
+// Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
+ApplicationSettings appSettings = builder.Configuration.GetRequiredSection<ApplicationSettings>("ApplicationSettings");
+JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
+EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
+CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
+
+// Register configuration sections with validation.
+builder.Services.AddOptions<ApplicationSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("ApplicationSettings"))
+    .ValidateDataAnnotations();
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
+    .ValidateDataAnnotations();
+builder.Services.AddOptions<EmailSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Email"))
+    .ValidateDataAnnotations();
+builder.Services.AddOptions<CacheSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Cache"))
+    .ValidateDataAnnotations();
+
 builder.Services.Configure<Dictionary<string, List<SeededUserConfiguration>>>(builder.Configuration.GetSection("SeededUsers"));
 
 // Add services to the container.
@@ -51,17 +71,16 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddDatabaseServices(builder.Configuration)
-    .AddEmailServices(builder.Configuration)
+    .AddEmailServices(emailSettings)
     .AddApplicationServices()
-    .AddIdentityServices(builder.Configuration);
+    .AddIdentityServices(jwtSettings);
 
 // Configure HybridCache conditionally
-var cacheConfig = builder.Configuration.GetSection("Cache");
 builder.Services.AddHybridCache(options =>
 {
     options.DefaultEntryOptions = new HybridCacheEntryOptions
     {
-        Expiration = TimeSpan.FromMinutes(cacheConfig.GetValue<int>("ExpirationMinutes"))
+        Expiration = TimeSpan.FromMinutes(cacheSettings.ExpirationMinutes)
     };
 });
 

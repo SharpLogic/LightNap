@@ -6,7 +6,7 @@ import { provideZonelessChangeDetection } from "@angular/core";
 import { of, throwError } from "rxjs";
 import { NotificationsComponent } from "./notifications.component";
 import { IdentityService } from "@core/services/identity.service";
-import { API_URL_ROOT, APP_NAME, NotificationItem, NotificationSearchResults } from "@core";
+import { APP_NAME, NotificationItem, NotificationSearchResults } from "@core";
 import { NotificationService } from "@core/features/notifications/services/notification.service";
 import { ToastService } from "@core/services/toast.service";
 import { Router } from "@angular/router";
@@ -70,7 +70,6 @@ describe("NotificationsComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideZonelessChangeDetection(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         { provide: NotificationService, useValue: mockNotificationService },

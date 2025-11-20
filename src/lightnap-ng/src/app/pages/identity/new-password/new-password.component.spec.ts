@@ -10,7 +10,7 @@ import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { LoginSuccessTypes } from "@core/backend-api";
-import { API_URL_ROOT, APP_NAME } from "@core/helpers";
+import { APP_NAME } from "@core/helpers";
 
 describe("NewPasswordComponent", () => {
   let component: NewPasswordComponent;
@@ -43,7 +43,6 @@ describe("NewPasswordComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideHttpClient(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         { provide: BlockUiService, useValue: mockBlockUiService },
@@ -53,11 +52,11 @@ describe("NewPasswordComponent", () => {
 
     fixture = TestBed.createComponent(NewPasswordComponent);
     component = fixture.componentInstance;
-    
+
     // Set required inputs
     fixture.componentRef.setInput("email", "test@example.com");
     fixture.componentRef.setInput("token", "reset-token-123");
-    
+
     mockRouteAliasService = TestBed.inject(RouteAliasService) as unknown as MockRouteAliasService;
     fixture.detectChanges();
   });

@@ -10,7 +10,6 @@ import { RouteAliasService } from "@core/features/routing/services/route-alias-s
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { LayoutConfigDto } from "@core/backend-api";
 import { provideHttpClient } from "@angular/common/http";
-import { API_URL_ROOT } from "@core/helpers";
 import { MenuService } from "@core/features/layout/services/menu.service";
 import { BreadcrumbService } from "@core/features/layout/services/breadcrumb.service";
 import { MenuItem, MessageService } from "primeng/api";
@@ -81,7 +80,6 @@ describe("AppLayoutComponent", () => {
         provideHttpClient(),
         provideRouter([]),
         provideLocationMocks(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: LayoutService, useValue: mockLayoutService },
         { provide: RouteAliasService, useClass: MockRouteAliasService },
         { provide: MenuService, useValue: mockMenuService },

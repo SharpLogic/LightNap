@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { API_URL_ROOT } from "@core/helpers";
 import { tap } from "rxjs";
 import { ClaimDto, NotificationSearchResultsDto, PagedRequestDto, PagedResponseDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
 import { NotificationHelper } from "../helpers/notification.helper";
@@ -11,7 +10,7 @@ import { UserSettingHelper } from "../helpers/user-setting.helper";
 })
 export class ProfileDataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}users/me/`;
+  #apiUrlRoot = "/api/users/me/";
 
   getProfile() {
     return this.#http.get<ProfileDto>(`${this.#apiUrlRoot}profile`);

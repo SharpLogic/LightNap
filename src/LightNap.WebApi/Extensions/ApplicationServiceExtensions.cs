@@ -34,6 +34,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace LightNap.WebApi.Extensions
@@ -99,21 +100,22 @@ namespace LightNap.WebApi.Extensions
         /// Adds email services to the service collection based on the configured email provider.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="emailSettings">The email settings.</param>
         /// <returns>The updated service collection.</returns>
         /// <exception cref="ArgumentException">Thrown when the email provider is unsupported.</exception>
-        public static IServiceCollection AddEmailServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEmailServices(this IServiceCollection services, EmailSettings emailSettings)
         {
-            string emailProvider = configuration.GetRequiredSetting("Email:Provider");
-            switch (emailProvider)
+            switch (emailSettings.Provider)
             {
-                case "LogToConsole":
+                case EmailProvider.LogToConsole:
                     services.AddLogToConsoleEmailSender();
                     break;
-                case "Smtp":
-                    services.AddSmtpEmailSender();
+                case EmailProvider.Smtp:
+                    if (emailSettings.Smtp is null) { throw new ArgumentNullException("SMTP settings are required if 'Smtp' email option is set"); }
+                    Validator.ValidateObject(emailSettings.Smtp, new ValidationContext(emailSettings.Smtp), validateAllProperties: true);
+                    services.AddSmtpEmailSender(emailSettings.Smtp);
                     break;
-                default: throw new ArgumentException($"Unsupported 'Email:Provider' setting: '{emailProvider}'");
+                default: throw new ArgumentException($"Unsupported 'Email:Provider' setting: '{emailSettings.Provider}'");
             }
 
             services.AddScoped<IEmailService, DefaultEmailService>();
@@ -125,9 +127,9 @@ namespace LightNap.WebApi.Extensions
         /// Adds identity services to the service collection.
         /// </summary>
         /// <param name="services">The service collection.</param>
-        /// <param name="configuration">The configuration.</param>
+        /// <param name="jwtSettings">The JWT settings.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(
                 (options) =>
@@ -150,9 +152,9 @@ namespace LightNap.WebApi.Extensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration.GetRequiredSetting("Jwt:Issuer"),
-                    ValidAudience = configuration.GetRequiredSetting("Jwt:Audience"),
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetRequiredSetting("Jwt:Key")))
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 };
 
                 // This event is needed to allow the JWT token to be passed in the query string for SignalR hub connections

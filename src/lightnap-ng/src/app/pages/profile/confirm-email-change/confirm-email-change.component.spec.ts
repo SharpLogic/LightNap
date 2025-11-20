@@ -8,7 +8,7 @@ import { ConfirmEmailChangeComponent } from "./confirm-email-change.component";
 import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
-import { API_URL_ROOT, APP_NAME } from "@core";
+import { APP_NAME } from "@core";
 
 describe("ConfirmEmailChangeComponent", () => {
   let component: ConfirmEmailChangeComponent;
@@ -36,7 +36,6 @@ describe("ConfirmEmailChangeComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideZonelessChangeDetection(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         { provide: BlockUiService, useValue: mockBlockUiService },

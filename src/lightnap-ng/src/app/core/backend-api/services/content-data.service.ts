@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { API_URL_ROOT } from "@core/helpers";
 import { tap } from "rxjs";
 import {
     CreateStaticContentDto,
@@ -22,7 +21,7 @@ import { StaticContentHelper } from "../helpers/static-content.helper";
 })
 export class ContentDataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}content/`;
+  #apiUrlRoot = "/api/content/";
 
   getPublishedStaticContent(key: string, languageCode: string) {
     return this.#http.get<PublishedStaticContentResultDto | null>(`${this.#apiUrlRoot}published/${key}/${languageCode}`);

@@ -70,7 +70,6 @@ namespace LightNap.Core.Tests.Services
                         AutomaticallyApplyEfMigrations = false,
                         LogOutInactiveDeviceDays = 30,
                         RequireTwoFactorForNewUsers = false,
-                        SiteUrlRootForEmails = "https://example.com/",
                     }));
 
             this._tokenServiceMock = new Mock<ITokenService>();
