@@ -6,7 +6,7 @@ import { provideZonelessChangeDetection } from "@angular/core";
 import { of, throwError } from "rxjs";
 import { DevicesComponent } from "./devices.component";
 import { IdentityService } from "@core/services/identity.service";
-import { API_URL_ROOT, APP_NAME, DeviceDto } from "@core";
+import { APP_NAME, DeviceDto } from "@core";
 import { ConfirmationService } from "primeng/api";
 
 describe("DevicesComponent", () => {
@@ -44,7 +44,6 @@ describe("DevicesComponent", () => {
         provideNoopAnimations(),
         provideRouter([]),
         provideZonelessChangeDetection(),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: APP_NAME, useValue: "TestApp" },
         { provide: IdentityService, useValue: mockIdentityService },
         ConfirmationService, // Use real service, not mock

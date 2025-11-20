@@ -2,7 +2,6 @@ import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { API_URL_ROOT } from "@core";
 import { IdentityService } from "@core/services/identity.service";
 import { tokenInterceptor } from "./token-interceptor";
 
@@ -20,7 +19,6 @@ describe("tokenInterceptor", () => {
         provideHttpClient(withInterceptors([tokenInterceptor])),
         provideHttpClientTesting(),
         { provide: IdentityService, useValue: identityServiceSpy },
-        { provide: API_URL_ROOT, useValue: "http://api.example.com" },
       ],
     });
 
@@ -37,9 +35,9 @@ describe("tokenInterceptor", () => {
     const token = "Bearer test-token";
     identityService.getBearerToken.and.returnValue(token);
 
-    httpClient.get("http://api.example.com/data").subscribe();
+    httpClient.get("/api/data").subscribe();
 
-    const req = httpMock.expectOne("http://api.example.com/data");
+    const req = httpMock.expectOne("/api/data");
     expect(req.request.headers.has("Authorization")).toBeTruthy();
     expect(req.request.headers.get("Authorization")).toBe(token);
     expect(req.request.withCredentials).toBeTrue();
@@ -58,9 +56,9 @@ describe("tokenInterceptor", () => {
   it("should not add Authorization header if token is not available", () => {
     identityService.getBearerToken.and.returnValue(undefined);
 
-    httpClient.get("http://api.example.com/data").subscribe();
+    httpClient.get("/api/data").subscribe();
 
-    const req = httpMock.expectOne("http://api.example.com/data");
+    const req = httpMock.expectOne("/api/data");
     expect(req.request.headers.has("Authorization")).toBeFalsy();
     expect(req.request.withCredentials).toBeTrue();
     req.flush({});

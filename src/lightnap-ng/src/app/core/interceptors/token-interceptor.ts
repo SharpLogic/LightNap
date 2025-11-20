@@ -1,6 +1,5 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { API_URL_ROOT } from "@core/helpers";
 import { IdentityService } from "@core/services/identity.service";
 import { Observable } from "rxjs";
 
@@ -12,7 +11,7 @@ import { Observable } from "rxjs";
  * @returns An observable of the HTTP event, with the Authorization header added if applicable.
  */
 export function tokenInterceptor(request: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  const apiUrlRoot = inject(API_URL_ROOT);
+  const apiUrlRoot = "/api/";
   const identityService = inject(IdentityService);
 
   if (request.url.startsWith(apiUrlRoot)) {

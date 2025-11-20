@@ -6,7 +6,6 @@ import { provideRouter } from "@angular/router";
 import { LayoutService } from "@core/features/layout/services/layout.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { LayoutConfigDto } from "@core/backend-api";
-import { API_URL_ROOT } from "@core/helpers";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { AppTopBarComponent } from "./app-top-bar.component";
 import { MessageService } from "primeng/api";
@@ -49,7 +48,6 @@ describe("AppTopBarComponent", () => {
         provideNoopAnimations(),
         provideHttpClient(),
         provideRouter([]),
-        { provide: API_URL_ROOT, useValue: "http://localhost:5000/api/" },
         { provide: LayoutService, useValue: mockLayoutService },
         { provide: RouteAliasService, useClass: MockRouteAliasService },
         MessageService,

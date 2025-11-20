@@ -6,7 +6,7 @@ import { bootstrapApplication, BrowserModule } from "@angular/platform-browser";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
 import { provideServiceWorker } from "@angular/service-worker";
-import { API_URL_ROOT, APP_NAME, throwInlineError } from "@core";
+import { APP_NAME, throwInlineError } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
@@ -55,10 +55,6 @@ bootstrapApplication(AppComponent, {
     provideAppInitializer(() => inject(InitializationService).initialize()),
 
     // 6. Configuration values (tokens)
-    {
-      provide: API_URL_ROOT,
-      useValue: environment.apiUrlRoot ?? throwInlineError("Required setting 'environment.apiUrlRoot' is not defined."),
-    },
     { provide: APP_NAME, useValue: environment.appName },
 
     // 7. Strategies & overrides

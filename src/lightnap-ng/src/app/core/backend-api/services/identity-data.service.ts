@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { API_URL_ROOT } from "@core";
 import { LoginRequestDto, LoginSuccessResultDto, RegisterRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, VerifyCodeRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmChangeEmailRequestDto, DeviceDto } from "../dtos";
 import { DeviceHelper } from "../helpers/device.helper";
 import { tap } from "rxjs";
@@ -10,7 +9,7 @@ import { tap } from "rxjs";
 })
 export class IdentityDataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = `${inject(API_URL_ROOT)}identity/`;
+  #apiUrlRoot = "/api/identity/";
 
   getAccessToken() {
     return this.#http.get<string>(`${this.#apiUrlRoot}access-token`);
