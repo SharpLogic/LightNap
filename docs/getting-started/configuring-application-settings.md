@@ -15,12 +15,3 @@ Application settings need to be [configured in `appsettings.json`](./application
 | `LogOutInactiveDeviceDays`       | The number of days of inactivity (no contact) before a device is logged out.                                                                                                                                                                                                                      |
 | `RequireEmailVerification`       | `true` to require users to verify their emails before they log in.                                                                                                                                                                                                                                |
 | `RequireTwoFactorForNewUsers`    | `true` to require two-factor email authentication for new users. It does not change existing users.                                                                                                                                                                                               |
-| `SiteUrlRootForEmails`           | The root URL used in emails. This should be the base URL where the Angular app is hosted from (e.g., `https://localhost:4200/` in development).                                                                                                                                                   |
-| `UseDistributedMode`             | `true` to enable distributed backend support using Redis for caching and SignalR backplane. Requires Redis connection string to be configured.                                                                                                                                                    |
-| `UseSameSiteStrictCookies`       | `true` to use SameSite strict cookies. Set this to `false` if debugging the frontend from a URL that doesn't match the base URL hosting the Web API. For example, when connecting a frontend hosted at `http://localhost:4200/` against a backend hosted at `https://lightnap.azurewebsites.net`. |
-
-## Cache Settings
-
-| Setting             | Purpose                                                  |
-| ------------------- | -------------------------------------------------------- |
-| `ExpirationMinutes` | The default expiration time for cached items in minutes for both local and distributed caches. |

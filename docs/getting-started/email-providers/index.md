@@ -39,9 +39,10 @@ Email providers are configured in `appsettings.json` under the `Email` node:
 ```json
 {
   "Email": {
-    "Provider": "Smtp",  // or "LogToConsole"
+    "Provider": "Smtp", // or "LogToConsole"
     "FromEmail": "noreply@example.com",
     "FromDisplayName": "LightNap App",
+    "SiteUrlRootForLinks": "https://yourdomain.com/",
     "Smtp": {
       "Host": "smtp.sendgrid.net",
       "Port": 587,
@@ -52,6 +53,16 @@ Email providers are configured in `appsettings.json` under the `Email` node:
   }
 }
 ```
+
+### Email Configuration Settings
+
+| Setting               | Required | Description                                                   |
+| --------------------- | -------- | ------------------------------------------------------------- |
+| `Provider`            | Yes      | The email provider to use: `"Smtp"` or `"LogToConsole"`       |
+| `FromEmail`           | Yes      | The email address that appears as the sender                  |
+| `FromDisplayName`     | Yes      | The display name for the sender (e.g., "Your App Name")       |
+| `SiteUrlRootForLinks` | Yes      | The base URL for links in emails (e.g., password reset links) |
+| `Smtp`                | No       | SMTP configuration (required when using SMTP provider)        |
 
 ## Common Email Scenarios
 
@@ -66,12 +77,12 @@ For a comprehensive guide on adding custom email scenarios, see [Adding Backend 
 
 ## Choosing a Provider
 
-| Scenario | Recommended Provider |
-|----------|---------------------|
-| Production deployment | SMTP |
-| Local development | Log To Console |
-| Testing/QA | Log To Console |
-| Demo environments | Log To Console |
+| Scenario              | Recommended Provider |
+| --------------------- | -------------------- |
+| Production deployment | SMTP                 |
+| Local development     | Log To Console       |
+| Testing/QA            | Log To Console       |
+| Demo environments     | Log To Console       |
 
 ## Switching Providers
 

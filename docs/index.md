@@ -8,7 +8,7 @@ nav_order: 100
 
 # Full-stack starter kit for modern SPAs 🚀
 
-LightNap (**light**weight .**N**ET/**A**ngular/**P**rimeNG) bundles a pragmatic set of tools and patterns to build production-ready single page applications fast. If you want authentication, notifications, scaffolding and a modern front-end experience without wiring everything from scratch, LightNap is for you.
+LightNap (**light**weight .**N**ET 10/**A**ngular/**P**rimeNG) bundles a pragmatic set of tools and patterns to build production-ready single page applications fast. If you want authentication, notifications, scaffolding and a modern front-end experience without wiring everything from scratch, LightNap is for you.
 
 > Quick highlights: Lightweight starter, secure defaults, extensible scaffolding, and helpful CI/CD docs — ready to jump-start your project.
 
@@ -43,9 +43,10 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 
 ## Why choose LightNap? ✅
 
-- Works with .NET and modern Angular UI (PrimeNG + Tailwind) out-of-the-box.
+- Works with .NET 10 and modern Angular UI (PrimeNG + Tailwind) out-of-the-box.
 - Built-in auth with ASP.NET Identity + JWT for secure session handling.
 - Flexible persistence: SQL Server, SQLite, or in-memory for quick experiments.
+- Distributed caching with Redis and real-time notifications with SignalR.
 - Production-ready patterns (scaffolding, seed data, notification system, and more).
 
 ---
@@ -54,7 +55,7 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 
 - **Authentication & Authorization:** Roles, claims, and user management ready in the admin UI.
 - **APIs & OpenAPI (Swagger):** Quickly inspect and test backend endpoints during development.
-- **Notifications:** In-app notifications and a backend notification service for system alerts.
+- **Notifications:** Real-time in-app notifications with SignalR and a backend notification service for system alerts.
 - **Scaffolder:** Auto-generate backend entities and front-end UI from a single entity definition.
 - **E2E & CI/CD:** Cypress-based end-to-end tests with guidance for workflows and GitHub Actions.
 
