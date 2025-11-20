@@ -96,7 +96,7 @@ cd src/LightNap.WebApi
 dotnet run
 ```
 
-The API will be available at `https://localhost:7227` (or check console output).
+The API will be available at `https://localhost:7266` (or check console output).
 
 > **Note:** The backend runs with a SQLite database by default and logs emails to the console for development. See [Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html) to configure SQL Server, email providers, or other settings.
 
