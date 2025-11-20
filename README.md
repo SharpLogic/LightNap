@@ -3,7 +3,7 @@
 **Light**weight **.N**ET/**A**ngular/**P**rimeNG full-stack starter kit for building modern Single Page Applications (SPA) with enterprise-grade authentication and identity management out of the box.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![.NET](https://img.shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![Angular](https://img.shields.io/badge/Angular-20-DD0031)](https://angular.io/)
 [![PrimeNG](https://img.shields.io/badge/PrimeNG-20-007BFF)](https://primeng.org/)
 
@@ -19,12 +19,14 @@ LightNap provides a complete foundation for building secure, scalable web applic
 
 ## ✨ Features
 
-### Backend (.NET 9)
+### Backend (.NET 10)
 
 - **ASP.NET Core Web API** - RESTful API with best practices
 - **ASP.NET Identity** - Complete authentication & authorization framework
 - **JWT Token Management** - Secure token-based authentication with refresh tokens
 - **Multiple Database Providers** - SQL Server, SQLite, and In-Memory options
+- **Redis Caching** - Distributed caching with hybrid cache support
+- **SignalR** - Real-time communication for notifications and live updates
 - **Email Integration** - Templated email system for authentication flows
 - **User Management** - Full CRUD operations for users, roles, and permissions
 - **Device Tracking** - Monitor and manage user sessions across devices
@@ -73,7 +75,7 @@ src/
 
 ## 📋 Prerequisites
 
-- **[.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)** or later
+- **[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** or later
 - **[Node.js](https://nodejs.org/)** (LTS version recommended)
 
 ---
