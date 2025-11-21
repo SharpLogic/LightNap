@@ -76,11 +76,11 @@ Learn more about [role-based authorization in ASP.NET](https://learn.microsoft.c
 
 ## Seeding Role Users
 
-Learn about [seeding users in a role](../getting-started/seeding-users).
+Learn about [seeding users in a role](../getting-started/application-configuration/seeding-users).
 
 ## Roles and JSON Web Tokens (JWTs)
 
-Roles are automatically embedded in access tokens by the backend to authorize future requests. As a result, tokens issued before a role assignment has changed will not reflect the latest role behavior until they are replaced. The maximum theoretical time for this is based on how long the access token is [configured to expire in the application settings](../getting-started/configuring-jwt). Users can speed this up by logging out and in again.
+Roles are automatically embedded in access tokens by the backend to authorize future requests. As a result, tokens issued before a role assignment has changed will not reflect the latest role behavior until they are replaced. The maximum theoretical time for this is based on how long the access token is [configured to expire in the application settings](../getting-started/application-configuration/configuring-jwt). Users can speed this up by logging out and in again.
 
 ## Using Roles on the Frontend
 

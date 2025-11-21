@@ -15,14 +15,16 @@ using LightNap.Core.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
-ApplicationSettings appSettings = builder.Configuration.GetRequiredSection<ApplicationSettings>("ApplicationSettings");
+AuthenticationSettings appSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
+DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
 // Register configuration sections with validation.
-builder.Services.AddOptions<ApplicationSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("ApplicationSettings"))
+builder.Services.AddOptions<AuthenticationSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Authentication"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Jwt"))
@@ -33,8 +35,21 @@ builder.Services.AddOptions<EmailSettings>()
 builder.Services.AddOptions<CacheSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Cache"))
     .ValidateDataAnnotations();
+builder.Services.AddOptions<RateLimitingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("RateLimiting"))
+    .ValidateDataAnnotations();
+builder.Services.AddOptions<DatabaseSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Database"))
+    .ValidateDataAnnotations();
 
-builder.Services.Configure<Dictionary<string, List<SeededUserConfiguration>>>(builder.Configuration.GetSection("SeededUsers"));
+// Check if the SeededUsers section exists before configuring and validating it
+var seededUsersSection = builder.Configuration.GetSection("SeededUsers");
+if (seededUsersSection.Exists())
+{
+    builder.Services.AddOptions<Dictionary<string, List<SeededUserConfiguration>>>()
+        .Bind(seededUsersSection)
+        .ValidateDataAnnotations();
+}
 
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions((options) =>
@@ -70,10 +85,11 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddDatabaseServices(builder.Configuration)
+builder.Services.AddDatabaseServices(builder.Configuration, databaseSettings)
     .AddEmailServices(emailSettings)
     .AddApplicationServices()
-    .AddIdentityServices(jwtSettings);
+    .AddIdentityServices(jwtSettings)
+    .AddRateLimitingServices(rateLimitingSettings);
 
 // Configure HybridCache conditionally
 builder.Services.AddHybridCache(options =>
@@ -134,6 +150,7 @@ app.UseCors(policy =>
         .AllowCredentials());
 
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.UseWebSockets();
@@ -174,7 +191,7 @@ var logger = services.GetService<ILogger<Program>>() ?? throw new Exception($"Lo
 
 try
 {
-    await services.InitializeDatabaseAsync(builder.Services, useDistributed, logger);
+    await services.InitializeDatabaseAsync(builder.Services, useDistributed, databaseSettings);
 }
 catch (Exception ex)
 {

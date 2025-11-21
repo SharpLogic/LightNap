@@ -1,6 +1,5 @@
 ﻿using LightNap.Core.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LightNap.DataProviders.Sqlite.Extensions
@@ -14,14 +13,12 @@ namespace LightNap.DataProviders.Sqlite.Extensions
         /// Adds the LightNap SQL Server services to the specified <see cref="IServiceCollection"/>.
         /// </summary>
         /// <param name="services">The service collection to add the services to.</param>
-        /// <param name="configuration">The configuration to use for setting up the services.</param>
+        /// <param name="connectionString">The connection string.</param>
         /// <returns>The service collection with the added services.</returns>
-        /// <exception cref="ArgumentException">Thrown when the required connection string 'DefaultConnection' is missing.</exception>
-        public static IServiceCollection AddLightNapSqlite(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddLightNapSqlite(this IServiceCollection services, string connectionString)
         {
             return services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException("Required connection string 'DefaultConnection' is missing"),
-                sqlOptions => sqlOptions.MigrationsAssembly("LightNap.DataProviders.Sqlite")));
+                options.UseSqlite(connectionString, sqlOptions => sqlOptions.MigrationsAssembly("LightNap.DataProviders.Sqlite")));
         }
     }
 }

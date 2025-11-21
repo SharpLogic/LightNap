@@ -56,24 +56,26 @@ Learn how to create, apply, and manage Entity Framework migrations to keep your 
 
 ## Configuration
 
-Database providers are configured in `appsettings.json` using the `DatabaseProvider` setting:
+Database providers are configured in `appsettings.json` using the `Database:Provider` setting:
 
 ```json
 {
-  "DatabaseProvider": "SqlServer",  // or "Sqlite" or "InMemory"
+  "Database": {
+    "Provider": "SqlServer"  // or "Sqlite" or "InMemory"
+  },
   "ConnectionStrings": {
     "DefaultConnection": "Server=..."
   }
 }
 ```
 
-See [Application Configuration](../application-configuration) for more details.
+See [Application Configuration](../application-configuration/index) for more details.
 
 ## Switching Providers
 
 To switch between providers:
 
-1. Update the `DatabaseProvider` setting in `appsettings.json`
+1. Update the `Database:Provider` setting in `appsettings.json`
 2. Update the connection string (if applicable)
 3. Apply migrations for the new provider (if using SQL Server or SQLite)
 4. Restart the application

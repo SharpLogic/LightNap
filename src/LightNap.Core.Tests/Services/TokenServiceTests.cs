@@ -8,6 +8,8 @@ using LightNap.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Tests.Services
 {
@@ -37,6 +39,7 @@ namespace LightNap.Core.Tests.Services
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettings).Build();
             services.AddSingleton<IConfiguration>(configuration);
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
             services.AddScoped<ITokenService, TokenService>();
 
@@ -117,15 +120,17 @@ namespace LightNap.Core.Tests.Services
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettingsInvalid).Build();
             services.AddSingleton<IConfiguration>(configuration);
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
             var serviceProvider = services.BuildServiceProvider();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            var jwtSettings = serviceProvider.GetRequiredService<IOptions<JwtSettings>>();
 
-            Assert.ThrowsExactly<ArgumentException>(() =>
-                {
-                    _ = new TokenService(configuration, userManager, roleManager);
-                });
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
+            {
+                _ = new TokenService(jwtSettings, userManager, roleManager);
+            });
         }
 
         [TestMethod]
@@ -147,14 +152,16 @@ namespace LightNap.Core.Tests.Services
             };
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(inMemorySettingsInvalid).Build();
             services.AddSingleton<IConfiguration>(configuration);
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
             var serviceProvider = services.BuildServiceProvider();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            var jwtSettings = serviceProvider.GetRequiredService<IOptions<JwtSettings>>();
 
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() =>
+            Assert.ThrowsExactly<ValidationException>(() =>
             {
-                _ = new TokenService(configuration, userManager, roleManager);
+                _ = new TokenService(jwtSettings, userManager, roleManager);
             });
         }
     }

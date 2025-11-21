@@ -15,7 +15,9 @@ Update `appsettings.json`:
 
 ```json
 {
-  "DatabaseProvider": "InMemory"
+  "Database": {
+    "Provider": "InMemory"
+  }
 }
 ```
 

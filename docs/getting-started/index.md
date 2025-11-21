@@ -16,19 +16,23 @@ Get LightNap running locally in minutes. This guide covers prerequisites, instal
 
 ## Configuration
 
-### [Application Configuration](./application-configuration)
+### [Application Configuration](./application-configuration/index)
 
 Overview of all configuration options available in `appsettings.json`, including links to detailed configuration guides for each subsystem.
 
-### [Configuring Application Settings](./configuring-application-settings)
+### [Configuring Application Settings](./application-configuration/configuring-application-settings)
 
 Configure core application behavior including automatic migrations, email verification requirements, two-factor authentication, and cookie settings.
 
-### [Configuring JSON Web Tokens (JWT)](./configuring-jwt)
+### [Configuring JSON Web Tokens (JWT)](./application-configuration/configuring-jwt)
 
 Set up JWT authentication parameters including the secret key, issuer, audience, and token expiration times. **Critical for production security.**
 
-### [Seeding Users](./seeding-users)
+### [Configuring Rate Limiting](./configuring-rate-limiting)
+
+Configure rate limiting policies to protect your API from abuse, including fixed window limiters, partitioned rate limiting, and custom policies. **Essential for production security and performance.**
+
+### [Seeding Users](./application-configuration/seeding-users)
 
 Bootstrap your application with initial user accounts and assign them to roles. Useful for creating administrator accounts and test users.
 
