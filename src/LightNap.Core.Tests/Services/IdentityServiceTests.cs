@@ -12,6 +12,7 @@ using LightNap.Core.Identity.Services;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Interfaces;
+using LightNap.Core.Services;
 using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +57,7 @@ namespace LightNap.Core.Tests.Services
 
             // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
             services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
             this._userContext = new();
             this._userContext.LogIn(IdentityServiceTests._userId);
@@ -490,7 +492,6 @@ namespace LightNap.Core.Tests.Services
 
             var cookie = this._cookieManager.GetCookie(_refreshTokenCookieName);
             Assert.IsNotNull(cookie);
-
         }
 
         [TestMethod]
@@ -989,75 +990,6 @@ namespace LightNap.Core.Tests.Services
             // Assert
             Assert.HasCount(1, result);
             Assert.AreEqual(activeDevice.Id, result[0].Id);
-        }
-
-        [TestMethod]
-        public async Task PurgeExpiredRefreshTokens_RemovesExpiredTokens()
-        {
-            // Arrange
-            var expiredToken = new RefreshToken
-            {
-                Id = "expired-device",
-                Token = "token",
-                LastSeen = DateTime.UtcNow.AddDays(-10),
-                IpAddress = "192.168.1.1",
-                Expires = DateTime.UtcNow.AddDays(-1),
-                IsRevoked = false,
-                Details = "Expired Device",
-                UserId = _userId
-            };
-
-            var activeToken = new RefreshToken
-            {
-                Id = "active-device",
-                Token = "token",
-                LastSeen = DateTime.UtcNow,
-                IpAddress = "192.168.1.2",
-                Expires = DateTime.UtcNow.AddDays(1),
-                IsRevoked = false,
-                Details = "Active Device",
-                UserId = _userId
-            };
-
-            this._dbContext.RefreshTokens.AddRange(expiredToken, activeToken);
-            await this._dbContext.SaveChangesAsync();
-            this._userContext.LogInAdministrator();
-
-            // Act
-            await this._identityService.PurgeExpiredRefreshTokens();
-
-            // Assert
-            var remainingTokens = this._dbContext.RefreshTokens.ToList();
-            Assert.HasCount(1, remainingTokens);
-            Assert.AreEqual(activeToken.Id, remainingTokens[0].Id);
-        }
-
-        [TestMethod]
-        public async Task PurgeExpiredRefreshTokens_NoExpiredTokens_NoChanges()
-        {
-            // Arrange
-            var activeToken = new RefreshToken
-            {
-                Id = "active-device",
-                Token = "token",
-                LastSeen = DateTime.UtcNow,
-                IpAddress = "192.168.1.1",
-                Expires = DateTime.UtcNow.AddDays(1),
-                IsRevoked = false,
-                Details = "Active Device",
-                UserId = _userId
-            };
-
-            this._dbContext.RefreshTokens.Add(activeToken);
-            await this._dbContext.SaveChangesAsync();
-            this._userContext.LogInAdministrator();
-
-            // Act
-            await this._identityService.PurgeExpiredRefreshTokens();
-
-            // Assert
-            var remainingTokens = this._dbContext.RefreshTokens.ToList();
-            Assert.HasCount(1, remainingTokens);
         }
 
         [TestMethod]

@@ -1,13 +1,17 @@
 ﻿using LightNap.Core.Api;
 using LightNap.Core.Configuration;
+using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
+using LightNap.Core.Services;
 using LightNap.Core.UserSettings.Interfaces;
 using LightNap.Core.UserSettings.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.MaintenanceService;
 using LightNap.MaintenanceService.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,8 +40,20 @@ var host = Host.CreateDefaultBuilder(args)
             default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseSettings.Provider}'");
         }
 
+        services.AddOptions<AuthenticationSettings>()
+            .Bind(context.Configuration.GetRequiredSection("Authentication"))
+            .ValidateDataAnnotations();
+        services.AddOptions<JwtSettings>()
+            .Bind(context.Configuration.GetRequiredSection("Jwt"))
+            .ValidateDataAnnotations();
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
         services.AddScoped<IUserContext, SystemUserContext>();
         services.AddScoped<IUserSettingsService, UserSettingsService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
         // Manage the tasks to run here. All transient dependencies added for IMaintenanceTask will be in the collection passed to MainService.
         services.AddTransient<IMaintenanceTask, CountUsersMaintenanceTask>();

@@ -111,13 +111,5 @@ namespace LightNap.Core.Identity.Interfaces
         /// <param name="deviceId">The ID of the device to be revoked.</param>  
         /// <returns>A task that represents the asynchronous operation.</returns>  
         Task RevokeDeviceAsync(string deviceId);
-
-        /// <summary>
-        /// Removes all expired refresh tokens from the data store.
-        /// </summary>
-        /// <remarks>This method is intended to clean up expired refresh tokens to maintain the integrity
-        /// of the token store  and prevent unnecessary storage usage. It does not affect active or unexpired
-        /// tokens.</remarks>
-        Task PurgeExpiredRefreshTokens();
     }
 }

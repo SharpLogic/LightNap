@@ -354,14 +354,7 @@ namespace LightNap.WebApi.Configuration
         private async Task SeedE2eContentAsync()
         {
             logger.LogInformation("Seeding E2E test content");
-            await contentService.CreateStaticContentAsync(
-                new CreateStaticContentDto()
-                {
-                    Key = "e2e-test-page",
-                    Type = StaticContentType.Page,
-                    Status = StaticContentStatus.Published,
-                    ReadAccess = StaticContentReadAccess.Public
-                }                );
+            
             logger.LogInformation("Seeded E2E test content");
         }
 
