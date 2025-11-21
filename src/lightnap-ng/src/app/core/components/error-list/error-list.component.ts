@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, OnChanges, SimpleChanges, input, signal } from "@angular/core";
 import { MessageModule } from "primeng/message";
 import { ApiResponseDto } from "@core";
@@ -7,7 +7,7 @@ import { ApiResponseDto } from "@core";
   selector: "ln-error-list",
   standalone: true,
   templateUrl: "./error-list.component.html",
-  imports: [CommonModule, MessageModule],
+  imports: [MessageModule],
 })
 export class ErrorListComponent implements OnChanges {
   readonly error = input<string | undefined>(undefined);
