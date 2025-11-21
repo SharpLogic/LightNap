@@ -61,10 +61,10 @@ nav_order: 100
 ## Usage
 
 - Access the application at `http://localhost:4200`.
-- By default, an administrator account is created with:
-  - **Email**: `admin@lightnap.azurewebsites.net`
-  - **UserName**: `admin`
-  - **Password**: `A2m!nPassword`
+- By default, three user accounts are created with different roles for testing:
+  - **Administrator**: `Admin@lightnap.azurewebsites.net` / `P@ssw0rd`
+  - **Content Editor**: `ContentEditor@lightnap.azurewebsites.net` / `P@ssw0rd`
+  - **Regular User**: `RegularUser@lightnap.azurewebsites.net` / `P@ssw0rd`
 
   {: .note }
   If you are debugging the backend in Visual Studio you may see an **Exception User-Unhandled** dialog whenever a `UserFriendlyApiException` is thrown. It is recommended that you disable this behavior by unchecking the `Break when this exception type is user-unhandled` since those exceptions are thrown regularly as part of normal operation.

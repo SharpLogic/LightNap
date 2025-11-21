@@ -58,6 +58,12 @@ Implement user-specific settings and preferences that persist across sessions. T
 
 Learn the architectural pattern for creating reusable form components in LightNap. This guide explores the layered component approach using SelectListItemComponent, UserSettingSelectComponent, and domain-specific wrappers to build type-safe, composable UI elements with minimal boilerplate.
 
+## Console Apps
+
+### [Maintenance Service](./console-apps/maintenance-service)
+
+Learn how to build and deploy console applications for the LightNap platform, using the MaintenanceService as a prescriptive example for running scheduled tasks and backend maintenance.
+
 ## Frontend Customization
 
 ### [Working With Angular Routes](./frontend-customization/using-route-alias)
