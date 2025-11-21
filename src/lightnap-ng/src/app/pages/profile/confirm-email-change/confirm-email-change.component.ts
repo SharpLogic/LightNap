@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { setApiErrors } from "@core";
@@ -14,7 +14,7 @@ import { finalize } from "rxjs";
 @Component({
   standalone: true,
   templateUrl: "./confirm-email-change.component.html",
-  imports: [CommonModule, ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
+  imports: [ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
 })
 export class ConfirmEmailChangeComponent implements OnInit {
   readonly #identityService = inject(IdentityService);
