@@ -37,13 +37,13 @@ LightNap (**light**weight .**N**ET 10/**A**ngular/**P**rimeNG) bundles a pragmat
    ng serve
    ```
 
-Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net) — visit it to see features in action.
+Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap.azurewebsites.net) — visit it to see features in action. The application comes with three pre-seeded user accounts for testing: Administrator (`Admin@lightnap.azurewebsites.net` / `P@ssw0rd`), Content Editor (`ContentEditor@lightnap.azurewebsites.net` / `P@ssw0rd`), and Regular User (`RegularUser@lightnap.azurewebsites.net` / `P@ssw0rd`).
 
 ---
 
 ## Why choose LightNap? ✅
 
-- Works with .NET 10 and modern Angular UI (PrimeNG + Tailwind) out-of-the-box.
+- Works with .NET 10 and Angular 20 UI (PrimeNG + Tailwind) out-of-the-box.
 - Built-in auth with ASP.NET Identity + JWT for secure session handling.
 - Flexible persistence: SQL Server, SQLite, or in-memory for quick experiments.
 - Distributed caching with Redis and real-time notifications with SignalR.
@@ -57,6 +57,7 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 - **APIs & OpenAPI (Swagger):** Quickly inspect and test backend endpoints during development.
 - **Notifications:** Real-time in-app notifications with SignalR and a backend notification service for system alerts.
 - **Scaffolder:** Auto-generate backend entities and front-end UI from a single entity definition.
+- **Maintenance Service:** Background task processing with Azure WebJobs support for scheduled maintenance.
 - **E2E & CI/CD:** Cypress-based end-to-end tests with guidance for workflows and GitHub Actions.
 
 ---

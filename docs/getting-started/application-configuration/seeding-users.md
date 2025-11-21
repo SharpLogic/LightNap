@@ -74,14 +74,14 @@ For example, here is a way to configure a new user that will be both an administ
 "SeededUsers": {
   "Administrator": [
     {
-      "Email": "admin@lightnap.azurewebsites.net",
-      "UserName": "admin",
-      "Password": "A2m!nPassword"
+      "Email": "Admin@lightnap.azurewebsites.net",
+      "UserName": "Admin",
+      "Password": "P@ssw0rd"
     }
   ],
   "ContentEditor": [
     {
-      "Email": "admin@lightnap.azurewebsites.net"
+      "Email": "Admin@lightnap.azurewebsites.net"
     }
   ]
 }
