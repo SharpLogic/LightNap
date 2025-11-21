@@ -272,4 +272,4 @@ The template uses the PrimeNG `p-panelMenu` component with the `[multiple]="true
 ## See Also
 
 - [Working With Angular Routes](./using-route-alias) - Learn about route aliases
-- [Working with Roles](./working-with-roles) - Understand the role system
+- [Working with Roles](../security-authorization/working-with-roles) - Understand the role system

@@ -11,6 +11,10 @@ Guides for implementing authentication, authorization, and security features in 
 
 ## Available Guides
 
+### [Rate Limiting](./rate-limiting)
+
+Configure and understand rate limiting to protect your API from abuse and ensure fair usage.
+
 ### [Working With Roles](./working-with-roles)
 
 Add and manage application roles for authorization. Learn how to define roles, apply them to endpoints, and use them in the frontend.

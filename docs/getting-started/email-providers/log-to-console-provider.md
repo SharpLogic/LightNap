@@ -11,6 +11,6 @@ The Log To Console email provider is included in the project to make it easier t
 
 ## Configuration
 
-To use the Log To Console provider you will need to [configure `Email` in `appsettings.json`](../application-configuration) or your deployment host with:
+To use the Log To Console provider you will need to [configure `Email` in `appsettings.json`](../application-configuration/index) or your deployment host with:
 
 - `Provider` set to `LogToConsole`.

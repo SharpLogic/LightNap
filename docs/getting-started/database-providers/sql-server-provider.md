@@ -20,7 +20,9 @@ Update `appsettings.json`:
 
 ```json
 {
-  "DatabaseProvider": "SqlServer",
+  "Database": {
+    "Provider": "SqlServer"
+  },
   "ConnectionStrings": {
     "DefaultConnection": "Server=your-server;Database=LightNap;Trusted_Connection=True;TrustServerCertificate=True;"
   }

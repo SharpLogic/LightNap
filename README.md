@@ -24,6 +24,7 @@ LightNap provides a complete foundation for building secure, scalable web applic
 - **ASP.NET Core Web API** - RESTful API with best practices
 - **ASP.NET Identity** - Complete authentication & authorization framework
 - **JWT Token Management** - Secure token-based authentication with refresh tokens
+- **Rate Limiting** - Built-in API rate limiting with configurable policies per endpoint
 - **Multiple Database Providers** - SQL Server, SQLite, and In-Memory options
 - **Redis Caching** - Distributed caching with hybrid cache support
 - **SignalR** - Real-time communication for notifications and live updates
@@ -98,7 +99,7 @@ dotnet run
 
 The API will be available at `https://localhost:7266` (or check console output).
 
-> **Note:** The backend runs with a SQLite database by default and logs emails to the console for development. See [Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html) to configure SQL Server, email providers, or other settings.
+> **Note:** The backend runs with a SQLite database by default and logs emails to the console for development. See [Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html) to configure SQL Server, email providers, rate limiting, caching, or other settings.
 
 ### 3. Start the Frontend
 
@@ -128,7 +129,7 @@ The application comes with three pre-seeded user accounts for testing:
 
 For detailed guides on configuration, customization, and advanced features, visit the **[official documentation](https://lightnap.sharplogic.com)**:
 
-- **[Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html)** - Database providers, email setup, JWT configuration
+- **[Application Configuration](https://lightnap.sharplogic.com/getting-started/application-configuration.html)** - Database providers, email setup, JWT configuration, rate limiting, and caching
 - **[Adding Entities](https://lightnap.sharplogic.com/common-scenarios/adding-entities.html)** - Using the scaffolding system
 - **[Authentication Concepts](https://lightnap.sharplogic.com/concepts/authentication.html)** - Understanding JWT, roles, and permissions
 - **[Content Management](https://lightnap.sharplogic.com/concepts/content-management.html)** - Working with dynamic content
@@ -141,6 +142,7 @@ For detailed guides on configuration, customization, and advanced features, visi
 Comprehensive documentation is available at **[lightnap.sharplogic.com](https://lightnap.sharplogic.com)**:
 
 - **Getting Started** - Setup and configuration guides
+- **Application Configuration** - Complete configuration reference including database providers, authentication, rate limiting, caching, and email setup
 - **Common Scenarios** - Step-by-step tutorials for adding features
 - **Concepts** - Architecture and design decisions
 - **API Reference** - Complete endpoint documentation

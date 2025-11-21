@@ -1,13 +1,13 @@
 ---
 title: Configuring JSON Web Tokens (JWT)
 layout: home
-parent: Getting Started
-nav_order: 600
+parent: Application Configuration
+nav_order: 400
 ---
 
 # {{ page.title }}
 
-Some JSON Web Token (JWT) parameters need to be [configured in `appsettings.json`](./application-configuration) or your deployment host. It will work out of the box as configured, but it's critical that the `Key` value be changed for at least production environments.
+Some JSON Web Token (JWT) parameters need to be [configured in `appsettings.json`](./index) or your deployment host. It will work out of the box as configured, but it's critical that the `Key` value be changed for at least production environments.
 
 - `Jwt.Key`: The secret key used for JWT token generation. This can be any 32+ character string, such as a randomly generated GUID. It should be different across different environments (development vs. production and so on).
 

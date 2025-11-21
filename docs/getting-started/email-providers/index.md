@@ -104,5 +104,5 @@ No code changes are required; the dependency injection container automatically r
 
 ## See Also
 
-- [Application Configuration](../application-configuration) - Overview of all configuration options
-- [Configuring Application Settings](../configuring-application-settings) - Email-related application settings
+- [Application Configuration](../application-configuration/index) - Overview of all configuration options
+- [Configuring Application Settings](../application-configuration/configuring-application-settings) - Email-related application settings
