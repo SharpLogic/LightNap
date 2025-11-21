@@ -11,7 +11,7 @@ import { TableModule } from "primeng/table";
 
 @Component({
   standalone: true,
-  selector: "user-roles",
+  selector: "ln-user-roles",
   templateUrl: "./user-roles.component.html",
   imports: [CommonModule, TableModule, ButtonModule, RouterLink, RoutePipe, ConfirmPopupComponent, ReactiveFormsModule, RolePickerComponent],
 })

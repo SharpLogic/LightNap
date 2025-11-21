@@ -48,6 +48,10 @@ jobs:
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
         run: npm install
 
+      - name: Run front-end linter
+        working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
+        run: npm run lint
+
       - name: Run front-end tests
         working-directory: src/${{ env.ANGULAR_PROJECT_NAME }}
         run: npm run test:ci

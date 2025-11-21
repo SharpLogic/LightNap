@@ -39,19 +39,19 @@
         </p-tablist>
         <p-tabpanels>
           <p-tabpanel value="profile">
-            <user-profile [user]="user" />
+            <ln-user-profile [user]="user" />
           </p-tabpanel>
           <p-tabpanel value="roles">
             <ln-api-response [apiResponse]="userRoles$()" errorMessage="Error loading user roles" loadingMessage="Loading user roles...">
               <ng-template #success let-userRolesAny>
                 @let userRoles = asUserRoles(userRolesAny);
 
-                <user-roles [userRoles]="userRoles ?? []" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
+                <ln-user-roles [userRoles]="userRoles ?? []" (addRole)="addRole($event)" (removeRole)="removeRole($event)" />
               </ng-template>
             </ln-api-response>
           </p-tabpanel>
           <p-tabpanel value="claims">
-            <user-claims [userId]="user.id" />
+            <ln-user-claims [userId]="user.id" />
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>

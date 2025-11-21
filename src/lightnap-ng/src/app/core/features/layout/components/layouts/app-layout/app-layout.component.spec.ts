@@ -255,10 +255,10 @@ describe("AppLayoutComponent", () => {
   });
 
   it("should cleanup outside click listener on destroy", () => {
-    component.menuOutsideClickListener = jasmine.createSpy("listener");
+    component.#menuOutsideClickListener = jasmine.createSpy("listener");
 
     component.ngOnDestroy();
 
-    expect(component.menuOutsideClickListener).toHaveBeenCalled();
+    expect(component.#menuOutsideClickListener).toHaveBeenCalled();
   });
 });
