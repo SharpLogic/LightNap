@@ -84,6 +84,13 @@ export class HttpErrorApiResponse<T> implements ApiResponseDto<T> {
         }
         break;
 
+        case 500:
+        this.errorMessages.push("An internal server error occurred.");
+        if (!environment.production) {
+          this.errorMessages.push(`DEBUG: The backend threw an unexpected exception.`);
+        }
+        break;
+
       default:
         this.errorMessages.push("An unexpected error occurred");
         break;

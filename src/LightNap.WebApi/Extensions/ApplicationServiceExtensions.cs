@@ -80,19 +80,18 @@ namespace LightNap.WebApi.Extensions
         /// <exception cref="ArgumentException">Thrown when the database provider is unsupported.</exception>
         public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration, DatabaseSettings databaseSettings)
         {
-            string databaseProvider = databaseSettings.Provider;
-            switch (databaseProvider)
+            switch (databaseSettings.Provider)
             {
-                case "InMemory":
+                case DatabaseProvider.InMemory:
                     services.AddLightNapInMemoryDatabase();
                     break;
-                case "Sqlite":
-                    services.AddLightNapSqlite(configuration);
+                case DatabaseProvider.Sqlite:
+                    services.AddLightNapSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                     break;
-                case "SqlServer":
-                    services.AddLightNapSqlServer(configuration);
+                case DatabaseProvider.SqlServer:
+                    services.AddLightNapSqlServer(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                     break;
-                default: throw new ArgumentException($"Unsupported 'Database:Provider' setting: '{databaseProvider}'");
+                default: throw new ArgumentException($"Unsupported 'Database:Provider' setting: '{databaseSettings.Provider}'");
             }
             return services;
         }
@@ -112,11 +111,11 @@ namespace LightNap.WebApi.Extensions
                     services.AddLogToConsoleEmailSender();
                     break;
                 case EmailProvider.Smtp:
-                    if (emailSettings.Smtp is null) { throw new ArgumentNullException("SMTP settings are required if 'Smtp' email option is set"); }
+                    if (emailSettings.Smtp is null) { throw new ArgumentNullException($"SMTP settings are required if '{emailSettings.Provider}' email option is set"); }
                     Validator.ValidateObject(emailSettings.Smtp, new ValidationContext(emailSettings.Smtp), validateAllProperties: true);
                     services.AddSmtpEmailSender(emailSettings.Smtp);
                     break;
-                default: throw new ArgumentException($"Unsupported 'Email:Provider' setting: '{emailSettings.Provider}'");
+                default: throw new ArgumentException($"Unsupported email provider setting: '{emailSettings.Provider}'");
             }
 
             services.AddScoped<IEmailService, DefaultEmailService>();
@@ -264,9 +263,7 @@ namespace LightNap.WebApi.Extensions
             seederServiceCollection.AddScoped<IUserContext, SystemUserContext>();
             seederServiceCollection.AddScoped<Seeder>();
 
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             using var seederServiceProvider = seederServiceCollection.BuildServiceProvider();
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             var seeder = seederServiceProvider.GetRequiredService<Seeder>();
             await seeder.SeedAsync();
         }

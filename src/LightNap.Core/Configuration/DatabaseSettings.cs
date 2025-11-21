@@ -11,10 +11,10 @@ public record DatabaseSettings
     /// The database provider (e.g., "Sqlite", "SqlServer", "InMemory").
     /// </summary>
     [Required]
-    public string Provider { get; set; } = string.Empty;
+    public DatabaseProvider Provider { get; set; }
 
     /// <summary>
     /// Whether to automatically apply EF migrations on startup.
     /// </summary>
-    public bool AutomaticallyApplyEfMigrations { get; set; } = true;
+    public bool AutomaticallyApplyEfMigrations { get; set; }
 }
