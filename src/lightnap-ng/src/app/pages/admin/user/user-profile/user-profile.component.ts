@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, input, OnChanges, output } from "@angular/core";
+import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { AdminUserDto } from "@core";
 import { ButtonModule } from "primeng/button";
 
 @Component({
   standalone: true,
-  selector: "user-profile",
+  selector: "ln-user-profile",
   templateUrl: "./user-profile.component.html",
   imports: [
     CommonModule,
@@ -14,7 +14,7 @@ import { ButtonModule } from "primeng/button";
     ButtonModule,
   ],
 })
-export class UserProfileComponent implements OnChanges {
+export class UserProfileComponent {
   readonly #fb = inject(FormBuilder);
 
   readonly user = input.required<AdminUserDto>();
@@ -22,8 +22,4 @@ export class UserProfileComponent implements OnChanges {
 
   readonly form = this.#fb.group({
   });
-
-  ngOnChanges() {
-  }
-
 }

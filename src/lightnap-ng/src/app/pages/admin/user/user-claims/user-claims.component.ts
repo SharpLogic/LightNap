@@ -13,7 +13,7 @@ import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  selector: "user-claims",
+  selector: "ln-user-claims",
   standalone: true,
   imports: [
     CommonModule,

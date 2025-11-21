@@ -24,7 +24,9 @@
     "update:deps": "ncu -u --reject \"/@angular/\" && npm install && npm run build",
     "update:angular": "ng update @angular/core @angular/cli && npm run build",
     "update:all": "npm run update:angular && npm run update:deps",
-    "update:all:test": "npm run update:all && npm run test:ci"
+    "update:all:test": "npm run update:all && npm run test:ci",
+    "lint": "eslint --ext .ts,.html src",
+    "lint:fix": "eslint --ext .ts,.html src --fix"
   },
   "private": true,
   "dependencies": {
@@ -55,8 +57,13 @@
     "@tailwindcss/postcss": "^4.1.17",
     "@types/jasmine": "~5.1.13",
     "autoprefixer": "^10.4.22",
+    "@angular-eslint/eslint-plugin": "^20.3.0",
+    "@angular-eslint/eslint-plugin-template": "^20.3.0",
+    "@angular-eslint/template-parser": "^20.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
     "cypress": "^15.6.0",
-    "eslint": "^9.39.1",
+    "eslint": "^8.56.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",

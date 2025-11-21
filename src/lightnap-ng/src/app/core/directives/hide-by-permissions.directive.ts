@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, ElementRef, inject, Input, Renderer2, SimpleChanges } from "@angular/core";
+import { DestroyRef, Directive, ElementRef, inject, Input, OnChanges, Renderer2, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ClaimDto } from "@core/backend-api";
 import { IdentityService } from "@core/services/identity.service";
@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
   selector: "[hideByPermissions]",
   standalone: true,
 })
-export class HideByPermissionsDirective {
+export class HideByPermissionsDirective implements OnChanges {
   #identityService = inject(IdentityService);
   #el = inject(ElementRef);
   #destroyRef = inject(DestroyRef);

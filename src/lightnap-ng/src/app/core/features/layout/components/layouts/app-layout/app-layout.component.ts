@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Renderer2, ViewChild } from "@angular/core";
+import { Component, OnDestroy, Renderer2, ViewChild, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterModule } from "@angular/router";
 import { LayoutService } from "@core/features/layout/services/layout.service";
@@ -14,22 +14,24 @@ import { BreadcrumbComponent } from "../../controls/breadcrumb/breadcrumb.compon
   templateUrl: "./app-layout.component.html",
   imports: [CommonModule, AppTopBarComponent, AppSidebarComponent, RouterModule, AppFooterComponent, BreadcrumbComponent],
 })
-export class AppLayoutComponent {
-  menuOutsideClickListener: any;
+export class AppLayoutComponent implements OnDestroy {
+  #menuOutsideClickListener: any;
 
   @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
 
   @ViewChild(AppTopBarComponent) appTopBar!: AppTopBarComponent;
 
-  constructor(
-    public layoutService: LayoutService,
-    public renderer: Renderer2,
-    public router: Router
-  ) {
+  public layoutService = inject(LayoutService);
+  public renderer = inject(Renderer2);
+  public router = inject(Router);
+
+  // Run these subscriptions during field initialization to ensure they are invoked within an injection context
+  // so takeUntilDestroyed() can be used safely.
+  readonly #_init = (() => {
     this.layoutService.overlayOpen$.pipe(takeUntilDestroyed()).subscribe({
       next: () => {
-        if (!this.menuOutsideClickListener) {
-          this.menuOutsideClickListener = this.renderer.listen("document", "click", event => {
+        if (!this.#menuOutsideClickListener) {
+          this.#menuOutsideClickListener = this.renderer.listen("document", "click", (event: any) => {
             if (this.isOutsideClicked(event)) {
               this.hideMenu();
             }
@@ -52,7 +54,9 @@ export class AppLayoutComponent {
           this.hideMenu();
         },
       });
-  }
+
+    return null;
+  })();
 
   isOutsideClicked(event: MouseEvent) {
     const sidebarEl = document.querySelector(".layout-sidebar");
@@ -68,10 +72,10 @@ export class AppLayoutComponent {
   }
 
   hideMenu() {
-    this.layoutService.layoutState.update(prev => ({ ...prev, overlayMenuActive: false, staticMenuMobileActive: false, menuHoverActive: false }));
-    if (this.menuOutsideClickListener) {
-      this.menuOutsideClickListener();
-      this.menuOutsideClickListener = null;
+    this.layoutService.layoutState.update((prev: any) => ({ ...prev, overlayMenuActive: false, staticMenuMobileActive: false, menuHoverActive: false }));
+    if (this.#menuOutsideClickListener) {
+      this.#menuOutsideClickListener();
+      this.#menuOutsideClickListener = null;
     }
     this.unblockBodyScroll();
   }
@@ -103,8 +107,8 @@ export class AppLayoutComponent {
   }
 
   ngOnDestroy() {
-    if (this.menuOutsideClickListener) {
-      this.menuOutsideClickListener();
+    if (this.#menuOutsideClickListener) {
+      this.#menuOutsideClickListener();
     }
   }
 }
