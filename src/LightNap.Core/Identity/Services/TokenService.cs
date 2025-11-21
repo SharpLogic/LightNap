@@ -1,11 +1,11 @@
 ﻿using LightNap.Core.Configuration;
 using LightNap.Core.Data.Entities;
-using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 
@@ -16,44 +16,30 @@ namespace LightNap.Core.Services
     /// </summary>
     public class TokenService : ITokenService
     {
-        private readonly IConfiguration _configuration;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SigningCredentials _signingCredentials;
-        private readonly string _issuer;
-        private readonly string _audience;
-        private readonly int _expirationMinutes;
-        public int ExpirationMinutes => this._expirationMinutes;
         private readonly JsonWebTokenHandler _tokenHandler;
+        private readonly JwtSettings _jwtSettings;
+
+        public int ExpirationMinutes => this._jwtSettings.ExpirationMinutes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenService"/> class.
         /// </summary>
-        /// <param name="configuration">The configuration settings.</param>
+        /// <param name="jwtSettings">JWT settings to use.</param>
         /// <param name="userManager">The user manager.</param>
         /// <param name="roleManager">The role manager.</param>
-        public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        public TokenService(IOptions<JwtSettings> jwtSettings, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            ArgumentNullException.ThrowIfNull(jwtSettings, nameof(jwtSettings));
+            Validator.ValidateObject(jwtSettings.Value, new ValidationContext(jwtSettings.Value), true);
+            this._jwtSettings = jwtSettings.Value;
             this._roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             this._userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
 
-            var tokenKey = this._configuration.GetRequiredSetting("Jwt:Key");
-            if (tokenKey.Length < 32) { throw new ArgumentException("The provided setting 'Jwt:Key' must be at least 32 characters long"); }
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._jwtSettings.Key));
             this._signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            this._issuer = this._configuration.GetRequiredSetting("Jwt:Issuer");
-            this._audience = this._configuration.GetRequiredSetting("Jwt:Audience");
-            var expirationSetting = this._configuration.GetRequiredSetting("Jwt:ExpirationMinutes");
-
-            if (!int.TryParse(expirationSetting, out var expirationParsed))
-            {
-                throw new ArgumentException("Invalid configuration: 'Jwt:ExpirationMinutes' must be an integer.");
-            }
-            if (expirationParsed < 5) { throw new ArgumentOutOfRangeException("Invalid configuration: 'Jwt:ExpirationMinutes' must be at least 5."); }
-            this._expirationMinutes = expirationParsed;
 
             this._tokenHandler = new JsonWebTokenHandler();
         }
@@ -98,10 +84,10 @@ namespace LightNap.Core.Services
 
             var token = new SecurityTokenDescriptor()
             {
-                Issuer = this._issuer,
-                Audience = this._audience,
+                Issuer = this._jwtSettings.Issuer,
+                Audience = this._jwtSettings.Audience,
                 Claims = claims,
-                Expires = DateTime.UtcNow.AddMinutes(this._expirationMinutes),
+                Expires = DateTime.UtcNow.AddMinutes(this._jwtSettings.ExpirationMinutes),
                 SigningCredentials = this._signingCredentials
             };
 
