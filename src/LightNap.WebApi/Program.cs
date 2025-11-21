@@ -15,7 +15,7 @@ using LightNap.Core.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
-ApplicationSettings appSettings = builder.Configuration.GetRequiredSection<ApplicationSettings>("ApplicationSettings");
+AuthenticationSettings appSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
@@ -23,8 +23,8 @@ DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<Dat
 RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
 // Register configuration sections with validation.
-builder.Services.AddOptions<ApplicationSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("ApplicationSettings"))
+builder.Services.AddOptions<AuthenticationSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Authentication"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Jwt"))

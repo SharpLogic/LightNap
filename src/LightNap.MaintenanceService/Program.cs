@@ -20,6 +20,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddLogging(configure => configure.AddConsole());
 
         var databaseSettings = context.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+
         switch (databaseSettings.Provider)
         {
             case DatabaseProvider.InMemory:

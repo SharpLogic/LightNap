@@ -28,7 +28,7 @@ namespace LightNap.Core.Identity.Services
         ITokenService tokenService,
         IEmailService emailService,
         INotificationService notificationService,
-        IOptions<ApplicationSettings> applicationSettings,
+        IOptions<AuthenticationSettings> authenticationSettings,
         ApplicationDbContext db,
         ICookieManager cookieManager,
         IUserContext userContext) : IIdentityService
@@ -42,7 +42,7 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The login result DTO containing the access token or a flag indicating whether further steps are required.</returns>
         private async Task<LoginSuccessDto> HandleUserLoginAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
         {
-            if (applicationSettings.Value.RequireEmailVerification && !user.EmailConfirmed)
+            if (authenticationSettings.Value.RequireEmailVerification && !user.EmailConfirmed)
             {
                 return new LoginSuccessDto() { Type = LoginSuccessType.EmailVerificationRequired };
             }
@@ -76,7 +76,7 @@ namespace LightNap.Core.Identity.Services
 
             refreshToken.LastSeen = DateTime.UtcNow;
             refreshToken.IpAddress = userContext.GetIpAddress() ?? Constants.RefreshTokens.NoIpProvided;
-            refreshToken.Expires = DateTime.UtcNow.AddDays(refreshToken.IsPersistent ? applicationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
+            refreshToken.Expires = DateTime.UtcNow.AddDays(refreshToken.IsPersistent ? authenticationSettings.Value.LogOutInactiveDeviceDays : (tokenService.ExpirationMinutes / (60.0 * 24)));
             refreshToken.Token = tokenService.GenerateRefreshToken();
 
             await db.SaveChangesAsync();
@@ -95,7 +95,7 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task CreateRefreshTokenAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
         {
-            DateTime expires = DateTime.UtcNow.AddDays(rememberMe ? applicationSettings.Value.LogOutInactiveDeviceDays : tokenService.ExpirationMinutes / (60.0 * 24));
+            DateTime expires = DateTime.UtcNow.AddDays(rememberMe ? authenticationSettings.Value.LogOutInactiveDeviceDays : tokenService.ExpirationMinutes / (60.0 * 24));
             string refreshToken = tokenService.GenerateRefreshToken();
 
             db.RefreshTokens.Add(
@@ -186,7 +186,7 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The login result.</returns>
         public async Task<LoginSuccessDto> RegisterAsync(RegisterRequestDto requestDto)
         {
-            ApplicationUser user = requestDto.ToCreate(applicationSettings.Value.RequireTwoFactorForNewUsers);
+            ApplicationUser user = requestDto.ToCreate(authenticationSettings.Value.RequireTwoFactorForNewUsers);
             var result = await userManager.CreateAsync(user, requestDto.Password);
             if (!result.Succeeded)
             {
@@ -199,7 +199,7 @@ namespace LightNap.Core.Identity.Services
                 await emailService.SendRegistrationWelcomeAsync(user);
             }
 
-            if (applicationSettings.Value.RequireEmailVerification)
+            if (authenticationSettings.Value.RequireEmailVerification)
             {
                 await this.SendVerificationEmailAsync(user);
             }

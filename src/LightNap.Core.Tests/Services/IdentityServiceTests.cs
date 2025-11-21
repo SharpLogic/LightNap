@@ -63,11 +63,10 @@ namespace LightNap.Core.Tests.Services
 
             services.AddScoped<IUserContext>(sp => this._userContext);
 
-            services.AddScoped<IOptions<ApplicationSettings>>(sp =>
+            services.AddScoped<IOptions<AuthenticationSettings>>(sp =>
                 Options.Create(
-                    new ApplicationSettings
+                    new AuthenticationSettings
                     {
-                        AutomaticallyApplyEfMigrations = false,
                         LogOutInactiveDeviceDays = 30,
                         RequireTwoFactorForNewUsers = false,
                     }));
@@ -718,7 +717,7 @@ namespace LightNap.Core.Tests.Services
         public async Task RegisterAsync_WithRequireEmailVerification_ShouldNotLogInUser()
         {
             // Arrange
-            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<AuthenticationSettings>>();
             appSettings.Value.RequireEmailVerification = true;
 
             var requestDto = new RegisterRequestDto
@@ -751,7 +750,7 @@ namespace LightNap.Core.Tests.Services
         public async Task LogInAsync_UnverifiedEmailWithRequireEmailVerification_ThrowsError()
         {
             // Arrange
-            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<AuthenticationSettings>>();
             appSettings.Value.RequireEmailVerification = true;
 
             var requestDto = new LoginRequestDto
@@ -888,7 +887,7 @@ namespace LightNap.Core.Tests.Services
         public async Task VerifyCodeAsync_ValidCode_ReturnsAccessToken()
         {
             // Arrange
-            var appSettings = this._serviceProvider.GetRequiredService<IOptions<ApplicationSettings>>();
+            var appSettings = this._serviceProvider.GetRequiredService<IOptions<AuthenticationSettings>>();
             appSettings.Value.RequireTwoFactorForNewUsers = true;
 
             var requestDto = new RegisterRequestDto
