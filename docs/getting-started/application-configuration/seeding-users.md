@@ -1,13 +1,13 @@
 ---
 title: Seeding Users
 layout: home
-parent: Getting Started
-nav_order: 700
+parent: Application Configuration
+nav_order: 500
 ---
 
 # {{ page.title }}
 
-User accounts can be [seeded in `appsettings.json`](./application-configuration) or your deployment host to help bootstrap the application.
+User accounts can be [seeded in `appsettings.json`](./index) or your deployment host to help bootstrap the application.
 
 - `SeededUsers`: Dictionary of roles with user lists to seed.
   - `Administrator`: List of administrator accounts to seed. This is included by default and may be removed if you prefer.

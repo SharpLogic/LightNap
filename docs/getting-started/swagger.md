@@ -30,4 +30,4 @@ Once authorized you can call protected endpoints directly from Swagger.
 - If the token expires, re-authorize to refresh testing access through Swagger.
 - For production deployments you may want to remove/lock down Swagger.
 
-For more details on obtaining tokens see [Configuring JSON Web Tokens (JWT)](/getting-started/configuring-jwt)
+For more details on obtaining tokens see [Configuring JSON Web Tokens (JWT)](./application-configuration/configuring-jwt)

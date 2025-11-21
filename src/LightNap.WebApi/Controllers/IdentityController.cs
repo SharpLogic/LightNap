@@ -4,6 +4,7 @@ using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace LightNap.WebApi.Controllers
 {
@@ -12,6 +13,7 @@ namespace LightNap.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting("Auth")]
     public class IdentityController(IIdentityService identityService) : ControllerBase
     {
         /// <summary>
@@ -33,6 +35,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="registerRequest">The registration request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("register")]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> Register(RegisterRequestDto registerRequest)

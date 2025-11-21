@@ -31,7 +31,7 @@ namespace LightNap.WebApi.Configuration
     /// <param name="userManager">The user manager.</param>
     /// <param name="contentService">The static content service.</param>
     /// <param name="seededUserConfigurations">The users to seed.</param>
-    /// <param name="applicationSettings">The configured application settings.</param>
+    /// <param name="authenticationSettings">The configured authentication settings.</param>
     public partial class Seeder(
         IServiceProvider serviceProvider,
         ILogger<Seeder> logger,
@@ -39,7 +39,7 @@ namespace LightNap.WebApi.Configuration
         UserManager<ApplicationUser> userManager,
         IStaticContentService contentService,
         IOptions<Dictionary<string, List<SeededUserConfiguration>>> seededUserConfigurations,
-        IOptions<ApplicationSettings> applicationSettings)
+        IOptions<AuthenticationSettings> authenticationSettings)
     {
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace LightNap.WebApi.Configuration
                     UserName = userName
                 };
 
-                user = registerRequestDto.ToCreate(applicationSettings.Value.RequireTwoFactorForNewUsers);
+                user = registerRequestDto.ToCreate(authenticationSettings.Value.RequireTwoFactorForNewUsers);
 
                 var result = await userManager.CreateAsync(user, passwordToSet);
                 if (!result.Succeeded)
@@ -354,14 +354,7 @@ namespace LightNap.WebApi.Configuration
         private async Task SeedE2eContentAsync()
         {
             logger.LogInformation("Seeding E2E test content");
-            await contentService.CreateStaticContentAsync(
-                new CreateStaticContentDto()
-                {
-                    Key = "e2e-test-page",
-                    Type = StaticContentType.Page,
-                    Status = StaticContentStatus.Published,
-                    ReadAccess = StaticContentReadAccess.Public
-                }                );
+            
             logger.LogInformation("Seeded E2E test content");
         }
 

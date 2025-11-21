@@ -21,7 +21,7 @@ The LightNap solution structure spreads out EF assets across multiple projects:
 
 As a result, additional parameters are required for the EF tools to work properly.
 
-Before modifying the migrations for a given project, set the `DatabaseProvider` key in the `appsettings.json` file of the `LightNap.WebApi` project to the appropriate value (like `SqlServer`).
+Before modifying the migrations for a given project, set the `Database:Provider` key in the `appsettings.json` file of the `LightNap.WebApi` project to the appropriate value (like `SqlServer`).
 
 ## Adding a Migration
 
@@ -50,4 +50,4 @@ dotnet ef database update --startup-project LightNap.WebApi --project LightNap.D
 {: .note}
 
 The `LightNap.WebApi` project also offers automatic migrations by setting
-[`SiteSettings.AutomaticallyApplyEfMigrations`](../configuring-application-settings) to `true`.
+[`Database:AutomaticallyApplyEfMigrations`](../application-configuration/configuring-application-settings) to `true`.

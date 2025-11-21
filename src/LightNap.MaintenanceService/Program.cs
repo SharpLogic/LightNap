@@ -1,12 +1,18 @@
 ﻿using LightNap.Core.Api;
+using LightNap.Core.Configuration;
+using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
+using LightNap.Core.Services;
 using LightNap.Core.UserSettings.Interfaces;
 using LightNap.Core.UserSettings.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.MaintenanceService;
 using LightNap.MaintenanceService.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,24 +23,37 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddLogging(configure => configure.AddConsole());
 
-        string databaseProvider = context.Configuration.GetRequiredSetting("DatabaseProvider");
-        switch (databaseProvider)
+        var databaseSettings = context.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+
+        switch (databaseSettings.Provider)
         {
-            case "InMemory":
-                Trace.TraceWarning($"The MaintenanceService is configured to use the '{databaseProvider}' database provider, so there won't be any DB data");
+            case DatabaseProvider.InMemory:
+                Trace.TraceWarning($"The MaintenanceService is configured to use the '{databaseSettings.Provider}' database provider, so there won't be any DB data");
                 services.AddLightNapInMemoryDatabase();
                 break;
-            case "Sqlite":
-                services.AddLightNapSqlite(context.Configuration);
+            case DatabaseProvider.Sqlite:
+                services.AddLightNapSqlite(context.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                 break;
-            case "SqlServer":
-                services.AddLightNapSqlServer(context.Configuration);
+            case DatabaseProvider.SqlServer:
+                services.AddLightNapSqlServer(context.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                 break;
-            default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseProvider}'");
+            default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseSettings.Provider}'");
         }
+
+        services.AddOptions<AuthenticationSettings>()
+            .Bind(context.Configuration.GetRequiredSection("Authentication"))
+            .ValidateDataAnnotations();
+        services.AddOptions<JwtSettings>()
+            .Bind(context.Configuration.GetRequiredSection("Jwt"))
+            .ValidateDataAnnotations();
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddScoped<IUserContext, SystemUserContext>();
         services.AddScoped<IUserSettingsService, UserSettingsService>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
         // Manage the tasks to run here. All transient dependencies added for IMaintenanceTask will be in the collection passed to MainService.
         services.AddTransient<IMaintenanceTask, CountUsersMaintenanceTask>();

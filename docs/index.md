@@ -65,7 +65,7 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 
 - Getting started guide: [Building & running the project](./getting-started/building-and-running)
 - Scaffolding & development: [Scaffolding docs](./development-guide/data-persistence/scaffolding)
-- Security and roles: [Security & authorization](./security-authorization)
+- Security and roles: [Security & authorization](./development-guide/security-authorization)
 - Testing & CI/CD: [Testing in CI/CD](./deployment-and-cicd/testing-in-cicd)
 
 ---

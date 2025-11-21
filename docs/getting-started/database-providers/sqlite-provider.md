@@ -19,7 +19,9 @@ Update `appsettings.json`:
 
 ```json
 {
-  "DatabaseProvider": "Sqlite",
+  "Database": {
+    "Provider": "Sqlite"
+  },
   "ConnectionStrings": {
     "DefaultConnection": "Data Source=LightNap.db"
   }

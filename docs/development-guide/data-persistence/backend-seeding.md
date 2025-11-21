@@ -29,7 +29,7 @@ Creates all application roles defined in `ApplicationRoles.All` and removes any 
 
 ### 2. Seed Users (`SeedUsersAsync`)
 
-Creates user accounts based on the `SeededUsers` configuration in `appsettings.json` and assigns them to their designated roles. See [Seeding Users](../getting-started/seeding-users) for detailed configuration options.
+Creates user accounts based on the `SeededUsers` configuration in `appsettings.json` and assigns them to their designated roles. See [Seeding Users](../../getting-started/application-configuration/seeding-users) for detailed configuration options.
 
 ### 3. Seed Static Content (`SeedStaticContentAsync`)
 
@@ -78,7 +78,7 @@ Calls the optional `SeedLocalContent()` partial method, which can be implemented
 
 LightNap's seeding system supports environment-specific seeding through direct methods in the `Seeder` class. This allows you to include development and testing data without risking it being deployed to production.
 
-### How It Works
+### How Environment Seeding Works
 
 The `SeedEnvironmentContentAsync` method checks the current hosting environment and calls the appropriate seeding method:
 
@@ -177,7 +177,7 @@ private async Task SeedProductionContentAsync()
 
 For developer-specific seeding that should not be committed to source control, LightNap provides a partial method pattern through `Seeder.Local.cs`.
 
-### How It Works
+### How Local-Only Seeding Works
 
 The `Seeder` class includes an optional partial method:
 
@@ -380,7 +380,7 @@ If seeding takes too long:
 
 ## Related Topics
 
-- [Seeding Users](../getting-started/seeding-users) - Detailed user seeding configuration
-- [Application Configuration](../getting-started/application-configuration) - Overall configuration reference
-- [Database Providers](../getting-started/database-providers) - Database setup and migrations
+- [Seeding Users](../../getting-started/application-configuration/seeding-users) - Detailed user seeding configuration
+- [Application Configuration](../../getting-started/application-configuration/index) - Overall configuration reference
+- [Database Providers](../../getting-started/database-providers) - Database setup and migrations
 - [Adding Entities](./adding-entities) - Creating new database entities

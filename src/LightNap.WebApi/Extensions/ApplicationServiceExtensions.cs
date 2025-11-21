@@ -31,11 +31,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading.RateLimiting;
 
 namespace LightNap.WebApi.Extensions
 {
@@ -60,6 +60,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<ICookieManager, WebCookieManager>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IPublicService, PublicService>();
@@ -75,23 +76,23 @@ namespace LightNap.WebApi.Extensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="configuration">The configuration.</param>
+        /// <param name="databaseSettings">The database settings.</param>
         /// <returns>The updated service collection.</returns>
         /// <exception cref="ArgumentException">Thrown when the database provider is unsupported.</exception>
-        public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration, DatabaseSettings databaseSettings)
         {
-            string databaseProvider = configuration.GetRequiredSetting("DatabaseProvider");
-            switch (databaseProvider)
+            switch (databaseSettings.Provider)
             {
-                case "InMemory":
+                case DatabaseProvider.InMemory:
                     services.AddLightNapInMemoryDatabase();
                     break;
-                case "Sqlite":
-                    services.AddLightNapSqlite(configuration);
+                case DatabaseProvider.Sqlite:
+                    services.AddLightNapSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                     break;
-                case "SqlServer":
-                    services.AddLightNapSqlServer(configuration);
+                case DatabaseProvider.SqlServer:
+                    services.AddLightNapSqlServer(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
                     break;
-                default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseProvider}'");
+                default: throw new ArgumentException($"Unsupported 'Database:Provider' setting: '{databaseSettings.Provider}'");
             }
             return services;
         }
@@ -111,11 +112,11 @@ namespace LightNap.WebApi.Extensions
                     services.AddLogToConsoleEmailSender();
                     break;
                 case EmailProvider.Smtp:
-                    if (emailSettings.Smtp is null) { throw new ArgumentNullException("SMTP settings are required if 'Smtp' email option is set"); }
+                    if (emailSettings.Smtp is null) { throw new ArgumentNullException($"SMTP settings are required if '{emailSettings.Provider}' email option is set"); }
                     Validator.ValidateObject(emailSettings.Smtp, new ValidationContext(emailSettings.Smtp), validateAllProperties: true);
                     services.AddSmtpEmailSender(emailSettings.Smtp);
                     break;
-                default: throw new ArgumentException($"Unsupported 'Email:Provider' setting: '{emailSettings.Provider}'");
+                default: throw new ArgumentException($"Unsupported email provider setting: '{emailSettings.Provider}'");
             }
 
             services.AddScoped<IEmailService, DefaultEmailService>();
@@ -176,14 +177,11 @@ namespace LightNap.WebApi.Extensions
                 };
             });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));
-            });
+            services.AddAuthorizationBuilder()
+                .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));
 
             return services;
         }
-
 
         /// <summary>
         /// Performs database migration and seeding, with locking for multi-instance deployments.
@@ -191,23 +189,23 @@ namespace LightNap.WebApi.Extensions
         /// <param name="services">The service provider.</param>
         /// <param name="builderServices">The original service collection for seeding.</param>
         /// <param name="useDistributed">True if running in distributed mode.</param>
-        /// <param name="logger">The logger for error/warning messages.</param>
+        /// <param name="databaseSettings">The database settings.</param>
         public static async Task InitializeDatabaseAsync(
             this IServiceProvider services,
             IServiceCollection builderServices,
             bool useDistributed,
-            ILogger logger)
+            DatabaseSettings databaseSettings)
         {
             var context = services.GetRequiredService<ApplicationDbContext>();
-            var applicationSettings = services.GetRequiredService<IOptions<ApplicationSettings>>();
+            var logger = services.GetRequiredService<ILogger<IServiceProvider>>();
 
             if (useDistributed)
             {
-                await InitializeWithLockAsync(services, builderServices, context, applicationSettings, logger);
+                await InitializeWithLockAsync(services, builderServices, context, databaseSettings, logger);
             }
             else
             {
-                await PerformMigrationAsync(context, applicationSettings);
+                await PerformMigrationAsync(context, databaseSettings);
                 await PerformSeedingAsync(builderServices);
             }
         }
@@ -216,7 +214,7 @@ namespace LightNap.WebApi.Extensions
             IServiceProvider services,
             IServiceCollection builderServices,
             ApplicationDbContext context,
-            IOptions<ApplicationSettings> applicationSettings,
+            DatabaseSettings databaseSettings,
             ILogger logger)
         {
             var multiplexer = services.GetRequiredService<IConnectionMultiplexer>();
@@ -238,7 +236,7 @@ namespace LightNap.WebApi.Extensions
 
             if (locked)
             {
-                await PerformMigrationAsync(context, applicationSettings);
+                await PerformMigrationAsync(context, databaseSettings);
                 await PerformSeedingAsync(builderServices);
                 await db.KeyDeleteAsync(lockKey);
             }
@@ -248,9 +246,9 @@ namespace LightNap.WebApi.Extensions
             }
         }
 
-        private static async Task PerformMigrationAsync(ApplicationDbContext context, IOptions<ApplicationSettings> applicationSettings)
+        private static async Task PerformMigrationAsync(ApplicationDbContext context, DatabaseSettings databaseSettings)
         {
-            if (applicationSettings.Value.AutomaticallyApplyEfMigrations && context.Database.IsRelational())
+            if (databaseSettings.AutomaticallyApplyEfMigrations && context.Database.IsRelational())
             {
                 await context.Database.MigrateAsync();
             }
@@ -266,11 +264,84 @@ namespace LightNap.WebApi.Extensions
             seederServiceCollection.AddScoped<IUserContext, SystemUserContext>();
             seederServiceCollection.AddScoped<Seeder>();
 
-#pragma warning disable ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             using var seederServiceProvider = seederServiceCollection.BuildServiceProvider();
-#pragma warning restore ASP0000 // Do not call 'IServiceCollection.BuildServiceProvider' in 'ConfigureServices'
             var seeder = seederServiceProvider.GetRequiredService<Seeder>();
             await seeder.SeedAsync();
+        }
+
+        /// <summary>
+        /// Adds rate limiting services to the service collection.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="rateLimitingSettings">The rate limiting settings.</param>
+        /// <returns>The updated service collection.</returns>
+        public static IServiceCollection AddRateLimitingServices(this IServiceCollection services, RateLimitingSettings rateLimitingSettings)
+        {
+            services.AddRateLimiter(options =>
+            {
+                // Helper to get partition key (user ID or IP)
+                string GetPartitionKey(HttpContext httpContext)
+                {
+                    string? userId = httpContext.User.TryGetUserId();
+                    return userId ?? (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+                }
+
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                {
+                    string key = GetPartitionKey(httpContext);
+
+                    return RateLimitPartition.GetFixedWindowLimiter(key, partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = rateLimitingSettings.GlobalPermitLimit,
+                        Window = TimeSpan.FromMinutes(1)
+                    });
+                });
+
+                // Policy for authentication endpoints
+                options.AddPolicy("Auth", httpContext =>
+                {
+                    string key = GetPartitionKey(httpContext);
+
+                    return RateLimitPartition.GetFixedWindowLimiter(key, partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = rateLimitingSettings.AuthPermitLimit,
+                        Window = TimeSpan.FromMinutes(1)
+                    });
+                });
+
+                // Policy for content-heavy endpoints
+                options.AddPolicy("Content", httpContext =>
+                {
+                    string key = GetPartitionKey(httpContext);
+
+                    return RateLimitPartition.GetFixedWindowLimiter(key, partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = rateLimitingSettings.ContentPermitLimit,
+                        Window = TimeSpan.FromMinutes(1)
+                    });
+                });
+
+                // Policy for registration endpoint (strict to prevent spam)
+                options.AddPolicy("Registration", httpContext =>
+                {
+                    string key = GetPartitionKey(httpContext);
+
+                    return RateLimitPartition.GetFixedWindowLimiter(key, partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = rateLimitingSettings.RegistrationPermitLimit,
+                        Window = TimeSpan.FromMinutes(1)
+                    });
+                });
+
+                // On rejection, return 429 with custom message
+                options.OnRejected = async (context, token) =>
+                {
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                    await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", token);
+                };
+            });
+
+            return services;
         }
     }
 }

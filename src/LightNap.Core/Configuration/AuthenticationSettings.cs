@@ -5,13 +5,8 @@ namespace LightNap.Core.Configuration
     /// <summary>
     /// Represents the site settings for the web API.
     /// </summary>
-    public record ApplicationSettings
+    public record AuthenticationSettings
     {
-        /// <summary>
-        /// True to automatically apply Entity Framework migrations on startup.
-        /// </summary>
-        public bool AutomaticallyApplyEfMigrations { get; set; }
-
         /// <summary>
         /// How long a device can stay logged in without refreshing an access token. In other words, how far out we push refresh token expirations.
         /// </summary>

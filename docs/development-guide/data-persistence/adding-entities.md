@@ -37,14 +37,14 @@ The process for changing the EF model by adding, updating, or removing is straig
     ```
 
 3. **Configure Relationships**: Define relationships and constraints using Fluent API or data annotations in your entity classes.
-4. **Migrations**: Use [EF migrations](../getting-started/database-providers/ef-migrations) to update the database schema.
+4. **Migrations**: Use [EF migrations](../../getting-started/database-providers/ef-migrations) to update the database schema.
 
     {: .note }
-    It's recommended to use the [in-memory](../getting-started/database-providers/in-memory-provider) database provider while working out the exact details of the entity. Once the model is finalized a single migration can be generated to keep the process cleaner.
+    It's recommended to use the [in-memory](../../getting-started/database-providers/in-memory-provider) database provider while working out the exact details of the entity. Once the model is finalized a single migration can be generated to keep the process cleaner.
 
 Once the new entity is wired up, check out [our scaffolding support](./scaffolding) to quickly generate code to expose that entity all the way through to the Angular app.
 
 ## See Also
 
-- [Adding In-App Notification Types](./adding-notifications) - Example of working with the Notification entity
+- [Adding In-App Notification Types](../features/adding-notifications) - Example of working with the Notification entity
 - [Scaffolding From an Entity](./scaffolding) - Generate complete infrastructure from an entity

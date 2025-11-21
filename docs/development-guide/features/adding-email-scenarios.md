@@ -576,6 +576,7 @@ public async Task CheckExpiringSubscriptions_ShouldSendEmailsForExpiringSubscrip
 For testing actual email sending without spamming real inboxes, use a test SMTP server:
 
 **Popular Options:**
+
 - **[Papercut-SMTP](https://github.com/ChangemakerStudios/Papercut-SMTP)**: Local SMTP server that captures emails
 - **[MailHog](https://github.com/mailhog/MailHog)**: Email testing tool with web interface
 - **[Mailtrap](https://mailtrap.io/)**: Cloud-based email testing service
@@ -777,10 +778,10 @@ For more sophisticated emails, consider:
 
 ## Related Documentation
 
-- [Email Providers](../getting-started/email-providers) - Configuring SMTP and email providers
+- [Email Providers](../../getting-started/email-providers) - Configuring SMTP and email providers
 - [Adding In-App Notification Types](./adding-notifications) - Complementary in-app notifications
-- [Project Structure](../concepts/project-structure) - Understanding the overall architecture
-- [Configuring Application Settings](../getting-started/configuring-application-settings) - Email-related settings
+- [Project Structure](../../concepts/project-structure) - Understanding the overall architecture
+- [Configuring Application Settings](../../getting-started/application-configuration/configuring-application-settings) - Email-related settings
 
 ## Additional Resources
 
