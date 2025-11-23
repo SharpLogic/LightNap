@@ -7,7 +7,7 @@ using LightNap.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace LightNap.Core.Services
+namespace LightNap.Core.Identity.Services
 {
     /// <summary>
     /// Service for managing refresh tokens in the database.

@@ -106,11 +106,6 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
     </None>
-    <None Update="Templates\Front-End\Area\Helpers\Helper.tt">
-      <CustomToolNamespace>LightNap.Scaffolding.Templates</CustomToolNamespace>
-      <LastGenOutput>Helper.cs</LastGenOutput>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-    </None>
     <None Update="Templates\Front-End\Area\Models\Request\CreateRequestDto.tt">
       <LastGenOutput>CreateRequestDto.cs</LastGenOutput>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -235,11 +230,6 @@
     </Compile>
     <Compile Update="Templates\Front-End\Area\Components\Pages\Routes.cs">
       <DependentUpon>Routes.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Templates\Front-End\Area\Helpers\Helper.cs">
-      <DependentUpon>Helper.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>

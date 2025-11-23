@@ -24,6 +24,6 @@ namespace LightNap.Core.Users.Dto.Response
         /// <summary>
         /// The created date of the user.
         /// </summary>
-        public long CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace LightNap.Core.Data.Converters
         /// <summary>
         /// Initializes a new instance of the <see cref="UtcValueConverter"/> class.
         /// </summary>
-        public UtcValueConverter() : base(value => value, value => DateTime.SpecifyKind(value, DateTimeKind.Utc))
+        public UtcValueConverter() : base(value => value.ToUniversalTime(), value => DateTime.SpecifyKind(value, DateTimeKind.Utc))
         {
         }
     }

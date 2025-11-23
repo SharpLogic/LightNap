@@ -2,19 +2,17 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { tap } from "rxjs";
 import {
-    CreateStaticContentDto,
-    CreateStaticContentLanguageDto,
-    PagedResponseDto,
-    SearchStaticContentRequestDto,
-    StaticContentDto,
-    StaticContentLanguageDto,
-    StaticContentSupportedLanguageDto,
-    UpdateStaticContentDto,
-    UpdateStaticContentLanguageDto
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  PagedResponseDto,
+  SearchStaticContentRequestDto,
+  StaticContentDto,
+  StaticContentLanguageDto,
+  StaticContentSupportedLanguageDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
 } from "../dtos";
 import { PublishedStaticContentResultDto } from "../dtos/static-contents/response/published-static-content-result-dto";
-import { StaticContentLanguageHelper } from "../helpers/static-content-language.helper";
-import { StaticContentHelper } from "../helpers/static-content.helper";
 
 @Injectable({
   providedIn: "root",
@@ -32,23 +30,19 @@ export class ContentDataService {
   }
 
   createStaticContent(createDto: CreateStaticContentDto) {
-    return this.#http.post<StaticContentDto>(`${this.#apiUrlRoot}`, createDto).pipe(tap(StaticContentHelper.rehydrate));
+    return this.#http.post<StaticContentDto>(`${this.#apiUrlRoot}`, createDto);
   }
 
   getStaticContent(key: string) {
-    return this.#http.get<StaticContentDto | null>(`${this.#apiUrlRoot}${key}`).pipe(tap(StaticContentHelper.rehydrate));
+    return this.#http.get<StaticContentDto | null>(`${this.#apiUrlRoot}${key}`);
   }
 
   searchStaticContent(searchDto: SearchStaticContentRequestDto) {
-    return this.#http.post<PagedResponseDto<StaticContentDto>>(`${this.#apiUrlRoot}search`, searchDto).pipe(
-      tap(response => {
-        response.data.forEach(StaticContentHelper.rehydrate);
-      })
-    );
+    return this.#http.post<PagedResponseDto<StaticContentDto>>(`${this.#apiUrlRoot}search`, searchDto);
   }
 
   updateStaticContent(key: string, updateDto: UpdateStaticContentDto) {
-    return this.#http.put<StaticContentDto>(`${this.#apiUrlRoot}${key}`, updateDto).pipe(tap(sc => StaticContentHelper.rehydrate(sc)!));
+    return this.#http.put<StaticContentDto>(`${this.#apiUrlRoot}${key}`, updateDto);
   }
 
   deleteStaticContent(key: string) {
@@ -56,29 +50,19 @@ export class ContentDataService {
   }
 
   getStaticContentLanguage(key: string, languageCode: string) {
-    return this.#http
-      .get<StaticContentLanguageDto | null>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`)
-      .pipe(tap(StaticContentLanguageHelper.rehydrate));
+    return this.#http.get<StaticContentLanguageDto | null>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`);
   }
 
   getStaticContentLanguages(key: string) {
-    return this.#http.get<Array<StaticContentLanguageDto>>(`${this.#apiUrlRoot}${key}/languages`).pipe(
-      tap(languages => {
-        languages.forEach(StaticContentLanguageHelper.rehydrate);
-      })
-    );
+    return this.#http.get<Array<StaticContentLanguageDto>>(`${this.#apiUrlRoot}${key}/languages`);
   }
 
   createStaticContentLanguage(key: string, languageCode: string, createDto: CreateStaticContentLanguageDto) {
-    return this.#http
-      .post<StaticContentLanguageDto>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`, createDto)
-      .pipe(tap(StaticContentLanguageHelper.rehydrate));
+    return this.#http.post<StaticContentLanguageDto>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`, createDto);
   }
 
   updateStaticContentLanguage(key: string, languageCode: string, updateDto: UpdateStaticContentLanguageDto) {
-    return this.#http
-      .put<StaticContentLanguageDto>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`, updateDto)
-      .pipe(tap(StaticContentLanguageHelper.rehydrate));
+    return this.#http.put<StaticContentLanguageDto>(`${this.#apiUrlRoot}${key}/languages/${languageCode}`, updateDto);
   }
 
   deleteStaticContentLanguage(key: string, languageCode: string) {

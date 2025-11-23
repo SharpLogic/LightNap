@@ -79,7 +79,6 @@ namespace LightNap.Scaffolding.ServiceRunner
                     new(new UpdateDto() { Parameters = templateParameters }, $"{parameters.CoreProjectPath}/{pascalNamePlural}/Dto/Request/Update{type.Name}Dto.cs"),
                     new(new Controller() { Parameters = templateParameters }, $"{parameters.WebApiProjectPath}/Controllers/{pascalNamePlural}Controller.cs"),
 
-                    new(new Helper() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/helpers/{kebabName}.helper.ts"),
                     new(new CreateRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/create-{kebabName}-request-dto.ts"),
                     new(new SearchRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/search-{kebabNamePlural}-request-dto.ts"),
                     new(new UpdateRequestDto() { Parameters = templateParameters }, $"{parameters.FrontEndAppPath}/{kebabNamePlural}/models/request/update-{kebabName}-request-dto.ts"),

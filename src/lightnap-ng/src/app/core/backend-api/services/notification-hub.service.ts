@@ -3,7 +3,6 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signal
 import { Observable, Subject } from "rxjs";
 import { NotificationDto } from "../dtos";
 import { IdentityService } from "@core/services/identity.service";
-import { NotificationHelper } from "../helpers/notification.helper";
 
 @Injectable({
   providedIn: "root",
@@ -15,12 +14,12 @@ export class NotificationHubService {
       accessTokenFactory: () => this.#identityService.getToken() || "",
     })
     .withAutomaticReconnect()
+    .configureLogging(LogLevel.Warning)
     .build();
   #notificationSubject = new Subject<NotificationDto>();
 
   constructor() {
     this.#hubConnection.on("ReceiveNotification", (notification: NotificationDto) => {
-      NotificationHelper.rehydrate(notification);
       this.#notificationSubject.next(notification);
     });
   }

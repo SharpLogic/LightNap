@@ -14,7 +14,6 @@ import {
   UserSettingDto,
 } from "../dtos";
 import { tap } from "rxjs";
-import { UserSettingHelper } from "../helpers/user-setting.helper";
 
 @Injectable({
   providedIn: "root",
@@ -96,12 +95,10 @@ export class UsersDataService {
   }
 
   getSettings(userId: string) {
-    return this.#http
-      .get<Array<UserSettingDto>>(`${this.#apiUrlRoot}${userId}/settings`)
-      .pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
+    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}${userId}/settings`);
   }
 
   updateSetting(userId: string, setUserSetting: SetUserSettingRequestDto) {
-    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}${userId}/settings`, setUserSetting).pipe(tap(UserSettingHelper.rehydrate));
+    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}${userId}/settings`, setUserSetting);
   }
 }

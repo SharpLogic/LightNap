@@ -1,7 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { LoginRequestDto, LoginSuccessResultDto, RegisterRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, VerifyCodeRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, SendMagicLinkEmailRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmChangeEmailRequestDto, DeviceDto } from "../dtos";
-import { DeviceHelper } from "../helpers/device.helper";
+import {
+  LoginRequestDto,
+  LoginSuccessResultDto,
+  RegisterRequestDto,
+  ResetPasswordRequestDto,
+  NewPasswordRequestDto,
+  VerifyCodeRequestDto,
+  SendVerificationEmailRequestDto,
+  VerifyEmailRequestDto,
+  SendMagicLinkEmailRequestDto,
+  ChangePasswordRequestDto,
+  ChangeEmailRequestDto,
+  ConfirmChangeEmailRequestDto,
+  DeviceDto,
+} from "../dtos";
 import { tap } from "rxjs";
 
 @Injectable({
@@ -51,7 +64,7 @@ export class IdentityDataService {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}request-magic-link`, sendMagicLinkEmailRequest);
   }
 
-    changePassword(changePasswordRequest: ChangePasswordRequestDto) {
+  changePassword(changePasswordRequest: ChangePasswordRequestDto) {
     return this.#http.post<boolean>(`${this.#apiUrlRoot}change-password`, changePasswordRequest);
   }
 
@@ -64,13 +77,10 @@ export class IdentityDataService {
   }
 
   getDevices() {
-    return this.#http
-      .get<Array<DeviceDto>>(`${this.#apiUrlRoot}devices`)
-      .pipe(tap(devices => devices.forEach(device => DeviceHelper.rehydrate(device))));
+    return this.#http.get<Array<DeviceDto>>(`${this.#apiUrlRoot}devices`);
   }
 
   revokeDevice(deviceId: string) {
     return this.#http.delete<boolean>(`${this.#apiUrlRoot}devices/${deviceId}`);
   }
-
 }

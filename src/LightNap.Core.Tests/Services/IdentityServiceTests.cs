@@ -12,7 +12,6 @@ using LightNap.Core.Identity.Services;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Interfaces;
-using LightNap.Core.Services;
 using LightNap.Core.Tests.Utilities;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
