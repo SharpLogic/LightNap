@@ -2,8 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { tap } from "rxjs";
 import { ClaimDto, NotificationSearchResultsDto, PagedRequestDto, PagedResponseDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
-import { NotificationHelper } from "../helpers/notification.helper";
-import { UserSettingHelper } from "../helpers/user-setting.helper";
 
 @Injectable({
   providedIn: "root",
@@ -21,9 +19,7 @@ export class ProfileDataService {
   }
 
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
-    return this.#http
-      .post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest)
-      .pipe(tap(results => results.data.forEach(NotificationHelper.rehydrate)));
+    return this.#http      .post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest);
   }
 
   markAllNotificationsAsRead() {
@@ -43,10 +39,10 @@ export class ProfileDataService {
   }
 
   getSettings() {
-    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}settings`).pipe(tap(settings => settings.forEach(UserSettingHelper.rehydrate)));
+    return this.#http.get<Array<UserSettingDto>>(`${this.#apiUrlRoot}settings`);
   }
 
   setSetting(setUserSettingRequest: SetUserSettingRequestDto) {
-    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}settings`, setUserSettingRequest).pipe(tap(UserSettingHelper.rehydrate));
+    return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}settings`, setUserSettingRequest);
   }
 }

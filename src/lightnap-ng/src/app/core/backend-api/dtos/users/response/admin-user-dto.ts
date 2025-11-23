@@ -6,13 +6,13 @@ import { PrivilegedUserDto } from "./privileged-user-dto";
 export interface AdminUserDto extends PrivilegedUserDto {
     /**
      * The timestamp when the user was last modified.
-     * @type {number}
+     * @type {Date}
      */
-    lastModifiedDate: number;
+    lastModifiedDate: Date;
 
     /**
      * The timestamp when the user lockout ends. If the user is not locked out, this value is undefined.
-     * @type {number}
+     * @type {Date}
      */
-    lockoutEnd: number;
+    lockoutEnd?: Date;
 }

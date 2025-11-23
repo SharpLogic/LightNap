@@ -16,7 +16,7 @@ export interface PublicUserDto {
 
     /**
      * The timestamp when the user was created.
-     * @type {number}
+     * @type {Date}
      */
-    createdDate: number;
+    createdDate: Date;
 }

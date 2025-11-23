@@ -13,7 +13,7 @@
         /// <summary>
         /// Gets or sets the timestamp of when the admin device was last seen.
         /// </summary>
-        public long LastSeen { get; set; }
+        public DateTime LastSeen { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address of the admin device.
@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets or sets the expiration timestamp of the admin device.
         /// </summary>
-        public long Expires { get; set; }
+        public DateTime Expires { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the user associated with the admin device.

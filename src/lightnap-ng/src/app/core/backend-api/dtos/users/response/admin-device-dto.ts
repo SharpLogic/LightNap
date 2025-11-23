@@ -6,9 +6,9 @@ import { DeviceDto } from "./device-dto";
 export interface AdminDeviceDto extends DeviceDto {
     /**
      * The timestamp when the device expires.
-     * @type {number}
+     * @type {Date}
      */
-    expires: number;
+    expires: Date;
 
     /**
      * The user associated with the device.

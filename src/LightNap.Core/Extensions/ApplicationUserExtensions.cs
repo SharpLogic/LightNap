@@ -67,15 +67,13 @@ namespace LightNap.Core.Extensions
         /// <returns>An AdminUserDto object representing the ApplicationUser object.</returns>
         public static AdminUserDto ToAdminUserDto(this ApplicationUser user)
         {
-            long? lockoutEnd = user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) < DateTimeOffset.UtcNow ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
-
             return new AdminUserDto()
             {
-                CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
-                LastModifiedDate = new DateTimeOffset(user.LastModifiedDate).ToUnixTimeMilliseconds(),
+                CreatedDate = user.CreatedDate,
+                LastModifiedDate = user.LastModifiedDate,
                 Email = user.Email!,
                 Id = user.Id,
-                LockoutEnd = lockoutEnd,
+                LockoutEnd = user.LockoutEnd?.UtcDateTime,
                 UserName = user.UserName!
             };
         }
@@ -87,7 +85,7 @@ namespace LightNap.Core.Extensions
         /// <returns>A list of AdminUserDto objects representing the ApplicationUser objects.</returns>
         public static List<AdminUserDto> ToAdminUserDtoList(this IEnumerable<ApplicationUser> users)
         {
-            return users.Select(user => user.ToAdminUserDto()).ToList();
+            return [.. users.Select(user => user.ToAdminUserDto())];
         }
 
         /// <summary>
@@ -97,11 +95,9 @@ namespace LightNap.Core.Extensions
         /// <returns>An PrivilegedUserDto object representing the ApplicationUser object.</returns>
         public static PrivilegedUserDto ToPrivilegedUserDto(this ApplicationUser user)
         {
-            long? lockoutEnd = user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) < DateTimeOffset.UtcNow ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
-
             return new PrivilegedUserDto()
             {
-                CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
+                CreatedDate = user.CreatedDate,
                 Email = user.Email!,
                 Id = user.Id,
                 UserName = user.UserName!
@@ -115,7 +111,7 @@ namespace LightNap.Core.Extensions
         /// <returns>A list of PrivilegedUserDto objects representing the ApplicationUser objects.</returns>
         public static List<PrivilegedUserDto> ToPrivilegedUserDtoList(this IEnumerable<ApplicationUser> users)
         {
-            return users.Select(user => user.ToPrivilegedUserDto()).ToList();
+            return [.. users.Select(user => user.ToPrivilegedUserDto())];
         }
 
         /// <summary>
@@ -125,11 +121,9 @@ namespace LightNap.Core.Extensions
         /// <returns>An PublicUserDto object representing the ApplicationUser object.</returns>
         public static PublicUserDto ToPublicUserDto(this ApplicationUser user)
         {
-            long? lockoutEnd = user.LockoutEnd.GetValueOrDefault(DateTimeOffset.MinValue) < DateTimeOffset.UtcNow ? null : user.LockoutEnd?.ToUnixTimeMilliseconds();
-
             return new PublicUserDto()
             {
-                CreatedDate = new DateTimeOffset(user.CreatedDate).ToUnixTimeMilliseconds(),
+                CreatedDate = user.CreatedDate,
                 Id = user.Id,
                 UserName = user.UserName!
             };
@@ -142,7 +136,7 @@ namespace LightNap.Core.Extensions
         /// <returns>A list of PublicUserDto objects representing the ApplicationUser objects.</returns>
         public static List<PublicUserDto> ToPublicUserDtoList(this IEnumerable<ApplicationUser> users)
         {
-            return users.Select(user => user.ToPublicUserDto()).ToList();
+            return [.. users.Select(user => user.ToPublicUserDto())];
         }
 
         /// <summary>
