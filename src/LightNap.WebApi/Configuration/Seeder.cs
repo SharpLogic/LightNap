@@ -275,7 +275,7 @@ namespace LightNap.WebApi.Configuration
 
                 user = registerRequestDto.ToCreate(authenticationSettings.Value.RequireTwoFactorForNewUsers);
 
-                var result = await userManager.CreateAsync(user, passwordToSet);
+                var result = await (passwordProvided ? userManager.CreateAsync(user, passwordToSet) : userManager.CreateAsync(user));
                 if (!result.Succeeded)
                 {
                     throw new ArgumentException($"Unable to create user '{userName}' ('{email}'): {string.Join("; ", result.Errors.Select(error => error.Description))}");
