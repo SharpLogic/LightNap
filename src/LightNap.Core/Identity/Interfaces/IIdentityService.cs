@@ -1,5 +1,7 @@
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Identity.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace LightNap.Core.Identity.Interfaces
 {
@@ -111,5 +113,19 @@ namespace LightNap.Core.Identity.Interfaces
         /// <param name="deviceId">The ID of the device to be revoked.</param>  
         /// <returns>A task that represents the asynchronous operation.</returns>  
         Task RevokeDeviceAsync(string deviceId);
+
+        /// <summary>
+        /// Configures the external authentication properties for the specified provider.
+        /// </summary>
+        /// <param name="provider">The external authentication provider.</param>
+        /// <param name="redirectUrl">The URL to redirect to after authentication.</param>
+        /// <returns>The authentication properties.</returns>
+        AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl);
+
+        /// <summary>
+        /// Handles the callback from an external authentication provider.
+        /// </summary>
+        /// <returns>The result of the external login callback.</returns>
+        Task<ExternalLoginCallbackResult> ExternalLoginCallbackAsync();
     }
 }

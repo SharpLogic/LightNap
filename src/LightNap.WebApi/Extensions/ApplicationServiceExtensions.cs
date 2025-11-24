@@ -129,8 +129,9 @@ namespace LightNap.WebApi.Extensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="jwtSettings">The JWT settings.</param>
+        /// <param name="authSettings">The authentication settings.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(
                 (options) =>
@@ -176,6 +177,33 @@ namespace LightNap.WebApi.Extensions
                     }
                 };
             });
+
+            // Add external authentication schemes
+            if (authSettings?.OAuth?.Google != null)
+            {
+                services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        options.ClientId = authSettings.OAuth.Google.ClientId;
+                        options.ClientSecret = authSettings.OAuth.Google.ClientSecret;
+                    });
+            }
+
+            if (authSettings?.OAuth?.Microsoft != null)
+            {
+                services.AddAuthentication()
+                    .AddMicrosoftAccount(options =>
+                    {
+                        options.ClientId = authSettings.OAuth.Microsoft.ClientId;
+                        options.ClientSecret = authSettings.OAuth.Microsoft.ClientSecret;
+                    });
+            }
+
+            if (authSettings?.WindowsAuth?.Enabled == true)
+            {
+                services.AddAuthentication()
+                    .AddNegotiate();
+            }
 
             services.AddAuthorizationBuilder()
                 .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));

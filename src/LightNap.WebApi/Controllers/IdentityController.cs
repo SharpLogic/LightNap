@@ -241,5 +241,48 @@ namespace LightNap.WebApi.Controllers
             await identityService.RevokeDeviceAsync(deviceId);
             return new ApiResponseDto<bool>(true);
         }
+
+        /// <summary>
+        /// Initiates external authentication with the specified provider.
+        /// </summary>
+        /// <param name="provider">The external authentication provider (e.g., Google, Microsoft, GitHub).</param>
+        /// <param name="returnUrl">The URL to redirect to after authentication.</param>
+        /// <returns>A challenge result that redirects to the external provider.</returns>
+        [HttpGet("external-login/{provider}")]
+        [ProducesResponseType(302)]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Identity", new { returnUrl });
+            var properties = identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl!);
+            return Challenge(properties, provider);
+        }
+
+        /// <summary>
+        /// Handles the callback from an external authentication provider.
+        /// </summary>
+        /// <param name="returnUrl">The URL to redirect to after successful authentication.</param>
+        /// <param name="remoteError">Any error from the external provider.</param>
+        /// <returns>The API response containing the login result or a redirect.</returns>
+        [HttpGet("external-login-callback")]
+        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [ProducesResponseType(302)]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                // Handle error from external provider
+                return BadRequest(new ApiResponseDto<string>($"External authentication error: {remoteError}"));
+            }
+
+            var result = await identityService.ExternalLoginCallbackAsync();
+            if (result.Succeeded)
+            {
+                return Ok(new ApiResponseDto<LoginSuccessDto>(result.LoginResult!));
+            }
+            else
+            {
+                return BadRequest(new ApiResponseDto<string>(result.Error ?? "External authentication failed"));
+            }
+        }
     }
 }

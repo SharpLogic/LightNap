@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace LightNap.Core.Identity.Services
 {
@@ -421,7 +423,7 @@ namespace LightNap.Core.Identity.Services
         }
 
         /// <summary>  
-        /// Revokes a device for the specified user.  
+        /// Revokes a device for the requesting user.  
         /// </summary>  
         /// <param name="deviceId">The ID of the device to be revoked.</param>  
         /// <returns>A task that represents the asynchronous operation.</returns>  
@@ -430,6 +432,82 @@ namespace LightNap.Core.Identity.Services
             userContext.AssertAuthenticated();
 
             await refreshTokenService.RevokeRefreshTokenAsync(deviceId);
+        }
+
+        /// <summary>
+        /// Configures the external authentication properties for the specified provider.
+        /// </summary>
+        /// <param name="provider">The external authentication provider.</param>
+        /// <param name="redirectUrl">The URL to redirect to after authentication.</param>
+        /// <returns>The authentication properties.</returns>
+        public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl)
+        {
+            return signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        }
+
+        /// <summary>
+        /// Handles the callback from an external authentication provider.
+        /// </summary>
+        /// <returns>The result of the external login callback.</returns>
+        public async Task<ExternalLoginCallbackResult> ExternalLoginCallbackAsync()
+        {
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return new ExternalLoginCallbackResult { Succeeded = false, Error = "External login info not found" };
+            }
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return new ExternalLoginCallbackResult { Succeeded = false, Error = "Email not provided by external provider" };
+            }
+
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // Create a new user account
+                user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true // External providers are trusted
+                };
+
+                var result = await userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
+                }
+
+                // Add the external login
+                result = await userManager.AddLoginAsync(user, info);
+                if (!result.Succeeded)
+                {
+                    return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
+                }
+            }
+            else
+            {
+                // Link the external login if not already linked
+                var existingLogin = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                if (existingLogin == null)
+                {
+                    var result = await userManager.AddLoginAsync(user, info);
+                    if (!result.Succeeded)
+                    {
+                        return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
+                    }
+                }
+            }
+
+            // Sign in the user
+            await signInManager.SignInAsync(user, isPersistent: false);
+
+            // Generate tokens
+            var loginResult = await HandleUserLoginAsync(user, false, "External Login");
+
+            return new ExternalLoginCallbackResult { Succeeded = true, LoginResult = loginResult };
         }
     }
 }

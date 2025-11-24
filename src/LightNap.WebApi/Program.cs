@@ -88,7 +88,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDatabaseServices(builder.Configuration, databaseSettings)
     .AddEmailServices(emailSettings)
     .AddApplicationServices()
-    .AddIdentityServices(jwtSettings)
+    .AddIdentityServices(jwtSettings, appSettings)
     .AddRateLimitingServices(rateLimitingSettings);
 
 // Configure HybridCache conditionally
