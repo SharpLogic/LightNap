@@ -2,6 +2,7 @@ using LightNap.Core.Api;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
+using LightNap.Core.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -250,11 +251,13 @@ namespace LightNap.WebApi.Controllers
         /// <returns>A challenge result that redirects to the external provider.</returns>
         [HttpGet("external-login/{provider}")]
         [ProducesResponseType(302)]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Identity", new { returnUrl });
-            var properties = identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl!);
-            return Challenge(properties, provider);
+            var properties = identityService.ConfigureExternalAuthenticationProperties(provider, returnUrl!);
+            return this.Challenge(properties, provider);
         }
 
         /// <summary>
@@ -262,27 +265,56 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <param name="returnUrl">The URL to redirect to after successful authentication.</param>
         /// <param name="remoteError">Any error from the external provider.</param>
-        /// <returns>The API response containing the login result or a redirect.</returns>
+        /// <returns>A redirect to the confirmation page or return URL, or an error response.</returns>
         [HttpGet("external-login-callback")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(302)]
+        [ProducesResponseType(400)]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
         {
+            // Something failed at the provider, such as the user declining to authorize.
             if (remoteError != null)
             {
-                // Handle error from external provider
-                return BadRequest(new ApiResponseDto<string>($"External authentication error: {remoteError}"));
+                return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(remoteError)}");
             }
 
-            var result = await identityService.ExternalLoginCallbackAsync();
-            if (result.Succeeded)
+            ExternalLoginCallbackResult result;
+
+            try
             {
-                return Ok(new ApiResponseDto<LoginSuccessDto>(result.LoginResult!));
+                result = await identityService.ExternalLoginCallbackAsync();
             }
-            else
+            catch (UserFriendlyApiException ex)
             {
-                return BadRequest(new ApiResponseDto<string>(result.Error ?? "External authentication failed"));
+                return this.Redirect($"/identity/external-login-error?error={string.Join(',', ex.Errors.Select(e => Uri.EscapeDataString(e)))}");
             }
+            catch (Exception ex)
+            {
+                return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(ex.Message)}");
+            }
+
+            if (!result.RequiresRegistration)
+            {
+                return Redirect(returnUrl ?? "/");
+            }
+
+            // Redirect to confirmation page with token
+            return Redirect($"/external-login-confirmation?token={result.ConfirmationToken}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
+        }
+
+        /// <summary>
+        /// Completes the external login registration.
+        /// </summary>
+        /// <param name="requestDto">The completion request DTO.</param>
+        /// <returns>The API response containing the login result.</returns>
+        [HttpPost("complete-external-login")]
+        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [ProducesResponseType(400)]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
+        public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(ExternalLoginRegisterRequestDto requestDto)
+        {
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.CompleteExternalLoginAsync(requestDto));
         }
     }
 }

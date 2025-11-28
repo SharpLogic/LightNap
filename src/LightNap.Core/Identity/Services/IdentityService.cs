@@ -12,12 +12,14 @@ using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Enums;
 using LightNap.Core.Notifications.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 
 namespace LightNap.Core.Identity.Services
 {
@@ -34,7 +36,8 @@ namespace LightNap.Core.Identity.Services
         ApplicationDbContext db,
         ICookieManager cookieManager,
         IUserContext userContext,
-        IRefreshTokenService refreshTokenService) : IIdentityService
+        IRefreshTokenService refreshTokenService,
+        HybridCache cache) : IIdentityService
     {
         /// <summary>
         /// Handles user login asynchronously.
@@ -451,63 +454,97 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The result of the external login callback.</returns>
         public async Task<ExternalLoginCallbackResult> ExternalLoginCallbackAsync()
         {
-            var info = await signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            var info = await signInManager.GetExternalLoginInfoAsync() ?? throw new UserFriendlyApiException("Unable to link your external login info");
+
+            var user = await this.GetUserFromCookieAsync();
+            if (user is not null)
             {
-                return new ExternalLoginCallbackResult { Succeeded = false, Error = "External login info not found" };
+                // User is already logged in, link the external login.
+                var result = await userManager.AddLoginAsync(user, info);
+                if (!result.Succeeded) { throw new UserFriendlyApiException(result.Errors.Select(e => e.Description)); }
+
+                return new ExternalLoginCallbackResult { RequiresRegistration = false };
             }
 
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            if (string.IsNullOrEmpty(email))
+            // Generate a temporary token to store OAuth info. This is the token we'll give the frontend to complete the registration.
+            var confirmationToken = Guid.NewGuid().ToString();
+            // Store OAuth info temporarily. This needs to be available long enough for the user to provide supplemental
+            // registration info (like required profile fields) and accept terms.
+            await cache.SetAsync(confirmationToken, info, new HybridCacheEntryOptions() { Expiration = TimeSpan.FromMinutes(10) });
+
+            return new ExternalLoginCallbackResult { RequiresRegistration = true, ConfirmationToken = confirmationToken };
+        }
+
+        /// <summary>
+        /// Completes the external login registration.
+        /// </summary>
+        /// <param name="registerRequestDto">The completion request DTO.</param>
+        /// <returns>The login result.</returns>
+        /// <remarks>
+        /// This method is specifically for completing the registration of a new user using an external login. While there might be 
+        /// some edge cases we can support (like logging in an existing linked user or linking an externally confirmed email with an 
+        /// existing account for that email) we will not support those here to avoid potential security issues.
+        /// </remarks>
+        public async Task<LoginSuccessDto> CompleteExternalLoginAsync(ExternalLoginRegisterRequestDto registerRequestDto)
+        {
+            ArgumentNullException.ThrowIfNull(registerRequestDto);
+            Validator.ValidateObject(registerRequestDto, new ValidationContext(registerRequestDto), true);
+
+            if (userContext.IsAuthenticated) { throw new UserFriendlyApiException("You are already logged in."); }
+
+            var (_, value) = await cache.TryGetValueAsync<ExternalLoginInfo>(registerRequestDto.ConfirmationToken);
+            var info = value ?? throw new UserFriendlyApiException("OAuth session expired. Please try again.");
+
+            // Make sure this external login is not already associated with another account.
+            if (await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey) is not null) 
             {
-                return new ExternalLoginCallbackResult { Succeeded = false, Error = "Email not provided by external provider" };
+                throw new UserFriendlyApiException(
+                    "This external login is already linked to an account. Log into that account to remove it there " +
+                    "if you want to associate it with this new account instead."); 
             }
 
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
+            // Make sure the requested email does not already exist.
+            var user = await userManager.FindByEmailAsync(registerRequestDto.Email);
+            if (user is not null) 
             {
-                // Create a new user account
-                user = new ApplicationUser
-                {
-                    UserName = email,
-                    Email = email,
-                    EmailConfirmed = true // External providers are trusted
-                };
-
-                var result = await userManager.CreateAsync(user);
-                if (!result.Succeeded)
-                {
-                    return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
-                }
-
-                // Add the external login
-                result = await userManager.AddLoginAsync(user, info);
-                if (!result.Succeeded)
-                {
-                    return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
-                }
-            }
-            else
-            {
-                // Link the external login if not already linked
-                var existingLogin = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                if (existingLogin == null)
-                {
-                    var result = await userManager.AddLoginAsync(user, info);
-                    if (!result.Succeeded)
-                    {
-                        return new ExternalLoginCallbackResult { Succeeded = false, Error = string.Join(", ", result.Errors.Select(e => e.Description)) };
-                    }
-                }
+                throw new UserFriendlyApiException(
+                    "A user with this email already exists. Log in with that account before linking an external login."); 
             }
 
-            // Sign in the user
-            await signInManager.SignInAsync(user, isPersistent: false);
+            // Check for username conflict before creating the user.
+            if (await userManager.FindByNameAsync(registerRequestDto.UserName) != null)
+            {
+                throw new UserFriendlyApiException("Username is already taken.");
+            }
 
-            // Generate tokens
-            var loginResult = await HandleUserLoginAsync(user, false, "External Login");
+            // Create the new user
+            user = registerRequestDto.ToCreate(authenticationSettings.Value.RequireTwoFactorForNewUsers);
+            var result = await userManager.CreateAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyApiException(result.Errors.Select(e => e.Description));
+            }
 
-            return new ExternalLoginCallbackResult { Succeeded = true, LoginResult = loginResult };
+            // Associate the external login.
+            result = await userManager.AddLoginAsync(user, info);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyApiException(result.Errors.Select(e => e.Description));
+            }
+
+            // Clean up temporary data and send out notifications/logging.
+            await cache.RemoveAsync(registerRequestDto.ConfirmationToken);
+            await notificationService.CreateSystemNotificationForRoleAsync(
+                ApplicationRoles.Administrator.Name!,
+                new CreateNotificationRequestDto()
+                {
+                    Type = NotificationType.AdministratorNewUserRegistration,
+                    Data = new Dictionary<string, object>() { { "userId", user.Id } }
+                });
+            logger.LogInformation("New user '{userName}' ('{email}') registered via OAuth!", user.UserName, user.Email);
+
+            // Log the user in.
+            return await HandleUserLoginAsync(user, registerRequestDto.RememberMe, registerRequestDto.DeviceDetails);
         }
     }
 }

@@ -8,23 +8,13 @@ namespace LightNap.Core.Identity.Models
     public class ExternalLoginCallbackResult
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the external login was successful.
+        /// True if the user is not yet registered.
         /// </summary>
-        public bool Succeeded { get; set; }
+        public bool RequiresRegistration { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether additional information is required from the user.
+        /// The confirmation token for completing the login.
         /// </summary>
-        public bool RequiresAdditionalInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the login result if the external login was successful.
-        /// </summary>
-        public LoginSuccessDto? LoginResult { get; set; }
-
-        /// <summary>
-        /// Gets or sets the error message if the external login failed.
-        /// </summary>
-        public string? Error { get; set; }
+        public string? ConfirmationToken { get; set; }
     }
 }

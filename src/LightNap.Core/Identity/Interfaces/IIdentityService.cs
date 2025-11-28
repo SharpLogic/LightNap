@@ -127,5 +127,12 @@ namespace LightNap.Core.Identity.Interfaces
         /// </summary>
         /// <returns>The result of the external login callback.</returns>
         Task<ExternalLoginCallbackResult> ExternalLoginCallbackAsync();
+
+        /// <summary>
+        /// Completes the external login registration.
+        /// </summary>
+        /// <param name="requestDto">The completion request DTO.</param>
+        /// <returns>The login result.</returns>
+        Task<LoginSuccessDto> CompleteExternalLoginAsync(ExternalLoginRegisterRequestDto requestDto);
     }
 }

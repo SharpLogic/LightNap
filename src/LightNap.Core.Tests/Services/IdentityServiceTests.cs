@@ -54,6 +54,8 @@ namespace LightNap.Core.Tests.Services
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddHybridCache();
+
             // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
             services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();

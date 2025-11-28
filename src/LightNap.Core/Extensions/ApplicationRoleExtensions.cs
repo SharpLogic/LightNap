@@ -30,7 +30,7 @@ namespace LightNap.Core.Extensions
         /// <returns>A list of RoleDto objects.</returns>
         public static List<RoleDto> ToDtoList(this IEnumerable<ApplicationRole> roles)
         {
-            return roles.Select(role => role.ToDto()).ToList();
+            return [.. roles.Select(role => role.ToDto())];
         }
     }
 }
