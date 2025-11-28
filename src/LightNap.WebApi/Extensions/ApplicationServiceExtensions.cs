@@ -178,25 +178,30 @@ namespace LightNap.WebApi.Extensions
                 };
             });
 
-            // Add external authentication schemes
-            if (authSettings?.OAuth?.Google != null)
+            // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc.
+            var oAuthSettings = authSettings?.OAuth;
+            if (oAuthSettings is not null)
             {
-                services.AddAuthentication()
-                    .AddGoogle(options =>
-                    {
-                        options.ClientId = authSettings.OAuth.Google.ClientId;
-                        options.ClientSecret = authSettings.OAuth.Google.ClientSecret;
-                    });
-            }
+                // Add external authentication schemes
+                if (oAuthSettings.Google is not null)
+                {
+                    services.AddAuthentication()
+                        .AddGoogle(options =>
+                        {
+                            options.ClientId = oAuthSettings.Google.ClientId;
+                            options.ClientSecret = oAuthSettings.Google.ClientSecret;
+                        });
+                }
 
-            if (authSettings?.OAuth?.Microsoft != null)
-            {
-                services.AddAuthentication()
-                    .AddMicrosoftAccount(options =>
-                    {
-                        options.ClientId = authSettings.OAuth.Microsoft.ClientId;
-                        options.ClientSecret = authSettings.OAuth.Microsoft.ClientSecret;
-                    });
+                if (oAuthSettings.Microsoft is not null)
+                {
+                    services.AddAuthentication()
+                        .AddMicrosoftAccount(options =>
+                        {
+                            options.ClientId = oAuthSettings.Microsoft.ClientId;
+                            options.ClientSecret = oAuthSettings.Microsoft.ClientSecret;
+                        });
+                }
             }
 
             if (authSettings?.WindowsAuth?.Enabled == true)

@@ -253,10 +253,10 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(302)]
         [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        public IActionResult ExternalLogin(string provider, string? returnUrl)
         {
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Identity", new { returnUrl });
-            var properties = identityService.ConfigureExternalAuthenticationProperties(provider, returnUrl!);
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Identity", new { returnUrl })!;
+            var properties = identityService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return this.Challenge(properties, provider);
         }
 
@@ -294,13 +294,13 @@ namespace LightNap.WebApi.Controllers
                 return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(ex.Message)}");
             }
 
-            if (!result.RequiresRegistration)
+            if (result.RequiresRegistration)
             {
-                return Redirect(returnUrl ?? "/");
+                // Redirect to confirmation page with token
+                return Redirect($"/identity/external-login-confirmation?token={result.ConfirmationToken}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
             }
 
-            // Redirect to confirmation page with token
-            return Redirect($"/external-login-confirmation?token={result.ConfirmationToken}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
+            return Redirect(returnUrl ?? "/");
         }
 
         /// <summary>
