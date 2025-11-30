@@ -125,14 +125,30 @@ namespace LightNap.Core.Identity.Interfaces
         /// <summary>
         /// Handles the callback from an external authentication provider.
         /// </summary>
-        /// <returns>The result of the external login callback.</returns>
-        Task<ExternalLoginCallbackResult> ExternalLoginCallbackAsync();
+        /// <returns>The confirmation token required to complete the process.</returns>
+        Task<string> ExternalLoginCallbackAsync();
 
         /// <summary>
         /// Completes the external login registration.
         /// </summary>
+        /// <param name="confirmationToken">The confirmation token for the login process.</param>
+        /// <returns>The result of the external login.</returns>
+        Task<ExternalLoginSuccessDto> GetExternalLoginResultAsync(string confirmationToken);
+
+        /// <summary>
+        /// Completes the external login registration.
+        /// </summary>
+        /// <param name="confirmationToken">The confirmation token for the login process.</param>
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The login result.</returns>
-        Task<LoginSuccessDto> CompleteExternalLoginAsync(ExternalLoginRegisterRequestDto requestDto);
+        Task<LoginSuccessDto> CompleteExternalLoginAsync(string confirmationToken, ExternalLoginRequestDto requestDto);
+
+        /// <summary>
+        /// Completes the external login registration.
+        /// </summary>
+        /// <param name="confirmationToken">The confirmation token for the login process.</param>
+        /// <param name="requestDto">The completion request DTO.</param>
+        /// <returns>The login result.</returns>
+        Task<LoginSuccessDto> CompleteExternalLoginRegistrationAsync(string confirmationToken, ExternalLoginRegisterRequestDto requestDto);
     }
 }

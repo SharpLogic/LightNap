@@ -279,11 +279,10 @@ namespace LightNap.WebApi.Controllers
                 return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(remoteError)}");
             }
 
-            ExternalLoginCallbackResult result;
-
             try
             {
-                result = await identityService.ExternalLoginCallbackAsync();
+                var token = await identityService.ExternalLoginCallbackAsync();
+                return Redirect($"/identity/external-login-register?token={token}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
             }
             catch (UserFriendlyApiException ex)
             {
@@ -293,28 +292,50 @@ namespace LightNap.WebApi.Controllers
             {
                 return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(ex.Message)}");
             }
-
-            if (result.RequiresRegistration)
-            {
-                // Redirect to confirmation page with token
-                return Redirect($"/identity/external-login-confirmation?token={result.ConfirmationToken}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
-            }
-
-            return Redirect(returnUrl ?? "/");
         }
 
         /// <summary>
-        /// Completes the external login registration.
+        /// Confirms external login association with current user.
         /// </summary>
-        /// <param name="requestDto">The completion request DTO.</param>
+        /// <param name="confirmationToken">The completion token.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpPost("complete-external-login")]
+        [HttpGet("external-login-result/{confirmationToken}")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
         [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
-        public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(ExternalLoginRegisterRequestDto requestDto)
+        public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResultAsync(string confirmationToken)
         {
-            return new ApiResponseDto<LoginSuccessDto>(await identityService.CompleteExternalLoginAsync(requestDto));
+            return new ApiResponseDto<ExternalLoginSuccessDto>(await identityService.GetExternalLoginResultAsync(confirmationToken));
+        }
+
+        /// <summary>
+        /// Completes the external login when the account is already linked.
+        /// </summary>
+        /// <param name="confirmationToken">The completion token.</param>
+        /// <param name="requestDto">The completion request DTO.</param>
+        /// <returns>The API response containing the login result.</returns>
+        [HttpPost("external-login-complete/{confirmationToken}")]
+        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [ProducesResponseType(400)]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
+        public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(string confirmationToken, ExternalLoginRequestDto requestDto)
+        {
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.CompleteExternalLoginAsync(confirmationToken, requestDto));
+        }
+
+        /// <summary>
+        /// Completes the external login registration when the user is not logged in yet.
+        /// </summary>
+        /// <param name="confirmationToken">The completion token.</param>
+        /// <param name="requestDto">The completion request DTO.</param>
+        /// <returns>The API response containing the login result.</returns>
+        [HttpPost("external-login-registration/{confirmationToken}")]
+        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [ProducesResponseType(400)]
+        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
+        public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLoginRegistration(string confirmationToken, ExternalLoginRegisterRequestDto requestDto)
+        {
+            return new ApiResponseDto<LoginSuccessDto>(await identityService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));
         }
     }
 }

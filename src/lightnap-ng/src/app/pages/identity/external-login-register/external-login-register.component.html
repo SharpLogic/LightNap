@@ -1,6 +1,6 @@
 <ln-branded-card>
-  <span title>Register</span>
-  <span subtitle>Let's get started!</span>
+  <span title>Register To Link Account</span>
+  <span subtitle>Just a few last things...</span>
 
   <form [formGroup]="form" (ngSubmit)="register()" autocomplete="off">
     <div>
@@ -13,24 +13,6 @@
         <div class="flex flex-col gap-2">
           <label for="email" class="text-xl">Email</label>
           <input id="email" data-cy="register-email" type="text" placeholder="Email address" pInputText formControlName="email" />
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label for="password" class="text-xl">Password</label>
-          <p-password data-cy="register-password" formControlName="password" class="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label for="confirmPassword" class="text-xl">Confirm Password</label>
-          <p-password
-            data-cy="register-confirm-password"
-            formControlName="confirmPassword"
-            styleClass="w-full"
-            inputStyleClass="w-full"
-            placeholder="Confirm Password"
-            [toggleMask]="true"
-            [feedback]="false"
-          />
         </div>
 
         <div class="flex items-center justify-between">
@@ -53,11 +35,6 @@
       </div>
 
       <p-button data-cy="register-submit" type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
-      <div class="flex justify-between mt-6">
-        <a data-cy="register-login-link" [routerLink]="'login' | route">I already have an account</a>
-
-        <a href="/api/Identity/external-login/Microsoft" target="_self">Link your Microsoft account</a>
-      </div>
     </div>
   </form>
 </ln-branded-card>

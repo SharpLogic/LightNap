@@ -1,0 +1,21 @@
+<ln-branded-card>
+  <span title>Complete External Login</span>
+  <span subtitle>One last step...</span>
+
+  <form [formGroup]="form" (ngSubmit)="logIn()" autocomplete="off">
+    <div>
+      <div class="flex flex-col gap-5">
+        <div class="flex items-center justify-between">
+          <div class="flex gap-2">
+            <p-checkbox data-cy="login-remember-me" inputId="rememberMe" formControlName="rememberMe" [binary]="true" />
+            <label for="rememberMe">Remember Me</label>
+          </div>
+        </div>
+
+        <ln-error-list data-cy="login-errors" [errors]="errors()" />
+      </div>
+
+      <p-button data-cy="login-submit" type="submit" label="Complete Login" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
+    </div>
+  </form>
+</ln-branded-card>

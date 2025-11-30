@@ -59,4 +59,20 @@ export const Routes: AppRoute[] = [
     title: "Confirm Your Email",
     loadComponent: () => import("./confirm-email/confirm-email.component").then(m => m.ConfirmEmailComponent),
   },
+  {
+    path: "external-login-error",
+    title: "External Login Error",
+    loadComponent: () => import("./external-login-error/external-login-error.component").then(m => m.ExternalLoginErrorComponent),
+  },
+  {
+    path: "external-login-register",
+    title: "External Login Registration",
+    loadComponent: () => import("./external-login-register/external-login-register.component").then(m => m.ExternalLoginRegisterComponent),
+  },
+  {
+    path: "external-login-complete/:token",
+    title: "External Login Completion",
+    data: { alias: "external-login-complete" },
+    loadComponent: () => import("./external-login-complete/external-login-complete.component").then(m => m.ExternalLoginCompleteComponent),
+  },
 ];

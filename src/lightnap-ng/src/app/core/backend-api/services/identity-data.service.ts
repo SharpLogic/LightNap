@@ -1,21 +1,23 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import {
-  LoginRequestDto,
-  LoginSuccessResultDto,
-  RegisterRequestDto,
-  ResetPasswordRequestDto,
-  NewPasswordRequestDto,
-  VerifyCodeRequestDto,
-  SendVerificationEmailRequestDto,
-  VerifyEmailRequestDto,
-  SendMagicLinkEmailRequestDto,
-  ChangePasswordRequestDto,
-  ChangeEmailRequestDto,
-  ConfirmChangeEmailRequestDto,
-  DeviceDto,
+    ChangeEmailRequestDto,
+    ChangePasswordRequestDto,
+    ConfirmChangeEmailRequestDto,
+    DeviceDto,
+    ExternalLoginRegisterRequestDto,
+    ExternalLoginRequestDto,
+    ExternalLoginSuccessResultDto,
+    LoginRequestDto,
+    LoginSuccessResultDto,
+    NewPasswordRequestDto,
+    RegisterRequestDto,
+    ResetPasswordRequestDto,
+    SendMagicLinkEmailRequestDto,
+    SendVerificationEmailRequestDto,
+    VerifyCodeRequestDto,
+    VerifyEmailRequestDto,
 } from "../dtos";
-import { tap } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -34,6 +36,18 @@ export class IdentityDataService {
 
   register(registerRequest: RegisterRequestDto) {
     return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}register`, registerRequest);
+  }
+
+  getExternalLoginResult(confirmationToken: string) {
+    return this.#http.get<ExternalLoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-result/${confirmationToken}`);
+  }
+
+  completeExternalLogin(confirmationToken: string, loginRequest: ExternalLoginRequestDto) {
+    return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-complete/${confirmationToken}`, loginRequest);
+  }
+
+  completeExternalLoginRegistration(confirmationToken: string, registerRequest: ExternalLoginRegisterRequestDto) {
+    return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-registration/${confirmationToken}`, registerRequest);
   }
 
   logOut() {

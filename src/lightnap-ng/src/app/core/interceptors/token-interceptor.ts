@@ -1,6 +1,7 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { IdentityService } from "@core/services/identity.service";
+import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils";
 import { Observable } from "rxjs";
 
 /**

@@ -46,4 +46,5 @@ export type RouteAlias =
     | 'register'
     | 'email-verification-required'
     | 'request-verification-email'
-    | 'confirm-email';
+    | 'confirm-email'
+    | 'external-login-complete';

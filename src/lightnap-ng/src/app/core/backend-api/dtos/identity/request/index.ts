@@ -1,3 +1,5 @@
+export * from "./external-login-register-request-dto";
+export * from "./external-login-request-dto";
 export * from "./login-request-dto";
 export * from "./login-type";
 export * from "./new-password-request-dto";
