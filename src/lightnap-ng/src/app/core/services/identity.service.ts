@@ -161,12 +161,12 @@ export class IdentityService {
       .getAccessToken()
       .pipe(finalize(() => (this.#requestingRefreshToken = false)))
       .subscribe({
-        next: token => this.#onTokenReceived(token?.length ? token : undefined),
-        error: () => this.#onTokenReceived(undefined),
+        next: token => this.setToken(token?.length ? token : undefined),
+        error: () => this.setToken(undefined),
       });
   }
 
-  #onTokenReceived(token?: string) {
+  setToken(token?: string) {
     this.#token = token;
     this.#claims = new Map<string, Array<string>>();
     this.#loggedInSubject$.next(!!this.#token);
@@ -401,7 +401,7 @@ export class IdentityService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   logIn(loginRequest: LoginRequestDto) {
-    return this.#dataService.logIn(loginRequest).pipe(tap(result => this.#onTokenReceived(result.accessToken)));
+    return this.#dataService.logIn(loginRequest).pipe(tap(result => this.setToken(result.accessToken)));
   }
 
   /**
@@ -411,39 +411,7 @@ export class IdentityService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   register(registerRequest: RegisterRequestDto) {
-    return this.#dataService.register(registerRequest).pipe(tap(result => this.#onTokenReceived(result?.accessToken)));
-  }
-
-  /**
-   * @method getExternalLoginResult
-   * @description Gets the result of an external login.
-   * @param {string} confirmationToken - The confirmation token for external login.
-   * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
-   */
-  getExternalLoginResult(confirmationToken: string) {
-    return this.#dataService.getExternalLoginResult(confirmationToken);
-  }
-
-  /**
-   * @method completeExternalLogin
-   * @description Completes an external login for a returning user.
-   * @param {string} confirmationToken - The confirmation token for external login.
-   * @param {ExternalLoginRequestDto} loginRequest - The request object containing login information.
-   * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
-   */
-  completeExternalLogin(confirmationToken: string, loginRequest: ExternalLoginRequestDto) {
-    return this.#dataService.completeExternalLogin(confirmationToken, loginRequest).pipe(tap(result => this.#onTokenReceived(result?.accessToken)));
-  }
-
-  /**
-   * @method completeExternalLoginRegistration
-   * @description Completes an external login by registering a new user.
-   * @param {string} confirmationToken - The confirmation token for external login.
-   * @param {ExternalLoginRegisterRequestDto} registerRequest - The request object containing registration information.
-   * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
-   */
-  completeExternalLoginRegistration(confirmationToken: string, registerRequest: ExternalLoginRegisterRequestDto) {
-    return this.#dataService.completeExternalLoginRegistration(confirmationToken, registerRequest).pipe(tap(result => this.#onTokenReceived(result?.accessToken)));
+    return this.#dataService.register(registerRequest).pipe(tap(result => this.setToken(result?.accessToken)));
   }
 
   /**
@@ -452,7 +420,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   logOut() {
-    return this.#dataService.logOut().pipe(tap(() => this.#onTokenReceived(undefined)));
+    return this.#dataService.logOut().pipe(tap(() => this.setToken(undefined)));
   }
 
   /**
@@ -462,7 +430,7 @@ export class IdentityService {
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
   verifyCode(verifyCodeRequest: VerifyCodeRequestDto) {
-    return this.#dataService.verifyCode(verifyCodeRequest).pipe(tap(token => this.#onTokenReceived(token)));
+    return this.#dataService.verifyCode(verifyCodeRequest).pipe(tap(token => this.setToken(token)));
   }
 
   /**
@@ -482,7 +450,7 @@ export class IdentityService {
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
   newPassword(newPasswordRequest: NewPasswordRequestDto) {
-    return this.#dataService.newPassword(newPasswordRequest).pipe(tap(result => this.#onTokenReceived(result.accessToken)));
+    return this.#dataService.newPassword(newPasswordRequest).pipe(tap(result => this.setToken(result.accessToken)));
   }
 
   /**

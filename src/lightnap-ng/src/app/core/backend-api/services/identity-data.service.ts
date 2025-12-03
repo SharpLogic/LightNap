@@ -24,7 +24,7 @@ import {
 })
 export class IdentityDataService {
   #http = inject(HttpClient);
-  #apiUrlRoot = "/api/identity/";
+  #apiUrlRoot = "/api/Identity/";
 
   getAccessToken() {
     return this.#http.get<string>(`${this.#apiUrlRoot}access-token`);
@@ -36,18 +36,6 @@ export class IdentityDataService {
 
   register(registerRequest: RegisterRequestDto) {
     return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}register`, registerRequest);
-  }
-
-  getExternalLoginResult(confirmationToken: string) {
-    return this.#http.get<ExternalLoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-result/${confirmationToken}`);
-  }
-
-  completeExternalLogin(confirmationToken: string, loginRequest: ExternalLoginRequestDto) {
-    return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-complete/${confirmationToken}`, loginRequest);
-  }
-
-  completeExternalLoginRegistration(confirmationToken: string, registerRequest: ExternalLoginRegisterRequestDto) {
-    return this.#http.post<LoginSuccessResultDto>(`${this.#apiUrlRoot}external-login-registration/${confirmationToken}`, registerRequest);
   }
 
   logOut() {

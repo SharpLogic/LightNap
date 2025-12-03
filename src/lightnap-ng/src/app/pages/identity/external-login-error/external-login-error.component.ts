@@ -8,5 +8,5 @@ import { BrandedCardComponent } from "@core/components/branded-card/branded-card
   imports: [RouterModule, RoutePipe, BrandedCardComponent],
 })
 export class ExternalLoginErrorComponent {
-    error = input.required<string>();
+    readonly error = input.required<string>();
 }

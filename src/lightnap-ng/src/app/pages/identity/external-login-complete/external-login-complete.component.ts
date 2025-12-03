@@ -6,10 +6,10 @@ import { BrandedCardComponent } from "@core/components/branded-card/branded-card
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
+import { ExternalLoginService } from "@core/services/external-login.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
-import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
 
 @Component({
@@ -18,23 +18,24 @@ import { finalize } from "rxjs";
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, CheckboxModule, ErrorListComponent, BrandedCardComponent],
 })
 export class ExternalLoginCompleteComponent {
-  #identityService = inject(IdentityService);
-  #blockUi = inject(BlockUiService);
-  #fb = inject(FormBuilder);
-  #routeAlias = inject(RouteAliasService);
+  readonly #identityService = inject(IdentityService);
+  readonly #externalLoginService = inject(ExternalLoginService);
+  readonly #blockUi = inject(BlockUiService);
+  readonly #fb = inject(FormBuilder);
+  readonly #routeAlias = inject(RouteAliasService);
 
-  token = input.required<string>();
+  readonly token = input.required<string>();
 
-  form = this.#fb.nonNullable.group({
+  readonly form = this.#fb.nonNullable.group({
     rememberMe: this.#fb.control(true),
   });
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
   logIn() {
     this.#blockUi.show({ message: "Completing login..." });
 
-    this.#identityService
+    this.#externalLoginService
       .completeExternalLogin(this.token(), {
         deviceDetails: navigator.userAgent,
         rememberMe: this.form.value.rememberMe!,

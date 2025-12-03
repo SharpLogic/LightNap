@@ -6,44 +6,42 @@ import { BrandedCardComponent } from "@core/components/branded-card/branded-card
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { BlockUiService } from "@core/services/block-ui.service";
+import { ExternalLoginService } from "@core/services/external-login.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
-import { finalize, switchMap, take } from "rxjs";
+import { finalize } from "rxjs";
 
 @Component({
-    standalone: true,
+  standalone: true,
   templateUrl: "./external-login-register.component.html",
   imports: [ReactiveFormsModule, RouterModule, InputTextModule, ButtonModule, CheckboxModule, RoutePipe, ErrorListComponent, BrandedCardComponent],
 })
 export class ExternalLoginRegisterComponent implements OnInit {
-  #identityService = inject(IdentityService);
-  #blockUi = inject(BlockUiService);
-  #fb = inject(FormBuilder);
-  #routeAlias = inject(RouteAliasService);
+  readonly #identityService = inject(IdentityService);
+  readonly #externalLoginService = inject(ExternalLoginService);
+  readonly #blockUi = inject(BlockUiService);
+  readonly #fb = inject(FormBuilder);
+  readonly #routeAlias = inject(RouteAliasService);
 
-  token = input.required<string>();
+  readonly token = input.required<string>();
 
-  form = this.#fb.nonNullable.group({
+  readonly form = this.#fb.nonNullable.group({
     email: this.#fb.control("", [Validators.required, Validators.email]),
     userName: this.#fb.control("", [Validators.required]),
     agreedToTerms: this.#fb.control(false, [Validators.requiredTrue]),
     rememberMe: this.#fb.control(true),
   });
 
-  errors = signal(new Array<string>());
+  readonly errors = signal(new Array<string>());
 
   ngOnInit() {
     this.#blockUi.show({ message: "Confirming external login..." });
 
-    this.#identityService
-      .watchLoggedIn$()
-      .pipe(
-        take(1),
-        finalize(() => this.#blockUi.hide()),
-        switchMap(_ => this.#identityService.getExternalLoginResult(this.token()))
-      )
+    this.#externalLoginService
+      .getExternalLoginResult(this.token())
+      .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
@@ -70,7 +68,7 @@ export class ExternalLoginRegisterComponent implements OnInit {
   register() {
     this.#blockUi.show({ message: "Registering..." });
 
-    this.#identityService
+    this.#externalLoginService
       .completeExternalLoginRegistration(this.token(), {
         email: this.form.value.email!,
         deviceDetails: navigator.userAgent,
