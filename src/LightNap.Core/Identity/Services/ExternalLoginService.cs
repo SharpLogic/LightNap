@@ -37,18 +37,7 @@ namespace LightNap.Core.Identity.Services
         IRefreshTokenService refreshTokenService,
         HybridCache cache) : IExternalLoginService
     {
-        /// <summary>
-        /// Handles user login asynchronously.
-        /// </summary>
-        /// <param name="user">The application user.</param>
-        /// <param name="rememberMe">Indicates whether to remember the user.</param>
-        /// <param name="deviceDetails">The device details.</param>
-        /// <returns>The login result DTO containing the access token or a flag indicating whether further steps are required.</returns>
-        private async Task<LoginSuccessDto> HandleUserLoginAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
-        {
-            InternalLoginService internalLoginService = new(userManager, tokenService, emailService, authenticationSettings, cookieManager, refreshTokenService);
-            return await internalLoginService.HandleUserLoginAsync(user, rememberMe, deviceDetails);
-        }
+        private readonly InternalLoginService _internalLoginService = new(userManager, tokenService, emailService, authenticationSettings, cookieManager, refreshTokenService);
 
         /// <inheritdoc />
         public AuthenticationProperties ConfigureExternalAuthenticationProperties(string provider, string redirectUrl)
@@ -134,7 +123,7 @@ namespace LightNap.Core.Identity.Services
             var user = await userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey) ?? throw new UserFriendlyApiException("The user associated with this request does not exist.");
 
             // Log the user in.
-            return await HandleUserLoginAsync(user, loginRequestDto.RememberMe, loginRequestDto.DeviceDetails);
+            return await this._internalLoginService.HandleUserLoginAsync(user, loginRequestDto.RememberMe, loginRequestDto.DeviceDetails);
         }
 
         /// <inheritdoc />
@@ -197,7 +186,7 @@ namespace LightNap.Core.Identity.Services
             logger.LogInformation("New user '{userName}' ('{email}') registered via OAuth '{provider}'.", user.UserName, user.Email, info.ProviderDisplayName);
 
             // Log the user in.
-            return await HandleUserLoginAsync(user, registerRequestDto.RememberMe, registerRequestDto.DeviceDetails);
+            return await this._internalLoginService.HandleUserLoginAsync(user, registerRequestDto.RememberMe, registerRequestDto.DeviceDetails);
         }
     }
 }

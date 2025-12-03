@@ -36,30 +36,7 @@ namespace LightNap.Core.Identity.Services
         IUserContext userContext,
         IRefreshTokenService refreshTokenService) : IIdentityService
     {
-        /// <summary>
-        /// Handles user login asynchronously.
-        /// </summary>
-        /// <param name="user">The application user.</param>
-        /// <param name="rememberMe">Indicates whether to remember the user.</param>
-        /// <param name="deviceDetails">The device details.</param>
-        /// <returns>The login result DTO containing the access token or a flag indicating whether further steps are required.</returns>
-        private async Task<LoginSuccessDto> HandleUserLoginAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
-        {
-            InternalLoginService internalLoginService = new(userManager, tokenService, emailService, authenticationSettings, cookieManager, refreshTokenService);
-            return await internalLoginService.HandleUserLoginAsync(user, rememberMe, deviceDetails);
-        }
-
-        /// <summary>
-        /// Generates and stores a refresh token asynchronously.
-        /// </summary>
-        /// <param name="user">The application user.</param>
-        /// <param name="rememberMe">Indicates whether to remember the user.</param>
-        /// <param name="deviceDetails">The device details.</param>
-        private async Task CreateRefreshTokenAsync(ApplicationUser user, bool rememberMe, string deviceDetails)
-        {
-            InternalLoginService internalLoginService = new(userManager, tokenService, emailService, authenticationSettings, cookieManager, refreshTokenService);
-            await internalLoginService.CreateRefreshTokenAsync(user, rememberMe, deviceDetails);
-        }
+        private readonly InternalLoginService _internalLoginService = new(userManager, tokenService, emailService, authenticationSettings, cookieManager, refreshTokenService);
 
         /// <summary>
         /// Gets the user from the refresh token cookie asynchronously. Also refreshes the refresh token if still valid.
@@ -139,7 +116,7 @@ namespace LightNap.Core.Identity.Services
                 }
             }
 
-            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            return await this._internalLoginService.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         /// <summary>
@@ -179,7 +156,7 @@ namespace LightNap.Core.Identity.Services
 
             logger.LogInformation("New user '{userName}' ('{email}') registered!", user.Email, user.UserName);
 
-            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            return await this._internalLoginService.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         /// <summary>
@@ -303,7 +280,7 @@ namespace LightNap.Core.Identity.Services
                 await db.SaveChangesAsync();
             }
 
-            return await this.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            return await this._internalLoginService.HandleUserLoginAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
         }
 
         /// <summary>
@@ -326,7 +303,7 @@ namespace LightNap.Core.Identity.Services
                 await emailService.SendRegistrationWelcomeAsync(user);
             }
 
-            await this.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
+            await this._internalLoginService.CreateRefreshTokenAsync(user, requestDto.RememberMe, requestDto.DeviceDetails);
 
             return await tokenService.GenerateAccessTokenAsync(user);
         }

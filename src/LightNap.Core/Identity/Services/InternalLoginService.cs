@@ -12,9 +12,10 @@ using Microsoft.Extensions.Options;
 namespace LightNap.Core.Identity.Services
 {
     /// <summary>
-    /// Service for managing identity.
+    /// Internal service for handling refresh token creation and user login. This is not an injected service, but rather created as
+    /// needed within the identity system. Its operations are sensitive, so it is kept internal to prevent external misuse.
     /// </summary>
-    public class InternalLoginService(
+    internal class InternalLoginService(
         UserManager<ApplicationUser> userManager,
         ITokenService tokenService,
         IEmailService emailService,
