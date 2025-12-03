@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Authentication
 {
     /// <summary>
     /// Represents the JWT settings for the web API.

@@ -1,4 +1,3 @@
-using LightNap.Core.Configuration;
 using LightNap.Core.Hubs;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
@@ -11,6 +10,9 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
 using StackExchange.Redis;
 using LightNap.Core.Extensions;
+using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Email;
+using LightNap.Core.Configuration.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 

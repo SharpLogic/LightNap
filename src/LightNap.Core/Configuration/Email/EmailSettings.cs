@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Email
 {
     /// <summary>
     /// Represents the email settings for the web API.

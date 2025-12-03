@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Configuration
+﻿namespace LightNap.Core.Configuration.UserSettings
 {
     /// <summary>
     /// Specifies the access levels available for user settings.

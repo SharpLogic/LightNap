@@ -1,5 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
+using LightNap.Core.Configuration.StaticContents;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;

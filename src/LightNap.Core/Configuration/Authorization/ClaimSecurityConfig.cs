@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Authorization
 {
     /// <summary>
     /// Configuration for claim-based security.

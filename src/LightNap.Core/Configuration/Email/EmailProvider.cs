@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Email
 {
     /// <summary>
     /// Represents the email provider options.

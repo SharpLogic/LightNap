@@ -1,5 +1,5 @@
 using LightNap.Core.Api;
-using LightNap.Core.Configuration;
+using LightNap.Core.Configuration.StaticContents;
 using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
 

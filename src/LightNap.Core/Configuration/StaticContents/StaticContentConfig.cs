@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.StaticContents
 {
     /// <summary>
     /// Provides configuration and lookup for all static content settings in the system.

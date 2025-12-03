@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Configuration
+﻿namespace LightNap.Core.Configuration.StaticContents
 {
     /// <summary>
     /// Defines a supported language for static content.

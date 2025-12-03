@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Database
 {
     /// <summary>
     /// Represents the database provider options.

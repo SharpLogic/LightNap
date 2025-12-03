@@ -1,4 +1,4 @@
-﻿namespace LightNap.Core.Configuration
+﻿namespace LightNap.Core.Configuration.UserSettings
 {
     /// <summary>
     /// Represents a definition for a user setting, including its key, value, access level, and activation status.

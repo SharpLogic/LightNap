@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.WebApi.Configuration
 {
     /// <summary>
     /// Represents the cache settings for the web API.

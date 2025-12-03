@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Email
 {
     /// <summary>
     /// Represents the SMTP settings for email.

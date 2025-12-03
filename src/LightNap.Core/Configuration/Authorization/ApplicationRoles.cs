@@ -1,6 +1,6 @@
 ﻿using LightNap.Core.Data.Entities;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.Authorization
 {
     /// <summary>
     /// Provides predefined application roles.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace LightNap.Core.Configuration
+namespace LightNap.Core.Configuration.UserSettings
 {
     /// <summary>
     /// Provides configuration and lookup for all user settings in the system.

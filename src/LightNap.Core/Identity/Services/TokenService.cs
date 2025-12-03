@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Configuration;
+﻿using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Authorization;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Interfaces;
 using Microsoft.AspNetCore.Identity;
