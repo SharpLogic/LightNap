@@ -27,6 +27,10 @@ export class ExternalLoginDataService {
     return this.#http.post<PagedResponseDto<AdminExternalLoginDto>>(`${this.#apiUrlRoot}search`, searchRequestDto);
   }
 
+  removeExternalLogin(userId: string, loginProvider: string, providerKey: string){
+    return this.#http.delete<boolean>(`${this.#apiUrlRoot}remove/${userId}/${loginProvider}/${providerKey}`);
+  }
+
   getExternalLoginResult(confirmationToken: string) {
     return this.#http.get<ExternalLoginSuccessResultDto>(`${this.#apiUrlRoot}result/${confirmationToken}`);
   }

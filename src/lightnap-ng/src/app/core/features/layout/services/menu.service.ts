@@ -30,7 +30,7 @@ export class MenuService {
         { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile"), routerLinkActiveOptions: { exact: true } },
         { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("my-devices") },
         { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") },
-        { label: "External Logins", icon: "pi pi-fw pi-users", routerLink: this.#routeAlias.getRoute("my-external-logins") },
+        { label: "External Logins", icon: "pi pi-fw pi-globe", routerLink: this.#routeAlias.getRoute("my-external-logins") },
       ],
     },
   ];
@@ -52,7 +52,7 @@ export class MenuService {
         { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeAlias.getRoute("admin-users") },
         { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("admin-roles") },
         { label: "Claims", icon: "pi pi-fw pi-shield", routerLink: this.#routeAlias.getRoute("admin-claims") },
-      ],
+        { label: "External Logins", icon: "pi pi-fw pi-globe", routerLink: this.#routeAlias.getRoute("admin-external-logins") },],
     },
   ];
 

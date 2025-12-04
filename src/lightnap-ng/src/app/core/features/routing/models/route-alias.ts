@@ -27,6 +27,7 @@ export type RouteAlias =
     | 'admin-role'
     | 'admin-claims'
     | 'admin-claim'
+    | 'admin-external-logins'
 
     // Profile
     | 'profile'

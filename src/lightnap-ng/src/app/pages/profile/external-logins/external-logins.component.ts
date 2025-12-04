@@ -37,7 +37,7 @@ export class ExternalLoginsComponent {
   readonly asExternalLogins = TypeHelpers.cast<Array<ExternalLoginDto>>;
   readonly asExternalLogin = TypeHelpers.cast<ExternalLoginDto>;
 
-  revokeExternalLogin(event: any, loginProvider: string, providerKey: string) {
+  removeExternalLogin(event: any, loginProvider: string, providerKey: string) {
     this.#confirmationService.confirm({
       header: "Confirm Removal",
       message: `Are you sure that you want to remove this external login?`,

@@ -1,0 +1,69 @@
+<ln-api-response [apiResponse]="externalLogins$" errorMessage="Error loading external logins" loadingMessage="Loading external logins...">
+  <ng-template #success let-externalLoginsAny>
+    @let externalLogins = asExternalLoginResults(externalLoginsAny);
+
+    <p-panel data-cy="search-claims-panel" header="Search Claims">
+      <form [formGroup]="form" class="my-2">
+        <div class="flex gap-1">
+          <div class="flex flex-col">
+            <input data-cy="login-provider-filter" pInputText placeholder="Login Provider" formControlName="loginProvider" />
+          </div>
+          <div class="flex flex-col">
+            <input data-cy="external-login-user-id-filter" pInputText placeholder="User ID" formControlName="userId" />
+          </div>
+        </div>
+      </form>
+
+      <p-table
+        [value]="externalLogins.data"
+        [paginator]="true"
+        [rows]="pageSize"
+        [totalRecords]="externalLogins.totalCount"
+        [lazy]="true"
+        (onLazyLoad)="loadClaimsLazy($event)"
+      >
+        <ng-template #header>
+          <tr>
+            <th></th>
+            <th>User ID</th>
+            <th>Login Provider</th>
+            <th>Provider Key</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-externalLoginAny>
+          @let externalLogin = asExternalLogin(externalLoginAny);
+
+          <tr>
+            <td>
+              <ln-confirm-dialog [key]="externalLogin.userId + ':' + externalLogin.loginProvider + ':' + externalLogin.providerKey" />
+              <p-button
+                severity="danger"
+                icon="pi pi-trash"
+                title="Remove external login"
+                (onClick)="removeExternalLogin($event, externalLogin.userId, externalLogin.loginProvider, externalLogin.providerKey)"
+              />
+            </td>
+            <td>
+              {{ externalLogin.userId }}
+            </td>
+            <td>
+              {{ externalLogin.loginProvider }}
+            </td>
+            <td>
+              {{ externalLogin.providerKey }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">
+              <span>There are no matching external logins.</span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <ln-error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</ln-api-response>

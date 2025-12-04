@@ -1,10 +1,13 @@
 using LightNap.Core.Api;
+using LightNap.Core.Configuration;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.WebApi.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using StackExchange.Redis;
 
 namespace LightNap.WebApi.Controllers
 {
@@ -31,11 +34,19 @@ namespace LightNap.WebApi.Controllers
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
-        [HttpGet("search")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [HttpPost("search")]
+        [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>> SearchExternalLogins(SearchExternalLoginsRequestDto searchRequestDto)
         {
             return new ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>(await externalLoginService.SearchExternalLoginsAsync(searchRequestDto));
+        }
+
+        [HttpDelete("remove/{userId}/{loginProvider}/{providerKey}")]
+        [Authorize(Roles = Constants.Roles.Administrator)]
+        public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string userId, string loginProvider, string providerKey)
+        {
+            await externalLoginService.RemoveExternalLoginAsync(userId, loginProvider, providerKey);
+            return new ApiResponseDto<bool>(true);
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace LightNap.Core.Identity.Interfaces
         /// </summary>
         /// <param name="loginProvider">The name of the external login provider.</param>
         /// <param name="providerKey">The unique key from the external provider.</param>
-        Task RemoveLoginAsync(string loginProvider, string providerKey);
+        Task RemoveMyLoginAsync(string loginProvider, string providerKey);
 
         /// <summary>
         /// Searches external logins with optional filtering and pagination.
@@ -66,5 +66,15 @@ namespace LightNap.Core.Identity.Interfaces
         /// <param name="searchDto">The search criteria and pagination parameters.</param>
         /// <returns>A paged response containing matching external login records.</returns>
         Task<PagedResponseDto<AdminExternalLoginDto>> SearchExternalLoginsAsync(SearchExternalLoginsRequestDto searchDto);
+
+        /// <summary>
+        /// Removes an external login association from the specified user asynchronously.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user from whom the login will be removed. Cannot be null or empty.</param>
+        /// <param name="loginProvider">The name of the external login provider (for example, "Google" or "Facebook"). Cannot be null or empty.</param>
+        /// <param name="providerKey">The unique key provided by the external login provider that identifies the user's login. Cannot be null or
+        /// empty.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task RemoveExternalLoginAsync(string userId, string loginProvider, string providerKey);
     }
 }

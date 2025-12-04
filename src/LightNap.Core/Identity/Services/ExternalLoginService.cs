@@ -202,11 +202,11 @@ public class ExternalLoginService(ILogger<ExternalLoginService> logger,
     }
 
     /// <inheritdoc />
-    public async Task RemoveLoginAsync(string loginProvider, string providerKey)
+    public async Task RemoveMyLoginAsync(string loginProvider, string providerKey)
     {
         userContext.AssertAuthenticated();
         var user = await userManager.FindByIdAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to remove external login.");
-     
+
         var result = await userManager.RemoveLoginAsync(user, loginProvider, providerKey);
         if (!result.Succeeded)
         {
@@ -249,5 +249,17 @@ public class ExternalLoginService(ILogger<ExternalLoginService> logger,
             .ToListAsync();
 
         return new PagedResponseDto<AdminExternalLoginDto>(userLogins, searchDto.PageNumber, searchDto.PageSize, totalCount);
+    }
+
+    /// <inheritdoc />
+    public async Task RemoveExternalLoginAsync(string userId, string loginProvider, string providerKey)
+    {
+        userContext.AssertAdministrator();
+        var user = await userManager.FindByIdAsync(userId) ?? throw new UserFriendlyApiException("Unable to remove external login.");
+        var result = await userManager.RemoveLoginAsync(user, loginProvider, providerKey);
+        if (!result.Succeeded)
+        {
+            throw new UserFriendlyApiException(result.Errors.Select(e => e.Description));
+        }
     }
 }

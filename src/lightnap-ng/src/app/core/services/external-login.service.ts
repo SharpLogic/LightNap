@@ -39,6 +39,18 @@ export class ExternalLoginService {
   }
 
   /**
+   * @method removeExternalLogin
+   * @description Removes an external login for a user.
+   * @param {string} userId - The ID of the user.
+   * @param {string} loginProvider - The login provider of the external login.
+   * @param {string} providerKey - The provider key of the external login.
+   * @returns {Observable<void>} An observable indicating the completion of the operation.
+   */
+  removeExternalLogin(userId: string, loginProvider: string, providerKey: string){
+    return this.#dataService.removeExternalLogin(userId, loginProvider, providerKey);
+  }
+
+  /**
    * @method getExternalLoginResult
    * @description Gets the result of an external login.
    * @param {string} confirmationToken - The confirmation token for external login.

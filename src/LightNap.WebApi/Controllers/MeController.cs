@@ -165,7 +165,7 @@ namespace LightNap.WebApi.Controllers
         [HttpDelete("external-logins/{loginProvider}/{providerKey}")]
         public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string loginProvider, string providerKey)
         {
-            await externalLoginService.RemoveLoginAsync(loginProvider, providerKey);
+            await externalLoginService.RemoveMyLoginAsync(loginProvider, providerKey);
             return new ApiResponseDto<bool>(true);
         }
 

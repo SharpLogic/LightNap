@@ -24,7 +24,7 @@
                 severity="danger"
                 icon="pi pi-trash"
                 title="Remove external login"
-                (onClick)="revokeExternalLogin($event, externalLogin.loginProvider, externalLogin.providerKey)"
+                (onClick)="removeExternalLogin($event, externalLogin.loginProvider, externalLogin.providerKey)"
               />
             </td>
             <td>{{ externalLogin.loginProvider }}</td>
