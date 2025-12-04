@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace LightNap.Core.Identity.Models
 {
@@ -15,8 +16,10 @@ namespace LightNap.Core.Identity.Models
 
         public PendingExternalUserLoginInfo(ExternalLoginInfo info) : base(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName)
         {
+            ArgumentNullException.ThrowIfNull(info);
+
             Email = info.Principal.FindFirstValue(ClaimTypes.Email);
-            UserName = info.Principal.FindFirstValue(ClaimTypes.Name);
+            UserName = Regex.Replace(info.Principal.FindFirstValue(ClaimTypes.Name) ?? "", @"[^\w.-]", "");
             FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName);
             LastName = info.Principal.FindFirstValue(ClaimTypes.Surname);
         }

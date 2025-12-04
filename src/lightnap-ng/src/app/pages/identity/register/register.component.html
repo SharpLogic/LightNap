@@ -53,10 +53,11 @@
       </div>
 
       <p-button data-cy="register-submit" type="submit" label="Register" styleClass="w-full text-xl mt-2" [disabled]="!form.valid" pRipple />
-      <div class="flex justify-between mt-6">
+      <div class="mt-4">
         <a data-cy="register-login-link" [routerLink]="'login' | route">I already have an account</a>
-
-        <a href="/api/ExternalLogin/login/Microsoft" target="_self">Link your Microsoft account</a>
+      </div>
+      <div class="mt-4">
+        <a [routerLink]="'external-logins' | route">I want to log in with an external account</a>
       </div>
     </div>
   </form>

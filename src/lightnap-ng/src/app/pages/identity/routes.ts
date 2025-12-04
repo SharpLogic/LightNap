@@ -60,6 +60,12 @@ export const Routes: AppRoute[] = [
     loadComponent: () => import("./confirm-email/confirm-email.component").then(m => m.ConfirmEmailComponent),
   },
   {
+    path: "external-login",
+    title: "External Logins",
+    data: { alias: "external-logins" },
+    loadComponent: () => import("./external-login/external-login.component").then(m => m.ExternalLoginComponent),
+  },
+  {
     path: "external-login-error",
     title: "External Login Error",
     loadComponent: () => import("./external-login-error/external-login-error.component").then(m => m.ExternalLoginErrorComponent),

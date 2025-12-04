@@ -1,6 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto, ExternalLoginSuccessResultDto, LoginSuccessResultDto } from "../dtos";
+import {
+  ExternalLoginRegisterRequestDto,
+  ExternalLoginRequestDto,
+  ExternalLoginSuccessResultDto,
+  LoginSuccessResultDto,
+  SupportedExternalLoginDto,
+} from "../dtos";
 
 @Injectable({
   providedIn: "root",
@@ -8,6 +14,10 @@ import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto, ExternalLogin
 export class ExternalLoginDataService {
   #http = inject(HttpClient);
   #apiUrlRoot = "/api/ExternalLogin/";
+
+  getSupportedLogins() {
+    return this.#http.get<Array<SupportedExternalLoginDto>>(`${this.#apiUrlRoot}supported`);
+  }
 
   getExternalLoginResult(confirmationToken: string) {
     return this.#http.get<ExternalLoginSuccessResultDto>(`${this.#apiUrlRoot}result/${confirmationToken}`);

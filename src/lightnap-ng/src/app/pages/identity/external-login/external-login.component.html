@@ -1,0 +1,22 @@
+<ln-branded-card>
+  <span title>External Login Options</span>
+  <span subtitle>Supported 3rd party options</span>
+
+  <ln-api-response [apiResponse]="externalLogins()">
+    <ng-template #success let-supportedExternalLoginsAny>
+      @let supportedExternalLogins = toSupportedExternalLogins(supportedExternalLoginsAny);
+
+      @if (supportedExternalLogins.length > 0) {
+        <ul>
+          @for (externalLogin of supportedExternalLogins; track externalLogin.providerName) {
+            <li>
+              <a [href]="externalLogin.loginUrl">Log in with your {{ externalLogin.displayName }} account</a>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p>No external login providers are currently configured.</p>
+      }
+    </ng-template>
+  </ln-api-response>
+</ln-branded-card>

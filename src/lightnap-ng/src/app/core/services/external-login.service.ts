@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto } from "@core/backend-api";
 import { ExternalLoginDataService } from "@core/backend-api/services/external-login-data.service";
-import { switchMap, take, tap } from "rxjs";
+import { switchMap, take, tap, shareReplay } from "rxjs";
 import { IdentityService } from "./identity.service";
 
 /**
@@ -17,6 +17,16 @@ import { IdentityService } from "./identity.service";
 export class ExternalLoginService {
   #dataService = inject(ExternalLoginDataService);
   #identityService = inject(IdentityService);
+  #supportedLogins$ = this.#dataService.getSupportedLogins().pipe(shareReplay(1));
+
+  /**
+   * @method getSupportedLogins
+   * @description Retrieves the list of supported external login providers.
+   * @returns {Observable<SupportedExternalLoginDto[]>} An observable containing the list of supported external login providers.
+   */
+  getSupportedLogins() {
+    return this.#supportedLogins$;
+  }
 
   /**
    * @method getExternalLoginResult
