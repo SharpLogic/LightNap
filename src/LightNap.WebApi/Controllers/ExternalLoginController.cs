@@ -28,6 +28,17 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
+        /// Gets the supported external login providers based on the application's configuration.
+        /// </summary>
+        /// <returns>The API response containing the list of options.</returns>
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        public async Task<ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>> SearchExternalLogins(SearchExternalLoginsRequestDto searchRequestDto)
+        {
+            return new ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>(await externalLoginService.SearchExternalLoginsAsync(searchRequestDto));
+        }
+
+        /// <summary>
         /// Confirms external login association with current user.
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
@@ -36,7 +47,7 @@ namespace LightNap.WebApi.Controllers
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
         [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
-        public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResultAsync(string confirmationToken)
+        public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResult(string confirmationToken)
         {
             return new ApiResponseDto<ExternalLoginSuccessDto>(await externalLoginService.GetExternalLoginResultAsync(confirmationToken));
         }

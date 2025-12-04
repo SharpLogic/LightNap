@@ -3,6 +3,7 @@ using LightNap.Core.Configuration.Authorization;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
+using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Users.Dto.Request;

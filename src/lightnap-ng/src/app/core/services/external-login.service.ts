@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto } from "@core/backend-api";
+import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto, SearchExternalLoginsRequestDto } from "@core/backend-api";
 import { ExternalLoginDataService } from "@core/backend-api/services/external-login-data.service";
 import { switchMap, take, tap, shareReplay } from "rxjs";
 import { IdentityService } from "./identity.service";
@@ -26,6 +26,16 @@ export class ExternalLoginService {
    */
   getSupportedLogins() {
     return this.#supportedLogins$;
+  }
+
+  /**
+   * @method searchExternalLogins
+   * @description Searches for external logins based on the provided search criteria.
+   * @param {SearchExternalLoginsRequestDto} searchRequestDto - The search criteria for external logins.
+   * @returns {Observable<PagedResponseDto<AdminExternalLoginDto>>} An observable containing the paged response of external logins.
+   */
+  searchExternalLogins(searchRequestDto: SearchExternalLoginsRequestDto) {
+    return this.#dataService.searchExternalLogins(searchRequestDto);
   }
 
   /**

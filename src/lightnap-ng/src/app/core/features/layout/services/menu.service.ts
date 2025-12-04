@@ -28,8 +28,9 @@ export class MenuService {
       expanded: true,
       items: [
         { label: "Profile", icon: "pi pi-fw pi-user", routerLink: this.#routeAlias.getRoute("profile"), routerLinkActiveOptions: { exact: true } },
-        { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("devices") },
+        { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("my-devices") },
         { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") },
+        { label: "External Logins", icon: "pi pi-fw pi-users", routerLink: this.#routeAlias.getRoute("my-external-logins") },
       ],
     },
   ];

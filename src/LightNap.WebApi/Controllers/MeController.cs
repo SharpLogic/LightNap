@@ -1,5 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
 using LightNap.Core.Notifications.Interfaces;
@@ -18,7 +19,8 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/users/me")]
-    public class MeController(IProfileService profileService, INotificationService notificationService, IClaimsService claimsService, IUserSettingsService userSettingsService) : ControllerBase
+    public class MeController(IProfileService profileService, INotificationService notificationService, IClaimsService claimsService, 
+        IUserSettingsService userSettingsService, IExternalLoginService externalLoginService) : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -138,6 +140,33 @@ namespace LightNap.WebApi.Controllers
         public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync([FromBody] SetUserSettingRequestDto setSettingDto)
         {
             return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetMySettingAsync(setSettingDto));
+        }
+
+        /// <summary>
+        /// Retrieves all external login providers linked to the current user.
+        /// </summary>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> containing a list of external login providers associated with the current user.
+        /// </returns>
+        [HttpGet("external-logins")]
+        public async Task<ApiResponseDto<List<ExternalLoginDto>>> GetExternalLogins()
+        {
+            return new ApiResponseDto<List<ExternalLoginDto>> (await externalLoginService.GetMyExternalLoginsAsync());
+        }
+
+        /// <summary>
+        /// Removes an external login provider from the current user's account.
+        /// </summary>
+        /// <param name="loginProvider">The name of the external login provider (e.g., "Google", "Facebook").</param>
+        /// <param name="providerKey">The unique identifier provided by the external login provider.</param>
+        /// <returns>
+        /// An <see cref="ApiResponseDto{T}"/> indicating whether the external login was successfully removed.
+        /// </returns>
+        [HttpDelete("external-logins/{loginProvider}/{providerKey}")]
+        public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string loginProvider, string providerKey)
+        {
+            await externalLoginService.RemoveLoginAsync(loginProvider, providerKey);
+            return new ApiResponseDto<bool>(true);
         }
 
     }

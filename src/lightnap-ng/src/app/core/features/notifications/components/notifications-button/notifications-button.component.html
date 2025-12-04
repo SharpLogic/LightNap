@@ -24,7 +24,7 @@
             @if (latestNotifications.unreadCount > 0) {
               <p-button icon="pi pi-eye" link="true" size="small" title="Mark all as read" (onClick)="markAllAsRead()" />
             }
-            <p-button icon="pi pi-inbox" link="true" size="small" title="Notification Center" [routerLink]="'notifications' | route" />
+            <p-button icon="pi pi-inbox" link="true" size="small" title="Notification Center" [routerLink]="'my-notifications' | route" />
           </div>
         </div>
         @for (notification of latestNotifications.notifications; track notification.id) {

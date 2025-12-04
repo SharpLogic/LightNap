@@ -1,10 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import {
+  AdminExternalLoginDto,
+  ExternalLoginDto,
   ExternalLoginRegisterRequestDto,
   ExternalLoginRequestDto,
   ExternalLoginSuccessResultDto,
   LoginSuccessResultDto,
+  PagedResponseDto,
+  SearchExternalLoginsRequestDto,
   SupportedExternalLoginDto,
 } from "../dtos";
 
@@ -17,6 +21,10 @@ export class ExternalLoginDataService {
 
   getSupportedLogins() {
     return this.#http.get<Array<SupportedExternalLoginDto>>(`${this.#apiUrlRoot}supported`);
+  }
+
+  searchExternalLogins(searchRequestDto: SearchExternalLoginsRequestDto) {
+    return this.#http.post<PagedResponseDto<AdminExternalLoginDto>>(`${this.#apiUrlRoot}search`, searchRequestDto);
   }
 
   getExternalLoginResult(confirmationToken: string) {
