@@ -219,6 +219,16 @@ export class IdentityService {
   }
 
   /**
+   * @method getLoggedIn$
+   * @description Gets the current login status. This method is preferable to watchLoggedIn$() when you only need
+   * to ensure the status is set before proceeding.
+   * @returns {Observable<boolean>} Emits true if the user is logged in, false otherwise.
+   */
+  getLoggedIn$() {
+    return this.#loggedInSubject$.pipe(take(1));
+  }
+
+  /**
    * @method watchLoggedIn$
    * @description Watches for changes in the login status.
    * @returns {Observable<boolean>} Emits true when the user logs in and false when the user logs out.

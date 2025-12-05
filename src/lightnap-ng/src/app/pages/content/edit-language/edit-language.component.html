@@ -20,7 +20,7 @@
           </p>
         }
 
-        <form [formGroup]="form" (ngSubmit)="onUpdate()">
+        <form [formGroup]="form" (ngSubmit)="update()">
           <div class="flex flex-col gap-2">
             <div class="field">
               <label for="format" class="text-xl">Format</label>
@@ -47,6 +47,6 @@
   </ng-template>
   <ng-template #null>
     <p>There is no "{{ languageCode() }}" language content content for key "{{ key() }}".</p>
-    <p-button label="Create Language Content" (onClick)="onCreate()" />
+    <p-button label="Create Language Content" (onClick)="create()" />
   </ng-template>
 </ln-api-response>

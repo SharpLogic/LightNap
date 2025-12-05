@@ -26,8 +26,7 @@
           <tr>
             <th></th>
             <th>User ID</th>
-            <th>Login Provider</th>
-            <th>Provider Key</th>
+            <th>Provider</th>
           </tr>
         </ng-template>
         <ng-template #body let-externalLoginAny>
@@ -47,10 +46,10 @@
               {{ externalLogin.userId }}
             </td>
             <td>
-              {{ externalLogin.loginProvider }}
-            </td>
-            <td>
-              {{ externalLogin.providerKey }}
+              <div class="flex flex-col">
+                <span class="font-semibold"> {{ externalLogin.loginProvider }}</span>
+                <span class="text-sm">{{ externalLogin.providerKey }}</span>
+              </div>
             </td>
           </tr>
         </ng-template>

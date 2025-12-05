@@ -4,10 +4,11 @@ import { SupportedExternalLoginDto, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ExternalLoginService } from "@core/services/external-login.service";
+import { ButtonModule } from "primeng/button";
 
 @Component({
   templateUrl: "./external-login.component.html",
-  imports: [ApiResponseComponent, RouterModule, BrandedCardComponent],
+  imports: [ApiResponseComponent, RouterModule, BrandedCardComponent, ButtonModule],
 })
 export class ExternalLoginComponent {
   readonly #externalLoginService = inject(ExternalLoginService);

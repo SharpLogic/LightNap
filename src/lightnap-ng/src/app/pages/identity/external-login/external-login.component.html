@@ -7,13 +7,13 @@
       @let supportedExternalLogins = toSupportedExternalLogins(supportedExternalLoginsAny);
 
       @if (supportedExternalLogins.length > 0) {
-        <ul>
+        <div class="flex flex-col gap-2">
           @for (externalLogin of supportedExternalLogins; track externalLogin.providerName) {
-            <li>
-              <a [href]="externalLogin.loginUrl">Log in with your {{ externalLogin.displayName }} account</a>
-            </li>
+            <a [href]="externalLogin.loginUrl" pButton class="w-full">
+              <span> Log in with your {{ externalLogin.displayName }} account </span>
+            </a>
           }
-        </ul>
+        </div>
       } @else {
         <p>No external login providers are currently configured.</p>
       }

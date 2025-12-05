@@ -91,7 +91,7 @@ describe("VerifyCodeComponent", () => {
         rememberMe: true,
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
         jasmine.objectContaining({
@@ -108,7 +108,7 @@ describe("VerifyCodeComponent", () => {
         code: "123456",
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockBlockUiService.show).toHaveBeenCalledWith({ message: "Verifying code..." });
     });
@@ -118,7 +118,7 @@ describe("VerifyCodeComponent", () => {
         code: "123456",
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockBlockUiService.hide).toHaveBeenCalled();
     });
@@ -129,7 +129,7 @@ describe("VerifyCodeComponent", () => {
         code: "123456",
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockRouteAliasService.navigate).toHaveBeenCalledWith("user-home");
     });
@@ -142,7 +142,7 @@ describe("VerifyCodeComponent", () => {
         code: "000000",
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(component.errors()).toEqual(["Invalid verification code"]);
     });
@@ -153,7 +153,7 @@ describe("VerifyCodeComponent", () => {
         rememberMe: false,
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
         jasmine.objectContaining({
@@ -218,7 +218,7 @@ describe("VerifyCodeComponent", () => {
         code: "123456",
       });
 
-      component.onVerifyClicked();
+      component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
         jasmine.objectContaining({

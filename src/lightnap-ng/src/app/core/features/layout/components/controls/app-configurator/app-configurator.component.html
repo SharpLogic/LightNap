@@ -6,7 +6,7 @@
         <button
           type="button"
           [title]="primaryColor.name"
-          (click)="onPrimaryColorChange(primaryColor.name ?? '')"
+          (click)="changePrimaryColor(primaryColor.name ?? '')"
           [ngClass]="{ 'outline-primary': primaryColor.name === layoutService.primaryPalette() }"
           class="border-none w-5 h-5 rounded-full p-0 cursor-pointer outline-none outline-offset-1"
           [style]="{
@@ -23,7 +23,7 @@
         <button
           type="button"
           [title]="surface.name"
-          (click)="onSurfaceColorChange(surface.name ?? '')"
+          (click)="changeSurfaceColor(surface.name ?? '')"
           [ngClass]="{
             'outline-primary': layoutService.surfacePalette()
               ? layoutService.surfacePalette() === surface.name
@@ -44,7 +44,7 @@
     <p-selectbutton
       [options]="presets"
       [ngModel]="layoutService.preset()"
-      (ngModelChange)="onPresetChange($event)"
+      (ngModelChange)="changePreset($event)"
       [allowEmpty]="false"
       size="small"
     />
@@ -54,7 +54,7 @@
       <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
       <p-selectbutton
         [ngModel]="layoutService.menuMode()"
-        (ngModelChange)="onMenuModeChange($event)"
+        (ngModelChange)="changeMenuMode($event)"
         [options]="layoutService.menuModeOptions"
         [allowEmpty]="false"
         size="small"

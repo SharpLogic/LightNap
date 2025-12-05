@@ -33,19 +33,19 @@ export class ContentReadAccessPickerComponent implements ControlValueAccessor {
     return baseOptions;
   }
 
-  onChange: (value: StaticContentReadAccess | null) => void = () => {};
-  onTouched: () => void = () => {};
+  change: (value: StaticContentReadAccess | null) => void = () => {};
+  markTouched: () => void = () => {};
 
   writeValue(value: StaticContentReadAccess | null): void {
     this.value = value;
   }
 
   registerOnChange(fn: (value: StaticContentReadAccess | null) => void): void {
-    this.onChange = fn;
+    this.change = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.markTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {

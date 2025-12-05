@@ -1,7 +1,7 @@
 <p-select
   [ngModel]="value"
-  (ngModelChange)="onChange($event)"
-  (onBlur)="onTouched()"
+  (ngModelChange)="change($event)"
+  (onBlur)="markTouched()"
   [options]="options"
   optionLabel="label"
   optionValue="value"

@@ -15,7 +15,7 @@
         [rows]="pageSize"
         [totalRecords]="results.totalCount"
         [lazy]="true"
-        (onLazyLoad)="onLazyLoad($event)"
+        (onLazyLoad)="lazyLoad($event)"
       >
         <ng-template #body let-notificationAny>
           @let notification = asNotification(notificationAny);

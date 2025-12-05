@@ -74,7 +74,7 @@ describe('ErrorListComponent', () => {
     fixture.componentRef.setInput('errors', ['Error 1', 'Error 2', 'Error 3']);
     fixture.detectChanges();
 
-    component.onClose('Error 2');
+    component.close('Error 2');
 
     expect(component.errorList()).toEqual(['Error 1', 'Error 3']);
   });
@@ -83,7 +83,7 @@ describe('ErrorListComponent', () => {
     fixture.componentRef.setInput('errors', ['Error 1', 'Error 2']);
     fixture.detectChanges();
 
-    component.onClose('Non-existent error');
+    component.close('Non-existent error');
 
     expect(component.errorList()).toEqual(['Error 1', 'Error 2']);
   });

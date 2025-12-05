@@ -6,6 +6,11 @@
     public enum ExternalLoginSuccessType
     {
         /// <summary>
+        /// This account cannot be linked to the current user because it's already linked to a different account.
+        /// </summary>
+        AlreadyLinkedToDifferentAccount,
+
+        /// <summary>
         /// The user has successfully logged in.
         /// </summary>
         AlreadyLinked,

@@ -27,7 +27,7 @@ export class RolesPickerComponent implements ControlValueAccessor {
   options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.displayName, role.description))));
 
   onChange: (value: string) => void = () => {};
-  onTouched: () => void = () => {};
+  markTouched: () => void = () => {};
 
   writeValue(value: string): void {
     this.value = value ? value.split(",").map(v => v.trim()) : [];
@@ -38,14 +38,14 @@ export class RolesPickerComponent implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.markTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
 
-  onValueChange(selectedRoles: string[]): void {
+  change(selectedRoles: string[]): void {
     this.value = selectedRoles;
     this.onChange(selectedRoles.join(","));
   }

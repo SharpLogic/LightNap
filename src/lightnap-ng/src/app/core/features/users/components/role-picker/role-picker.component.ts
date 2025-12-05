@@ -26,19 +26,19 @@ export class RolePickerComponent implements ControlValueAccessor {
 
   options = this.#userManager.getRoles().pipe(map(roles => roles.map(role => new ListItem<string>(role.name, role.displayName, role.description))));
 
-  onChange: (value: string | null) => void = () => {};
-  onTouched: () => void = () => {};
+  change: (value: string | null) => void = () => {};
+  markTouched: () => void = () => {};
 
   writeValue(value: string | null): void {
     this.value = value;
   }
 
   registerOnChange(fn: (value: string | null) => void): void {
-    this.onChange = fn;
+    this.change = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.markTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {

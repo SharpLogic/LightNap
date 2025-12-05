@@ -80,12 +80,10 @@ public class ExternalLoginService(ILogger<ExternalLoginService> logger,
             {
                 if (externalLoginUser.Id != loggedInUser.Id)
                 {
-                    throw new UserFriendlyApiException(
-                        "This external login is already linked to an account. Log into that account to remove it there " +
-                        "if you want to associate it with this new account instead.");
+                    return new ExternalLoginSuccessDto() { Type = ExternalLoginSuccessType.AlreadyLinkedToDifferentAccount };
                 }
 
-                throw new UserFriendlyApiException("This external login is already linked to your account.");
+                return new ExternalLoginSuccessDto() { Type = ExternalLoginSuccessType.AlreadyLinked };
             }
 
             var result = await userManager.AddLoginAsync(loggedInUser, info);

@@ -106,7 +106,7 @@ describe("AppConfiguratorComponent", () => {
     const updateSpy = jasmine.createSpy("update");
     mockLayoutService.layoutConfig.update = updateSpy;
 
-    component.onPrimaryColorChange("green");
+    component.changePrimaryColor("green");
 
     expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
   });
@@ -139,7 +139,7 @@ describe("AppConfiguratorComponent", () => {
     const updateSpy = jasmine.createSpy("update");
     mockLayoutService.layoutConfig.update = updateSpy;
 
-    component.onSurfaceColorChange("zinc");
+    component.changeSurfaceColor("zinc");
 
     expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
   });
@@ -160,7 +160,7 @@ describe("AppConfiguratorComponent", () => {
     const updateSpy = jasmine.createSpy("update");
     mockLayoutService.layoutConfig.update = updateSpy;
 
-    component.onPresetChange("Lara");
+    component.changePreset("Lara");
 
     expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
   });
@@ -181,7 +181,7 @@ describe("AppConfiguratorComponent", () => {
     const updateSpy = jasmine.createSpy("update");
     mockLayoutService.layoutConfig.update = updateSpy;
 
-    component.onMenuModeChange("overlay");
+    component.changeMenuMode("overlay");
 
     expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
   });

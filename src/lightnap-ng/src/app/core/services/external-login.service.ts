@@ -57,8 +57,7 @@ export class ExternalLoginService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   getExternalLoginResult(confirmationToken: string) {
-    return this.#identityService.watchLoggedIn$().pipe(
-      take(1),
+    return this.#identityService.getLoggedIn$().pipe(
       switchMap(_ => this.#dataService.getExternalLoginResult(confirmationToken))
     );
   }

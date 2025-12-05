@@ -18,7 +18,7 @@
           <ln-error-list [errors]="errors()" />
         </div>
 
-        <p-button type="submit" label="Verify" class="w-full" [disabled]="!form.valid" pRipple (onClick)="onVerifyClicked()" />
+        <p-button type="submit" label="Verify" class="w-full" [disabled]="!form.valid" pRipple (onClick)="verify()" />
       </form>
 
       <div class="mt-6 flex flex-wrap gap-4">

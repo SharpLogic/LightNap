@@ -45,6 +45,11 @@ export class ExternalLoginRegisterComponent implements OnInit {
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
+            case ExternalLoginSuccessTypes.AlreadyLinkedToDifferentAccount:
+              this.errors.set([
+                "This external account is already linked to a different user account. Please use a different external account or log in with your existing account.",
+              ]);
+              break;
             case ExternalLoginSuccessTypes.AlreadyLinked:
               this.#routeAlias.navigateWithExtras("external-login-complete", this.token(), { replaceUrl: true });
               break;

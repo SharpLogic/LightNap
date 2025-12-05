@@ -10,7 +10,7 @@ import { ExternalLoginService } from "@core/services/external-login.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
-import { finalize } from "rxjs";
+import { finalize, take } from "rxjs";
 
 @Component({
   standalone: true,
@@ -31,6 +31,16 @@ export class ExternalLoginCompleteComponent {
   });
 
   readonly errors = signal(new Array<string>());
+
+  constructor() {
+    this.#identityService
+      .getLoggedIn$()
+      .subscribe(isLoggedIn => {
+        if (isLoggedIn) {
+          this.#routeAlias.navigate("my-external-logins");
+        }
+      });
+  }
 
   logIn() {
     this.#blockUi.show({ message: "Completing login..." });

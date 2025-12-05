@@ -43,7 +43,7 @@ export class NotificationsComponent {
   asNotifications = TypeHelpers.cast<NotificationSearchResults>;
   asNotification = TypeHelpers.cast<NotificationItem>;
 
-  onLazyLoad(event: TableLazyLoadEvent) {
+  lazyLoad(event: TableLazyLoadEvent) {
     this.#currentPage = (event.first ?? 0) / this.pageSize + 1;
     this.#lazyLoadEventSubject.next(event);
   }

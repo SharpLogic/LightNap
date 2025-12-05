@@ -105,7 +105,7 @@ describe("NotificationsComponent", () => {
     it("should initialize currentPage to 0", () => {
       // Test that the first lazy load call uses pageNumber 1 (which corresponds to currentPage = 0 initially)
       const event = { first: 0 };
-      component.onLazyLoad(event);
+      component.lazyLoad(event);
       expect(mockNotificationService.searchNotifications).toHaveBeenCalledWith({
         pageSize: 10,
         pageNumber: 1,
@@ -118,7 +118,7 @@ describe("NotificationsComponent", () => {
     it("should call searchNotifications on lazy load", () => {
       const event = { first: 0 };
 
-      component.onLazyLoad(event);
+      component.lazyLoad(event);
 
       expect(mockNotificationService.searchNotifications).toHaveBeenCalledWith({
         pageSize: 10,
@@ -129,7 +129,7 @@ describe("NotificationsComponent", () => {
     it("should calculate correct page number for lazy load", () => {
       const event = { first: 20 }; // Second page (pageSize = 10)
 
-      component.onLazyLoad(event);
+      component.lazyLoad(event);
 
       expect(mockNotificationService.searchNotifications).toHaveBeenCalledWith({
         pageSize: 10,
@@ -140,7 +140,7 @@ describe("NotificationsComponent", () => {
     it("should handle first = 0 correctly", () => {
       const event = { first: 0 };
 
-      component.onLazyLoad(event);
+      component.lazyLoad(event);
 
       expect(mockNotificationService.searchNotifications).toHaveBeenCalledWith({
         pageSize: 10,
@@ -218,7 +218,7 @@ describe("NotificationsComponent", () => {
       expect(notificationItems.length).toBe(0);
 
       // Trigger lazy load to load notifications
-      component.onLazyLoad({ first: 0 });
+      component.lazyLoad({ first: 0 });
       fixture.detectChanges();
 
       // After lazy load, notifications should be rendered
