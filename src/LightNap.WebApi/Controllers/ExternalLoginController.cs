@@ -127,21 +127,21 @@ namespace LightNap.WebApi.Controllers
             // Something failed at the provider, such as the user declining to authorize.
             if (remoteError != null)
             {
-                return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(remoteError)}");
+                return this.Redirect($"/identity/external-logins/error?error={Uri.EscapeDataString(remoteError)}");
             }
 
             try
             {
                 var token = await externalLoginService.ExternalLoginCallbackAsync();
-                return Redirect($"/identity/external-login-register?token={token}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
+                return Redirect($"/identity/external-logins/callback?token={token}&returnUrl={Uri.EscapeDataString(returnUrl ?? "/")}");
             }
             catch (UserFriendlyApiException ex)
             {
-                return this.Redirect($"/identity/external-login-error?error={string.Join(',', ex.Errors.Select(e => Uri.EscapeDataString(e)))}");
+                return this.Redirect($"/identity/external-logins/error?error={string.Join(',', ex.Errors.Select(e => Uri.EscapeDataString(e)))}");
             }
             catch (Exception ex)
             {
-                return this.Redirect($"/identity/external-login-error?error={Uri.EscapeDataString(ex.Message)}");
+                return this.Redirect($"/identity/external-logins/error?error={Uri.EscapeDataString(ex.Message)}");
             }
         }
     }

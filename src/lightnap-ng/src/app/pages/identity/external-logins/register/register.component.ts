@@ -15,10 +15,10 @@ import { finalize } from "rxjs";
 
 @Component({
   standalone: true,
-  templateUrl: "./external-login-register.component.html",
+  templateUrl: "./register.component.html",
   imports: [ReactiveFormsModule, RouterModule, InputTextModule, ButtonModule, CheckboxModule, RoutePipe, ErrorListComponent, BrandedCardComponent],
 })
-export class ExternalLoginRegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   readonly #identityService = inject(IdentityService);
   readonly #externalLoginService = inject(ExternalLoginService);
   readonly #blockUi = inject(BlockUiService);
@@ -45,17 +45,6 @@ export class ExternalLoginRegisterComponent implements OnInit {
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
-            case ExternalLoginSuccessTypes.AlreadyLinkedToDifferentAccount:
-              this.errors.set([
-                "This external account is already linked to a different user account. Please use a different external account or log in with your existing account.",
-              ]);
-              break;
-            case ExternalLoginSuccessTypes.AlreadyLinked:
-              this.#routeAlias.navigateWithExtras("external-login-complete", this.token(), { replaceUrl: true });
-              break;
-            case ExternalLoginSuccessTypes.NewAccountLink:
-              this.#routeAlias.navigateWithExtras("user-home", null, { replaceUrl: true });
-              break;
             case ExternalLoginSuccessTypes.RequiresRegistration:
               this.form.patchValue({
                 email: loginResult.email ?? "",
@@ -63,7 +52,8 @@ export class ExternalLoginRegisterComponent implements OnInit {
               });
               break;
             default:
-              throw new Error(`Unexpected ExternalLoginSuccessResult.type: '${loginResult.type}'`);
+                this.#routeAlias.navigateWithExtras("external-login-callback", this.token(), { replaceUrl: true });
+              break;
           }
         },
         error: setApiErrors(this.errors),

@@ -50,4 +50,6 @@ export type RouteAlias =
     | 'request-verification-email'
     | 'confirm-email'
     | 'external-logins'
-    | 'external-login-complete';
+    | 'external-login-callback'
+    | 'external-login-complete'
+    | 'external-login-register';

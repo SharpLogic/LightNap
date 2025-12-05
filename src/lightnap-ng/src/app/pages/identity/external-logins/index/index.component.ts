@@ -7,10 +7,10 @@ import { ExternalLoginService } from "@core/services/external-login.service";
 import { ButtonModule } from "primeng/button";
 
 @Component({
-  templateUrl: "./external-login.component.html",
+  templateUrl: "./index.component.html",
   imports: [ApiResponseComponent, RouterModule, BrandedCardComponent, ButtonModule],
 })
-export class ExternalLoginComponent {
+export class IndexComponent {
   readonly #externalLoginService = inject(ExternalLoginService);
   readonly externalLogins = signal(this.#externalLoginService.getSupportedLogins());
 
