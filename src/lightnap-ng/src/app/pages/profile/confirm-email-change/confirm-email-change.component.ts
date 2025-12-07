@@ -12,7 +12,6 @@ import { PanelModule } from "primeng/panel";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./confirm-email-change.component.html",
   imports: [ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
 })

@@ -89,7 +89,6 @@ describe('BrandedCardComponent', () => {
         </ln-branded-card>
       `,
       imports: [BrandedCardComponent],
-      standalone: true,
     })
     class TestHostComponent {}
 

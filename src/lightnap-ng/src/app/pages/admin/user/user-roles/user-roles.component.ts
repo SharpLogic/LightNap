@@ -10,7 +10,6 @@ import { ButtonModule } from "primeng/button";
 import { TableModule } from "primeng/table";
 
 @Component({
-  standalone: true,
   selector: "user-roles",
   templateUrl: "./user-roles.component.html",
   imports: [TableModule, ButtonModule, RouterLink, RoutePipe, ConfirmPopupComponent, ReactiveFormsModule, RolePickerComponent],

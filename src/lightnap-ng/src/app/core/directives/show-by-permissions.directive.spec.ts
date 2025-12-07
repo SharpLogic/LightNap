@@ -8,7 +8,6 @@ import { ClaimDto } from '@core/backend-api';
 
 @Component({
   selector: 'app-test',
-  standalone: true,
   imports: [ShowByPermissionsDirective],
   template: `<div [showByPermissions] [roles]="roles" [claims]="claims" id="testDiv">Content</div>`,
 })

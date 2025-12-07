@@ -4,7 +4,6 @@ import { IdentityService } from "@core/services/identity.service";
 
 @Directive({
   selector: "[showIfLoggedIn]",
-  standalone: true,
 })
 export class ShowIfLoggedInDirective implements OnInit {
   #identityService = inject(IdentityService);

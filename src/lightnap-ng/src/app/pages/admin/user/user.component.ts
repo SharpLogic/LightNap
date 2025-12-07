@@ -19,7 +19,6 @@ import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { UserRolesComponent } from "./user-roles/user-roles.component";
 
 @Component({
-  standalone: true,
   templateUrl: "./user.component.html",
   imports: [
     CommonModule,

@@ -33,7 +33,7 @@
 
           <tr>
             <td>
-              <ln-confirm-popup [key]="user.id" confirmStyleClass="p-button-danger" />
+              <ln-confirm-popup [key]="user.id" />
               <p-button severity="danger" icon="pi pi-trash" title="Remove user claim" (onClick)="removeUserClaim($event, user.id)" />
             </td>
             <td>

@@ -9,7 +9,6 @@ import { DrawerModule } from "primeng/drawer";
 import { ToastModule } from "primeng/toast";
 
 @Component({
-  standalone: true,
   selector: "app-root",
   templateUrl: "./app.component.html",
   imports: [RouterOutlet, BlockUIModule, DrawerModule, ToastModule],

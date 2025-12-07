@@ -5,7 +5,6 @@ import { map, of, startWith } from "rxjs";
 
 @Pipe({
   name: "since",
-  standalone: true,
 })
 export class SincePipe implements PipeTransform {
   readonly timerInterval = 15 * 1000;

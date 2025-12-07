@@ -11,7 +11,6 @@ import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./access-denied.component.html",
   imports: [RouterLink, RoutePipe, ButtonModule, BrandedCardComponent],
 })

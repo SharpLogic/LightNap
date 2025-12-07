@@ -10,7 +10,6 @@ import { Observable } from "rxjs";
 
 @Component({
   selector: "ln-user-setting-toggle",
-  standalone: true,
   templateUrl: "./user-setting-toggle.component.html",
   imports: [CommonModule, FormsModule, ToggleSwitchModule, ApiResponseComponent],
 })

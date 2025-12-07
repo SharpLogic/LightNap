@@ -6,8 +6,7 @@ import { ButtonModule } from "primeng/button";
 import { PanelModule } from 'primeng/panel';
 
 @Component({
-  standalone: true,
-  templateUrl: './change-email-requested.component.html',
+  templateUrl: "./change-email-requested.component.html",
   imports: [PanelModule, ButtonModule, RouterLink, RoutePipe],
 })
 export class ChangeEmailRequestedComponent {

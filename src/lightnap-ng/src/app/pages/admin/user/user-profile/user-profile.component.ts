@@ -5,7 +5,6 @@ import { AdminUserDto } from "@core";
 import { ButtonModule } from "primeng/button";
 
 @Component({
-  standalone: true,
   selector: "user-profile",
   templateUrl: "./user-profile.component.html",
   imports: [

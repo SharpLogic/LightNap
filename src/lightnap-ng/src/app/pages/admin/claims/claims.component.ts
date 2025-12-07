@@ -14,7 +14,6 @@ import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./claims.component.html",
   imports: [
     ReactiveFormsModule,

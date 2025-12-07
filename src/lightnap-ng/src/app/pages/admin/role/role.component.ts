@@ -15,7 +15,6 @@ import { TableModule } from "primeng/table";
 import { Observable } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./role.component.html",
   imports: [
     ReactiveFormsModule,

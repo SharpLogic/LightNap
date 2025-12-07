@@ -29,7 +29,6 @@ bootstrapApplication(AppComponent, {
   providers: [
     // 1. Core Angular providers
     provideZonelessChangeDetection(),
-    provideAnimationsAsync(),
 
     // 2. Routing
     provideRouter(Routes, withInMemoryScrolling(), withComponentInputBinding(), withRouterConfig({})),

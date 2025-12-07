@@ -4,7 +4,6 @@ import { LayoutService } from "@core/features/layout/services/layout.service";
 
 @Component({
   selector: 'ln-branded-card',
-  standalone: true,
   templateUrl: './branded-card.component.html',
   imports: [],
 })

@@ -12,7 +12,6 @@ import { Observable } from "rxjs";
 
 @Component({
   selector: "ln-user-setting-select",
-  standalone: true,
   templateUrl: "./user-setting-select.component.html",
   imports: [FormsModule, Select, SelectListItemComponent, ApiResponseComponent],
 })

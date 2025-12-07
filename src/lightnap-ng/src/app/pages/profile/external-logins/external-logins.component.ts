@@ -12,7 +12,6 @@ import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 
 @Component({
-  standalone: true,
   templateUrl: "./external-logins.component.html",
   imports: [
     TableModule,

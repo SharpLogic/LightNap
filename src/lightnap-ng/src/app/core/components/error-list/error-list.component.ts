@@ -5,7 +5,6 @@ import { ApiResponseDto } from "@core";
 
 @Component({
   selector: "ln-error-list",
-  standalone: true,
   templateUrl: "./error-list.component.html",
   imports: [MessageModule],
 })

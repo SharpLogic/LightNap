@@ -15,7 +15,6 @@ import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./change-password.component.html",
   imports: [
     ButtonModule,

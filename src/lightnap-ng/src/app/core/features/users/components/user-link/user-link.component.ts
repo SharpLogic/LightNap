@@ -7,7 +7,6 @@ import { ApiResponseComponent } from "@core/components/api-response/api-response
 
 @Component({
   selector: "ln-user-link",
-  standalone: true,
   templateUrl: "./user-link.component.html",
   imports: [ApiResponseComponent],
 })

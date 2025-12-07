@@ -14,7 +14,6 @@ import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   selector: "user-claims",
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,

@@ -27,7 +27,6 @@ import { TagModule } from "primeng/tag";
 import { debounceTime, startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./users.component.html",
   imports: [
     CommonModule,

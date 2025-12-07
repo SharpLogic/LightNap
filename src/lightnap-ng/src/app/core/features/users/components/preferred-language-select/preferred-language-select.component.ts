@@ -8,7 +8,6 @@ import { UserSettingSelectComponent } from "../user-setting-select/user-setting-
 
 @Component({
   selector: "ln-preferred-language-select",
-  standalone: true,
   templateUrl: "./preferred-language-select.component.html",
   imports: [UserSettingSelectComponent, ApiResponseComponent],
 })

@@ -8,7 +8,6 @@ import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 
 @Component({
-  standalone: true,
   templateUrl: "./roles.component.html",
   imports: [PanelModule, RouterLink, RoutePipe, ApiResponseComponent, TableModule],
 })

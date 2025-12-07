@@ -4,7 +4,6 @@ import { ButtonModule, ButtonSeverity } from "primeng/button";
 import { ConfirmPopupModule } from "primeng/confirmpopup";
 
 @Component({
-  standalone: true,
   selector: "ln-confirm-popup",
   templateUrl: "./confirm-popup.component.html",
   imports: [ConfirmPopupModule, ButtonModule],

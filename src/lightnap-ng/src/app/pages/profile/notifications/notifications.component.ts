@@ -13,7 +13,6 @@ import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./notifications.component.html",
   imports: [TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, NotificationItemComponent],
 })
