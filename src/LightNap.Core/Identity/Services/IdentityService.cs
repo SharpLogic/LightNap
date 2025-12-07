@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Identity.Services
 {
@@ -82,6 +83,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The login result.</returns>
         public async Task<LoginSuccessDto> LogInAsync(LoginRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = requestDto.Type switch
             {
                 LoginType.Email or LoginType.MagicLink => await userManager.FindByEmailAsync(requestDto.Login) ?? throw new UserFriendlyApiException("Invalid email/password combination."),
@@ -126,6 +129,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The login result.</returns>
         public async Task<LoginSuccessDto> RegisterAsync(RegisterRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = requestDto.ToCreate(authenticationSettings.Value.RequireTwoFactorForNewUsers);
             var result = await userManager.CreateAsync(user, requestDto.Password);
             if (!result.Succeeded)
@@ -180,6 +185,9 @@ namespace LightNap.Core.Identity.Services
         /// <exception cref="UserFriendlyApiException">Thrown when the new password does not match the confirmation password or if the password change fails.</exception>  
         public async Task ChangePasswordAsync(ChangePasswordRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+            userContext.AssertAuthenticated();
+
             if (requestDto.NewPassword != requestDto.ConfirmNewPassword) { throw new UserFriendlyApiException("New password does not match confirmation password."); }
 
             ApplicationUser user = await userManager.FindByIdAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to change password.");
@@ -200,6 +208,9 @@ namespace LightNap.Core.Identity.Services
         /// <exception cref="UserFriendlyApiException">Thrown when the email change fails.</exception>
         public async Task ChangeEmailAsync(ChangeEmailRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+            userContext.AssertAuthenticated();
+
             var user = await userManager.FindByIdAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to change email.");
             var token = await userManager.GenerateChangeEmailTokenAsync(user, requestDto.NewEmail);
 
@@ -222,6 +233,9 @@ namespace LightNap.Core.Identity.Services
         /// <exception cref="UserFriendlyApiException">Thrown when the email confirmation fails.</exception>
         public async Task ConfirmEmailChangeAsync(ConfirmEmailChangeRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+            userContext.AssertAuthenticated();
+
             var user = await userManager.FindByIdAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Unable to confirm email change.");
 
             var result = await userManager.ChangeEmailAsync(user, requestDto.NewEmail, requestDto.Code);
@@ -243,6 +257,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The success of the operation.</returns>
         public async Task ResetPasswordAsync(ResetPasswordRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser? user = await userManager.FindByEmailAsync(requestDto.Email) ?? throw new UserFriendlyApiException("An account with this email was not found.");
 
             string token = await userManager.GeneratePasswordResetTokenAsync(user);
@@ -265,6 +281,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The login result.</returns>
         public async Task<LoginSuccessDto> NewPasswordAsync(NewPasswordRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = await userManager.FindByEmailAsync(requestDto.Email) ?? throw new UserFriendlyApiException("An account with this email was not found.");
 
             IdentityResult result = await userManager.ResetPasswordAsync(user, requestDto.Token, requestDto.Password);
@@ -290,6 +308,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>The access token.</returns>
         public async Task<string> VerifyCodeAsync(VerifyCodeRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = await userManager.FindByEmailAsync(requestDto.Login) ?? await userManager.FindByNameAsync(requestDto.Login) ?? throw new UserFriendlyApiException("An account with this email was not found.");
             if (!await userManager.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider, requestDto.Code))
             {
@@ -329,6 +349,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task RequestVerificationEmailAsync(SendVerificationEmailRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = await userManager.FindByEmailAsync(requestDto.Email) ?? throw new UserFriendlyApiException("An account with this email was not found.");
             if (user.EmailConfirmed) { throw new UserFriendlyApiException("This email is already verified."); }
             await this.SendVerificationEmailAsync(user);
@@ -341,6 +363,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task VerifyEmailAsync(VerifyEmailRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = await userManager.FindByEmailAsync(requestDto.Email) ?? throw new UserFriendlyApiException("An account with this email was not found.");
             if (user.EmailConfirmed) { throw new UserFriendlyApiException("This email is already verified."); }
             IdentityResult result = await userManager.ConfirmEmailAsync(user, requestDto.Code);
@@ -358,6 +382,8 @@ namespace LightNap.Core.Identity.Services
         /// <returns>A task that represents the asynchronous operation.</returns>
         public async Task RequestMagicLinkEmailAsync(SendMagicLinkRequestDto requestDto)
         {
+            Validator.ValidateObject(requestDto, new ValidationContext(requestDto), validateAllProperties: true);
+
             ApplicationUser user = await userManager.FindByEmailAsync(requestDto.Email) ?? throw new UserFriendlyApiException("An account with this email was not found.");
 
             string token = await userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, Constants.Identity.MagicLinkTokenPurpose);

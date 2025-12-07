@@ -355,7 +355,7 @@ namespace LightNap.WebApi.Extensions
                 });
 
                 // Policy for authentication endpoints
-                options.AddPolicy("Auth", httpContext =>
+                options.AddPolicy(WebConstants.RateLimiting.AuthPolicyName, httpContext =>
                 {
                     string key = GetPartitionKey(httpContext);
 
@@ -367,7 +367,7 @@ namespace LightNap.WebApi.Extensions
                 });
 
                 // Policy for content-heavy endpoints
-                options.AddPolicy("Content", httpContext =>
+                options.AddPolicy(WebConstants.RateLimiting.ContentPolicyName, httpContext =>
                 {
                     string key = GetPartitionKey(httpContext);
 
@@ -379,7 +379,7 @@ namespace LightNap.WebApi.Extensions
                 });
 
                 // Policy for registration endpoint (strict to prevent spam)
-                options.AddPolicy("Registration", httpContext =>
+                options.AddPolicy(WebConstants.RateLimiting.RegistrationPolicyName, httpContext =>
                 {
                     string key = GetPartitionKey(httpContext);
 

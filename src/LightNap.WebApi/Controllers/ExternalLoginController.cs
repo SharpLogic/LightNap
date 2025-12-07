@@ -16,7 +16,7 @@ namespace LightNap.WebApi.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    [EnableRateLimiting("Auth")]
+    [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
     public class ExternalLoginController(IExternalLoginService externalLoginService, IEnumerable<SupportedExternalLoginDto> supportedExternalLogins) : ControllerBase
     {
         /// <summary>
@@ -57,7 +57,6 @@ namespace LightNap.WebApi.Controllers
         [HttpGet("result/{confirmationToken}")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResult(string confirmationToken)
         {
             return new ApiResponseDto<ExternalLoginSuccessDto>(await externalLoginService.GetExternalLoginResultAsync(confirmationToken));
@@ -72,7 +71,6 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("complete/{confirmationToken}")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(string confirmationToken, ExternalLoginRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginAsync(confirmationToken, requestDto));
@@ -87,7 +85,6 @@ namespace LightNap.WebApi.Controllers
         [HttpPost("register/{confirmationToken}")]
         [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
         [ProducesResponseType(400)]
-        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLoginRegistration(string confirmationToken, ExternalLoginRegisterRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));
@@ -102,7 +99,6 @@ namespace LightNap.WebApi.Controllers
         /// <returns>A challenge result that redirects to the external provider.</returns>
         [HttpGet("login/{provider}")]
         [ProducesResponseType(302)]
-        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Login(string provider, string? returnUrl)
         {
@@ -120,7 +116,6 @@ namespace LightNap.WebApi.Controllers
         [HttpGet("callback")]
         [ProducesResponseType(302)]
         [ProducesResponseType(400)]
-        [EnableRateLimiting("Registration")]  // Override the controller-level "Auth" policy
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> LoginCallback(string? returnUrl = null, string? remoteError = null)
         {

@@ -4,6 +4,7 @@ using LightNap.Core.Configuration.StaticContents;
 using LightNap.Core.StaticContents.Dto.Request;
 using LightNap.Core.StaticContents.Dto.Response;
 using LightNap.Core.StaticContents.Interfaces;
+using LightNap.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -14,7 +15,7 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
-    [EnableRateLimiting("Content")]
+    [EnableRateLimiting(WebConstants.RateLimiting.ContentPolicyName)]
     public class ContentController(IStaticContentService staticContentService) : ControllerBase
     {
         [HttpGet("published/{key}/{languageCode}")]

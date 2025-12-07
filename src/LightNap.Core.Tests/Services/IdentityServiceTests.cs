@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Moq;
+using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Tests.Services
 {
@@ -480,7 +481,7 @@ namespace LightNap.Core.Tests.Services
             var loginRequest = new LoginRequestDto
             {
                 Type = LoginType.MagicLink,
-                DeviceDetails = "",
+                DeviceDetails = "from-test",
                 Login = requestDto.Email,
                 Password = magicLinkToken
             };
@@ -550,7 +551,7 @@ namespace LightNap.Core.Tests.Services
         }
 
         [TestMethod]
-        public async Task ChangePassword_ShouldFailWithWrongMistmatchedNewPassword()
+        public async Task ChangePassword_ShouldFailWithWrongMismatchedNewPassword()
         {
             // Arrange
             await TestHelper.CreateTestUserAsync(this._userManager, _userId, _userName, _userEmail);
@@ -567,7 +568,7 @@ namespace LightNap.Core.Tests.Services
             if (!identityResult.Succeeded) { Assert.Fail("Failed to add password to user."); }
 
             // Act & Assert
-            await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () => await this._identityService.ChangePasswordAsync(changePasswordDto));
+            await Assert.ThrowsExactlyAsync<ValidationException>(async () => await this._identityService.ChangePasswordAsync(changePasswordDto));
         }
 
         [TestMethod]

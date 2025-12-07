@@ -191,9 +191,12 @@ namespace LightNap.Core.Users.Services
 
             if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { throw new UserFriendlyApiException("You may not delete an Administrator."); }
 
-            db.Users.Remove(user);
-
-            await db.SaveChangesAsync();
+            // Delete the user using UserManager to ensure all related data is cleaned up properly.
+            var result = await userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new UserFriendlyApiException(result.Errors.Select(e => e.Description));
+            }
         }
 
         /// <summary>
