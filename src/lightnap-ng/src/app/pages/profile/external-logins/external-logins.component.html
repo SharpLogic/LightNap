@@ -1,0 +1,43 @@
+<ln-api-response [apiResponse]="externalLogins$()" errorMessage="Error loading external logins" loadingMessage="Loading external logins...">
+  <ng-template #success let-externalLoginsAny>
+    @let externalLogins = asExternalLogins(externalLoginsAny);
+
+    <p-panel header="Manage Your External Logins">
+      <div class="flex justify-end">
+        <a [routerLink]="'external-logins' | route">Link an external account</a>
+      </div>
+      <p-table [value]="externalLogins">
+        <ng-template #header>
+          <tr>
+            <th><i class="pi pi-trash"></i></th>
+            <th>Provider</th>
+            <th>Key</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-externalLoginAny>
+          @let externalLogin = asExternalLogin(externalLoginAny);
+
+          <tr>
+            <td>
+              <ln-confirm-dialog [key]="externalLogin.loginProvider + ':' + externalLogin.providerKey" />
+              <p-button
+                severity="danger"
+                icon="pi pi-trash"
+                title="Remove external login"
+                (onClick)="removeExternalLogin($event, externalLogin.loginProvider, externalLogin.providerKey)"
+              />
+            </td>
+            <td>{{ externalLogin.loginProvider }}</td>
+            <td>{{ externalLogin.providerKey }}</td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="100%">You do not have any external logins linked.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <ln-error-list [errors]="errors()" />
+    </p-panel>
+  </ng-template>
+</ln-api-response>

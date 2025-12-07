@@ -1,5 +1,6 @@
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
+using Microsoft.AspNetCore.Authentication;
 
 namespace LightNap.Core.Identity.Interfaces
 {

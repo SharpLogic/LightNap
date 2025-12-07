@@ -1,5 +1,7 @@
 ﻿using LightNap.Core.Api;
-using LightNap.Core.Configuration;
+using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Database;
+using LightNap.Core.Configuration.Email;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
@@ -26,7 +28,9 @@ using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +64,7 @@ namespace LightNap.WebApi.Extensions
             services.AddScoped<ICookieManager, WebCookieManager>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<IExternalLoginService, ExternalLoginService>();
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IProfileService, ProfileService>();
@@ -129,8 +134,9 @@ namespace LightNap.WebApi.Extensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="jwtSettings">The JWT settings.</param>
+        /// <param name="authSettings">The authentication settings.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings)
         {
             services.AddIdentity<ApplicationUser, ApplicationRole>(
                 (options) =>
@@ -176,6 +182,57 @@ namespace LightNap.WebApi.Extensions
                     }
                 };
             });
+
+            // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc.
+            // To add more providers, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social.
+            var supportedExternalLogins = new List<SupportedExternalLoginDto>();
+            var oAuthSettings = authSettings?.OAuth;
+            if (oAuthSettings is not null)
+            {
+                // Add external authentication schemes
+                if (oAuthSettings.Google is not null)
+                {
+                    services.AddAuthentication()
+                        .AddGoogle(options =>
+                        {
+                            options.ClientId = oAuthSettings.Google.ClientId;
+                            options.ClientSecret = oAuthSettings.Google.ClientSecret;
+                        });
+                    supportedExternalLogins.Add(new SupportedExternalLoginDto("Google", GoogleDefaults.DisplayName));
+                }
+
+                if (oAuthSettings.Microsoft is not null)
+                {
+                    services.AddAuthentication()
+                        .AddMicrosoftAccount(options =>
+                        {
+                            options.ClientId = oAuthSettings.Microsoft.ClientId;
+                            options.ClientSecret = oAuthSettings.Microsoft.ClientSecret;
+                        });
+                    supportedExternalLogins.Add(new SupportedExternalLoginDto("Microsoft", MicrosoftAccountDefaults.DisplayName));
+                }
+
+                if (oAuthSettings.GitHub is not null)
+                {
+                    // You must install the NuGet package: AspNet.Security.OAuth.GitHub
+                    // And add: using AspNet.Security.OAuth.GitHub;
+                    services.AddAuthentication()
+                        .AddGitHub(options =>
+                        {
+                            options.ClientId = oAuthSettings.GitHub.ClientId;
+                            options.ClientSecret = oAuthSettings.GitHub.ClientSecret;
+                        });
+                    supportedExternalLogins.Add(new SupportedExternalLoginDto("GitHub", "GitHub"));
+                }
+            }
+
+            if (authSettings?.WindowsAuth?.Enabled == true)
+            {
+                services.AddAuthentication()
+                    .AddNegotiate();
+            }
+
+            services.AddSingleton<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
 
             services.AddAuthorizationBuilder()
                 .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));

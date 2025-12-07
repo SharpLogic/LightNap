@@ -21,19 +21,19 @@ export class AppConfiguratorComponent {
   readonly presets = Object.keys(this.layoutService.presets);
   readonly showMenuModeButton = signal(!this.router.url.includes("identity"));
 
-  onPrimaryColorChange(primary: string) {
+  changePrimaryColor(primary: string) {
     this.layoutService.layoutConfig.update(state => ({ ...state, primary }));
   }
 
-  onSurfaceColorChange(surface: string) {
+  changeSurfaceColor(surface: string) {
     this.layoutService.layoutConfig.update(state => ({ ...state, surface }));
   }
 
-  onPresetChange(preset: string) {
+  changePreset(preset: string) {
     this.layoutService.layoutConfig.update(state => ({ ...state, preset }));
   }
 
-  onMenuModeChange(menuMode: string) {
+  changeMenuMode(menuMode: string) {
     this.layoutService.layoutConfig.update(state => ({ ...state, menuMode }));
   }
 }

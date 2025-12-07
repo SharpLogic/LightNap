@@ -1,4 +1,5 @@
 import { AppRoute } from "@core";
+import { Routes as ExternalLoginRoutes } from "./external-logins/routes";
 
 export const Routes: AppRoute[] = [
   { path: "login", title: "Log In", data: { alias: "login" }, loadComponent: () => import("./login/login.component").then(m => m.LoginComponent) },
@@ -58,5 +59,10 @@ export const Routes: AppRoute[] = [
     path: "confirm-email/:email/:code",
     title: "Confirm Your Email",
     loadComponent: () => import("./confirm-email/confirm-email.component").then(m => m.ConfirmEmailComponent),
+  },
+  {
+    path: "external-logins",
+    title: "External Logins",
+    children: ExternalLoginRoutes
   },
 ];

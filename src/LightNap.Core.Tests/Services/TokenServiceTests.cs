@@ -1,4 +1,3 @@
-using LightNap.Core.Configuration;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Interfaces;
@@ -10,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
+using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Authorization;
 
 namespace LightNap.Core.Tests.Services
 {

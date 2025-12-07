@@ -1,4 +1,5 @@
 using LightNap.Core.Api;
+using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;

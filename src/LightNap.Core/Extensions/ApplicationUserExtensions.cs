@@ -45,6 +45,23 @@ namespace LightNap.Core.Extensions
         }
 
         /// <summary>
+        /// Converts a ExternalLoginRegisterRequestDto object to an ApplicationUser object.
+        /// </summary>
+        /// <param name="dto">The ExternalLoginRegisterRequestDto object containing the registration details.</param>
+        /// <param name="twoFactorEnabled">A boolean indicating if two-factor authentication is enabled.</param>
+        /// <returns>An ApplicationUser object created from the registration details.</returns>
+        public static ApplicationUser ToCreate(this ExternalLoginRegisterRequestDto dto, bool twoFactorEnabled)
+        {
+            var user = new ApplicationUser()
+            {
+                Email = dto.Email,
+                TwoFactorEnabled = twoFactorEnabled,
+                UserName = dto.UserName
+            };
+            return user;
+        }
+
+        /// <summary>
         /// Updates the ApplicationUser object with the values from the UpdateProfileDto object.
         /// </summary>
         /// <param name="user">The ApplicationUser object to update.</param>

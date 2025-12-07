@@ -29,7 +29,7 @@ describe("AppTopBarComponent", () => {
       layoutConfig: layoutConfigSignal,
       isDarkTheme: signal(false),
       appName: "LightNap Test",
-      onMenuToggle: jasmine.createSpy("onMenuToggle"),
+      toggleMenu: jasmine.createSpy("toggleMenu"),
       presets: { Aura: {}, Lara: {}, Nora: {} },
       surfaces: [],
       colors: [],
@@ -92,7 +92,7 @@ describe("AppTopBarComponent", () => {
     expect(menuButton?.querySelector("i.pi-bars")).toBeTruthy();
   });
 
-  it("should call onMenuToggle when menu button clicked", () => {
+  it("should call toggleMenu when menu button clicked", () => {
     const fixture = TestBed.createComponent(AppTopBarComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
@@ -100,7 +100,7 @@ describe("AppTopBarComponent", () => {
 
     menuButton.click();
 
-    expect(mockLayoutService.onMenuToggle).toHaveBeenCalled();
+    expect(mockLayoutService.toggleMenu).toHaveBeenCalled();
   });
 
   it("should render app logo with light theme", () => {

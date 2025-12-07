@@ -21,17 +21,13 @@ export class AccessDeniedComponent {
   #routeAlias = inject(RouteAliasService);
   #toast = inject(ToastService);
 
-  loggedIn$ = this.#identityService.watchLoggedIn$();
-
-  constructor() {
-    this.loggedIn$.pipe(take(1)).subscribe({
-      next: loggedIn => {
-        if (!loggedIn) {
-          this.#routeAlias.navigate("login");
-        }
-      },
-    });
-  }
+  loggedIn$ = this.#identityService.getLoggedIn$().subscribe({
+    next: loggedIn => {
+      if (!loggedIn) {
+        this.#routeAlias.navigate("login");
+      }
+    },
+  });
 
   logOut() {
     this.#identityService.logOut().subscribe({

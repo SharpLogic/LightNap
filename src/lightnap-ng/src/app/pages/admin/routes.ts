@@ -22,7 +22,7 @@ export const Routes: AppRoute[] = [
         title: "Admin | User",
         data: {
           alias: "admin-user",
-          breadcrumb: (route) => route.params["userName"] || "User Details"
+          breadcrumb: route => route.params["userName"] || "User Details",
         },
         loadComponent: () => import("./user/user.component").then(m => m.UserComponent),
       },
@@ -43,7 +43,7 @@ export const Routes: AppRoute[] = [
         title: "Admin | Role",
         data: {
           alias: "admin-role",
-          breadcrumb: (route) => route.params["role"] || "Role Details"
+          breadcrumb: route => route.params["role"] || "Role Details",
         },
         loadComponent: () => import("./role/role.component").then(m => m.RoleComponent),
       },
@@ -64,14 +64,23 @@ export const Routes: AppRoute[] = [
         title: "Admin | Claim",
         data: {
           alias: "admin-claim",
-          breadcrumb: (route) => {
+          breadcrumb: route => {
             const type = route.params["type"];
             const value = route.params["value"];
             return type && value ? `${type}: ${value}` : "Claim Details";
-          }
+          },
         },
         loadComponent: () => import("./claim/claim.component").then(m => m.ClaimComponent),
       },
     ],
+  },
+  {
+    path: "external-logins",
+    title: "Admin | External Logins",
+    data: {
+      alias: "admin-external-logins",
+      breadcrumb: "External Logins",
+    },
+    loadComponent: () => import("./external-logins/external-logins.component").then(m => m.ExternalLoginsComponent),
   },
 ];

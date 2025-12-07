@@ -26,7 +26,7 @@ export class UserSettingToggleComponent implements OnChanges {
     this.setting.set(this.#profileService.getSetting<boolean>(this.key()));
   }
 
-  onToggle($event: { originalEvent: Event; checked: boolean }) {
+  toggle($event: { originalEvent: Event; checked: boolean }) {
     this.#profileService.setSetting(this.key(), $event.checked).subscribe({
       next: () => this.#toast.success("Setting updated."),
       error: () => this.#toast.error("Failed to update setting."),

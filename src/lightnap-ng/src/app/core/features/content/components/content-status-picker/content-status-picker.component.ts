@@ -33,19 +33,19 @@ export class ContentStatusPickerComponent implements ControlValueAccessor {
     return baseOptions;
   }
 
-  onChange: (value: StaticContentStatus | null) => void = () => {};
-  onTouched: () => void = () => {};
+  change: (value: StaticContentStatus | null) => void = () => {};
+  markTouched: () => void = () => {};
 
   writeValue(value: StaticContentStatus | null): void {
     this.value = value;
   }
 
   registerOnChange(fn: (value: StaticContentStatus | null) => void): void {
-    this.onChange = fn;
+    this.change = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.markTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {

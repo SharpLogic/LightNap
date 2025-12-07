@@ -17,7 +17,6 @@ import { SelectModule } from "primeng/select";
 import { finalize, tap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./index.component.html",
   imports: [
     CommonModule,

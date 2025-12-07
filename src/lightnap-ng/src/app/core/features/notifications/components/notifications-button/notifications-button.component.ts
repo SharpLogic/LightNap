@@ -30,7 +30,7 @@ export class NotificationsButtonComponent {
     {
       label: "See all",
       icon: "pi pi-images",
-      command: () => this.#routeAlias.navigate("notifications"),
+      command: () => this.#routeAlias.navigate("my-notifications"),
     }
   );
 

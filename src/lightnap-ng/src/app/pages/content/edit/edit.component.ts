@@ -112,7 +112,7 @@ export class EditComponent {
     });
   }
 
-  onUpdate() {
+  update() {
     const value = {
       ...this.form.getRawValue(),
       readerRoles: this.form.value.readAccess === StaticContentReadAccesses.Explicit ? this.form.value.readerRoles : undefined,
@@ -132,14 +132,14 @@ export class EditComponent {
     });
   }
 
-  onTabChanged(tabName: any) {
+  tabChanged(tabName: any) {
     if (this.#previousTabName === "settings" && this.form.dirty) {
       this.#toast.info("You have unsaved changes in the Settings tab.");
     }
     this.#previousTabName = tabName;
   }
 
-  onCopyPageUrl() {
+  copyPageUrl() {
     navigator.clipboard
       .writeText(this.pageUrl())
       .then(() => {

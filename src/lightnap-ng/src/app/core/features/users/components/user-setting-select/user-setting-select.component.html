@@ -2,7 +2,7 @@
   <ng-template #success let-value>
     <p-select
       [ngModel]="value"
-      (ngModelChange)="onChange($event)"
+      (ngModelChange)="change($event)"
       [options]="options()"
       optionLabel="label"
       optionValue="value"

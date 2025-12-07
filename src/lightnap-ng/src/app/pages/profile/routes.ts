@@ -10,14 +10,20 @@ export const Routes: AppRoute[] = [
   {
     path: "devices",
     title: "Profile | Devices",
-    data: { alias: "devices", breadcrumb: "Devices" },
+    data: { alias: "my-devices", breadcrumb: "Devices" },
     loadComponent: () => import("./devices/devices.component").then(m => m.DevicesComponent),
   },
   {
     path: "notifications",
     title: "Profile | Notifications",
-    data: { alias: "notifications", breadcrumb: "Notifications" },
+    data: { alias: "my-notifications", breadcrumb: "Notifications" },
     loadComponent: () => import("./notifications/notifications.component").then(m => m.NotificationsComponent),
+  },
+  {
+    path: "external-logins",
+    title: "Profile | External Logins",
+    data: { alias: "my-external-logins", breadcrumb: "External Logins" },
+    loadComponent: () => import("./external-logins/external-logins.component").then(m => m.ExternalLoginsComponent),
   },
   {
     path: "change-password",

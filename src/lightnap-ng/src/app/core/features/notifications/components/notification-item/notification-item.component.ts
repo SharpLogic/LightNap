@@ -16,7 +16,7 @@ export class NotificationItemComponent {
   readonly #router = inject(Router);
   readonly notification = input.required<NotificationItem>();
 
-  onClick() {
+  open() {
     this.#notificationService.markNotificationAsRead(this.notification().id).subscribe();
     this.#router.navigate(this.notification().routerLink);
   }

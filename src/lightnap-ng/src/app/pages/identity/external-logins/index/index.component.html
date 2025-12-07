@@ -1,0 +1,41 @@
+<ln-branded-card>
+  <span title>External Login Options</span>
+  <span subtitle>Supported 3rd party options</span>
+
+  <ln-api-response [apiResponse]="externalLogins()">
+    <ng-template #success let-supportedExternalLoginsAny>
+      @let supportedExternalLogins = toSupportedExternalLogins(supportedExternalLoginsAny);
+
+      @if (supportedExternalLogins.length > 0) {
+        <div class="flex flex-col gap-2">
+          @for (externalLogin of supportedExternalLogins; track externalLogin.providerName) {
+            <a [href]="externalLogin.loginUrl" pButton class="w-full">
+              <div class="flex items-center w-full">
+                <span class="flex flex-0">
+                  @switch (externalLogin.providerName) {
+                    @case ("Google") {
+                      <i class="pi pi-google mr-2"></i>
+                    }
+                    @case ("Microsoft") {
+                      <i class="pi pi-microsoft mr-2"></i>
+                    }
+                    @case ("GitHub") {
+                      <i class="pi pi-github mr-2"></i>
+                    }
+                    @default {
+                      <i class="pi pi-external-link mr-2"></i>
+                    }
+                  }
+                </span>
+
+                <span class="flex flex-1"> Log in with your {{ externalLogin.displayName }} account </span>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <p>No external login providers are currently configured.</p>
+      }
+    </ng-template>
+  </ln-api-response>
+</ln-branded-card>

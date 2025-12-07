@@ -1,5 +1,6 @@
 using LightNap.Core.Api;
-using LightNap.Core.Configuration;
+using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Authorization;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
@@ -53,6 +54,8 @@ namespace LightNap.Core.Tests.Services
                 .AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddHybridCache();
 
             // Use EphemeralDataProtectionProvider for testing things like generating a password reset token.
             services.AddSingleton<IDataProtectionProvider, EphemeralDataProtectionProvider>();

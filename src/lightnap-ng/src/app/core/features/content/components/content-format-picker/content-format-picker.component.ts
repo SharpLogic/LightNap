@@ -33,19 +33,19 @@ export class ContentFormatPickerComponent implements ControlValueAccessor {
     return baseOptions;
   }
 
-  onChange: (value: StaticContentFormat | null) => void = () => {};
-  onTouched: () => void = () => {};
+  change: (value: StaticContentFormat | null) => void = () => {};
+  markTouched: () => void = () => {};
 
   writeValue(value: StaticContentFormat | null): void {
     this.value = value;
   }
 
   registerOnChange(fn: (value: StaticContentFormat | null) => void): void {
-    this.onChange = fn;
+    this.change = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
+    this.markTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {

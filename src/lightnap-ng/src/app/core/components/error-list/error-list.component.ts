@@ -31,7 +31,7 @@ export class ErrorListComponent implements OnChanges {
     }
   }
 
-  onClose(error: string) {
+  close(error: string) {
     this.errorList.set(this.errorList().filter(e => e !== error));
   }
 }

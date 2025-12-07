@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Configuration;
+﻿using LightNap.Core.Configuration.Email;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Email.Templates;

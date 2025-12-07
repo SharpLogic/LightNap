@@ -1,7 +1,18 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { tap } from "rxjs";
-import { ClaimDto, NotificationSearchResultsDto, PagedRequestDto, PagedResponseDto, ProfileDto, SearchNotificationsRequestDto, SetUserSettingRequestDto, UpdateProfileRequestDto, UserSettingDto } from "../dtos";
+import {
+  ClaimDto,
+  ExternalLoginDto,
+  NotificationSearchResultsDto,
+  PagedRequestDto,
+  PagedResponseDto,
+  ProfileDto,
+  SearchNotificationsRequestDto,
+  SetUserSettingRequestDto,
+  UpdateProfileRequestDto,
+  UserSettingDto,
+} from "../dtos";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +30,7 @@ export class ProfileDataService {
   }
 
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
-    return this.#http      .post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest);
+    return this.#http.post<NotificationSearchResultsDto>(`${this.#apiUrlRoot}notifications`, searchNotificationsRequest);
   }
 
   markAllNotificationsAsRead() {
@@ -44,5 +55,13 @@ export class ProfileDataService {
 
   setSetting(setUserSettingRequest: SetUserSettingRequestDto) {
     return this.#http.patch<UserSettingDto>(`${this.#apiUrlRoot}settings`, setUserSettingRequest);
+  }
+
+  getExternalLogins() {
+    return this.#http.get<Array<ExternalLoginDto>>(`${this.#apiUrlRoot}external-logins`);
+  }
+
+  removeExternalLogin(loginProvider: string, providerKey: string) {
+    return this.#http.delete<boolean>(`${this.#apiUrlRoot}external-logins/${loginProvider}/${providerKey}`);
   }
 }

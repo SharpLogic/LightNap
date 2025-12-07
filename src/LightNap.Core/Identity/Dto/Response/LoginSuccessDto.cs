@@ -8,7 +8,7 @@ namespace LightNap.Core.Identity.Dto.Response
     public class LoginSuccessDto
     {
         /// <summary>
-        /// Indicates when if a token was issued or if further steps are required.
+        /// Indicates if a token was issued or if further steps are required.
         /// </summary>
         public required LoginSuccessType Type { get; set; }
 

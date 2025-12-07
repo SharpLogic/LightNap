@@ -1,0 +1,9 @@
+<ln-branded-card>
+  <span title>Unable To Link Account</span>
+  <span subtitle>{{error()}}</span>
+
+  <div class="flex justify-between w-96">
+    <a [routerLink]="'login' | route">Return to login</a>
+    <a [routerLink]="'reset-password' | route" class="ml-auto">Try again</a>
+  </div>
+</ln-branded-card>

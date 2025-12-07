@@ -27,11 +27,13 @@ export type RouteAlias =
     | 'admin-role'
     | 'admin-claims'
     | 'admin-claim'
+    | 'admin-external-logins'
 
     // Profile
     | 'profile'
-    | 'devices'
-    | 'notifications'
+    | 'my-devices'
+    | 'my-external-logins'
+    | 'my-notifications'
     | 'change-email'
     | 'change-email-requested'
 
@@ -46,4 +48,8 @@ export type RouteAlias =
     | 'register'
     | 'email-verification-required'
     | 'request-verification-email'
-    | 'confirm-email';
+    | 'confirm-email'
+    | 'external-logins'
+    | 'external-login-callback'
+    | 'external-login-complete'
+    | 'external-login-register';

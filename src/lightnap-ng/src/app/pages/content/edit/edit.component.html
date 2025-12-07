@@ -20,7 +20,7 @@
       }
     </p-panel>
 
-    <p-tabs value="settings" (valueChange)="onTabChanged($event)" class="mt-2">
+    <p-tabs value="settings" (valueChange)="tabChanged($event)" class="mt-2">
       <p-tablist>
         <p-tab value="settings">Settings</p-tab>
         <p-tab value="editors" showByPermissions [roles]="['Administrator', 'ContentEditor']">Editors</p-tab>
@@ -29,7 +29,7 @@
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="settings">
-          <form [formGroup]="form" (ngSubmit)="onUpdate()">
+          <form [formGroup]="form" (ngSubmit)="update()">
             <div class="flex flex-col gap-2">
               <hr />
 
@@ -53,7 +53,7 @@
                       [text]="true"
                       [rounded]="true"
                       severity="secondary"
-                      (onClick)="onCopyPageUrl()"
+                      (onClick)="copyPageUrl()"
                       pTooltip="Copy URL"
                       tooltipPosition="top"
                     />

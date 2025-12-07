@@ -30,7 +30,7 @@ export class UserSettingSelectComponent<T> implements OnChanges {
     this.setting.set(this.#profileService.getSetting<T>(this.key(), this.defaultValue()));
   }
 
-  onChange(value: T) {
+  change(value: T) {
     this.#profileService.setSetting(this.key(), value).subscribe({
       next: () => this.#toast.success("Setting updated."),
       error: () => this.#toast.error("Failed to update setting."),

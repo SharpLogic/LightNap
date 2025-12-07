@@ -9,7 +9,6 @@ import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
-import { tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -20,13 +19,7 @@ export class DevicesComponent {
   readonly #devicesService = inject(IdentityService);
   readonly #confirmationService = inject(ConfirmationService);
 
-  readonly devices$ = signal(
-    this.#devicesService.getDevices().pipe(
-      tap(devices => {
-        console.log("Devices loaded:", devices);
-      })
-    )
-  );
+  readonly devices$ = signal(this.#devicesService.getDevices());
 
   readonly errors = signal(new Array<string>());
 

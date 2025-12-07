@@ -297,7 +297,7 @@ export class LayoutService {
     });
   }
 
-  onMenuToggle() {
+  toggleMenu() {
     if (this.isOverlay()) {
       this.layoutState.update(prev => ({ ...prev, overlayMenuActive: !this.layoutState().overlayMenuActive }));
 

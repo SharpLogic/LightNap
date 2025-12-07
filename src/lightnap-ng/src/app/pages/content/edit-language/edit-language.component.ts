@@ -62,14 +62,14 @@ export class EditLanguageComponent {
 
   asLanguage = TypeHelpers.cast<StaticContentLanguageDto>;
 
-  onUpdate() {
+  update() {
     this.#contentService.updateStaticContentLanguage(this.key(), this.languageCode(), this.form.getRawValue()).subscribe({
       next: _ => this.#toast.success("Language updated successfully."),
       error: setApiErrors(this.errors),
     });
   }
 
-  onCreate() {
+  create() {
     this.#contentService.createStaticContentLanguage(this.key(), this.languageCode(), this.form.getRawValue()).subscribe({
       next: _ => {
         this.#toast.success("Language created successfully.");

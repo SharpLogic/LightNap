@@ -41,8 +41,7 @@ export class ContentService {
    * Gets the user's preferred language. If empty or auto-detect, returns browser language or default fallback.
    */
   #getPreferredLanguageCode(): Observable<string> {
-    return this.#identityService.watchLoggedIn$().pipe(
-      take(1),
+    return this.#identityService.getLoggedIn$().pipe(
       switchMap(isLoggedIn => {
         if (!isLoggedIn) return of(this.#getBrowserLanguageCode());
 
@@ -69,8 +68,7 @@ export class ContentService {
     const cacheKey = `${key}:${languageCode}`;
 
     return this.#publishedContentCache.getOrSetDefault(cacheKey, () =>
-      this.#identityService.watchLoggedIn$().pipe(
-        take(1),
+      this.#identityService.getLoggedIn$().pipe(
         switchMap(_ =>
           this.#dataService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
         ),
@@ -104,7 +102,6 @@ export class ContentService {
     return this.#dataService.updateStaticContent(key, updateDto).pipe(
       switchMap(staticContent =>
         this.getSupportedLanguages().pipe(
-          take(1),
           tap(languages => languages.forEach(language => this.clearCachedPublishedStaticContent(key, language.languageCode))),
           map(_ => staticContent)
         )

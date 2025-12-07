@@ -32,7 +32,7 @@ export class VerifyCodeComponent {
 
   errors = signal(new Array<string>());
 
-  onVerifyClicked() {
+  verify() {
     const value = this.form.value;
 
     this.#blockUi.show({ message: "Verifying code..." });

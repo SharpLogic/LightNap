@@ -162,4 +162,24 @@ export class ProfileService {
   hasLoadedStyleSettings() {
     return !!this.#settings.length;
   }
+
+  /**
+   * @method getExternalLogins
+   * @description Retrieves the list of external logins associated with the user.
+   * @returns {Observable<Array<ExternalLoginDto>>} An observable containing the list of external logins.
+   */
+  getExternalLogins() {
+    return this.#dataService.getExternalLogins();
+  }
+
+  /**
+   * @method removeExternalLogin
+   * @description Removes an external login associated with the user.
+   * @param {string} loginProvider - The login provider of the external login to be removed.
+   * @param {string} providerKey - The provider key of the external login to be removed.
+   * @returns {Observable<boolean>} An observable indicating whether the removal was successful.
+   */
+  removeExternalLogin(loginProvider: string, providerKey: string) {
+    return this.#dataService.removeExternalLogin(loginProvider, providerKey);
+  }
 }
