@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, OnChanges, inject, input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { UserSettingKey } from "@core/backend-api";
@@ -14,7 +14,7 @@ import { Observable } from "rxjs";
   selector: "ln-user-setting-select",
   standalone: true,
   templateUrl: "./user-setting-select.component.html",
-  imports: [CommonModule, FormsModule, Select, SelectListItemComponent, ApiResponseComponent],
+  imports: [FormsModule, Select, SelectListItemComponent, ApiResponseComponent],
 })
 export class UserSettingSelectComponent<T> implements OnChanges {
   readonly #profileService = inject(ProfileService);

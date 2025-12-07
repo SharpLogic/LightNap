@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -19,7 +19,6 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
   standalone: true,
   templateUrl: "./external-logins.component.html",
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     PanelModule,
     TableModule,
@@ -29,7 +28,7 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     ApiResponseComponent,
     CheckboxModule,
     ConfirmDialogComponent
-  ],
+],
 })
 export class ExternalLoginsComponent {
   readonly pageSize = 10;

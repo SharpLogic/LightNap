@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { setApiErrors } from "@core";
@@ -14,7 +14,7 @@ import { finalize } from "rxjs";
 @Component({
   standalone: true,
   templateUrl: "./change-email.component.html",
-  imports: [CommonModule, ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
+  imports: [ButtonModule, ErrorListComponent, InputTextModule, ReactiveFormsModule, PanelModule],
 })
 export class ChangeEmailComponent {
   readonly #identityService = inject(IdentityService);

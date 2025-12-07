@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
@@ -15,7 +15,7 @@ import { NotificationItemComponent } from "../notification-item/notification-ite
   selector: "ln-notifications-button",
   standalone: true,
   templateUrl: "./notifications-button.component.html",
-  imports: [CommonModule, ButtonModule, PopoverModule, OverlayBadgeModule, NotificationItemComponent, RoutePipe, RouterLink],
+  imports: [ButtonModule, PopoverModule, OverlayBadgeModule, NotificationItemComponent, RoutePipe, RouterLink],
 })
 export class NotificationsButtonComponent {
   readonly #notificationService = inject(NotificationService);

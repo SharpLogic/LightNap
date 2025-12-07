@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -19,7 +19,6 @@ import { finalize, tap } from "rxjs";
 @Component({
   templateUrl: "./index.component.html",
   imports: [
-    CommonModule,
     ErrorListComponent,
     ReactiveFormsModule,
     ButtonModule,
@@ -28,8 +27,8 @@ import { finalize, tap } from "rxjs";
     RouterLink,
     RoutePipe,
     ApiResponseComponent,
-    PreferredLanguageSelectComponent,
-  ],
+    PreferredLanguageSelectComponent
+],
 })
 export class IndexComponent {
   readonly #identityService = inject(IdentityService);

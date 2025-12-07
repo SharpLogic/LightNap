@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, input, output } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -13,7 +13,7 @@ import { TableModule } from "primeng/table";
   standalone: true,
   selector: "user-roles",
   templateUrl: "./user-roles.component.html",
-  imports: [CommonModule, TableModule, ButtonModule, RouterLink, RoutePipe, ConfirmPopupComponent, ReactiveFormsModule, RolePickerComponent],
+  imports: [TableModule, ButtonModule, RouterLink, RoutePipe, ConfirmPopupComponent, ReactiveFormsModule, RolePickerComponent],
 })
 export class UserRolesComponent {
   #confirmationService = inject(ConfirmationService);
