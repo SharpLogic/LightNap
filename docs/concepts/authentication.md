@@ -34,6 +34,14 @@ If the loading request to retrieve a token fails then the user needs to authenti
 - When the user logs in and their account is not multi-factor.
 - When the user submits a multi-factor code after a successful login.
 - When the user sets a new password using the link from a "forgot password" email.
+- When the user authenticates through an OAuth provider (Google, Microsoft, GitHub, etc.).
+
+#### OAuth Authentication
+
+LightNap supports OAuth-based authentication, allowing users to sign in using credentials from third-party providers. This enables single sign-on experiences without requiring users to create new credentials specific to your application. OAuth providers can be configured to work alongside traditional email/username authentication.
+
+{: .note }
+For detailed information on setting up OAuth providers, see [OAuth Providers Configuration](../getting-started/oauth-providers/index.md).
 
 {: .note }
 If the user does not opt for their device to be remembered, then the refresh token cookie issued by the backend will be set to expire at the end of the current browser session. The next time the browser is opened they will no longer have that cookie available and will need to authenticate.

@@ -211,6 +211,19 @@ namespace LightNap.WebApi.Extensions
                         });
                     supportedExternalLogins.Add(new SupportedExternalLoginDto("Microsoft", MicrosoftAccountDefaults.DisplayName));
                 }
+
+                if (oAuthSettings.GitHub is not null)
+                {
+                    // You must install the NuGet package: AspNet.Security.OAuth.GitHub
+                    // And add: using AspNet.Security.OAuth.GitHub;
+                    services.AddAuthentication()
+                        .AddGitHub(options =>
+                        {
+                            options.ClientId = oAuthSettings.GitHub.ClientId;
+                            options.ClientSecret = oAuthSettings.GitHub.ClientSecret;
+                        });
+                    supportedExternalLogins.Add(new SupportedExternalLoginDto("GitHub", "GitHub"));
+                }
             }
 
             if (authSettings?.WindowsAuth?.Enabled == true)

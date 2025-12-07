@@ -56,6 +56,16 @@ Configure how LightNap sends transactional emails for password resets, email ver
 - **[SMTP Provider](./email-providers/smtp-provider)** - Production email via SMTP servers
 - **[Log To Console Provider](./email-providers/log-to-console-provider)** - Development email logging
 
+## Authentication Providers
+
+### [OAuth Providers](./oauth-providers)
+
+Enable third-party authentication using OAuth. Allow users to sign in with Google, Microsoft, GitHub, and other providers.
+
+- **[Google OAuth](./oauth-providers#setting-up-google-oauth)** - Sign in with Google accounts
+- **[Microsoft OAuth](./oauth-providers#setting-up-microsoft-oauth)** - Sign in with Microsoft/Azure AD accounts
+- **[GitHub OAuth](./oauth-providers#setting-up-github-oauth)** - Sign in with GitHub accounts
+
 ### [API / Swagger](./swagger)
 
 Explore the API surface via Swagger UI and learn how to authorize with a JWT so you can test protected endpoints interactively.
