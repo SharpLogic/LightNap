@@ -191,7 +191,18 @@ namespace LightNap.Core.Users.Services
 
             if (await userManager.IsInRoleAsync(user, ApplicationRoles.Administrator.Name!)) { throw new UserFriendlyApiException("You may not delete an Administrator."); }
 
-            // Delete the user using UserManager to ensure all related data is cleaned up properly.
+            // Delete all user claims and external logins. Needs to be done manually because UserManager doesn't handle it.
+            foreach (var userClaim in await userManager.GetClaimsAsync(user))
+            {
+                await userManager.RemoveClaimAsync(user, userClaim);
+            }
+
+            foreach (var userLogin in await userManager.GetLoginsAsync(user))
+            {
+                await userManager.RemoveLoginAsync(user, userLogin.LoginProvider, userLogin.ProviderKey);
+            }
+
+            // Delete the user using UserManager to ensure the remaining related data is cleaned up properly.
             var result = await userManager.DeleteAsync(user);
             if (!result.Succeeded)
             {
