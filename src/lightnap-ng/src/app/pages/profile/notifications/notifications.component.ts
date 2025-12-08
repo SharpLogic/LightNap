@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { EmptyPagedResponse, NotificationItem, NotificationSearchResults, setApiErrors, TypeHelpers } from "@core";
@@ -13,9 +13,8 @@ import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./notifications.component.html",
-  imports: [CommonModule, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, NotificationItemComponent],
+  imports: [TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, NotificationItemComponent],
 })
 export class NotificationsComponent {
   readonly pageSize = 10;

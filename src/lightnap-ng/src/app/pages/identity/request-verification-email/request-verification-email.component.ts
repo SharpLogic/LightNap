@@ -13,7 +13,6 @@ import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./request-verification-email.component.html",
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, BrandedCardComponent, ErrorListComponent],
 })

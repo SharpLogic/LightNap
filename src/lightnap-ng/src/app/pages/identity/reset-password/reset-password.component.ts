@@ -13,7 +13,6 @@ import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./reset-password.component.html",
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, PasswordModule, InputTextModule, RoutePipe, BrandedCardComponent, ErrorListComponent],
 })

@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, computed, inject, input } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -14,9 +14,7 @@ import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   selector: "user-claims",
-  standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     RouterLink,
     RoutePipe,
@@ -24,8 +22,8 @@ import { startWith, Subject, switchMap } from "rxjs";
     InputTextModule,
     ButtonModule,
     ConfirmPopupComponent,
-    ApiResponseComponent,
-  ],
+    ApiResponseComponent
+],
   templateUrl: "./user-claims.component.html",
 })
 export class UserClaimsComponent {

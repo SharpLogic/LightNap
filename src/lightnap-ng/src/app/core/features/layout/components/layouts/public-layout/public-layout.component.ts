@@ -11,7 +11,6 @@ import { RippleModule } from "primeng/ripple";
 import { StyleClassModule } from "primeng/styleclass";
 
 @Component({
-  standalone: true,
   templateUrl: "./public-layout.component.html",
   imports: [CommonModule, SharedModule, StyleClassModule, RouterOutlet, RouterLink, ButtonModule, RippleModule, RoutePipe],
 })

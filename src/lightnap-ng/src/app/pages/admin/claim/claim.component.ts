@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -16,10 +16,8 @@ import { TableLazyLoadEvent, TableModule } from "primeng/table";
 import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./claim.component.html",
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     PanelModule,
     TableModule,
@@ -30,8 +28,8 @@ import { startWith, Subject, switchMap } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    UserPickerComponent,
-  ],
+    UserPickerComponent
+],
 })
 export class ClaimComponent {
   readonly pageSize = 10;

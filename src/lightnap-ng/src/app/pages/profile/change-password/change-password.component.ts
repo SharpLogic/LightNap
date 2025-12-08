@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { setApiErrors } from "@core";
@@ -15,18 +15,16 @@ import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./change-password.component.html",
   imports: [
-    CommonModule,
     ButtonModule,
     ErrorListComponent,
     PasswordModule,
     ReactiveFormsModule,
     PanelModule,
     InputGroupModule,
-    InputGroupAddonModule,
-  ],
+    InputGroupAddonModule
+],
 })
 export class ChangePasswordComponent {
   readonly #identityService = inject(IdentityService);

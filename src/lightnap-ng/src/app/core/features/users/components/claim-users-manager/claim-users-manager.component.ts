@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
@@ -23,7 +23,6 @@ import { UserLinkComponent } from "../user-link/user-link.component";
   selector: "ln-claim-users-manager",
   templateUrl: "./claim-users-manager.component.html",
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ButtonModule,
     TableModule,
@@ -32,8 +31,8 @@ import { UserLinkComponent } from "../user-link/user-link.component";
     ErrorListComponent,
     UserPickerComponent,
     UserLinkComponent,
-    ConfirmPopupComponent,
-  ],
+    ConfirmPopupComponent
+],
 })
 export class ClaimUsersManagerComponent {
   #usersService = inject(PrivilegedUsersService);

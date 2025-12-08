@@ -10,7 +10,6 @@ import { AppConfiguratorComponent } from "../app-configurator/app-configurator.c
 
 @Component({
   selector: "ln-app-top-bar",
-  standalone: true,
   templateUrl: "./app-top-bar.component.html",
   imports: [RouterModule, CommonModule, StyleClassModule, AppConfiguratorComponent, NotificationsButtonComponent, RoutePipe],
 })

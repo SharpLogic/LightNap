@@ -17,7 +17,14 @@
 
         <div class="flex flex-col gap-2">
           <label for="password" class="text-xl">Password</label>
-          <p-password data-cy="register-password" formControlName="password" class="w-full" inputStyleClass="w-full" placeholder="Password" [toggleMask]="true" />
+          <p-password
+            data-cy="register-password"
+            formControlName="password"
+            class="w-full"
+            inputStyleClass="w-full"
+            placeholder="Password"
+            [toggleMask]="true"
+          />
         </div>
 
         <div class="flex flex-col gap-2">
@@ -25,7 +32,6 @@
           <p-password
             data-cy="register-confirm-password"
             formControlName="confirmPassword"
-            styleClass="w-full"
             inputStyleClass="w-full"
             placeholder="Confirm Password"
             [toggleMask]="true"

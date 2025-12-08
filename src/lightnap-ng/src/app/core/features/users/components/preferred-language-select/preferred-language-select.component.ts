@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ContentService } from "@core/features/content/services/content.service";
@@ -8,9 +8,8 @@ import { UserSettingSelectComponent } from "../user-setting-select/user-setting-
 
 @Component({
   selector: "ln-preferred-language-select",
-  standalone: true,
   templateUrl: "./preferred-language-select.component.html",
-  imports: [CommonModule, UserSettingSelectComponent, ApiResponseComponent],
+  imports: [UserSettingSelectComponent, ApiResponseComponent],
 })
 export class PreferredLanguageSelectComponent {
   readonly #contentService = inject(ContentService);

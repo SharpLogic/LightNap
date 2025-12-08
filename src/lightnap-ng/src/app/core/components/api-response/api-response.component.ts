@@ -7,7 +7,6 @@ import { ErrorListComponent } from "../error-list/error-list.component";
 
 @Component({
   selector: "ln-api-response",
-  standalone: true,
   templateUrl: "./api-response.component.html",
   imports: [CommonModule, ErrorListComponent, ProgressSpinnerModule],
 })

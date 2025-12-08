@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, computed, inject, input } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
@@ -11,7 +11,7 @@ import { StaticContentDirective } from "../../directives/static-content.directiv
 @Component({
   selector: "ln-zone",
   templateUrl: "./zone.component.html",
-  imports: [CommonModule, RouterModule, RoutePipe, ApiResponseComponent, StaticContentDirective],
+  imports: [RouterModule, RoutePipe, ApiResponseComponent, StaticContentDirective],
 })
 export class ZoneComponent {
   readonly #contentService = inject(ContentService);

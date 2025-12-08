@@ -14,7 +14,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./register.component.html",
   imports: [ReactiveFormsModule, RouterModule, InputTextModule, ButtonModule, CheckboxModule, RoutePipe, ErrorListComponent, BrandedCardComponent],
 })

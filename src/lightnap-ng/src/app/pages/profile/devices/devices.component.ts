@@ -11,7 +11,6 @@ import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 
 @Component({
-  standalone: true,
   templateUrl: "./devices.component.html",
   imports: [CommonModule, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
 })

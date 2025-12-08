@@ -4,7 +4,6 @@ import { RoutePipe } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 
 @Component({
-  standalone: true,
   templateUrl: "./email-verification-required.component.html",
   imports: [RouterModule, RoutePipe, BrandedCardComponent],
 })

@@ -5,7 +5,6 @@ import { BrandedCardComponent } from "@core/components/branded-card/branded-card
 import { LayoutService } from "@core/features/layout/services/layout.service";
 
 @Component({
-  standalone: true,
   templateUrl: "./error.component.html",
   imports: [RouterLink, RoutePipe, BrandedCardComponent],
 })

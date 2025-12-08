@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, EventEmitter, forwardRef, inject, Input, Output, signal } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AdminUserDto, PublicSearchUsersRequestDto, SearchUsersSortBy } from "@core/backend-api";
@@ -9,7 +9,7 @@ import { finalize } from "rxjs";
 @Component({
   selector: 'ln-user-picker',
   templateUrl: './user-picker.component.html',
-  imports: [CommonModule, FormsModule, AutoCompleteModule],
+  imports: [FormsModule, AutoCompleteModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

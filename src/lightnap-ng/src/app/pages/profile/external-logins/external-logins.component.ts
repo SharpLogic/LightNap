@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ExternalLoginDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
@@ -12,10 +12,8 @@ import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 
 @Component({
-  standalone: true,
   templateUrl: "./external-logins.component.html",
   imports: [
-    CommonModule,
     TableModule,
     ButtonModule,
     ErrorListComponent,
@@ -23,8 +21,8 @@ import { TableModule } from "primeng/table";
     ApiResponseComponent,
     ConfirmDialogComponent,
     RouterLink,
-    RoutePipe,
-  ],
+    RoutePipe
+],
 })
 export class ExternalLoginsComponent {
   readonly #profileService = inject(ProfileService);

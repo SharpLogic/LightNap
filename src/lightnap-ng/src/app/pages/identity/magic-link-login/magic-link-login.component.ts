@@ -13,7 +13,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./magic-link-login.component.html",
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, InputTextModule, CheckboxModule, BrandedCardComponent, ErrorListComponent],
 })

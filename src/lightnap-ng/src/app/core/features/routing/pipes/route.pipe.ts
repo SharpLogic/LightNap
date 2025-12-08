@@ -4,7 +4,6 @@ import { RouteAliasService } from "@core/features/routing/services/route-alias-s
 
 @Pipe({
   name: "route",
-  standalone: true,
 })
 /**
  * A pipe that transforms a given `RouteAlias` into route data that can be bound to [routerLink] in templates.

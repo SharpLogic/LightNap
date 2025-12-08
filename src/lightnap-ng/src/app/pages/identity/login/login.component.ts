@@ -17,7 +17,6 @@ import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./login.component.html",
   imports: [
     ReactiveFormsModule,

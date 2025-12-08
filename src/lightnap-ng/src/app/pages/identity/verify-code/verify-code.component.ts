@@ -13,7 +13,6 @@ import { InputOtpModule } from "primeng/inputotp";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./verify-code.component.html",
   imports: [ReactiveFormsModule, RouterModule, CheckboxModule, ButtonModule, RoutePipe, InputOtpModule, BrandedCardComponent, ErrorListComponent],
 })

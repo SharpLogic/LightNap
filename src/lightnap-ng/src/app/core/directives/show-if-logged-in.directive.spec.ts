@@ -7,7 +7,6 @@ import { IdentityService } from '@core/services/identity.service';
 
 @Component({
   selector: 'app-test',
-  standalone: true,
   imports: [ShowIfLoggedInDirective],
   template: `<div showIfLoggedIn id="testDiv">Content</div>`,
 })

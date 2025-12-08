@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, inject } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ErrorApiResponse, RoutePipe } from "@core";
@@ -11,9 +11,8 @@ import { ButtonModule } from "primeng/button";
 import { take } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./access-denied.component.html",
-  imports: [CommonModule, RouterLink, RoutePipe, ButtonModule, BrandedCardComponent],
+  imports: [RouterLink, RoutePipe, ButtonModule, BrandedCardComponent],
 })
 export class AccessDeniedComponent {
   layoutService = inject(LayoutService);

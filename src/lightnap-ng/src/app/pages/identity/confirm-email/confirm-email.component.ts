@@ -13,7 +13,6 @@ import { InputTextModule } from "primeng/inputtext";
 import { finalize } from "rxjs";
 
 @Component({
-  standalone: true,
   templateUrl: "./confirm-email.component.html",
   imports: [ReactiveFormsModule, RouterModule, ButtonModule, InputTextModule, CheckboxModule, BrandedCardComponent, ErrorListComponent],
 })

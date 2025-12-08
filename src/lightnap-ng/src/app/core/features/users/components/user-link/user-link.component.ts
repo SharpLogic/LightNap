@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, computed, inject, input } from "@angular/core";
 import { PublicUserDto } from "@core/backend-api/dtos/users/response/public-user-dto";
 import { TypeHelpers } from "@core/helpers/type-helpers";
@@ -7,9 +7,8 @@ import { ApiResponseComponent } from "@core/components/api-response/api-response
 
 @Component({
   selector: "ln-user-link",
-  standalone: true,
   templateUrl: "./user-link.component.html",
-  imports: [CommonModule, ApiResponseComponent],
+  imports: [ApiResponseComponent],
 })
 export class UserLinkComponent {
   readonly #usersService = inject(PublicUsersService);

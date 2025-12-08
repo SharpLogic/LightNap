@@ -6,7 +6,6 @@ import { Subscription } from "rxjs";
 
 @Directive({
   selector: "[hideByPermissions]",
-  standalone: true,
 })
 export class HideByPermissionsDirective {
   #identityService = inject(IdentityService);

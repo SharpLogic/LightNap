@@ -4,7 +4,6 @@ import { ButtonModule, ButtonSeverity } from "primeng/button";
 import { ConfirmDialogModule } from "primeng/confirmdialog";
 
 @Component({
-  standalone: true,
   selector: "ln-confirm-dialog",
   templateUrl: "./confirm-dialog.component.html",
   imports: [ConfirmDialogModule, ButtonModule],
