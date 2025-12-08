@@ -84,7 +84,7 @@ describe("ProfileService", () => {
 
   it("should update style settings", () => {
     const clientSettings: LayoutConfigDto = { source: "server" } as any;
-    const serverSettings: ApplicationSettingsDto = { source: "client" } as any;
+    const serverSettings: LayoutConfigDto = { source: "client" } as any;
     dataServiceSpy.getSettings.and.returnValue(of([{ key: "BrowserSettings", value: JSON.stringify(serverSettings) }] as any));
     dataServiceSpy.setSetting.and.returnValue(of({} as any));
 
