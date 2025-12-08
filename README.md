@@ -4,8 +4,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
-[![Angular](https://img.shields.io/badge/Angular-20-DD0031)](https://angular.io/)
-[![PrimeNG](https://img.shields.io/badge/PrimeNG-20-007BFF)](https://primeng.org/)
+[![Angular](https://img.shields.io/badge/Angular-21-DD0031)](https://angular.io/)
+[![PrimeNG](https://img.shields.io/badge/PrimeNG-21-007BFF)](https://primeng.org/)
 
 ---
 
@@ -33,7 +33,7 @@ LightNap provides a complete foundation for building secure, scalable web applic
 - **Device Tracking** - Monitor and manage user sessions across devices
 - **Maintenance Service** - Background task processing with Azure WebJobs support
 
-### Frontend (Angular 20)
+### Frontend (Angular 21)
 
 - **Angular** - Latest Angular framework with standalone components
 - **PrimeNG** - Comprehensive UI component library (70+ components)

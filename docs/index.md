@@ -43,7 +43,7 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 
 ## Why choose LightNap? ✅
 
-- Works with .NET 10 and Angular 20 UI (PrimeNG + Tailwind) out-of-the-box.
+- Works with .NET 10 and Angular 21 UI (PrimeNG 21 + Tailwind) out-of-the-box.
 - Built-in auth with ASP.NET Identity + JWT for secure session handling.
 - Flexible persistence: SQL Server, SQLite, or in-memory for quick experiments.
 - Distributed caching with Redis and real-time notifications with SignalR.
