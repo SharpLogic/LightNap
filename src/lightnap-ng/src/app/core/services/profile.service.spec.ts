@@ -1,6 +1,6 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { UpdateProfileRequestDto, ApplicationSettingsDto, LayoutConfigDto } from "@core/backend-api";
+import { UpdateProfileRequestDto, LayoutConfigDto } from "@core/backend-api";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
@@ -74,7 +74,7 @@ describe("ProfileService", () => {
   });
 
   it("should update settings", () => {
-    const browserSettings: ApplicationSettingsDto = {} as any;
+    const browserSettings: LayoutConfigDto = {} as any;
     dataServiceSpy.setSetting.and.returnValue(of({} as any));
 
     service.setSetting("BrowserSettings", browserSettings).subscribe();

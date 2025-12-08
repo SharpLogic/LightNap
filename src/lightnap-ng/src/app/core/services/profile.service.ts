@@ -106,9 +106,10 @@ export class ProfileService {
 
   /**
    * @method setSetting
-   * @description Updates an application setting.
-   * @param {ApplicationSettingsDto} applicationSettings - The new application setting to be updated.
-   * @returns {Observable<boolean>} An observable containing true if successful.
+   * @description Sets a user setting.
+   * @param {UserSettingKey} key - The key of the setting to be set.
+   * @param {T} value - The value to be set for the specified key.
+   * @returns {Observable<UserSettingDto>} An observable containing the updated user setting.
    */
   setSetting<T>(key: UserSettingKey, value: T) {
     return this.#dataService
