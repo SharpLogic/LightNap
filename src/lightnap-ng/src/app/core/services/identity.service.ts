@@ -3,22 +3,18 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import {
-  ChangeEmailRequestDto,
-  ChangePasswordRequestDto,
-  ClaimDto,
-  ExternalLoginRequestDto,
-  ConfirmChangeEmailRequestDto,
-  ExternalLoginRegisterRequestDto,
-  LoginRequestDto,
-  NewPasswordRequestDto,
-  RegisterRequestDto,
-  ResetPasswordRequestDto,
-  SendMagicLinkEmailRequestDto,
-  SendVerificationEmailRequestDto,
-  VerifyCodeRequestDto,
-  VerifyEmailRequestDto,
+    ChangeEmailRequestDto,
+    ChangePasswordRequestDto,
+    ClaimDto,
+    LoginRequestDto,
+    NewPasswordRequestDto,
+    RegisterRequestDto,
+    ResetPasswordRequestDto,
+    SendVerificationEmailRequestDto,
+    VerifyCodeRequestDto,
+    VerifyEmailRequestDto,
 } from "@core/backend-api";
-import { IdentityDataService } from "@core/backend-api/services/identity-data.service";
+import { LightNapWebApiService } from "@core/backend-api/index.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
@@ -42,7 +38,7 @@ export class IdentityService {
 
   #initializationService = inject(InitializationService);
   #timer = inject(TimerService);
-  #dataService = inject(IdentityDataService);
+  #dataService = inject(LightNapWebApiService);
   #routeAlias = inject(RouteAliasService);
   #router = inject(Router);
 

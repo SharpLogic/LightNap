@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { ApiResponseType, ApiResponseTypes } from "./api-response-type";
 import { environment } from "src/environments/environment";
 import { ApiResponseDto } from ".";
+import { ApiResponseType } from "./models";
 
 /**
  * Represents an HTTP error response from an API.
@@ -18,7 +18,7 @@ export class HttpErrorApiResponse<T> implements ApiResponseDto<T> {
    * The type of the API response.
    * Defaults to "UnexpectedError".
    */
-  type: ApiResponseType = ApiResponseTypes.UnexpectedError;
+  type: ApiResponseType = ApiResponseType.UnexpectedError;
 
   /**
    * A list of error messages associated with the API response.

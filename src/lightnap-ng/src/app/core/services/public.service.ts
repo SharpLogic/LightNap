@@ -1,9 +1,9 @@
 import { Injectable, inject } from "@angular/core";
-import { PublicDataService } from "@core/backend-api/services/public-data.service";
+import { LightNapWebApiService } from "@core/backend-api/index.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class PublicService {
-    #dataService = inject(PublicDataService);
+    #dataService = inject(LightNapWebApiService);
 }

@@ -1,4 +1,4 @@
-import { ApiResponseType } from "../api-response-type";
+import { ApiResponseType } from "./models";
 
 /**
  * Represents a generic API response.

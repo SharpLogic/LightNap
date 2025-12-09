@@ -1,8 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { ExternalLoginRegisterRequestDto, ExternalLoginRequestDto, SearchExternalLoginsRequestDto } from "@core/backend-api";
-import { ExternalLoginDataService } from "@core/backend-api/services/external-login-data.service";
-import { switchMap, take, tap, shareReplay } from "rxjs";
+import { shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";
+import { LightNapWebApiService } from "@core/backend-api/lightnap-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.
@@ -15,9 +15,9 @@ import { IdentityService } from "./identity.service";
   providedIn: "root",
 })
 export class ExternalLoginService {
-  #dataService = inject(ExternalLoginDataService);
+  #dataService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
-  #supportedLogins$ = this.#dataService.getSupportedLogins().pipe(shareReplay(1));
+  #supportedLogins$ = this.#dataService.getApiExternalLoginSupported().pipe(shareReplay(1));
 
   /**
    * @method getSupportedLogins
@@ -35,7 +35,7 @@ export class ExternalLoginService {
    * @returns {Observable<PagedResponseDto<AdminExternalLoginDto>>} An observable containing the paged response of external logins.
    */
   searchExternalLogins(searchRequestDto: SearchExternalLoginsRequestDto) {
-    return this.#dataService.searchExternalLogins(searchRequestDto);
+    return this.#dataService.postApiExternalLoginSearch(searchRequestDto);
   }
 
   /**
@@ -47,7 +47,7 @@ export class ExternalLoginService {
    * @returns {Observable<void>} An observable indicating the completion of the operation.
    */
   removeExternalLogin(userId: string, loginProvider: string, providerKey: string){
-    return this.#dataService.removeExternalLogin(userId, loginProvider, providerKey);
+    return this.#dataService.deleteApiExternalLoginRemoveUserIdLoginProviderProviderKey(userId, loginProvider, providerKey);
   }
 
   /**
@@ -58,7 +58,7 @@ export class ExternalLoginService {
    */
   getExternalLoginResult(confirmationToken: string) {
     return this.#identityService.getLoggedIn$().pipe(
-      switchMap(_ => this.#dataService.getExternalLoginResult(confirmationToken))
+      switchMap(_ => this.#dataService.getApiExternalLoginResultConfirmationToken(confirmationToken))
     );
   }
 
@@ -71,7 +71,7 @@ export class ExternalLoginService {
    */
   completeExternalLogin(confirmationToken: string, loginRequest: ExternalLoginRequestDto) {
     return this.#dataService
-      .completeExternalLogin(confirmationToken, loginRequest)
+      .postApiExternalLoginCompleteConfirmationToken(confirmationToken, loginRequest)
       .pipe(tap(result => this.#identityService.setToken(result?.accessToken)));
   }
 
@@ -84,7 +84,7 @@ export class ExternalLoginService {
    */
   completeExternalLoginRegistration(confirmationToken: string, registerRequest: ExternalLoginRegisterRequestDto) {
     return this.#dataService
-      .completeExternalLoginRegistration(confirmationToken, registerRequest)
+      .postApiExternalLoginRegisterConfirmationToken(confirmationToken, registerRequest)
       .pipe(tap(result => this.#identityService.setToken(result?.accessToken)));
   }
 }

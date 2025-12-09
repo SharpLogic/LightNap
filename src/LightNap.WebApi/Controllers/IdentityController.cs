@@ -23,8 +23,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="loginRequest">The login request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("login")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> LogIn(LoginRequestDto loginRequest)
         {
             return new ApiResponseDto<LoginSuccessDto>(await identityService.LogInAsync(loginRequest));
@@ -37,8 +35,6 @@ namespace LightNap.WebApi.Controllers
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("register")]
         [EnableRateLimiting(WebConstants.RateLimiting.RegistrationPolicyName)]  // Override the controller-level "Auth" policy
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> Register(RegisterRequestDto registerRequest)
         {
             return new ApiResponseDto<LoginSuccessDto>(await identityService.RegisterAsync(registerRequest));
@@ -49,7 +45,6 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpGet("logout")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
         public async Task<ApiResponseDto<bool>> LogOut()
         {
             await identityService.LogOutAsync();
@@ -67,9 +62,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="400">If the request is invalid or the current password is incorrect.</response>
         /// <response code="401">If the user is not authenticated.</response>
         [HttpPost("change-password")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
         public async Task<ApiResponseDto<bool>> ChangePassword(ChangePasswordRequestDto changePasswordRequest)
         {
             await identityService.ChangePasswordAsync(changePasswordRequest);
@@ -88,9 +80,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="401">If the user is not authenticated.</response>
         [HttpPost("change-email")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
         public async Task<ApiResponseDto<bool>> ChangeEmail(ChangeEmailRequestDto changeEmailRequest)
         {
             await identityService.ChangeEmailAsync(changeEmailRequest);
@@ -109,9 +98,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="401">If the user is not authenticated.</response>
         [HttpPost("confirm-email-change")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
         public async Task<ApiResponseDto<bool>> ConfirmEmailChange(ConfirmEmailChangeRequestDto confirmEmailChangeRequest)
         {
             await identityService.ConfirmEmailChangeAsync(confirmEmailChangeRequest);
@@ -124,8 +110,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="resetPasswordRequest">The reset password request DTO.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("reset-password")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> ResetPassword(ResetPasswordRequestDto resetPasswordRequest)
         {
             await identityService.ResetPasswordAsync(resetPasswordRequest);
@@ -138,8 +122,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="newPasswordRequest">The new password request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("new-password")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> NewPassword(NewPasswordRequestDto newPasswordRequest)
         {
             return new ApiResponseDto<LoginSuccessDto>(await identityService.NewPasswordAsync(newPasswordRequest));
@@ -151,8 +133,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="verifyCodeRequest">The verify code request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("verify-code")]
-        [ProducesResponseType(typeof(ApiResponseDto<string>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<string>> VerifyCode(VerifyCodeRequestDto verifyCodeRequest)
         {
             return new ApiResponseDto<string>(await identityService.VerifyCodeAsync(verifyCodeRequest));
@@ -163,7 +143,6 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <returns>The API response containing the new access token.</returns>
         [HttpGet("access-token")]
-        [ProducesResponseType(typeof(ApiResponseDto<string>), 200)]
         public async Task<ApiResponseDto<string>> AccessToken()
         {
             return new ApiResponseDto<string>(await identityService.GetAccessTokenAsync());
@@ -175,8 +154,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="verificationEmailRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-verification-email")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RequestVerificationEmail(SendVerificationEmailRequestDto verificationEmailRequest)
         {
             await identityService.RequestVerificationEmailAsync(verificationEmailRequest);
@@ -189,8 +166,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="verifyEmailRequest">The verify email request DTO.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("verify-email")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> VerifyEmail(VerifyEmailRequestDto verifyEmailRequest)
         {
             await identityService.VerifyEmailAsync(verifyEmailRequest);
@@ -203,8 +178,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="magicLinkRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-magic-link")]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<bool>> RequestMagicLinkEmail(SendMagicLinkRequestDto magicLinkRequest)
         {
             await identityService.RequestMagicLinkEmailAsync(magicLinkRequest);
@@ -219,8 +192,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="401">Unauthorized access.</response>
         [HttpGet("devices")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponseDto<IList<DeviceDto>>), 200)]
-        [ProducesResponseType(401)]
         public async Task<ApiResponseDto<IList<DeviceDto>>> GetDevices()
         {
             return new ApiResponseDto<IList<DeviceDto>>(await identityService.GetDevicesAsync());
@@ -236,9 +207,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="404">Device not found.</response>
         [HttpDelete("devices/{deviceId}")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponseDto<bool>), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
         public async Task<ApiResponseDto<bool>> RevokeDevice(string deviceId)
         {
             await identityService.RevokeDeviceAsync(deviceId);

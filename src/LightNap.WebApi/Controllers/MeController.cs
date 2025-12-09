@@ -31,8 +31,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="200">Returns the profile of the current user.</response>
         /// <response code="401">If the user is not authenticated.</response>
         [HttpGet("profile")]
-        [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
-        [ProducesResponseType(401)]
         public async Task<ApiResponseDto<ProfileDto>> GetProfile()
         {
             return new ApiResponseDto<ProfileDto>(await profileService.GetProfileAsync());
@@ -49,9 +47,6 @@ namespace LightNap.WebApi.Controllers
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="400">If the request is invalid.</response>
         [HttpPut("profile")]
-        [ProducesResponseType(typeof(ApiResponseDto<ProfileDto>), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<ProfileDto>> UpdateProfile(UpdateProfileRequestDto updateProfileRequest)
         {
             return new ApiResponseDto<ProfileDto>(await profileService.UpdateProfileAsync(updateProfileRequest));

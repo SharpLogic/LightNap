@@ -1,4 +1,4 @@
-import { PagedResponseDto } from "./dtos";
+import { PagedResponseDto } from ".";
 
 /**
  * Represents an empty paged response. This is useful when a component requires an initial response to kickstart.

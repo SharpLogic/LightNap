@@ -11,7 +11,7 @@ import {
     SearchNotificationsRequestDto
 } from "@core";
 import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
-import { NotificationHubService } from "@core/backend-api/services/notification-hub.service";
+import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { RequestPollingManager } from "@core/helpers";

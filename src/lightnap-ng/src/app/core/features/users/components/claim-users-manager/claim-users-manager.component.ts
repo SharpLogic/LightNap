@@ -1,7 +1,7 @@
 
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
+import { PagedResponseDto } from "@core/backend-api/paged-response-dto";
 import { PrivilegedUserDto } from "@core/backend-api/dtos/users/response/privileged-user-dto";
 import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
 import { UserPickerComponent } from "@core/features/users/components/user-picker/user-picker.component";

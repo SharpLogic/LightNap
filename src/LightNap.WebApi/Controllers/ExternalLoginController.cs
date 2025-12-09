@@ -76,8 +76,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("complete/{confirmationToken}")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(string confirmationToken, ExternalLoginRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginAsync(confirmationToken, requestDto));
@@ -90,8 +88,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("register/{confirmationToken}")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLoginRegistration(string confirmationToken, ExternalLoginRegisterRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));
@@ -109,7 +105,6 @@ namespace LightNap.WebApi.Controllers
         /// <param name="returnUrl">Optional. The application URL to redirect to after authentication completes. Defaults to home page if not provided.</param>
         /// <returns>A challenge result (HTTP 302) that redirects to the external provider's authentication endpoint.</returns>
         [HttpGet("login/{provider}")]
-        [ProducesResponseType(302)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Login(string provider, string? returnUrl)
         {
@@ -132,8 +127,6 @@ namespace LightNap.WebApi.Controllers
         /// <returns>An HTTP 302 redirect response directing the user to either the success callback page or the error page.</returns>
         /// <exception cref="UserFriendlyApiException">Caught and handled gracefully with user-friendly error messages.</exception>
         [HttpGet("callback")]
-        [ProducesResponseType(302)]
-        [ProducesResponseType(400)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> LoginCallback(string? returnUrl = null, string? remoteError = null)
         {

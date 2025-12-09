@@ -1,14 +1,14 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-  LayoutConfigDto,
-  SetUserSettingRequestDto,
-  UpdateProfileRequestDto,
-  UserSettingDto,
-  UserSettingKey,
-  UserSettingKeys,
+    LayoutConfigDto,
+    SetUserSettingRequestDto,
+    UpdateProfileRequestDto,
+    UserSettingDto,
+    UserSettingKey,
+    UserSettingKeys,
 } from "@core/backend-api";
-import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
+import { LightNapWebApiService } from "@core/backend-api/index.service";
 import { filter, map, Observable, of, shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";
 
@@ -21,7 +21,7 @@ import { IdentityService } from "./identity.service";
  * The ProfileService class provides methods to manage user profiles and application settings.
  */
 export class ProfileService {
-  #dataService = inject(ProfileDataService);
+  #dataService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
 
   #defaultBrowserSettings = <LayoutConfigDto>{

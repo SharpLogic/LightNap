@@ -440,6 +440,9 @@ public static class ApplicationServiceExtensions
             {
                 [new OpenApiSecuritySchemeReference(securityDefinitionName, document)] = []
             });
+
+            options.SupportNonNullableReferenceTypes();
+            options.NonNullableReferenceTypesAsRequired();
         });
 
         return services;

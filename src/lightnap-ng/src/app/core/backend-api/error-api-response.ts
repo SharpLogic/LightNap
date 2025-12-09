@@ -1,5 +1,5 @@
-import { ApiResponseDto } from ".";
-import { ApiResponseType } from "./api-response-type";
+import { ApiResponseDto } from "./api-response-dto";
+import { ApiResponseType } from "./models";
 
 /**
  * Represents an error response from an API. This is useful for scenarios where the error occurs on the client-side,
