@@ -27,7 +27,7 @@ export class IdentityService {
 
   #initializationService = inject(InitializationService);
   #timer = inject(TimerService);
-  #dataService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
   #routeAlias = inject(RouteAliasService);
   #router = inject(Router);
 
@@ -142,7 +142,7 @@ export class IdentityService {
   #tryRefreshToken() {
     if (this.#requestingRefreshToken) return;
     this.#requestingRefreshToken = true;
-    this.#dataService
+    this.#webApiService
       .getAccessToken()
       .pipe(finalize(() => (this.#requestingRefreshToken = false)))
       .subscribe({
@@ -396,7 +396,7 @@ export class IdentityService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   logIn(loginRequest: LoginRequestDto) {
-    return this.#dataService.logIn(loginRequest).pipe(tap(result => this.setToken(result.accessToken)));
+    return this.#webApiService.logIn(loginRequest).pipe(tap(result => this.setToken(result.accessToken)));
   }
 
   /**
@@ -406,7 +406,7 @@ export class IdentityService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   register(registerRequest: RegisterRequestDto) {
-    return this.#dataService.register(registerRequest).pipe(tap(result => this.setToken(result?.accessToken)));
+    return this.#webApiService.register(registerRequest).pipe(tap(result => this.setToken(result?.accessToken)));
   }
 
   /**
@@ -415,7 +415,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   logOut() {
-    return this.#dataService.logOut().pipe(tap(() => this.setToken(undefined)));
+    return this.#webApiService.logOut().pipe(tap(() => this.setToken(undefined)));
   }
 
   /**
@@ -425,7 +425,7 @@ export class IdentityService {
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
   verifyCode(verifyCodeRequest: VerifyCodeRequestDto) {
-    return this.#dataService.verifyCode(verifyCodeRequest).pipe(tap(token => this.setToken(token)));
+    return this.#webApiService.verifyCode(verifyCodeRequest).pipe(tap(token => this.setToken(token)));
   }
 
   /**
@@ -435,7 +435,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   resetPassword(resetPasswordRequest: ResetPasswordRequestDto) {
-    return this.#dataService.resetPassword(resetPasswordRequest);
+    return this.#webApiService.resetPassword(resetPasswordRequest);
   }
 
   /**
@@ -445,7 +445,7 @@ export class IdentityService {
    * @returns {Observable<string>} An observable containing the result of the operation.
    */
   newPassword(newPasswordRequest: NewPasswordRequestDto) {
-    return this.#dataService.newPassword(newPasswordRequest).pipe(tap(result => this.setToken(result.accessToken)));
+    return this.#webApiService.newPassword(newPasswordRequest).pipe(tap(result => this.setToken(result.accessToken)));
   }
 
   /**
@@ -455,7 +455,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   requestVerificationEmail(sendVerificationEmailRequest: SendVerificationEmailRequestDto) {
-    return this.#dataService.requestVerificationEmail(sendVerificationEmailRequest);
+    return this.#webApiService.requestVerificationEmail(sendVerificationEmailRequest);
   }
 
   /**
@@ -465,7 +465,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   verifyEmail(verifyEmailRequest: VerifyEmailRequestDto) {
-    return this.#dataService.verifyEmail(verifyEmailRequest);
+    return this.#webApiService.verifyEmail(verifyEmailRequest);
   }
 
   /**
@@ -475,7 +475,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
   requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkRequestDto) {
-    return this.#dataService.requestMagicLinkEmail(sendMagicLinkEmailRequest);
+    return this.#webApiService.requestMagicLinkEmail(sendMagicLinkEmailRequest);
   }
 
   /**
@@ -484,7 +484,7 @@ export class IdentityService {
    * @returns {Observable<Array<Device>>} An observable containing the list of devices.
    */
   getDevices() {
-    return this.#dataService.getDevices();
+    return this.#webApiService.getDevices();
   }
 
   /**
@@ -494,7 +494,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
   revokeDevice(deviceId: string) {
-    return this.#dataService.revokeDevice(deviceId);
+    return this.#webApiService.revokeDevice(deviceId);
   }
 
   /**
@@ -504,7 +504,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
   changePassword(changePasswordRequest: ChangePasswordRequestDto) {
-    return this.#dataService.changePassword(changePasswordRequest);
+    return this.#webApiService.changePassword(changePasswordRequest);
   }
 
   /**
@@ -514,7 +514,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
   changeEmail(changeEmailRequest: ChangeEmailRequestDto) {
-    return this.#dataService.changeEmail(changeEmailRequest);
+    return this.#webApiService.changeEmail(changeEmailRequest);
   }
 
   /**
@@ -524,6 +524,6 @@ export class IdentityService {
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
   confirmEmailChange(confirmChangeEmailRequest: ConfirmEmailChangeRequestDto) {
-    return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
+    return this.#webApiService.confirmEmailChange(confirmChangeEmailRequest);
   }
 }

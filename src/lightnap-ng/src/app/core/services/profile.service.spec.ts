@@ -1,7 +1,7 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { UpdateProfileRequestDto, LayoutConfigDto } from "@core/backend-api";
-import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
 import { ProfileService } from "./profile.service";
@@ -9,16 +9,16 @@ import { TimerService } from "./timer.service";
 
 describe("ProfileService", () => {
   let service: ProfileService;
-  let dataServiceSpy: jasmine.SpyObj<ProfileDataService>;
+  let webApiServiceSpy: jasmine.SpyObj<any>;
   let timerServiceSpy: jasmine.SpyObj<TimerService>;
   let identityServiceSpy: jasmine.SpyObj<IdentityService>;
 
   beforeEach(() => {
-    const dataSpy = jasmine.createSpyObj("ProfileDataService", [
+    const dataSpy = jasmine.createSpyObj("LightNapWebApiService", [
       "getProfile",
-      "updateProfile",
-      "getSettings",
-      "setSetting",
+      "updateMyProfile",
+      "getMyUserSettings",
+      "setMyUserSetting",
     ]);
     const identitySpy = jasmine.createSpyObj("IdentityService", ["watchLoggedIn$"]);
     const timerSpy = jasmine.createSpyObj("TimerService", ["watchTimer$"]);
@@ -27,7 +27,7 @@ describe("ProfileService", () => {
       providers: [
         provideZonelessChangeDetection(),
         ProfileService,
-        { provide: ProfileDataService, useValue: dataSpy },
+        { provide: LightNapWebApiService, useValue: dataSpy },
         { provide: IdentityService, useValue: identitySpy },
         { provide: TimerService, useValue: timerSpy },
       ],
@@ -39,7 +39,7 @@ describe("ProfileService", () => {
     identityServiceSpy = TestBed.inject(IdentityService) as jasmine.SpyObj<IdentityService>;
     identityServiceSpy.watchLoggedIn$.and.returnValue(of(true));
 
-    dataServiceSpy = TestBed.inject(ProfileDataService) as jasmine.SpyObj<ProfileDataService>;
+    webApiServiceSpy = TestBed.inject(LightNapWebApiService) as jasmine.SpyObj<any>;
     service = TestBed.inject(ProfileService);
   });
 
@@ -48,50 +48,50 @@ describe("ProfileService", () => {
   });
 
   it("should get profile", () => {
-    dataServiceSpy.getProfile.and.returnValue(of({} as any));
+    webApiServiceSpy.getProfile.and.returnValue(of({} as any));
 
     service.getProfile().subscribe();
 
-    expect(dataServiceSpy.getProfile).toHaveBeenCalled();
+    expect(webApiServiceSpy.getProfile).toHaveBeenCalled();
   });
 
   it("should update profile", () => {
     const updateProfileRequest: UpdateProfileRequestDto = {} as any;
-    dataServiceSpy.updateProfile.and.returnValue(of({} as any));
+    webApiServiceSpy.updateMyProfile.and.returnValue(of({} as any));
 
     service.updateProfile(updateProfileRequest).subscribe();
 
-    expect(dataServiceSpy.updateProfile).toHaveBeenCalledWith(updateProfileRequest);
+    expect(webApiServiceSpy.updateMyProfile).toHaveBeenCalledWith(updateProfileRequest);
   });
 
   it("should get settings", () => {
-    dataServiceSpy.getSettings.and.returnValue(of([{}] as any));
+    webApiServiceSpy.getMyUserSettings.and.returnValue(of([{}] as any));
 
     service.getSettings().subscribe();
 
-    expect(dataServiceSpy.getSettings).toHaveBeenCalled();
+    expect(webApiServiceSpy.getMyUserSettings).toHaveBeenCalled();
     expect(service.hasLoadedStyleSettings()).toBeTrue();
   });
 
   it("should update settings", () => {
     const browserSettings: LayoutConfigDto = {} as any;
-    dataServiceSpy.setSetting.and.returnValue(of({} as any));
+    webApiServiceSpy.setMyUserSetting.and.returnValue(of({} as any));
 
     service.setSetting("BrowserSettings", browserSettings).subscribe();
 
-    expect(dataServiceSpy.setSetting).toHaveBeenCalledWith({ key: "BrowserSettings", value: JSON.stringify(browserSettings) });
+    expect(webApiServiceSpy.setMyUserSetting).toHaveBeenCalledWith({ key: "BrowserSettings", value: JSON.stringify(browserSettings) });
   });
 
   it("should update style settings", () => {
     const clientSettings: LayoutConfigDto = { source: "server" } as any;
     const serverSettings: LayoutConfigDto = { source: "client" } as any;
-    dataServiceSpy.getSettings.and.returnValue(of([{ key: "BrowserSettings", value: JSON.stringify(serverSettings) }] as any));
-    dataServiceSpy.setSetting.and.returnValue(of({} as any));
+    webApiServiceSpy.getMyUserSettings.and.returnValue(of([{ key: "BrowserSettings", value: JSON.stringify(serverSettings) }] as any));
+    webApiServiceSpy.setMyUserSetting.and.returnValue(of({} as any));
 
     service.updateStyleSettings(clientSettings).subscribe();
 
-    expect(dataServiceSpy.getSettings).toHaveBeenCalled();
-    expect(dataServiceSpy.setSetting).toHaveBeenCalled();
+    expect(webApiServiceSpy.getMyUserSettings).toHaveBeenCalled();
+    expect(webApiServiceSpy.setMyUserSetting).toHaveBeenCalled();
   });
 
   it("should get default style settings", () => {

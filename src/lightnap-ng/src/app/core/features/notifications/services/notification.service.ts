@@ -23,7 +23,7 @@ import { ReplaySubject, combineLatest, finalize, forkJoin, map, of, switchMap, t
   providedIn: "root",
 })
 export class NotificationService {
-  #dataService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
   #adminService = inject(AdminUsersService);
   #routeAlias = inject(RouteAliasService);
@@ -60,7 +60,7 @@ export class NotificationService {
   }
 
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
-    return this.#dataService.searchMyNotifications(searchNotificationsRequest).pipe(
+    return this.#webApiService.searchMyNotifications(searchNotificationsRequest).pipe(
       tap(results => {
         this.#unreadCount = results.unreadCount;
         this.#unreadCountSubject.next(results.unreadCount);
@@ -116,11 +116,11 @@ export class NotificationService {
   }
 
   markAllNotificationsAsRead() {
-    return this.#dataService.markAllMyNotificationsAsRead().pipe(tap(() => this.#refreshLatestNotifications()));
+    return this.#webApiService.markAllMyNotificationsAsRead().pipe(tap(() => this.#refreshLatestNotifications()));
   }
 
   markNotificationAsRead(id: number) {
-    return this.#dataService.markMyNotificationAsRead(id).pipe(tap(() => this.#refreshLatestNotifications()));
+    return this.#webApiService.markMyNotificationAsRead(id).pipe(tap(() => this.#refreshLatestNotifications()));
   }
 
   #loadNotificationItems(notifications: Array<NotificationDto>) {

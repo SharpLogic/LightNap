@@ -21,7 +21,7 @@ import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
  * The ProfileService class provides methods to manage user profiles and application settings.
  */
 export class ProfileService {
-  #dataService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
 
   #defaultBrowserSettings = <LayoutConfigDto>{
@@ -59,7 +59,7 @@ export class ProfileService {
    * @returns {Observable<Profile>} An observable containing the user profile.
    */
   getProfile() {
-    return this.#dataService.getProfile();
+    return this.#webApiService.getProfile();
   }
 
   /**
@@ -69,7 +69,7 @@ export class ProfileService {
    * @returns {Observable<Profile>} An observable containing the updated profile.
    */
   updateProfile(updateProfileRequest: UpdateProfileRequestDto) {
-    return this.#dataService.updateMyProfile(updateProfileRequest);
+    return this.#webApiService.updateMyProfile(updateProfileRequest);
   }
 
   /**
@@ -80,7 +80,7 @@ export class ProfileService {
   getSettings() {
     if (this.#settings.length) return of(this.#settings);
     if (!this.#settings$) {
-      this.#settings$ = this.#dataService.getMyUserSettings().pipe(
+      this.#settings$ = this.#webApiService.getMyUserSettings().pipe(
         map(settings => settings || []),
         shareReplay(1),
         tap(settings => (this.#settings = settings))
@@ -113,7 +113,7 @@ export class ProfileService {
    * @returns {Observable<UserSettingDto>} An observable containing the updated user setting.
    */
   setSetting<T>(key: UserSettingKey, value: T) {
-    return this.#dataService
+    return this.#webApiService
       .setMyUserSetting(<SetUserSettingRequestDto>{
         key,
         value: JSON.stringify(value),
@@ -171,7 +171,7 @@ export class ProfileService {
    * @returns {Observable<Array<ExternalLoginDto>>} An observable containing the list of external logins.
    */
   getExternalLogins() {
-    return this.#dataService.getMyExternalLogins();
+    return this.#webApiService.getMyExternalLogins();
   }
 
   /**
@@ -182,6 +182,6 @@ export class ProfileService {
    * @returns {Observable<boolean>} An observable indicating whether the removal was successful.
    */
   removeExternalLogin(loginProvider: string, providerKey: string) {
-    return this.#dataService.removeMyExternalLogin(loginProvider, providerKey);
+    return this.#webApiService.removeMyExternalLogin(loginProvider, providerKey);
   }
 }

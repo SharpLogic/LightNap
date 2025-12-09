@@ -203,8 +203,8 @@ describe("DevicesComponent", () => {
       mockIdentityService.getDevices.and.returnValue(of([]));
       component.devices$.set(mockIdentityService.getDevices());
 
-      component.devices$().subscribe(devices => {
-        expect(devices.length).toBe(0);
+      component.devices$().subscribe((devices: any) => {
+        expect(devices?.length).toBe(0);
         done();
       });
     });

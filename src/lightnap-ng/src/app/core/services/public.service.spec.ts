@@ -1,20 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { PublicService } from './public.service';
-import { PublicDataService } from '@core/backend-api/services/public-data.service';
+import { LightNapWebApiService } from '@core/backend-api/services/lightnap-api';
 
 describe('PublicService', () => {
   let service: PublicService;
-  let dataServiceSpy: jasmine.SpyObj<PublicDataService>;
+  let webApiServiceSpy: jasmine.SpyObj<any>;
 
   beforeEach(() => {
-    dataServiceSpy = jasmine.createSpyObj('PublicDataService', ['getData']);
+    webApiServiceSpy = jasmine.createSpyObj('LightNapWebApiService', ['getData']);
 
     TestBed.configureTestingModule({
       providers: [
         provideZonelessChangeDetection(),
         PublicService,
-        { provide: PublicDataService, useValue: dataServiceSpy },
+        { provide: LightNapWebApiService, useValue: webApiServiceSpy },
       ],
     });
 

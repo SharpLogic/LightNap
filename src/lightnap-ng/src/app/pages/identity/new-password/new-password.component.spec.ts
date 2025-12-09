@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
 
 describe("NewPasswordComponent", () => {
@@ -23,7 +23,7 @@ describe("NewPasswordComponent", () => {
     mockIdentityService = {
       newPassword: jasmine.createSpy("newPassword").and.returnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
@@ -166,7 +166,7 @@ describe("NewPasswordComponent", () => {
     it("should redirect logged in user on AccessToken success", () => {
       mockIdentityService.newPassword.and.returnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       );
@@ -184,7 +184,7 @@ describe("NewPasswordComponent", () => {
     it("should navigate to verify-code on TwoFactorRequired", () => {
       mockIdentityService.newPassword.and.returnValue(
         of({
-          type: LoginSuccessTypes.TwoFactorRequired,
+          type: LoginSuccessType.TwoFactorRequired,
         })
       );
       spyOn(mockRouteAliasService, "navigate");

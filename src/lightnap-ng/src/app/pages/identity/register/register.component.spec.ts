@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
 
 describe("RegisterComponent", () => {
@@ -23,7 +23,7 @@ describe("RegisterComponent", () => {
     mockIdentityService = {
       register: jasmine.createSpy("register").and.returnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
@@ -210,7 +210,7 @@ describe("RegisterComponent", () => {
   it("should redirect logged in user on successful registration with AccessToken", () => {
     mockIdentityService.register.and.returnValue(
       of({
-        type: LoginSuccessTypes.AccessToken,
+        type: LoginSuccessType.AccessToken,
         accessToken: "test-token",
       })
     );
@@ -231,7 +231,7 @@ describe("RegisterComponent", () => {
   it("should navigate to verify-code on TwoFactorRequired", () => {
     mockIdentityService.register.and.returnValue(
       of({
-        type: LoginSuccessTypes.TwoFactorRequired,
+        type: LoginSuccessType.TwoFactorRequired,
       })
     );
 
@@ -250,10 +250,10 @@ describe("RegisterComponent", () => {
     expect(mockRouteAliasService.navigate).toHaveBeenCalledWith("verify-code", "test@example.com");
   });
 
-  it("should navigate to email-verification-required on EmailVerificationRequired", () => {
+  it("should navigate to verify-email on EmailVerificationRequired", () => {
     mockIdentityService.register.and.returnValue(
       of({
-        type: LoginSuccessTypes.EmailVerificationRequired,
+        type: LoginSuccessType.EmailVerificationRequired,
       })
     );
 

@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
 
 describe("LoginComponent", () => {
@@ -23,7 +23,7 @@ describe("LoginComponent", () => {
     mockIdentityService = {
       logIn: jasmine.createSpy("logIn").and.returnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
@@ -146,7 +146,7 @@ describe("LoginComponent", () => {
   it("should redirect logged in user on successful login with AccessToken", () => {
     mockIdentityService.logIn.and.returnValue(
       of({
-        type: LoginSuccessTypes.AccessToken,
+        type: LoginSuccessType.AccessToken,
         accessToken: "test-token",
       })
     );
@@ -164,7 +164,7 @@ describe("LoginComponent", () => {
   it("should navigate to verify-code on TwoFactorRequired", () => {
     mockIdentityService.logIn.and.returnValue(
       of({
-        type: LoginSuccessTypes.TwoFactorRequired,
+        type: LoginSuccessType.TwoFactorRequired,
       })
     );
 
@@ -183,7 +183,7 @@ describe("LoginComponent", () => {
   it("should navigate to email-verification-required on EmailVerificationRequired", () => {
     mockIdentityService.logIn.and.returnValue(
       of({
-        type: LoginSuccessTypes.EmailVerificationRequired,
+        type: LoginSuccessType.EmailVerificationRequired,
       })
     );
 

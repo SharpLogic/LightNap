@@ -29,7 +29,12 @@ module.exports = [
     languageOptions: {
       parser: typescriptEslintParser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: (filePath) => {
+          if (filePath.includes('.spec.ts')) {
+            return './tsconfig.spec.json';
+          }
+          return './tsconfig.json';
+        },
         createDefaultProgram: true,
         sourceType: 'module',
       },

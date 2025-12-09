@@ -12,12 +12,12 @@ import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
   providedIn: "root",
 })
 export class ContentService {
-  #dataService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
   #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
 
-  #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(map(languages => languages ?? []), shareReplay({ bufferSize: 1, refCount: false }));
+  #supportedLanguages$ = this.#webApiService.getSupportedLanguages().pipe(map(languages => languages ?? []), shareReplay({ bufferSize: 1, refCount: false }));
 
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
 
@@ -63,7 +63,7 @@ export class ContentService {
     return this.#publishedContentCache.getOrSetDefault(cacheKey, () =>
       this.#identityService.getLoggedIn$().pipe(
         switchMap(_ =>
-          this.#dataService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
+          this.#webApiService.getPublishedStaticContent(key, languageCode).pipe(map(result => (result ? new PublishedContent(result) : null)))
         ),
         shareReplay({ bufferSize: 1, refCount: false })
       )
@@ -80,19 +80,19 @@ export class ContentService {
   }
 
   createStaticContent(createDto: CreateStaticContentDto) {
-    return this.#dataService.createStaticContent(createDto);
+    return this.#webApiService.createStaticContent(createDto);
   }
 
   getStaticContent(key: string) {
-    return this.#dataService.getStaticContent(key);
+    return this.#webApiService.getStaticContent(key);
   }
 
   searchStaticContent(searchDto: SearchStaticContentRequestDto) {
-    return this.#dataService.searchStaticContent(searchDto);
+    return this.#webApiService.searchStaticContent(searchDto);
   }
 
   updateStaticContent(key: string, updateDto: UpdateStaticContentDto) {
-    return this.#dataService.updateStaticContent(key, updateDto).pipe(
+    return this.#webApiService.updateStaticContent(key, updateDto).pipe(
       switchMap(staticContent =>
         this.getSupportedLanguages().pipe(
           tap(languages => languages.forEach(language => this.clearCachedPublishedStaticContent(key, language.languageCode))),
@@ -103,7 +103,7 @@ export class ContentService {
   }
 
   deleteStaticContent(key: string) {
-    return this.#dataService.deleteStaticContent(key);
+    return this.#webApiService.deleteStaticContent(key);
   }
 
   addReader(userId: string, key: string) {
@@ -123,19 +123,19 @@ export class ContentService {
   }
 
   getStaticContentLanguage(key: string, languageCode: string) {
-    return this.#dataService.getStaticContentLanguage(key, languageCode);
+    return this.#webApiService.getStaticContentLanguage(key, languageCode);
   }
 
   getStaticContentLanguages(key: string) {
-    return this.#dataService.getStaticContentLanguages(key);
+    return this.#webApiService.getStaticContentLanguages(key);
   }
 
   createStaticContentLanguage(key: string, languageCode: string, createDto: CreateStaticContentLanguageDto) {
-    return this.#dataService.createStaticContentLanguage(key, languageCode, createDto);
+    return this.#webApiService.createStaticContentLanguage(key, languageCode, createDto);
   }
 
   updateStaticContentLanguage(key: string, languageCode: string, updateDto: UpdateStaticContentLanguageDto) {
-    return this.#dataService.updateStaticContentLanguage(key, languageCode, updateDto).pipe(
+    return this.#webApiService.updateStaticContentLanguage(key, languageCode, updateDto).pipe(
       tap(_ => {
         this.clearCachedPublishedStaticContent(key, languageCode);
       })
@@ -143,6 +143,6 @@ export class ContentService {
   }
 
   deleteStaticContentLanguage(key: string, languageCode: string) {
-    return this.#dataService.deleteStaticContentLanguage(key, languageCode);
+    return this.#webApiService.deleteStaticContentLanguage(key, languageCode);
   }
 }

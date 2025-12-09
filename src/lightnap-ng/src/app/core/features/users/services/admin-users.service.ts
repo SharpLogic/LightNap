@@ -24,9 +24,9 @@ import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
   providedIn: "root",
 })
 export class AdminUsersService {
-  #dataService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
 
-  #roles$ = this.#dataService
+  #roles$ = this.#webApiService
     .getRoles()
     .pipe(map(roles => roles || []))
     .pipe(shareReplay({ bufferSize: 1, refCount: false }));
@@ -37,7 +37,7 @@ export class AdminUsersService {
    * @returns {Observable<AdminUserDto>} An observable containing the user data.
    */
   getUser(userId: string) {
-    return this.#dataService.getUser(userId);
+    return this.#webApiService.getUser(userId);
   }
 
   /**
@@ -46,7 +46,7 @@ export class AdminUsersService {
    * @returns {Observable<AdminUserDto>} An observable containing the user data.
    */
   getUserByUserName(userName: string) {
-    return this.#dataService.getUserByUserName(userName) as Observable<AdminUserDto>;
+    return this.#webApiService.getUserByUserName(userName) as Observable<AdminUserDto>;
   }
 
   /**
@@ -56,7 +56,7 @@ export class AdminUsersService {
    * @returns {Observable<AdminUserDto>} An observable with the updated user.
    */
   updateUser(userId: string, updateAdminUserRequest: AdminUpdateUserRequestDto) {
-    return this.#dataService.updateUser(userId, updateAdminUserRequest);
+    return this.#webApiService.updateUser(userId, updateAdminUserRequest);
   }
 
   /**
@@ -65,7 +65,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable indicating the deletion result.
    */
   deleteUser(userId: string) {
-    return this.#dataService.deleteUser(userId);
+    return this.#webApiService.deleteUser(userId);
   }
 
   /**
@@ -74,7 +74,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<AdminUserDto>>} An observable containing the search results.
    */
   searchUsers(adminSearchUsersRequest: AdminSearchUsersRequestDto) {
-    return this.#dataService.searchUsers(adminSearchUsersRequest) as Observable<PagedResponseDto<AdminUserDto>>;
+    return this.#webApiService.searchUsers(adminSearchUsersRequest) as Observable<PagedResponseDto<AdminUserDto>>;
   }
 
   /**
@@ -84,7 +84,7 @@ export class AdminUsersService {
    */
   getUsersById(userIds: Array<string>): Observable<Array<AdminUserDto>> {
     if (!userIds || userIds.length === 0) return of([]);
-    return this.#dataService.getUsersByIds(userIds);
+    return this.#webApiService.getUsersByIds(userIds);
   }
 
   /**
@@ -110,7 +110,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
-    return forkJoin([this.getRoles(), this.#dataService.getRolesForUser(userId).pipe(map(userRoles => userRoles || []))]).pipe(
+    return forkJoin([this.getRoles(), this.#webApiService.getRolesForUser(userId).pipe(map(userRoles => userRoles || []))]).pipe(
       map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!))
     );
   }
@@ -121,7 +121,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<AdminUserDto>>} An observable containing the members.
    */
   getUsersInRole(role: string) {
-    return this.#dataService.getUsersInRole(role);
+    return this.#webApiService.getUsersInRole(role);
   }
 
   /**
@@ -145,7 +145,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   addUserToRole(userId: string, role: string) {
-    return this.#dataService.addUserToRole(role, userId);
+    return this.#webApiService.addUserToRole(role, userId);
   }
 
   /**
@@ -155,7 +155,7 @@ export class AdminUsersService {
    * @returns {Observable<RoleDto>} An observable with a result of true if successful.
    */
   removeUserFromRole(userId: string, role: string) {
-    return this.#dataService.removeUserFromRole(role, userId);
+    return this.#webApiService.removeUserFromRole(role, userId);
   }
 
   /**
@@ -164,7 +164,7 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   searchClaims(searchClaims: SearchClaimsRequestDto) {
-    return this.#dataService.searchClaims(searchClaims);
+    return this.#webApiService.searchClaims(searchClaims);
   }
 
   /**
@@ -173,7 +173,7 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   getUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
-    return this.#dataService
+    return this.#webApiService
       .searchUserClaims(searchUserClaimsRequestDto)
       .pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
   }
@@ -184,7 +184,7 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<AdminUserDto>>} An observable containing the users.
    */
   getUsersWithClaim(searchClaimRequestDto: SearchClaimRequestDto) {
-    return this.#dataService
+    return this.#webApiService
       .getUsersWithClaim(searchClaimRequestDto)
       .pipe(
         switchMap(results =>
@@ -202,7 +202,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   addUserClaim(userId: string, claim: ClaimDto) {
-    return this.#dataService.addUserClaim(userId, claim);
+    return this.#webApiService.addUserClaim(userId, claim);
   }
 
   /**
@@ -212,7 +212,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   removeUserClaim(userId: string, claim: ClaimDto) {
-    return this.#dataService.removeUserClaim(userId, claim);
+    return this.#webApiService.removeUserClaim(userId, claim);
   }
 
   /**
@@ -221,7 +221,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   lockUserAccount(userId: string) {
-    return this.#dataService.lockUserAccount(userId);
+    return this.#webApiService.lockUserAccount(userId);
   }
 
   /**
@@ -230,7 +230,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   unlockUserAccount(userId: string) {
-    return this.#dataService.unlockUserAccount(userId);
+    return this.#webApiService.unlockUserAccount(userId);
   }
 
   /**
