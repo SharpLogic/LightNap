@@ -81,6 +81,7 @@ export class ProfileService {
     if (this.#settings.length) return of(this.#settings);
     if (!this.#settings$) {
       this.#settings$ = this.#dataService.getMyUserSettings().pipe(
+        map(settings => settings || []),
         shareReplay(1),
         tap(settings => (this.#settings = settings))
       );

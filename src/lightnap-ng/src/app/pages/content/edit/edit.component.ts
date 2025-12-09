@@ -10,7 +10,7 @@ import {
     StaticContentDto,
     StaticContentReadAccess,
     StaticContentStatus,
-    StaticContentSupportedLanguage,
+    StaticContentSupportedLanguageDto,
     StaticContentType,
     ToStringPipe,
     TypeHelpers,
@@ -99,7 +99,7 @@ export class EditComponent {
   languages = computed(() => this.#contentService.getSupportedLanguages());
 
   asContent = TypeHelpers.cast<StaticContentDto>;
-  asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguage>>;
+  asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguageDto>>;
 
   #previousTabName = "settings";
 

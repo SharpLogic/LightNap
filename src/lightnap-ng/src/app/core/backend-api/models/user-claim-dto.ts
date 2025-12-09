@@ -4,15 +4,20 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { ClaimDto } from "./claim-dto";
 
 /**
  * Data transfer object for user claims, extending base claim information with user identification.
  */
-export interface UserClaimDto {
-  /** Gets or sets the claim type. */
-  type: string;
-  /** Gets or sets the claim value. */
-  value: string;
+export type UserClaimDto = ClaimDto & {
   /** Gets or sets the unique identifier of the user associated with this claim. */
   userId: string;
-}
+} & Required<
+    Pick<
+      ClaimDto & {
+        /** Gets or sets the unique identifier of the user associated with this claim. */
+        userId: string;
+      },
+      "userId"
+    >
+  >;

@@ -4,7 +4,7 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { ExternalLoginDto } from "./external-login-dto";
+import type { ExternalLoginDtoListApiResponseDtoResultItem } from "./external-login-dto-list-api-response-dto-result-item";
 import type { ApiResponseType } from "./api-response-type";
 
 /**
@@ -15,7 +15,7 @@ export interface ExternalLoginDtoListApiResponseDto {
    * Gets or sets the result of the API call.
    * @nullable
    */
-  result?: ExternalLoginDto[] | null;
+  result?: ExternalLoginDtoListApiResponseDtoResultItem[] | null;
   type: ApiResponseType;
   /**
    * Gets or sets the error messages associated with the API response.

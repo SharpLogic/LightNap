@@ -4,14 +4,14 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { PublicUserDto } from "./public-user-dto";
+import type { PublicUserDtoPagedResponseDtoDataItem } from "./public-user-dto-paged-response-dto-data-item";
 
 /**
  * Represents a paginated response.
  */
 export interface PublicUserDtoPagedResponseDto {
   /** Gets or sets the data for the current page. */
-  data: PublicUserDto[];
+  data: PublicUserDtoPagedResponseDtoDataItem[];
   /** Gets or sets the current page number. */
   pageNumber: number;
   /** Gets or sets the size of the page. */

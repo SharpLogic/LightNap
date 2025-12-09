@@ -17,7 +17,7 @@ export class ContentService {
   #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
 
-  #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(shareReplay({ bufferSize: 1, refCount: false }));
+  #supportedLanguages$ = this.#dataService.getSupportedLanguages().pipe(map(languages => languages ?? []), shareReplay({ bufferSize: 1, refCount: false }));
 
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
 

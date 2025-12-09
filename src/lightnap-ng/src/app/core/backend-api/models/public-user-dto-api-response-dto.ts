@@ -4,14 +4,18 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { PublicUserDto } from "./public-user-dto";
+import type { PublicUserDtoApiResponseDtoResult } from "./public-user-dto-api-response-dto-result";
 import type { ApiResponseType } from "./api-response-type";
 
 /**
  * Represents the response of an API call.
  */
 export interface PublicUserDtoApiResponseDto {
-  result?: PublicUserDto;
+  /**
+   * Gets or sets the result of the API call.
+   * @nullable
+   */
+  result?: PublicUserDtoApiResponseDtoResult;
   type: ApiResponseType;
   /**
    * Gets or sets the error messages associated with the API response.

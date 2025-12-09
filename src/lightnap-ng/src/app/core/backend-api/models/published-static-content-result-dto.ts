@@ -5,9 +5,10 @@
  * OpenAPI spec version: 1.0
  */
 import type { StaticContentUserVisibility } from "./static-content-user-visibility";
-import type { PublishedStaticContentDto } from "./published-static-content-dto";
+import type { PublishedStaticContentResultDtoContent } from "./published-static-content-result-dto-content";
 
 export interface PublishedStaticContentResultDto {
   visibility: StaticContentUserVisibility;
-  content?: PublishedStaticContentDto;
+  /** @nullable */
+  content?: PublishedStaticContentResultDtoContent;
 }

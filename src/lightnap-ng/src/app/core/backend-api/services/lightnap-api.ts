@@ -12,36 +12,57 @@ import { Injectable, inject } from "@angular/core";
 import { Observable } from "rxjs";
 
 import type {
+  AddUserClaimBodyOne,
+  AddUserClaimBodyThree,
+  AddUserClaimBodyTwo,
   AdminExternalLoginDtoPagedResponseDto,
   AdminSearchUsersRequestDto,
   AdminUpdateUserRequestDto,
   AdminUserDto,
   ChangeEmailRequestDto,
   ChangePasswordRequestDto,
-  ClaimDto,
   ClaimDtoPagedResponseDto,
+  CompleteExternalLoginBodyOne,
+  CompleteExternalLoginBodyThree,
+  CompleteExternalLoginBodyTwo,
   ConfirmEmailChangeRequestDto,
   CreateStaticContentDto,
   CreateStaticContentLanguageDto,
   DeviceDto,
-  ExternalLoginDto,
   ExternalLoginRegisterRequestDto,
-  ExternalLoginRequestDto,
   ExternalLoginSuccessDto,
+  GetMyExternalLogins200OneItem,
+  GetMyExternalLogins200ThreeItem,
+  GetMyExternalLogins200TwoItem,
+  GetMyUserClaimsBodyOne,
+  GetMyUserClaimsBodyThree,
+  GetMyUserClaimsBodyTwo,
+  GetUser200One,
+  GetUser200Three,
+  GetUser200Two,
+  GetUserByUserName200One,
+  GetUserByUserName200Three,
+  GetUserByUserName200Two,
+  GetUsersByIds200OneItem,
+  GetUsersByIds200ThreeItem,
+  GetUsersByIds200TwoItem,
   LoginRequestDto,
   LoginSuccessDto,
   NewPasswordRequestDto,
   NotificationSearchResultsDto,
-  PagedRequestDtoBase,
   ProfileDto,
-  PublicUserDto,
   PublicUserDtoPagedResponseDto,
   PublishedStaticContentResultDto,
   RegisterRequestDto,
+  RemoveUserClaimBodyOne,
+  RemoveUserClaimBodyThree,
+  RemoveUserClaimBodyTwo,
   ResetPasswordRequestDto,
   RoleDto,
   SearchClaimRequestDto,
-  SearchClaimsRequestDto,
+  SearchClaimsBodyOne,
+  SearchClaimsBodyThree,
+  SearchClaimsBodyTwo,
   SearchExternalLoginsRequestDto,
   SearchNotificationsRequestDto,
   SearchStaticContentRequestDto,
@@ -56,8 +77,12 @@ import type {
   StringPagedResponseDto,
   SupportedExternalLoginDto,
   UpdateProfileRequestDto,
-  UpdateStaticContentDto,
-  UpdateStaticContentLanguageDto,
+  UpdateStaticContentBodyOne,
+  UpdateStaticContentBodyThree,
+  UpdateStaticContentBodyTwo,
+  UpdateStaticContentLanguageBodyOne,
+  UpdateStaticContentLanguageBodyThree,
+  UpdateStaticContentLanguageBodyTwo,
   UserClaimDtoPagedResponseDto,
   UserSettingDto,
   VerifyCodeRequestDto,
@@ -166,25 +191,25 @@ export class LightNapWebApiService {
    */
   updateStaticContent<TData = StaticContentDto>(
     key: string,
-    updateStaticContentDto: UpdateStaticContentDto,
+    updateStaticContentBody: UpdateStaticContentBodyOne | UpdateStaticContentBodyTwo | UpdateStaticContentBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   updateStaticContent<TData = StaticContentDto>(
     key: string,
-    updateStaticContentDto: UpdateStaticContentDto,
+    updateStaticContentBody: UpdateStaticContentBodyOne | UpdateStaticContentBodyTwo | UpdateStaticContentBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   updateStaticContent<TData = StaticContentDto>(
     key: string,
-    updateStaticContentDto: UpdateStaticContentDto,
+    updateStaticContentBody: UpdateStaticContentBodyOne | UpdateStaticContentBodyTwo | UpdateStaticContentBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   updateStaticContent<TData = StaticContentDto>(
     key: string,
-    updateStaticContentDto: UpdateStaticContentDto,
+    updateStaticContentBody: UpdateStaticContentBodyOne | UpdateStaticContentBodyTwo | UpdateStaticContentBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
-    return this.http.put<TData>(`/api/Content/${key}`, updateStaticContentDto, options);
+    return this.http.put<TData>(`/api/Content/${key}`, updateStaticContentBody, options);
   }
 
   /**
@@ -283,28 +308,28 @@ export class LightNapWebApiService {
   updateStaticContentLanguage<TData = StaticContentLanguageDto>(
     key: string,
     languageCode: string,
-    updateStaticContentLanguageDto: UpdateStaticContentLanguageDto,
+    updateStaticContentLanguageBody: UpdateStaticContentLanguageBodyOne | UpdateStaticContentLanguageBodyTwo | UpdateStaticContentLanguageBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   updateStaticContentLanguage<TData = StaticContentLanguageDto>(
     key: string,
     languageCode: string,
-    updateStaticContentLanguageDto: UpdateStaticContentLanguageDto,
+    updateStaticContentLanguageBody: UpdateStaticContentLanguageBodyOne | UpdateStaticContentLanguageBodyTwo | UpdateStaticContentLanguageBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   updateStaticContentLanguage<TData = StaticContentLanguageDto>(
     key: string,
     languageCode: string,
-    updateStaticContentLanguageDto: UpdateStaticContentLanguageDto,
+    updateStaticContentLanguageBody: UpdateStaticContentLanguageBodyOne | UpdateStaticContentLanguageBodyTwo | UpdateStaticContentLanguageBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   updateStaticContentLanguage<TData = StaticContentLanguageDto>(
     key: string,
     languageCode: string,
-    updateStaticContentLanguageDto: UpdateStaticContentLanguageDto,
+    updateStaticContentLanguageBody: UpdateStaticContentLanguageBodyOne | UpdateStaticContentLanguageBodyTwo | UpdateStaticContentLanguageBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
-    return this.http.put<TData>(`/api/Content/${key}/languages/${languageCode}`, updateStaticContentLanguageDto, options);
+    return this.http.put<TData>(`/api/Content/${key}/languages/${languageCode}`, updateStaticContentLanguageBody, options);
   }
 
   /**
@@ -447,25 +472,25 @@ export class LightNapWebApiService {
    */
   completeExternalLogin<TData = LoginSuccessDto>(
     confirmationToken: string,
-    externalLoginRequestDto: ExternalLoginRequestDto,
+    completeExternalLoginBody: CompleteExternalLoginBodyOne | CompleteExternalLoginBodyTwo | CompleteExternalLoginBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   completeExternalLogin<TData = LoginSuccessDto>(
     confirmationToken: string,
-    externalLoginRequestDto: ExternalLoginRequestDto,
+    completeExternalLoginBody: CompleteExternalLoginBodyOne | CompleteExternalLoginBodyTwo | CompleteExternalLoginBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   completeExternalLogin<TData = LoginSuccessDto>(
     confirmationToken: string,
-    externalLoginRequestDto: ExternalLoginRequestDto,
+    completeExternalLoginBody: CompleteExternalLoginBodyOne | CompleteExternalLoginBodyTwo | CompleteExternalLoginBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   completeExternalLogin<TData = LoginSuccessDto>(
     confirmationToken: string,
-    externalLoginRequestDto: ExternalLoginRequestDto,
+    completeExternalLoginBody: CompleteExternalLoginBodyOne | CompleteExternalLoginBodyTwo | CompleteExternalLoginBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
-    return this.http.post<TData>(`/api/ExternalLogin/complete/${confirmationToken}`, externalLoginRequestDto, options);
+    return this.http.post<TData>(`/api/ExternalLogin/complete/${confirmationToken}`, completeExternalLoginBody, options);
   }
 
   /**
@@ -827,19 +852,19 @@ export class LightNapWebApiService {
  * @summary Retrieves the claims associated with the currently authenticated user.
  */
   getMyUserClaims<TData = ClaimDtoPagedResponseDto>(
-    pagedRequestDtoBase: PagedRequestDtoBase,
+    getMyUserClaimsBody: GetMyUserClaimsBodyOne | GetMyUserClaimsBodyTwo | GetMyUserClaimsBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   getMyUserClaims<TData = ClaimDtoPagedResponseDto>(
-    pagedRequestDtoBase: PagedRequestDtoBase,
+    getMyUserClaimsBody: GetMyUserClaimsBodyOne | GetMyUserClaimsBodyTwo | GetMyUserClaimsBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   getMyUserClaims<TData = ClaimDtoPagedResponseDto>(
-    pagedRequestDtoBase: PagedRequestDtoBase,
+    getMyUserClaimsBody: GetMyUserClaimsBodyOne | GetMyUserClaimsBodyTwo | GetMyUserClaimsBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   getMyUserClaims<TData = ClaimDtoPagedResponseDto>(
-    pagedRequestDtoBase: PagedRequestDtoBase,
+    getMyUserClaimsBody: GetMyUserClaimsBodyOne | GetMyUserClaimsBodyTwo | GetMyUserClaimsBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
     return this.http.get<TData>(`/api/users/me/claims`, options);
@@ -883,12 +908,18 @@ export class LightNapWebApiService {
   /**
    * @summary Retrieves all external login providers linked to the current user.
    */
-  getMyExternalLogins<TData = ExternalLoginDto[] | null>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
-  getMyExternalLogins<TData = ExternalLoginDto[] | null>(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
-  getMyExternalLogins<TData = ExternalLoginDto[] | null>(
-    options?: HttpClientOptions & { observe: "response" }
-  ): Observable<AngularHttpResponse<TData>>;
-  getMyExternalLogins<TData = ExternalLoginDto[] | null>(options?: HttpClientOptions & { observe?: any }): Observable<any> {
+  getMyExternalLogins<
+    TData = GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null,
+  >(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  getMyExternalLogins<
+    TData = GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null,
+  >(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  getMyExternalLogins<
+    TData = GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null,
+  >(options?: HttpClientOptions & { observe: "response" }): Observable<AngularHttpResponse<TData>>;
+  getMyExternalLogins<
+    TData = GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null,
+  >(options?: HttpClientOptions & { observe?: any }): Observable<any> {
     return this.http.get<TData>(`/api/users/me/external-logins`, options);
   }
 
@@ -921,10 +952,19 @@ export class LightNapWebApiService {
   /**
    * @summary Retrieves a user by ID.
    */
-  getUser<TData = PublicUserDto>(userId: string, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
-  getUser<TData = PublicUserDto>(userId: string, options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
-  getUser<TData = PublicUserDto>(userId: string, options?: HttpClientOptions & { observe: "response" }): Observable<AngularHttpResponse<TData>>;
-  getUser<TData = PublicUserDto>(userId: string, options?: HttpClientOptions & { observe?: any }): Observable<any> {
+  getUser<TData = GetUser200One | GetUser200Two | GetUser200Three>(
+    userId: string,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  getUser<TData = GetUser200One | GetUser200Two | GetUser200Three>(
+    userId: string,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  getUser<TData = GetUser200One | GetUser200Two | GetUser200Three>(
+    userId: string,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  getUser<TData = GetUser200One | GetUser200Two | GetUser200Three>(userId: string, options?: HttpClientOptions & { observe?: any }): Observable<any> {
     return this.http.get<TData>(`/api/Users/${userId}`, options);
   }
 
@@ -967,13 +1007,22 @@ export class LightNapWebApiService {
   /**
    * @summary Retrieves a user by username.
    */
-  getUserByUserName<TData = PublicUserDto>(userName: string, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
-  getUserByUserName<TData = PublicUserDto>(userName: string, options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
-  getUserByUserName<TData = PublicUserDto>(
+  getUserByUserName<TData = GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>(
+    userName: string,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  getUserByUserName<TData = GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>(
+    userName: string,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  getUserByUserName<TData = GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>(
     userName: string,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
-  getUserByUserName<TData = PublicUserDto>(userName: string, options?: HttpClientOptions & { observe?: any }): Observable<any> {
+  getUserByUserName<TData = GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>(
+    userName: string,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
     return this.http.get<TData>(`/api/Users/user-name/${userName}`, options);
   }
 
@@ -1002,16 +1051,22 @@ export class LightNapWebApiService {
   /**
    * @summary Retrieves a list of users by their IDs.
    */
-  getUsersByIds<TData = PublicUserDto[] | null>(getUsersByIdsBody: string[], options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
-  getUsersByIds<TData = PublicUserDto[] | null>(
+  getUsersByIds<TData = GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null>(
+    getUsersByIdsBody: string[],
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  getUsersByIds<TData = GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null>(
     getUsersByIdsBody: string[],
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
-  getUsersByIds<TData = PublicUserDto[] | null>(
+  getUsersByIds<TData = GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null>(
     getUsersByIdsBody: string[],
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
-  getUsersByIds<TData = PublicUserDto[] | null>(getUsersByIdsBody: string[], options?: HttpClientOptions & { observe?: any }): Observable<any> {
+  getUsersByIds<TData = GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null>(
+    getUsersByIdsBody: string[],
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
     return this.http.post<TData>(`/api/Users/get-by-ids`, getUsersByIdsBody, options);
   }
 
@@ -1087,22 +1142,22 @@ export class LightNapWebApiService {
    * @summary Searches claims.
    */
   searchClaims<TData = ClaimDtoPagedResponseDto>(
-    searchClaimsRequestDto: SearchClaimsRequestDto,
+    searchClaimsBody: SearchClaimsBodyOne | SearchClaimsBodyTwo | SearchClaimsBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   searchClaims<TData = ClaimDtoPagedResponseDto>(
-    searchClaimsRequestDto: SearchClaimsRequestDto,
+    searchClaimsBody: SearchClaimsBodyOne | SearchClaimsBodyTwo | SearchClaimsBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   searchClaims<TData = ClaimDtoPagedResponseDto>(
-    searchClaimsRequestDto: SearchClaimsRequestDto,
+    searchClaimsBody: SearchClaimsBodyOne | SearchClaimsBodyTwo | SearchClaimsBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   searchClaims<TData = ClaimDtoPagedResponseDto>(
-    searchClaimsRequestDto: SearchClaimsRequestDto,
+    searchClaimsBody: SearchClaimsBodyOne | SearchClaimsBodyTwo | SearchClaimsBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
-    return this.http.post<TData>(`/api/Users/claims/search`, searchClaimsRequestDto, options);
+    return this.http.post<TData>(`/api/Users/claims/search`, searchClaimsBody, options);
   }
 
   /**
@@ -1152,37 +1207,53 @@ export class LightNapWebApiService {
   /**
    * @summary Adds a claim to a user.
    */
-  addUserClaim<TData = boolean>(userId: string, claimDto: ClaimDto, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
   addUserClaim<TData = boolean>(
     userId: string,
-    claimDto: ClaimDto,
+    addUserClaimBody: AddUserClaimBodyOne | AddUserClaimBodyTwo | AddUserClaimBodyThree,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  addUserClaim<TData = boolean>(
+    userId: string,
+    addUserClaimBody: AddUserClaimBodyOne | AddUserClaimBodyTwo | AddUserClaimBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   addUserClaim<TData = boolean>(
     userId: string,
-    claimDto: ClaimDto,
+    addUserClaimBody: AddUserClaimBodyOne | AddUserClaimBodyTwo | AddUserClaimBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
-  addUserClaim<TData = boolean>(userId: string, claimDto: ClaimDto, options?: HttpClientOptions & { observe?: any }): Observable<any> {
-    return this.http.post<TData>(`/api/Users/${userId}/claims`, claimDto, options);
+  addUserClaim<TData = boolean>(
+    userId: string,
+    addUserClaimBody: AddUserClaimBodyOne | AddUserClaimBodyTwo | AddUserClaimBodyThree,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.post<TData>(`/api/Users/${userId}/claims`, addUserClaimBody, options);
   }
 
   /**
    * @summary Removes a claim from a user.
    */
-  removeUserClaim<TData = boolean>(userId: string, claimDto: ClaimDto, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
   removeUserClaim<TData = boolean>(
     userId: string,
-    claimDto: ClaimDto,
+    removeUserClaimBody: RemoveUserClaimBodyOne | RemoveUserClaimBodyTwo | RemoveUserClaimBodyThree,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  removeUserClaim<TData = boolean>(
+    userId: string,
+    removeUserClaimBody: RemoveUserClaimBodyOne | RemoveUserClaimBodyTwo | RemoveUserClaimBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   removeUserClaim<TData = boolean>(
     userId: string,
-    claimDto: ClaimDto,
+    removeUserClaimBody: RemoveUserClaimBodyOne | RemoveUserClaimBodyTwo | RemoveUserClaimBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
-  removeUserClaim<TData = boolean>(userId: string, claimDto: ClaimDto, options?: HttpClientOptions & { observe?: any }): Observable<any> {
-    return this.http.delete<TData>(`/api/Users/${userId}/claims`, { body: claimDto, ...options });
+  removeUserClaim<TData = boolean>(
+    userId: string,
+    removeUserClaimBody: RemoveUserClaimBodyOne | RemoveUserClaimBodyTwo | RemoveUserClaimBodyThree,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.delete<TData>(`/api/Users/${userId}/claims`, { body: removeUserClaimBody, ...options });
   }
 
   /**
@@ -1288,14 +1359,18 @@ export type MarkMyNotificationAsReadClientResult = NonNullable<boolean>;
 export type GetMyUserClaimsClientResult = NonNullable<ClaimDtoPagedResponseDto>;
 export type GetMyUserSettingsClientResult = NonNullable<UserSettingDto[] | null>;
 export type SetMyUserSettingClientResult = NonNullable<UserSettingDto>;
-export type GetMyExternalLoginsClientResult = NonNullable<ExternalLoginDto[] | null>;
+export type GetMyExternalLoginsClientResult = NonNullable<
+  GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null
+>;
 export type RemoveMyExternalLoginClientResult = NonNullable<boolean>;
-export type GetUserClientResult = NonNullable<PublicUserDto>;
+export type GetUserClientResult = NonNullable<GetUser200One | GetUser200Two | GetUser200Three>;
 export type UpdateUserClientResult = NonNullable<AdminUserDto>;
 export type DeleteUserClientResult = NonNullable<boolean>;
-export type GetUserByUserNameClientResult = NonNullable<PublicUserDto>;
+export type GetUserByUserNameClientResult = NonNullable<GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>;
 export type SearchUsersClientResult = NonNullable<PublicUserDtoPagedResponseDto>;
-export type GetUsersByIdsClientResult = NonNullable<PublicUserDto[] | null>;
+export type GetUsersByIdsClientResult = NonNullable<
+  GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null
+>;
 export type GetRolesClientResult = NonNullable<RoleDto[] | null>;
 export type GetRolesForUserClientResult = NonNullable<string[] | null>;
 export type GetUsersInRoleClientResult = NonNullable<AdminUserDto[] | null>;

@@ -28,6 +28,7 @@ using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
+using LightNap.WebApi.Filters;
 using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -441,8 +442,14 @@ public static class ApplicationServiceExtensions
                 [new OpenApiSecuritySchemeReference(securityDefinitionName, document)] = []
             });
 
+            // Enable support for non-nullable reference types and required properties so everything generated from
+            // the spec isn't optional and nullable unless it's supposed to be
             options.SupportNonNullableReferenceTypes();
             options.NonNullableReferenceTypesAsRequired();
+
+            // Include schemas for select base classes so that frontend type generation from tools like Orval give us
+            // an easier time working with polymorphic types, such as when searching users as admin vs. regular user
+            options.UseOneOfForPolymorphism();
         });
 
         return services;

@@ -4,22 +4,20 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { NotificationDto } from "./notification-dto";
+import type { NotificationDtoPagedResponseDto } from "./notification-dto-paged-response-dto";
 
 /**
  * Contains the search results for notifications.
  */
-export interface NotificationSearchResultsDto {
-  /** Gets or sets the data for the current page. */
-  data: NotificationDto[];
-  /** Gets or sets the current page number. */
-  pageNumber: number;
-  /** Gets or sets the size of the page. */
-  pageSize: number;
-  /** Gets or sets the total count of items. */
-  totalCount: number;
-  /** Gets the total number of pages. */
-  readonly totalPages: number;
+export type NotificationSearchResultsDto = NotificationDtoPagedResponseDto & {
   /** The number of unread notifications. */
   unreadCount: number;
-}
+} & Required<
+    Pick<
+      NotificationDtoPagedResponseDto & {
+        /** The number of unread notifications. */
+        unreadCount: number;
+      },
+      "unreadCount"
+    >
+  >;

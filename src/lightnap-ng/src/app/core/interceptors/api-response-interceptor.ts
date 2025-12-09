@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { ApiResponseDto, ApiResponseTypes, HttpErrorApiResponse } from "@core";
+import { ApiResponseDto, ApiResponseType, HttpErrorApiResponse } from "@core";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { IdentityService } from "@core/services/identity.service";
 import { Observable, catchError, of, switchMap, throwError } from "rxjs";
@@ -26,10 +26,10 @@ export function apiResponseInterceptor(request: HttpRequest<unknown>, next: Http
     switchMap(httpEvent => {
       const apiHttpResponse = httpEvent as HttpResponse<ApiResponseDto<string>>;
       switch (apiHttpResponse.body?.type) {
-        case ApiResponseTypes.Error:
-        case ApiResponseTypes.UnexpectedError:
+        case ApiResponseType.Error:
+        case ApiResponseType.UnexpectedError:
           return throwError(() => apiHttpResponse.body);
-        case ApiResponseTypes.Success:
+        case ApiResponseType.Success:
           return of(apiHttpResponse.clone({ body: apiHttpResponse.body.result ?? null }));
         default:
           break;
@@ -45,8 +45,8 @@ export function apiResponseInterceptor(request: HttpRequest<unknown>, next: Http
       }
 
       switch (error?.type) {
-        case ApiResponseTypes.Error:
-        case ApiResponseTypes.UnexpectedError:
+        case ApiResponseType.Error:
+        case ApiResponseType.UnexpectedError:
           return throwError(() => error);
       }
 

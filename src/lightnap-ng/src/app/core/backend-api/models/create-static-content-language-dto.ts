@@ -4,9 +4,6 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { StaticContentFormat } from "./static-content-format";
+import type { UpdateStaticContentLanguageDto } from "./update-static-content-language-dto";
 
-export interface CreateStaticContentLanguageDto {
-  content: string;
-  format: StaticContentFormat;
-}
+export type CreateStaticContentLanguageDto = UpdateStaticContentLanguageDto;

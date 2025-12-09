@@ -12,7 +12,7 @@ export interface DeviceDto {
   /** Gets or sets the unique identifier of the device. */
   id: string;
   /** Gets or sets the timestamp of the last time the device was seen. */
-  lastSeen: string;
+  lastSeen: Date;
   /** Gets or sets the IP address of the device. */
   ipAddress: string;
   /** Gets or sets additional details about the device. */

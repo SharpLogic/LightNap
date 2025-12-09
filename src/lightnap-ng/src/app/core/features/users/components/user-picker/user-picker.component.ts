@@ -73,7 +73,7 @@ export class UserPickerComponent implements ControlValueAccessor {
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {
+  setDisabledState?(_isDisabled: boolean): void {
     // Optionally implement if you want to support disabling the picker
   }
 }

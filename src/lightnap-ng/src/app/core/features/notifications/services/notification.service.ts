@@ -1,13 +1,14 @@
 import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-    ApiResponseDto,
-    LatestNotifications,
-    NotificationDto,
-    NotificationItem,
-    NotificationSearchResults,
-    NotificationStatus,
-    SearchNotificationsRequestDto
+  ApiResponseDto,
+  LatestNotifications,
+  NotificationDto,
+  NotificationItem,
+  NotificationSearchResults,
+  NotificationStatus,
+  NotificationType,
+  SearchNotificationsRequestDto,
 } from "@core";
 import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
@@ -44,10 +45,10 @@ export class NotificationService {
       .subscribe({
         next: loggedIn => {
           if (loggedIn) {
-            this.#hubService.startConnection().catch(err => console.error('Error starting SignalR connection:', err));
+            this.#hubService.startConnection().catch(err => console.error("Error starting SignalR connection:", err));
             this.#pollingManager.startPolling(); // Keep polling as fallback
           } else {
-            this.#hubService.stopConnection().catch(err => console.error('Error stopping SignalR connection:', err));
+            this.#hubService.stopConnection().catch(err => console.error("Error stopping SignalR connection:", err));
             this.#notifications = undefined;
             this.#notificationsSubject.next([]);
             this.#unreadCount = 0;
@@ -59,7 +60,7 @@ export class NotificationService {
   }
 
   searchNotifications(searchNotificationsRequest: SearchNotificationsRequestDto) {
-    return this.#dataService.searchNotifications(searchNotificationsRequest).pipe(
+    return this.#dataService.searchMyNotifications(searchNotificationsRequest).pipe(
       tap(results => {
         this.#unreadCount = results.unreadCount;
         this.#unreadCountSubject.next(results.unreadCount);
@@ -87,12 +88,12 @@ export class NotificationService {
           this.#toastService.info(item.title, item.description);
         }
       },
-      error: err => console.error('Error processing received notification:', err)
+      error: err => console.error("Error processing received notification:", err),
     });
   }
 
   #requestLatestNotifications() {
-    return this.searchNotifications({ sinceId: this.#notifications?.[0]?.id }).pipe(
+    return this.searchNotifications({ sinceId: this.#notifications?.[0]?.id, pageNumber: 1, pageSize: 25 }).pipe(
       tap(results => {
         if (!results.notifications.length && this.#notifications) return;
         this.#notifications = [...results.notifications, ...(this.#notifications || [])];
@@ -103,7 +104,7 @@ export class NotificationService {
 
   #refreshLatestNotifications() {
     this.#pollingManager.pausePolling();
-    this.searchNotifications({})
+    this.searchNotifications({ pageNumber: 1, pageSize: 25 })
       .pipe(finalize(() => this.#pollingManager.resumePolling()))
       .subscribe({
         next: results => {
@@ -115,11 +116,11 @@ export class NotificationService {
   }
 
   markAllNotificationsAsRead() {
-    return this.#dataService.markAllNotificationsAsRead().pipe(tap(() => this.#refreshLatestNotifications()));
+    return this.#dataService.markAllMyNotificationsAsRead().pipe(tap(() => this.#refreshLatestNotifications()));
   }
 
   markNotificationAsRead(id: number) {
-    return this.#dataService.markNotificationAsRead(id).pipe(tap(() => this.#refreshLatestNotifications()));
+    return this.#dataService.markMyNotificationAsRead(id).pipe(tap(() => this.#refreshLatestNotifications()));
   }
 
   #loadNotificationItems(notifications: Array<NotificationDto>) {
@@ -136,11 +137,14 @@ export class NotificationService {
       id: notification.id,
       timestamp: notification.timestamp,
       isUnread: notification.status === NotificationStatus.Unread,
+      title: "",
+      description: "",
+      routerLink: [],
     };
 
     switch (notification.type) {
-      case NotificationTypes.AdministratorNewUserRegistration:
-        return this.#adminService.getUser(notification.data.userId).pipe(
+      case NotificationType.AdministratorNewUserRegistration:
+        return this.#adminService.getUser(notification.data["userId"] as string).pipe(
           map(user => {
             // User may have been deleted since the notification was created
             if (!user) return null;

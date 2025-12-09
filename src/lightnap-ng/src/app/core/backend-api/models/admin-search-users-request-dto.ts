@@ -4,35 +4,9 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { ApplicationUserSortBy } from "./application-user-sort-by";
+import type { PrivilegedSearchUsersRequestDto } from "./privileged-search-users-request-dto";
 
 /**
  * Represents a request to search users.
  */
-export interface AdminSearchUsersRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
-  /**
-   * Gets or sets the email of the user.
-   * @nullable
-   */
-  email?: string | null;
-  /**
-   * Gets or sets the username of the user.
-   * @nullable
-   */
-  userName?: string | null;
-  sortBy: ApplicationUserSortBy;
-  /** Reverses the default sort behavior of the SortBy field. */
-  reverseSort: boolean;
-}
+export type AdminSearchUsersRequestDto = PrivilegedSearchUsersRequestDto;

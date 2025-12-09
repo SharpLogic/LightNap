@@ -4,24 +4,13 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { PagedRequestDtoBase } from "./paged-request-dto-base";
 import type { StaticContentReadAccess } from "./static-content-read-access";
 import type { StaticContentStatus } from "./static-content-status";
 import type { StaticContentType } from "./static-content-type";
 import type { StaticContentSortBy } from "./static-content-sort-by";
 
-export interface SearchStaticContentRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
+export type SearchStaticContentRequestDto = PagedRequestDtoBase & {
   /**
    * Substring key search filter.
    * @nullable
@@ -33,4 +22,21 @@ export interface SearchStaticContentRequestDto {
   sortBy: StaticContentSortBy;
   /** Reverses the default sort behavior of the SortBy field. */
   reverseSort: boolean;
-}
+} & Required<
+    Pick<
+      PagedRequestDtoBase & {
+        /**
+         * Substring key search filter.
+         * @nullable
+         */
+        keyContains?: string | null;
+        readAccess?: StaticContentReadAccess;
+        status?: StaticContentStatus;
+        type?: StaticContentType;
+        sortBy: StaticContentSortBy;
+        /** Reverses the default sort behavior of the SortBy field. */
+        reverseSort: boolean;
+      },
+      "reverseSort" | "sortBy"
+    >
+  >;

@@ -4,25 +4,14 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { PagedRequestDtoBase } from "./paged-request-dto-base";
 import type { NotificationStatus } from "./notification-status";
 import type { NotificationType } from "./notification-type";
 
 /**
  * Data transfer object for searching notifications with pagination support.
  */
-export interface SearchNotificationsRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
+export type SearchNotificationsRequestDto = PagedRequestDtoBase & {
   /**
    * Gets or sets the ID of the notification to start the search from.
    * @nullable
@@ -35,4 +24,4 @@ export interface SearchNotificationsRequestDto {
   priorToId?: number | null;
   status?: NotificationStatus;
   type?: NotificationType;
-}
+};

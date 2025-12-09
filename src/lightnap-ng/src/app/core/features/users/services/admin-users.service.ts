@@ -11,9 +11,9 @@ import {
     SearchClaimsRequestDto,
     SearchUserClaimsRequestDto,
 } from "@core/backend-api";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { Observable, forkJoin, map, of, shareReplay, switchMap, throwError } from "rxjs";
 import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
-import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 /**
  * Service for managing users and roles in the application. This service provides full access and should only be used in the context of
@@ -26,7 +26,10 @@ import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 export class AdminUsersService {
   #dataService = inject(LightNapWebApiService);
 
-  #roles$ = this.#dataService.getRoles().pipe(shareReplay({ bufferSize: 1, refCount: false }));
+  #roles$ = this.#dataService
+    .getRoles()
+    .pipe(map(roles => roles || []))
+    .pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
   /**
    * Gets a user by their ID.
@@ -43,7 +46,7 @@ export class AdminUsersService {
    * @returns {Observable<AdminUserDto>} An observable containing the user data.
    */
   getUserByUserName(userName: string) {
-    return this.#dataService.getUserByUserName(userName);
+    return this.#dataService.getUserByUserName(userName) as Observable<AdminUserDto>;
   }
 
   /**
@@ -71,7 +74,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<AdminUserDto>>} An observable containing the search results.
    */
   searchUsers(adminSearchUsersRequest: AdminSearchUsersRequestDto) {
-    return this.#dataService.searchUsers(adminSearchUsersRequest);
+    return this.#dataService.searchUsers(adminSearchUsersRequest) as Observable<PagedResponseDto<AdminUserDto>>;
   }
 
   /**
@@ -107,8 +110,8 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
-    return forkJoin([this.getRoles(), this.#dataService.getRolesForUser(userId)]).pipe(
-      map(([rolesResponse, userRolesResponse]) => userRolesResponse.map(userRole => rolesResponse.find(role => role.name === userRole)!))
+    return forkJoin([this.getRoles(), this.#dataService.getRolesForUser(userId).pipe(map(userRoles => userRoles || []))]).pipe(
+      map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!))
     );
   }
 
@@ -161,7 +164,7 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   searchClaims(searchClaims: SearchClaimsRequestDto) {
-    return this.#dataService.searchClaimsAsync(searchClaims);
+    return this.#dataService.searchClaims(searchClaims);
   }
 
   /**
@@ -171,7 +174,7 @@ export class AdminUsersService {
    */
   getUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
     return this.#dataService
-      .searchUserClaimsAsync(searchUserClaimsRequestDto)
+      .searchUserClaims(searchUserClaimsRequestDto)
       .pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
   }
 

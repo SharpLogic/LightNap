@@ -4,46 +4,15 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { SearchClaimsRequestDto } from "./search-claims-request-dto";
 
 /**
  * Represents a request to search user claims.
  */
-export interface SearchUserClaimsRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
-  /**
-   * Filter by exact claim type.
-   * @nullable
-   */
-  type?: string | null;
-  /**
-   * Filter by claim type substring.
-   * @nullable
-   */
-  typeContains?: string | null;
-  /**
-   * Filter by exact claim value.
-   * @nullable
-   */
-  value?: string | null;
-  /**
-   * Filter by claim value substring.
-   * @nullable
-   */
-  valueContains?: string | null;
+export type SearchUserClaimsRequestDto = SearchClaimsRequestDto & {
   /**
    * Filter by user.
    * @nullable
    */
   userId?: string | null;
-}
+};

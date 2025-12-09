@@ -4,23 +4,12 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { PagedRequestDtoBase } from "./paged-request-dto-base";
 
 /**
  * Represents a request to search claims.
  */
-export interface SearchClaimsRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
+export type SearchClaimsRequestDto = PagedRequestDtoBase & {
   /**
    * Filter by exact claim type.
    * @nullable
@@ -41,4 +30,4 @@ export interface SearchClaimsRequestDto {
    * @nullable
    */
   valueContains?: string | null;
-}
+};

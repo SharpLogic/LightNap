@@ -4,14 +4,14 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { ClaimDto } from "./claim-dto";
+import type { ClaimDtoPagedResponseDtoDataItem } from "./claim-dto-paged-response-dto-data-item";
 
 /**
  * Represents a paginated response.
  */
 export interface ClaimDtoPagedResponseDto {
   /** Gets or sets the data for the current page. */
-  data: ClaimDto[];
+  data: ClaimDtoPagedResponseDtoDataItem[];
   /** Gets or sets the current page number. */
   pageNumber: number;
   /** Gets or sets the size of the page. */

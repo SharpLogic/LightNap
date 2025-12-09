@@ -4,19 +4,12 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { ExternalLoginRequestDto } from "./external-login-request-dto";
 
 /**
  * Represents the data transfer object for completing external login registration.
  */
-export interface ExternalLoginRegisterRequestDto {
-  /** Gets or sets a value indicating whether to remember the user. */
-  rememberMe: boolean;
-  /**
-   * Gets or sets the device details of the user.
-   * @minLength 0
-   * @maxLength 512
-   */
-  deviceDetails: string;
+export type ExternalLoginRegisterRequestDto = ExternalLoginRequestDto & {
   /**
    * Gets or sets the email address of the user.
    * @minLength 0
@@ -29,4 +22,22 @@ export interface ExternalLoginRegisterRequestDto {
    * @maxLength 32
    */
   userName: string;
-}
+} & Required<
+    Pick<
+      ExternalLoginRequestDto & {
+        /**
+         * Gets or sets the email address of the user.
+         * @minLength 0
+         * @maxLength 32
+         */
+        email: string;
+        /**
+         * Gets or sets the username of the user.
+         * @minLength 0
+         * @maxLength 32
+         */
+        userName: string;
+      },
+      "email" | "userName"
+    >
+  >;

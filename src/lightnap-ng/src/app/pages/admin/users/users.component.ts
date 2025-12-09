@@ -8,7 +8,7 @@ import {
   EmptyPagedResponse,
   PagedResponseDto,
   RoutePipe,
-  SearchUsersSortBy,
+  ApplicationUserSortBy,
   SearchUsersSortByListItems,
   setApiErrors,
   TypeHelpers,
@@ -62,7 +62,7 @@ export class UsersComponent {
   readonly users$ = this.#lazyLoadEventSubject.pipe(
     switchMap(event =>
       this.#adminService.searchUsers({
-        sortBy: (event.sortField as SearchUsersSortBy) ?? SearchUsersSortBy.UserName,
+        sortBy: (event.sortField as ApplicationUserSortBy) ?? ApplicationUserSortBy.UserName,
         reverseSort: event.sortOrder === -1,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,

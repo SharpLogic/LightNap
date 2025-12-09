@@ -14,5 +14,5 @@ export interface PublicUserDto {
   /** The username of the user. */
   userName: string;
   /** The created date of the user. */
-  createdDate: string;
+  createdDate: Date;
 }

@@ -31,7 +31,7 @@ export interface StaticContentDto {
    */
   readerRoles?: string | null;
   /** Gets or sets the date and time when the content was created. */
-  createdDate: string;
+  createdDate: Date;
   /**
    * Gets or sets the user identifier who created this content.
    * @nullable
@@ -41,7 +41,7 @@ export interface StaticContentDto {
    * Gets or sets the date and time when the status was last changed.
    * @nullable
    */
-  statusChangedDate: string | null;
+  statusChangedDate: Date | null;
   /**
    * Gets or sets the user identifier who last changed the status.
    * @nullable
@@ -51,7 +51,7 @@ export interface StaticContentDto {
    * Gets or sets the date and time when the content was last modified.
    * @nullable
    */
-  lastModifiedDate: string | null;
+  lastModifiedDate: Date | null;
   /**
    * Gets or sets the user identifier who last modified this content.
    * @nullable

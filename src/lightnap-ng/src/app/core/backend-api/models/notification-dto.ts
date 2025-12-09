@@ -15,7 +15,7 @@ export interface NotificationDto {
   /** Gets or sets the notification identifier. */
   id: number;
   /** Gets or sets the timestamp of the notification. */
-  timestamp: string;
+  timestamp: Date;
   status: NotificationStatus;
   type: NotificationType;
   /** Gets or sets the additional data associated with the notification. */

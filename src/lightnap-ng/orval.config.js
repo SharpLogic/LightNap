@@ -15,6 +15,9 @@ module.exports = {
             httpClient: true,
             mock: false,
             namingConvention: "kebab-case",
+            override: {
+                useDates: true
+            }
         },
         hooks: {
             afterAllFilesWrite: "prettier --write",

@@ -17,10 +17,10 @@ export interface UserSettingDto {
    * Gets or sets the date and time when the setting was created.
    * @nullable
    */
-  createdDate?: string | null;
+  createdDate?: Date | null;
   /**
    * Gets or sets the date and time when the setting was last modified.
    * @nullable
    */
-  lastModifiedDate?: string | null;
+  lastModifiedDate?: Date | null;
 }

@@ -4,23 +4,12 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { PagedRequestDtoBase } from "./paged-request-dto-base";
 
 /**
  * Represents a request to search external logins.
  */
-export interface SearchExternalLoginsRequestDto {
-  /**
-   * Gets or sets the page number. Must be greater than 0.
-   * @minimum 1
-   * @maximum 2147483647
-   */
-  pageNumber: number;
-  /**
-   * Gets or sets the page size. Must be between 1 and 50.
-   * @minimum 1
-   * @maximum 50
-   */
-  pageSize: number;
+export type SearchExternalLoginsRequestDto = PagedRequestDtoBase & {
   /**
    * The optional login provider to filter by.
    * @nullable
@@ -31,4 +20,4 @@ export interface SearchExternalLoginsRequestDto {
    * @nullable
    */
   userId?: string | null;
-}
+};

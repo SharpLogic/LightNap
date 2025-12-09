@@ -4,21 +4,19 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { StaticContentFormat } from "./static-content-format";
+import type { PublishedStaticContentDto } from "./published-static-content-dto";
 
 /**
  * Data transfer object for static content in a specific language.
 Extends LightNap.Core.StaticContents.Dto.Response.PublishedStaticContentDto with language-specific metadata.
  */
-export interface StaticContentLanguageDto {
-  content: string;
-  format: StaticContentFormat;
+export type StaticContentLanguageDto = PublishedStaticContentDto & {
   /** Gets or sets the unique identifier of the parent static content. */
   staticContentId: number;
   /** Gets or sets the language code (e.g., "en-US", "fr-FR"). */
   languageCode: string;
   /** Gets or sets the date and time when this language version was created. */
-  createdDate: string;
+  createdDate: Date;
   /**
    * Gets or sets the user ID of who created this language version.
    * @nullable
@@ -28,10 +26,37 @@ export interface StaticContentLanguageDto {
    * Gets or sets the date and time when this language version was last modified.
    * @nullable
    */
-  lastModifiedDate: string | null;
+  lastModifiedDate: Date | null;
   /**
    * Gets or sets the user ID of who last modified this language version.
    * @nullable
    */
   lastModifiedUserId: string | null;
-}
+} & Required<
+    Pick<
+      PublishedStaticContentDto & {
+        /** Gets or sets the unique identifier of the parent static content. */
+        staticContentId: number;
+        /** Gets or sets the language code (e.g., "en-US", "fr-FR"). */
+        languageCode: string;
+        /** Gets or sets the date and time when this language version was created. */
+        createdDate: Date;
+        /**
+         * Gets or sets the user ID of who created this language version.
+         * @nullable
+         */
+        createdByUserId: string | null;
+        /**
+         * Gets or sets the date and time when this language version was last modified.
+         * @nullable
+         */
+        lastModifiedDate: Date | null;
+        /**
+         * Gets or sets the user ID of who last modified this language version.
+         * @nullable
+         */
+        lastModifiedUserId: string | null;
+      },
+      "createdByUserId" | "createdDate" | "languageCode" | "lastModifiedDate" | "lastModifiedUserId" | "staticContentId"
+    >
+  >;

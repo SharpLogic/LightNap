@@ -4,24 +4,30 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { PrivilegedUserDto } from "./privileged-user-dto";
 
 /**
  * Represents a user DTO with public information.
  */
-export interface AdminUserDto {
-  /** The ID of the user. */
-  id: string;
-  /** The username of the user. */
-  userName: string;
-  /** The created date of the user. */
-  createdDate: string;
-  /** The username of the user. */
-  email: string;
+export type AdminUserDto = PrivilegedUserDto & {
   /** The last modified date of the user. */
-  lastModifiedDate: string;
+  lastModifiedDate: Date;
   /**
    * When the user's lockout ends, if applicable.
    * @nullable
    */
-  lockoutEnd?: string | null;
-}
+  lockoutEnd?: Date | null;
+} & Required<
+    Pick<
+      PrivilegedUserDto & {
+        /** The last modified date of the user. */
+        lastModifiedDate: Date;
+        /**
+         * When the user's lockout ends, if applicable.
+         * @nullable
+         */
+        lockoutEnd?: Date | null;
+      },
+      "lastModifiedDate"
+    >
+  >;

@@ -4,18 +4,21 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
+import type { ExternalLoginDto } from "./external-login-dto";
 
 /**
  * Represents external login information for an administrative user, including the user's identifier and associated
 external authentication details.
  */
-export interface AdminExternalLoginDto {
-  /** The name of the external authentication provider (for example, "Google" or "Facebook"). */
-  loginProvider: string;
-  /** The unique identifier assigned to the user by the external authentication provider. */
-  providerKey: string;
-  /** The display name of the external authentication provider, as shown to users. */
-  providerDisplayName: string;
+export type AdminExternalLoginDto = ExternalLoginDto & {
   /** The unique identifier of the administrative user associated with the external login. */
   userId: string;
-}
+} & Required<
+    Pick<
+      ExternalLoginDto & {
+        /** The unique identifier of the administrative user associated with the external login. */
+        userId: string;
+      },
+      "userId"
+    >
+  >;
