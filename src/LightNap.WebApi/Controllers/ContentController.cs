@@ -28,9 +28,9 @@ namespace LightNap.WebApi.Controllers
         /// <param name="key">The unique identifier of the static content.</param>
         /// <param name="languageCode">The language code for the content (e.g., "en-US", "fr-FR").</param>
         /// <returns>The published static content result if found; otherwise null.</returns>
-        [HttpGet("published/{key}/{languageCode}")]
+        [HttpGet("published/{key}/{languageCode}", Name = nameof(GetPublishedStaticContent))]
         [AllowAnonymous]
-        public async Task<ApiResponseDto<PublishedStaticContentResultDto?>> GetPublishedStaticContentAsync(string key, string languageCode)
+        public async Task<ApiResponseDto<PublishedStaticContentResultDto?>> GetPublishedStaticContent(string key, string languageCode)
         {
             return new ApiResponseDto<PublishedStaticContentResultDto?>(await staticContentService.GetPublishedStaticContentAsync(key, languageCode));
         }
@@ -39,12 +39,12 @@ namespace LightNap.WebApi.Controllers
         /// Retrieves the list of supported languages for static content.
         /// </summary>
         /// <returns>A read-only list of supported language configurations.</returns>
-        [HttpGet("supported-languages")]
+        [HttpGet("supported-languages", Name = nameof(GetSupportedLanguages))]
         [AllowAnonymous]
         [OutputCache(Duration = 3600)]
-        public ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguage>> GetSupportedLanguages()
+        public ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguageDto>> GetSupportedLanguages()
         {
-            return new ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguage>>(staticContentService.GetSupportedLanguages());
+            return new ApiResponseDto<IReadOnlyList<StaticContentSupportedLanguageDto>>(staticContentService.GetSupportedLanguages());
         }
 
         /// <summary>
@@ -53,9 +53,9 @@ namespace LightNap.WebApi.Controllers
         /// <param name="createDto">The data transfer object containing the content to create.</param>
         /// <returns>The newly created static content.</returns>
         /// <remarks>Requires Administrator or ContentEditor role.</remarks>
-        [HttpPost]
+        [HttpPost(Name = nameof(CreateStaticContent))]
         [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
-        public async Task<ApiResponseDto<StaticContentDto>> CreateStaticContentAsync(CreateStaticContentDto createDto)
+        public async Task<ApiResponseDto<StaticContentDto>> CreateStaticContent(CreateStaticContentDto createDto)
         {
             return new ApiResponseDto<StaticContentDto>(await staticContentService.CreateStaticContentAsync(createDto));
         }
@@ -65,8 +65,8 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <param name="key">The unique identifier of the static content.</param>
         /// <returns>The static content if found; otherwise null.</returns>
-        [HttpGet("{key}")]
-        public async Task<ApiResponseDto<StaticContentDto?>> GetStaticContentAsync(string key)
+        [HttpGet("{key}", Name = nameof(GetStaticContent))]
+        public async Task<ApiResponseDto<StaticContentDto?>> GetStaticContent(string key)
         {
             return new ApiResponseDto<StaticContentDto?>(await staticContentService.GetStaticContentAsync(key));
         }
@@ -77,9 +77,9 @@ namespace LightNap.WebApi.Controllers
         /// <param name="searchDto">The search criteria and pagination parameters.</param>
         /// <returns>A paginated list of matching static content.</returns>
         /// <remarks>Requires Administrator or ContentEditor role.</remarks>
-        [HttpPost("search")]
+        [HttpPost("search", Name = nameof(SearchStaticContent))]
         [Authorize(Roles = $"{Constants.Roles.Administrator},{Constants.Roles.ContentEditor}")]
-        public async Task<ApiResponseDto<PagedResponseDto<StaticContentDto>>> SearchStaticContentAsync(SearchStaticContentRequestDto searchDto)
+        public async Task<ApiResponseDto<PagedResponseDto<StaticContentDto>>> SearchStaticContent(SearchStaticContentRequestDto searchDto)
         {
             return new ApiResponseDto<PagedResponseDto<StaticContentDto>>(await staticContentService.SearchStaticContentAsync(searchDto));
         }
@@ -90,8 +90,8 @@ namespace LightNap.WebApi.Controllers
         /// <param name="key">The unique identifier of the static content to update.</param>
         /// <param name="updateDto">The data transfer object containing the updated content.</param>
         /// <returns>The updated static content.</returns>
-        [HttpPut("{key}")]
-        public async Task<ApiResponseDto<StaticContentDto>> UpdateStaticContentAsync(string key, UpdateStaticContentDto updateDto)
+        [HttpPut("{key}", Name = nameof(UpdateStaticContent))]
+        public async Task<ApiResponseDto<StaticContentDto>> UpdateStaticContent(string key, UpdateStaticContentDto updateDto)
         {
             return new ApiResponseDto<StaticContentDto>(await staticContentService.UpdateStaticContentAsync(key, updateDto));
         }
@@ -102,9 +102,9 @@ namespace LightNap.WebApi.Controllers
         /// <param name="key">The unique identifier of the static content to delete.</param>
         /// <returns>True if the deletion was successful.</returns>
         /// <remarks>Requires Administrator role.</remarks>
-        [HttpDelete("{key}")]
+        [HttpDelete("{key}", Name = nameof(DeleteStaticContent))]
         [Authorize(Roles = Constants.Roles.Administrator)]
-        public async Task<ApiResponseDto<bool>> DeleteStaticContentAsync(string key)
+        public async Task<ApiResponseDto<bool>> DeleteStaticContent(string key)
         {
             await staticContentService.DeleteStaticContentAsync(key);
             return new ApiResponseDto<bool>(true);
@@ -116,8 +116,8 @@ namespace LightNap.WebApi.Controllers
         /// <param name="key">The unique identifier of the static content.</param>
         /// <param name="languageCode">The language code for the content version.</param>
         /// <returns>The language-specific static content if found; otherwise null.</returns>
-        [HttpGet("{key}/languages/{languageCode}")]
-        public async Task<ApiResponseDto<StaticContentLanguageDto?>> GetStaticContentLanguageAsync(string key, string languageCode)
+        [HttpGet("{key}/languages/{languageCode}", Name = nameof(GetStaticContentLanguage))]
+        public async Task<ApiResponseDto<StaticContentLanguageDto?>> GetStaticContentLanguage(string key, string languageCode)
         {
             return new ApiResponseDto<StaticContentLanguageDto?>(await staticContentService.GetStaticContentLanguageAsync(key, languageCode));
         }
@@ -127,8 +127,8 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <param name="key">The unique identifier of the static content.</param>
         /// <returns>A read-only list of all language versions.</returns>
-        [HttpGet("{key}/languages")]
-        public async Task<ApiResponseDto<IReadOnlyList<StaticContentLanguageDto>>> GetStaticContentLanguagesAsync(string key)
+        [HttpGet("{key}/languages", Name = nameof(GetStaticContentLanguages))]
+        public async Task<ApiResponseDto<IReadOnlyList<StaticContentLanguageDto>>> GetStaticContentLanguages(string key)
         {
             return new ApiResponseDto<IReadOnlyList<StaticContentLanguageDto>>(await staticContentService.GetStaticContentLanguagesAsync(key));
         }
@@ -140,8 +140,8 @@ namespace LightNap.WebApi.Controllers
         /// <param name="languageCode">The language code for the new version.</param>
         /// <param name="createDto">The data transfer object containing the language-specific content.</param>
         /// <returns>The newly created language-specific static content.</returns>
-        [HttpPost("{key}/languages/{languageCode}")]
-        public async Task<ApiResponseDto<StaticContentLanguageDto>> CreateStaticContentLanguageAsync(string key, string languageCode, CreateStaticContentLanguageDto createDto)
+        [HttpPost("{key}/languages/{languageCode}", Name = nameof(CreateStaticContentLanguage))]
+        public async Task<ApiResponseDto<StaticContentLanguageDto>> CreateStaticContentLanguage(string key, string languageCode, CreateStaticContentLanguageDto createDto)
         {
             return new ApiResponseDto<StaticContentLanguageDto>(await staticContentService.CreateStaticContentLanguageAsync(key, languageCode, createDto));
         }
@@ -153,8 +153,8 @@ namespace LightNap.WebApi.Controllers
         /// <param name="languageCode">The language code of the version to update.</param>
         /// <param name="updateDto">The data transfer object containing the updated language-specific content.</param>
         /// <returns>The updated language-specific static content.</returns>
-        [HttpPut("{key}/languages/{languageCode}")]
-        public async Task<ApiResponseDto<StaticContentLanguageDto>> UpdateStaticContentLanguageAsync(string key, string languageCode, UpdateStaticContentLanguageDto updateDto)
+        [HttpPut("{key}/languages/{languageCode}", Name = nameof(UpdateStaticContentLanguage))]
+        public async Task<ApiResponseDto<StaticContentLanguageDto>> UpdateStaticContentLanguage(string key, string languageCode, UpdateStaticContentLanguageDto updateDto)
         {
             return new ApiResponseDto<StaticContentLanguageDto>(await staticContentService.UpdateStaticContentLanguageAsync(key, languageCode, updateDto));
         }
@@ -166,12 +166,11 @@ namespace LightNap.WebApi.Controllers
         /// <param name="languageCode">The language code of the version to delete.</param>
         /// <returns>True if the deletion was successful.</returns>
         /// <remarks>Requires Administrator role.</remarks>
-        [HttpDelete("{key}/languages/{languageCode}")]
+        [HttpDelete("{key}/languages/{languageCode}", Name = nameof(DeleteStaticContentLanguage))]
         [Authorize(Roles = Constants.Roles.Administrator)]
-        public async Task<ApiResponseDto<bool>> DeleteStaticContentLanguageAsync(string key, string languageCode)
+        public async Task<ApiResponseDto<bool>> DeleteStaticContentLanguage(string key, string languageCode)
         {
             await staticContentService.DeleteStaticContentLanguageAsync(key, languageCode);
             return new ApiResponseDto<bool>(true);
         }
-    }
-}
+    }}

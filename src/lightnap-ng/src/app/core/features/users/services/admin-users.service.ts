@@ -11,9 +11,9 @@ import {
     SearchClaimsRequestDto,
     SearchUserClaimsRequestDto,
 } from "@core/backend-api";
-import { UsersDataService } from "@core/backend-api/services/users-data.service";
 import { Observable, forkJoin, map, of, shareReplay, switchMap, throwError } from "rxjs";
 import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 /**
  * Service for managing users and roles in the application. This service provides full access and should only be used in the context of
@@ -24,7 +24,7 @@ import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
   providedIn: "root",
 })
 export class AdminUsersService {
-  #dataService = inject(UsersDataService);
+  #dataService = inject(LightNapWebApiService);
 
   #roles$ = this.#dataService.getRoles().pipe(shareReplay({ bufferSize: 1, refCount: false }));
 
@@ -81,7 +81,7 @@ export class AdminUsersService {
    */
   getUsersById(userIds: Array<string>): Observable<Array<AdminUserDto>> {
     if (!userIds || userIds.length === 0) return of([]);
-    return this.#dataService.getUsersById(userIds);
+    return this.#dataService.getUsersByIds(userIds);
   }
 
   /**
@@ -107,7 +107,7 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
-    return forkJoin([this.getRoles(), this.#dataService.getUserRoles(userId)]).pipe(
+    return forkJoin([this.getRoles(), this.#dataService.getRolesForUser(userId)]).pipe(
       map(([rolesResponse, userRolesResponse]) => userRolesResponse.map(userRole => rolesResponse.find(role => role.name === userRole)!))
     );
   }
@@ -161,7 +161,7 @@ export class AdminUsersService {
    * @returns {Observable<PagedResponseDto<ClaimDto>>} An observable containing the search results.
    */
   searchClaims(searchClaims: SearchClaimsRequestDto) {
-    return this.#dataService.searchClaims(searchClaims);
+    return this.#dataService.searchClaimsAsync(searchClaims);
   }
 
   /**
@@ -171,7 +171,7 @@ export class AdminUsersService {
    */
   getUserClaims(searchUserClaimsRequestDto: SearchUserClaimsRequestDto) {
     return this.#dataService
-      .searchUserClaims(searchUserClaimsRequestDto)
+      .searchUserClaimsAsync(searchUserClaimsRequestDto)
       .pipe(map(results => <PagedResponseDto<ClaimDto>>{ ...results, data: results.data }));
   }
 

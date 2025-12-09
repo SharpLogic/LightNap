@@ -3,6 +3,15 @@ using LightNap.Core.Interfaces;
 
 namespace LightNap.Core.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="IUserContext"/> that enforce authentication, role membership,
+    /// administrator privileges, and claim requirements by throwing user-friendly exceptions when access conditions are
+    /// not met.
+    /// </summary>
+    /// <remarks>These methods are intended to simplify access control checks in application code by throwing
+    /// <see cref="UserFriendlyApiException"/> when a user does not meet the required criteria. Use these extensions to
+    /// ensure that users are properly authenticated and authorized before performing sensitive operations. All methods
+    /// throw exceptions with descriptive messages suitable for displaying to end users.</remarks>
     public static class IUserContextExtensions
     {
         /// <summary>

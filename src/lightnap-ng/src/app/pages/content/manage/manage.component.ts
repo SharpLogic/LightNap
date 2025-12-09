@@ -9,13 +9,9 @@ import {
   setApiErrors,
   StaticContentDto,
   StaticContentReadAccess,
-  StaticContentReadAccesses,
   StaticContentSortBy,
-  StaticContentSortBys,
   StaticContentStatus,
-  StaticContentStatuses,
   StaticContentType,
-  StaticContentTypes,
   TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
@@ -81,7 +77,7 @@ export class ManageComponent {
         type: this.form.value.type ?? undefined,
         pageSize: this.pageSize,
         pageNumber: (event.first ?? 0) / this.pageSize + 1,
-        sortBy: (event.sortField as StaticContentSortBy) ?? StaticContentSortBys.Key,
+        sortBy: (event.sortField as StaticContentSortBy) ?? StaticContentSortBy.Key,
         reverseSort: event.sortOrder === -1,
       })
     ),
@@ -116,9 +112,9 @@ export class ManageComponent {
     this.#contentService
       .createStaticContent({
         key: this.createForm.value.key!,
-        type: StaticContentTypes.Page,
-        status: StaticContentStatuses.Draft,
-        readAccess: StaticContentReadAccesses.Explicit,
+        type: StaticContentType.Page,
+        status: StaticContentStatus.Draft,
+        readAccess: StaticContentReadAccess.Explicit,
       })
       .subscribe({
         next: () => this.#lazyLoadEventSubject.next({ first: 0 }),

@@ -21,6 +21,7 @@ namespace LightNap.Core.Email.Interfaces
         /// Sends a email change email to the specified user.
         /// </summary>
         /// <param name="user">The user to send the email to.</param>
+        /// <param name="newEmail">The new email address.</param>
         /// <param name="token">The token for verifying the email change.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task SendChangeEmailAsync(ApplicationUser user, string newEmail, string token);

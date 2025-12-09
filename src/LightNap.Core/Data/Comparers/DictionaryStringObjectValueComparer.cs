@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace LightNap.Core.Data.Comparers
 {
-    public class DictionaryStringObjectValueComparer : ValueComparer<Dictionary<string, object>>
+    internal class DictionaryStringObjectValueComparer : ValueComparer<Dictionary<string, object>>
     {
         public DictionaryStringObjectValueComparer()
             : base(

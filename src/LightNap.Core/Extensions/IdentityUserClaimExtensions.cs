@@ -9,7 +9,7 @@ namespace LightNap.Core.Extensions
         /// <summary>
         /// Converts a UserClaim to a ClaimDto.
         /// </summary>
-        /// <param name="claim">The user claim to convert.</param>
+        /// <param name="userClaim">The user claim to convert.</param>
         /// <returns>A ClaimDto representing the user claim.</returns>
         public static ClaimDto ToDto(this IdentityUserClaim<string> userClaim)
         {
@@ -42,7 +42,7 @@ namespace LightNap.Core.Extensions
         /// <returns>The list of converted ClaimDto objects.</returns>
         public static List<ClaimDto> ToDtoList(this IEnumerable<IdentityUserClaim<string>> claims)
         {
-            return claims.Select(claim => claim.ToDto()).ToList();
+            return [.. claims.Select(claim => claim.ToDto())];
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace LightNap.Core.Extensions
         /// <returns>The list of converted UserClaimDto objects.</returns>
         public static List<UserClaimDto> ToUserClaimDtoList(this IEnumerable<IdentityUserClaim<string>> claims)
         {
-            return claims.Select(claim => claim.ToUserClaimDto()).ToList();
+            return [.. claims.Select(claim => claim.ToUserClaimDto())];
         }
 
     }

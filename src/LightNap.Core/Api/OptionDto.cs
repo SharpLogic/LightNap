@@ -1,19 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace LightNap.Core.Api;
 
-namespace LightNap.Core.Api
+/// <summary>
+/// Represents a data transfer object for an option with display information and metadata.
+/// </summary>
+/// <param name="Key">The unique identifier for the option.</param>
+/// <param name="DisplayName">The human-readable name to display for the option.</param>
+/// <param name="Description">The optional description of the option. Defaults to an empty string if not provided.</param>
+public record OptionDto(string Key, string DisplayName, string Description = "")
 {
-    public class OptionDto
-    {
-        public required string DisplayName { get; set; }
-        public required string Key { get; set; }
-        public required string Description { get; set; }
-
-        [SetsRequiredMembers]
-        public OptionDto(string key, string displayName, string? description = null)
-        {
-            this.Description = description ?? string.Empty;
-            this.DisplayName = displayName;
-            this.Key = key;
-        }
-    }
 }

@@ -30,10 +30,10 @@ namespace LightNap.WebApi.Controllers
         /// </returns>
         /// <response code="200">Returns the profile of the current user.</response>
         /// <response code="401">If the user is not authenticated.</response>
-        [HttpGet("profile")]
+        [HttpGet("profile", Name = nameof(GetProfile))]
         public async Task<ApiResponseDto<ProfileDto>> GetProfile()
         {
-            return new ApiResponseDto<ProfileDto>(await profileService.GetProfileAsync());
+            return new ApiResponseDto<ProfileDto>(await profileService.GetMyProfileAsync());
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace LightNap.WebApi.Controllers
         /// <response code="200">Returns the updated profile of the current user.</response>
         /// <response code="401">If the user is not authenticated.</response>
         /// <response code="400">If the request is invalid.</response>
-        [HttpPut("profile")]
-        public async Task<ApiResponseDto<ProfileDto>> UpdateProfile(UpdateProfileRequestDto updateProfileRequest)
+        [HttpPut("profile", Name = nameof(UpdateMyProfile))]
+        public async Task<ApiResponseDto<ProfileDto>> UpdateMyProfile(UpdateProfileRequestDto updateProfileRequest)
         {
             return new ApiResponseDto<ProfileDto>(await profileService.UpdateProfileAsync(updateProfileRequest));
         }
@@ -61,7 +61,7 @@ namespace LightNap.WebApi.Controllers
         /// </returns>
         /// <response code="200">Returns the list of notifications.</response>
         /// <response code="401">If the user is not authenticated.</response>
-        [HttpPost("notifications")]
+        [HttpPost("notifications", Name = nameof(SearchMyNotifications))]
         public async Task<ApiResponseDto<NotificationSearchResultsDto>> SearchMyNotifications(SearchNotificationsRequestDto searchNotificationsRequest)
         {
             return new ApiResponseDto<NotificationSearchResultsDto>(await notificationService.SearchMyNotificationsAsync(searchNotificationsRequest));
@@ -75,8 +75,8 @@ namespace LightNap.WebApi.Controllers
         /// </returns>
         /// <response code="200">If all notifications were marked as read successfully.</response>
         /// <response code="401">If the user is not authenticated.</response>
-        [HttpPut("notifications/mark-all-as-read")]
-        public async Task<ApiResponseDto<bool>> MarkAllNotificationsAsRead()
+        [HttpPut("notifications/mark-all-as-read", Name = nameof(MarkAllMyNotificationsAsRead))]
+        public async Task<ApiResponseDto<bool>> MarkAllMyNotificationsAsRead()
         {
             await notificationService.MarkAllMyNotificationsAsReadAsync();
             return new ApiResponseDto<bool>(true);
@@ -91,8 +91,8 @@ namespace LightNap.WebApi.Controllers
         /// </returns>
         /// <response code="200">If the notification was marked as read successfully.</response>
         /// <response code="401">If the user is not authenticated.</response>
-        [HttpPut("notifications/{id}/mark-as-read")]
-        public async Task<ApiResponseDto<bool>> MarkNotificationAsRead(int id)
+        [HttpPut("notifications/{id}/mark-as-read", Name = nameof(MarkMyNotificationAsRead))]
+        public async Task<ApiResponseDto<bool>> MarkMyNotificationAsRead(int id)
         {
             await notificationService.MarkMyNotificationAsReadAsync(id);
             return new ApiResponseDto<bool>(true);
@@ -106,8 +106,8 @@ namespace LightNap.WebApi.Controllers
         /// to access this endpoint.</remarks>
         /// <param name="pagedRequestDto">The pagination and sorting information.</param>
         /// <returns>A <see cref="PagedResponseDto{ClaimDto}"/> containing the user's claims.</returns>
-        [HttpGet("claims")]
-        public async Task<ApiResponseDto<PagedResponseDto<ClaimDto>>> GetUserClaimsAsync(PagedRequestDtoBase pagedRequestDto)
+        [HttpGet("claims", Name = nameof(GetMyUserClaims))]
+        public async Task<ApiResponseDto<PagedResponseDto<ClaimDto>>> GetMyUserClaims(PagedRequestDtoBase pagedRequestDto)
         {
             return new ApiResponseDto<PagedResponseDto<ClaimDto>>(await claimsService.GetMyClaimsAsync(pagedRequestDto));
         }
@@ -116,8 +116,8 @@ namespace LightNap.WebApi.Controllers
         /// Gets the user settings for the current user.
         /// </summary>
         /// <returns>The list of user settings.</returns>
-        [HttpGet("settings")]
-        public async Task<ApiResponseDto<List<UserSettingDto>>> GetUserSettingsAsync()
+        [HttpGet("settings", Name = nameof(GetMyUserSettings))]
+        public async Task<ApiResponseDto<List<UserSettingDto>>> GetMyUserSettings()
         {
             return new ApiResponseDto<List<UserSettingDto>>(await userSettingsService.GetMySettingsAsync());
         }
@@ -131,8 +131,8 @@ namespace LightNap.WebApi.Controllers
         /// <param name="setSettingDto">The request data containing the user setting to be updated. This parameter cannot be <see langword="null"/>.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains an <see
         /// cref="ApiResponseDto{T}"/> object wrapping the updated <see cref="UserSettingDto"/>.</returns>
-        [HttpPatch("settings")]
-        public async Task<ApiResponseDto<UserSettingDto>> SetUserSettingAsync([FromBody] SetUserSettingRequestDto setSettingDto)
+        [HttpPatch("settings", Name = nameof(SetMyUserSetting))]
+        public async Task<ApiResponseDto<UserSettingDto>> SetMyUserSetting([FromBody] SetUserSettingRequestDto setSettingDto)
         {
             return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetMySettingAsync(setSettingDto));
         }
@@ -143,8 +143,8 @@ namespace LightNap.WebApi.Controllers
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> containing a list of external login providers associated with the current user.
         /// </returns>
-        [HttpGet("external-logins")]
-        public async Task<ApiResponseDto<List<ExternalLoginDto>>> GetExternalLogins()
+        [HttpGet("external-logins", Name = nameof(GetMyExternalLogins))]
+        public async Task<ApiResponseDto<List<ExternalLoginDto>>> GetMyExternalLogins()
         {
             return new ApiResponseDto<List<ExternalLoginDto>> (await externalLoginService.GetMyExternalLoginsAsync());
         }
@@ -157,12 +157,11 @@ namespace LightNap.WebApi.Controllers
         /// <returns>
         /// An <see cref="ApiResponseDto{T}"/> indicating whether the external login was successfully removed.
         /// </returns>
-        [HttpDelete("external-logins/{loginProvider}/{providerKey}")]
-        public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string loginProvider, string providerKey)
+        [HttpDelete("external-logins/{loginProvider}/{providerKey}", Name = nameof(RemoveMyExternalLogin))]
+        public async Task<ApiResponseDto<bool>> RemoveMyExternalLogin(string loginProvider, string providerKey)
         {
             await externalLoginService.RemoveMyLoginAsync(loginProvider, providerKey);
             return new ApiResponseDto<bool>(true);
         }
 
-    }
-}
+    }}

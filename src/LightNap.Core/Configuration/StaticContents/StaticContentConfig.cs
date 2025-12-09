@@ -25,17 +25,17 @@ namespace LightNap.Core.Configuration.StaticContents
         /// <summary>
         /// The list of all supported static content languages. These are the languages you can localize static content into.
         /// </summary>
-        public static IReadOnlyList<StaticContentSupportedLanguage> SupportedLanguages =>
+        public static IReadOnlyList<StaticContentSupportedLanguageDto> SupportedLanguages =>
         [
-            new StaticContentSupportedLanguage("en", "English"),
-            new StaticContentSupportedLanguage("fr", "French"),
-            new StaticContentSupportedLanguage("es", "Spanish"),
+            new StaticContentSupportedLanguageDto("en", "English"),
+            new StaticContentSupportedLanguageDto("fr", "French"),
+            new StaticContentSupportedLanguageDto("es", "Spanish"),
         ];
 
         /// <summary>
         /// A lookup dictionary for supported static content languages by their language code.
         /// </summary>
-        public static ReadOnlyDictionary<string, StaticContentSupportedLanguage> SupportedLanguagesLookup { get; } =
-            new ReadOnlyDictionary<string, StaticContentSupportedLanguage>(StaticContentConfig.SupportedLanguages.ToDictionary(l => l.LanguageCode));
+        public static ReadOnlyDictionary<string, StaticContentSupportedLanguageDto> SupportedLanguagesLookup { get; } =
+            new ReadOnlyDictionary<string, StaticContentSupportedLanguageDto>(StaticContentConfig.SupportedLanguages.ToDictionary(l => l.LanguageCode));
     }
 }

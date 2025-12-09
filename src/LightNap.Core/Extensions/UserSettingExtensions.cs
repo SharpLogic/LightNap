@@ -32,7 +32,7 @@ namespace LightNap.Core.Extensions
             return new UserSettingDto()
             {
                 Key = userSettingDefinition.Key,
-                Value = userSettingDefinition.DefaultValue,
+                Value = userSettingDefinition.DefaultJson,
             };
         }
     }

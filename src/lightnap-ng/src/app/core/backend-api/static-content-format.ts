@@ -1,4 +1,5 @@
 import { ListItem } from "@core/models";
+import { StaticContentFormat } from "./models";
 
 export const StaticContentFormatListItems: Array<ListItem<StaticContentFormat>> = [
   new ListItem<StaticContentFormat>(StaticContentFormat.Html, "HTML", "Render as HTML."),

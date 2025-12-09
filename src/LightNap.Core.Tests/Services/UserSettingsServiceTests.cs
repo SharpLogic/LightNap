@@ -16,9 +16,9 @@ namespace LightNap.Core.Tests.Services
     [TestClass]
     public class UserSettingsServiceTests
     {
-        private const string TestUserId = "test-user-id";
-        private const string OtherUserId = "other-user-id";
-        private const string TestSettingKey = "BrowserSettings";
+        private const string _testUserId = "test-user-id";
+        private const string _otherUserId = "other-user-id";
+        private const string _testSettingKey = "BrowserSettings";
 
         // These will be initialized during TestInitialize.
 #pragma warning disable CS8618
@@ -44,8 +44,8 @@ namespace LightNap.Core.Tests.Services
             this._userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             this._logger = serviceProvider.GetRequiredService<ILogger<UserSettingsService>>();
 
-            await TestHelper.CreateTestUserAsync(this._userManager, TestUserId);
-            await TestHelper.CreateTestUserAsync(this._userManager, OtherUserId);
+            await TestHelper.CreateTestUserAsync(this._userManager, _testUserId);
+            await TestHelper.CreateTestUserAsync(this._userManager, _otherUserId);
 
             this._userContext = new TestUserContext();
             this._userSettingsService = new UserSettingsService(this._dbContext, this._userContext, this._logger);
@@ -68,8 +68,8 @@ namespace LightNap.Core.Tests.Services
             var expectedValue = new { theme = "dark" };
             var setting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = JsonSerializer.Serialize(expectedValue),
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow
@@ -78,7 +78,7 @@ namespace LightNap.Core.Tests.Services
             await this._dbContext.SaveChangesAsync();
 
             // Act
-            var result = await this._userSettingsService.GetUserSettingAsync<object>(TestUserId, TestSettingKey);
+            var result = await this._userSettingsService.GetUserSettingAsync<object>(_testUserId, _testSettingKey);
 
             // Assert
             Assert.IsNotNull(result);
@@ -94,7 +94,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.LogInAdministrator();
 
             // Act
-            var result = await this._userSettingsService.GetUserSettingAsync<string>(TestUserId, TestSettingKey);
+            var result = await this._userSettingsService.GetUserSettingAsync<string>(_testUserId, _testSettingKey);
 
             // Assert
             Assert.IsNull(result);
@@ -104,12 +104,12 @@ namespace LightNap.Core.Tests.Services
         public async Task GetUserSettingAsync_NonAdminUser_ThrowsException()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
-                await this._userSettingsService.GetUserSettingAsync<string>(TestUserId, TestSettingKey);
+                await this._userSettingsService.GetUserSettingAsync<string>(_testUserId, _testSettingKey);
             });
         }
 
@@ -122,7 +122,7 @@ namespace LightNap.Core.Tests.Services
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
-                await this._userSettingsService.GetUserSettingAsync<string>(TestUserId, TestSettingKey);
+                await this._userSettingsService.GetUserSettingAsync<string>(_testUserId, _testSettingKey);
             });
         }
 
@@ -133,8 +133,8 @@ namespace LightNap.Core.Tests.Services
             this._userContext.LogInAdministrator();
             var setting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "invalid-json",
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow
@@ -145,7 +145,7 @@ namespace LightNap.Core.Tests.Services
             // Act & Assert
             await Assert.ThrowsExactlyAsync<JsonException>(async () =>
             {
-                await this._userSettingsService.GetUserSettingAsync<int>(TestUserId, TestSettingKey);
+                await this._userSettingsService.GetUserSettingAsync<int>(_testUserId, _testSettingKey);
             });
         }
 
@@ -160,8 +160,8 @@ namespace LightNap.Core.Tests.Services
             this._userContext.LogInAdministrator();
             var setting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "test-value",
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow
@@ -170,12 +170,12 @@ namespace LightNap.Core.Tests.Services
             await this._dbContext.SaveChangesAsync();
 
             // Act
-            var result = await this._userSettingsService.GetUserSettingsAsync(TestUserId);
+            var result = await this._userSettingsService.GetUserSettingsAsync(_testUserId);
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotEmpty(result);
-            Assert.IsTrue(result.Any(s => s.Key == TestSettingKey));
+            Assert.IsTrue(result.Any(s => s.Key == _testSettingKey));
         }
 
         [TestMethod]
@@ -185,7 +185,7 @@ namespace LightNap.Core.Tests.Services
             this._userContext.LogInAdministrator();
 
             // Act
-            var result = await this._userSettingsService.GetUserSettingsAsync(TestUserId);
+            var result = await this._userSettingsService.GetUserSettingsAsync(_testUserId);
 
             // Assert
             Assert.IsNotNull(result);
@@ -197,12 +197,12 @@ namespace LightNap.Core.Tests.Services
         public async Task GetUserSettingsAsync_NonAdminUser_ThrowsException()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
-                await this._userSettingsService.GetUserSettingsAsync(TestUserId);
+                await this._userSettingsService.GetUserSettingsAsync(_testUserId);
             });
         }
 
@@ -214,11 +214,11 @@ namespace LightNap.Core.Tests.Services
         public async Task GetMySettingsAsync_AuthenticatedUser_ReturnsUserSettings()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
             var setting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "my-value",
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow
@@ -231,7 +231,7 @@ namespace LightNap.Core.Tests.Services
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsTrue(result.Any(s => s.Key == TestSettingKey && s.Value == "my-value"));
+            Assert.IsTrue(result.Any(s => s.Key == _testSettingKey && s.Value == "my-value"));
         }
 
         [TestMethod]
@@ -251,7 +251,7 @@ namespace LightNap.Core.Tests.Services
         public async Task GetMySettingsAsync_OnlyReturnsUserReadableSettings()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
 
             // Act
             var result = await this._userSettingsService.GetMySettingsAsync();
@@ -271,24 +271,20 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             this._userContext.LogInAdministrator();
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "new-value"
-            };
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "new-value");
 
             // Act
-            var result = await this._userSettingsService.SetUserSettingAsync(TestUserId, dto);
+            var result = await this._userSettingsService.SetUserSettingAsync(_testUserId, dto);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(TestSettingKey, result.Key);
+            Assert.AreEqual(_testSettingKey, result.Key);
             Assert.AreEqual("new-value", result.Value);
             Assert.IsNotNull(result.CreatedDate);
             Assert.IsNotNull(result.LastModifiedDate);
 
             var settingInDb = await this._dbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == TestUserId && s.Key == TestSettingKey);
+                .FirstOrDefaultAsync(s => s.UserId == _testUserId && s.Key == _testSettingKey);
             Assert.IsNotNull(settingInDb);
             Assert.AreEqual("new-value", settingInDb.Value);
         }
@@ -301,8 +297,8 @@ namespace LightNap.Core.Tests.Services
             DateTime originalTimestamp = DateTime.UtcNow.AddDays(-1);
             var originalSetting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "old-value",
                 CreatedDate = originalTimestamp,
                 LastModifiedDate = originalTimestamp,
@@ -310,22 +306,18 @@ namespace LightNap.Core.Tests.Services
             this._dbContext.UserSettings.Add(originalSetting);
             await this._dbContext.SaveChangesAsync();
 
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "updated-value"
-            };
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "updated-value");
 
             // Act
-            var result = await this._userSettingsService.SetUserSettingAsync(TestUserId, dto);
+            var result = await this._userSettingsService.SetUserSettingAsync(_testUserId, dto);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(TestSettingKey, result.Key);
+            Assert.AreEqual(_testSettingKey, result.Key);
             Assert.AreEqual("updated-value", result.Value);
 
             var settingInDb = await this._dbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == TestUserId && s.Key == TestSettingKey);
+                .FirstOrDefaultAsync(s => s.UserId == _testUserId && s.Key == _testSettingKey);
             Assert.IsNotNull(settingInDb);
             Assert.AreEqual("updated-value", settingInDb.Value);
             Assert.IsTrue(settingInDb.LastModifiedDate > originalTimestamp);
@@ -335,17 +327,13 @@ namespace LightNap.Core.Tests.Services
         public async Task SetUserSettingAsync_NonAdminUser_ThrowsException()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "new-value"
-            };
+            this._userContext.LogIn(_testUserId);
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "new-value");
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
             {
-                await this._userSettingsService.SetUserSettingAsync(TestUserId, dto);
+                await this._userSettingsService.SetUserSettingAsync(_testUserId, dto);
             });
         }
 
@@ -357,23 +345,19 @@ namespace LightNap.Core.Tests.Services
         public async Task SetMySettingAsync_AuthenticatedUser_CreatesSetting()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "my-new-value"
-            };
+            this._userContext.LogIn(_testUserId);
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "my-new-value");
 
             // Act
             var result = await this._userSettingsService.SetMySettingAsync(dto);
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(TestSettingKey, result.Key);
+            Assert.AreEqual(_testSettingKey, result.Key);
             Assert.AreEqual("my-new-value", result.Value);
 
             var settingInDb = await this._dbContext.UserSettings
-                .FirstOrDefaultAsync(s => s.UserId == TestUserId && s.Key == TestSettingKey);
+                .FirstOrDefaultAsync(s => s.UserId == _testUserId && s.Key == _testSettingKey);
             Assert.IsNotNull(settingInDb);
             Assert.AreEqual("my-new-value", settingInDb.Value);
         }
@@ -382,11 +366,11 @@ namespace LightNap.Core.Tests.Services
         public async Task SetMySettingAsync_AuthenticatedUser_UpdatesExistingSetting()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
             var originalSetting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "old-value",
                 CreatedDate = DateTime.UtcNow.AddDays(-1),
                 LastModifiedDate = DateTime.UtcNow.AddDays(-1)
@@ -394,11 +378,7 @@ namespace LightNap.Core.Tests.Services
             this._dbContext.UserSettings.Add(originalSetting);
             await this._dbContext.SaveChangesAsync();
 
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "my-updated-value"
-            };
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "my-updated-value");
 
             // Act
             var result = await this._userSettingsService.SetMySettingAsync(dto);
@@ -413,11 +393,7 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             this._userContext.LogOut();
-            var dto = new SetUserSettingRequestDto
-            {
-                Key = TestSettingKey,
-                Value = "value"
-            };
+            var dto = new SetUserSettingRequestDto(_testSettingKey, "value");
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -439,8 +415,8 @@ namespace LightNap.Core.Tests.Services
             // Add a valid setting
             var validSetting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "valid-value",
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow
@@ -450,7 +426,7 @@ namespace LightNap.Core.Tests.Services
             // Add an invalid/unused setting
             var unusedSetting = new UserSetting
             {
-                UserId = TestUserId,
+                UserId = _testUserId,
                 Key = "NonExistentSettingKey",
                 Value = "unused-value",
                 CreatedDate = DateTime.UtcNow,
@@ -471,7 +447,7 @@ namespace LightNap.Core.Tests.Services
 
             var remainingSetting = await this._dbContext.UserSettings.FirstOrDefaultAsync();
             Assert.IsNotNull(remainingSetting);
-            Assert.AreEqual(TestSettingKey, remainingSetting.Key);
+            Assert.AreEqual(_testSettingKey, remainingSetting.Key);
         }
 
         [TestMethod]
@@ -483,17 +459,15 @@ namespace LightNap.Core.Tests.Services
             var unusedKey = "ObsoleteSettingKey";
             var settings = new List<UserSetting>
             {
-                new UserSetting
-                {
-                    UserId = TestUserId,
+                new() {
+                    UserId = _testUserId,
                     Key = unusedKey,
                     Value = "value1",
                     CreatedDate = DateTime.UtcNow,
                     LastModifiedDate = DateTime.UtcNow
                 },
-                new UserSetting
-                {
-                    UserId = OtherUserId,
+                new() {
+                    UserId = _otherUserId,
                     Key = unusedKey,
                     Value = "value2",
                     CreatedDate = DateTime.UtcNow,
@@ -515,7 +489,7 @@ namespace LightNap.Core.Tests.Services
         public async Task PurgeUnusedUserSettingsAsync_NonAdminUser_ThrowsException()
         {
             // Arrange
-            this._userContext.LogIn(TestUserId);
+            this._userContext.LogIn(_testUserId);
 
             // Act & Assert
             await Assert.ThrowsExactlyAsync<UserFriendlyApiException>(async () =>
@@ -532,8 +506,8 @@ namespace LightNap.Core.Tests.Services
 
             var validSetting = new UserSetting
             {
-                UserId = TestUserId,
-                Key = TestSettingKey,
+                UserId = _testUserId,
+                Key = _testSettingKey,
                 Value = "valid-value",
                 CreatedDate = DateTime.UtcNow,
                 LastModifiedDate = DateTime.UtcNow

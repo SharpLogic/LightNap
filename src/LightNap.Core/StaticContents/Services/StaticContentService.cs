@@ -137,9 +137,9 @@ namespace LightNap.Core.StaticContents.Services
         /// cref="StaticContent.ReadAccess"/> value is unknown, access is denied.</remarks>
         /// <param name="staticContent">The static content whose visibility is being evaluated.</param>
         /// <returns>A <see cref="StaticContentUserVisibility"/> value indicating the visibility of the static content for the
-        /// current user. Returns <see cref="StaticContentUserVisibility.Visible"/> if the content is accessible, <see
-        /// cref="StaticContentUserVisibility.RequiresAuthentication"/> if authentication is required, or <see
-        /// cref="StaticContentUserVisibility.Restricted"/> if access is denied.</returns>
+        /// current user. Returns <see cref="StaticContentUserVisibility.Reader"/> or <see cref="StaticContentUserVisibility.Editor"/> 
+        /// if the content is accessible, <see cref="StaticContentUserVisibility.RequiresAuthentication"/> if authentication is required, 
+        /// or <see cref="StaticContentUserVisibility.Restricted"/> if access is denied.</returns>
         private StaticContentUserVisibility GetUserVisibilityInternal(StaticContent staticContent)
         {
             if (this.CanEdit(staticContent)) { return StaticContentUserVisibility.Editor; }
@@ -419,7 +419,7 @@ namespace LightNap.Core.StaticContents.Services
         }
 
         /// <inheritdoc/>
-        public IReadOnlyList<StaticContentSupportedLanguage> GetSupportedLanguages()
+        public IReadOnlyList<StaticContentSupportedLanguageDto> GetSupportedLanguages()
         {
             return StaticContentConfig.SupportedLanguages;
         }

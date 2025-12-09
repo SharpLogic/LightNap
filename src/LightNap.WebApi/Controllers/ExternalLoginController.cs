@@ -23,7 +23,7 @@ namespace LightNap.WebApi.Controllers
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
-        [HttpGet("supported")]
+        [HttpGet("supported", Name = nameof(GetSupportedExternalLogins))]
         public ApiResponseDto<IEnumerable<SupportedExternalLoginDto>> GetSupportedExternalLogins()
         {
             return new ApiResponseDto<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
@@ -33,7 +33,7 @@ namespace LightNap.WebApi.Controllers
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
-        [HttpPost("search")]
+        [HttpPost("search", Name = nameof(SearchExternalLogins))]
         [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>> SearchExternalLogins(SearchExternalLoginsRequestDto searchRequestDto)
         {
@@ -50,7 +50,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="providerKey">The unique key provided by the external login provider that identifies the user's login. Cannot be null or
         /// empty.</param>
         /// <returns>An ApiResponseDto containing <see langword="true"/> if the external login was removed successfully.</returns>
-        [HttpDelete("remove/{userId}/{loginProvider}/{providerKey}")]
+        [HttpDelete("remove/{userId}/{loginProvider}/{providerKey}", Name = nameof(RemoveExternalLogin))]
         [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string userId, string loginProvider, string providerKey)
         {
@@ -63,7 +63,7 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpGet("result/{confirmationToken}")]
+        [HttpGet("result/{confirmationToken}", Name = nameof(GetExternalLoginResult))]
         public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResult(string confirmationToken)
         {
             return new ApiResponseDto<ExternalLoginSuccessDto>(await externalLoginService.GetExternalLoginResultAsync(confirmationToken));
@@ -75,7 +75,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpPost("complete/{confirmationToken}")]
+        [HttpPost("complete/{confirmationToken}", Name = nameof(CompleteExternalLogin))]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(string confirmationToken, ExternalLoginRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginAsync(confirmationToken, requestDto));
@@ -87,7 +87,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpPost("register/{confirmationToken}")]
+        [HttpPost("register/{confirmationToken}", Name = nameof(CompleteExternalLoginRegistration))]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLoginRegistration(string confirmationToken, ExternalLoginRegisterRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));

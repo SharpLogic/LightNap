@@ -7,11 +7,10 @@ import {
     NotificationItem,
     NotificationSearchResults,
     NotificationStatus,
-    NotificationTypes,
     SearchNotificationsRequestDto
 } from "@core";
-import { ProfileDataService } from "@core/backend-api/services/profile-data.service";
 import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { RequestPollingManager } from "@core/helpers";
@@ -23,7 +22,7 @@ import { ReplaySubject, combineLatest, finalize, forkJoin, map, of, switchMap, t
   providedIn: "root",
 })
 export class NotificationService {
-  #dataService = inject(ProfileDataService);
+  #dataService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
   #adminService = inject(AdminUsersService);
   #routeAlias = inject(RouteAliasService);

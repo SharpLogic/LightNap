@@ -18,21 +18,13 @@ namespace LightNap.Core.Email.Services
     /// <param name="emailSender">The email sending service.</param>
     public class DefaultEmailService(IOptions<EmailSettings> emailSettings, IEmailSender emailSender) : IEmailService
     {
-        /// <summary>
-        /// Sends an email asynchronously.
-        /// </summary>
-        /// <param name="message">The email message to send.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendMailAsync(MailMessage message)
         {
             await emailSender.SendMailAsync(message);
         }
 
-        /// <summary>
-        /// Sends an email asynchronously.
-        /// </summary>
-        /// <param name="message">The email message to send.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendMailAsync(ApplicationUser user, string subject, string body)
         {
             await emailSender.SendMailAsync(
@@ -44,12 +36,7 @@ namespace LightNap.Core.Email.Services
                 });
         }
 
-        /// <summary>
-        /// Sends a password reset email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <param name="token">The token required to reset the password.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendPasswordResetAsync(ApplicationUser user, string token)
         {
             await this.SendMailAsync(user, "Reset your password",
@@ -62,12 +49,7 @@ namespace LightNap.Core.Email.Services
                 }.TransformText());
         }
 
-        /// <summary>
-        /// Sends an email change email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <param name="token">The token for verifying the email change.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendChangeEmailAsync(ApplicationUser user, string newEmail, string token)
         {
             await emailSender.SendMailAsync(
@@ -82,12 +64,7 @@ namespace LightNap.Core.Email.Services
                     }.TransformText()));
         }
 
-        /// <summary>
-        /// Sends an email verification email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <param name="token">The token for verifying the email.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendEmailVerificationAsync(ApplicationUser user, string token)
         {
             await this.SendMailAsync(user, "Confirm your email",
@@ -100,11 +77,7 @@ namespace LightNap.Core.Email.Services
                 }.TransformText());
         }
 
-        /// <summary>
-        /// Sends a registration email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendRegistrationWelcomeAsync(ApplicationUser user)
         {
             await this.SendMailAsync(user, "Welcome to our site",
@@ -116,12 +89,7 @@ namespace LightNap.Core.Email.Services
                 }.TransformText());
         }
 
-        /// <summary>
-        /// Sends a two-factor authentication email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <param name="code">The two-factor authentication code.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendTwoFactorAsync(ApplicationUser user, string code)
         {
             await this.SendMailAsync(user, "Your login security code",
@@ -134,12 +102,7 @@ namespace LightNap.Core.Email.Services
                 }.TransformText());
         }
 
-        /// <summary>
-        /// Sends a magic link email to the specified user.
-        /// </summary>
-        /// <param name="user">The user to send the email to.</param>
-        /// <param name="token">The magic link token.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc/>
         public async Task SendMagicLinkAsync(ApplicationUser user, string token)
         {
             await this.SendMailAsync(user, "Your login link",

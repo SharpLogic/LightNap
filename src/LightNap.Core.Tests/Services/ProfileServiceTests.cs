@@ -64,7 +64,7 @@ namespace LightNap.Core.Tests.Services
             };
 
             // Act
-            var profile = await this._profileService.GetProfileAsync();
+            var profile = await this._profileService.GetMyProfileAsync();
 
             // Assert
             Assert.AreEqual(expectedProfile.Id, profile.Id);
@@ -100,7 +100,7 @@ namespace LightNap.Core.Tests.Services
 
             // Act
             var updatedProfile = await this._profileService.UpdateProfileAsync(updateProfileDto);
-            var retrievedProfile = await this._profileService.GetProfileAsync();
+            var retrievedProfile = await this._profileService.GetMyProfileAsync();
 
             // Assert
             Assert.AreEqual(updatedProfile.Id, retrievedProfile.Id);

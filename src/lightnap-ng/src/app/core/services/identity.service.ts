@@ -2,23 +2,12 @@ import { Injectable, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import {
-    ChangeEmailRequestDto,
-    ChangePasswordRequestDto,
-    ClaimDto,
-    LoginRequestDto,
-    NewPasswordRequestDto,
-    RegisterRequestDto,
-    ResetPasswordRequestDto,
-    SendVerificationEmailRequestDto,
-    VerifyCodeRequestDto,
-    VerifyEmailRequestDto,
-} from "@core/backend-api";
-import { LightNapWebApiService } from "@core/backend-api/index.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { ReplaySubject, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from "rxjs";
 import { InitializationService } from "./initialization.service";
 import { TimerService } from "./timer.service";
+import { ClaimDto, LoginRequestDto, RegisterRequestDto, VerifyCodeRequestDto, ResetPasswordRequestDto, NewPasswordRequestDto, SendVerificationEmailRequestDto, VerifyEmailRequestDto, ChangePasswordRequestDto, ChangeEmailRequestDto, ConfirmEmailChangeRequestDto, SendMagicLinkRequestDto } from "@core/backend-api/models";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 /**
  * Service responsible for managing user identity, including authentication and token management.
@@ -46,7 +35,7 @@ export class IdentityService {
   #loggedInRolesSubject$ = new ReplaySubject<Array<string>>(1);
   #loggedInClaimsSubject$ = new ReplaySubject<Map<string, Array<string>>>(1);
 
-  #token?: string;
+  #token?: string | null;
   #expires = 0;
   #requestingRefreshToken = false;
   #userId?: string;
@@ -162,7 +151,7 @@ export class IdentityService {
       });
   }
 
-  setToken(token?: string) {
+  setToken(token?: string | null) {
     this.#token = token;
     this.#claims = new Map<string, Array<string>>();
     this.#loggedInSubject$.next(!!this.#token);
@@ -274,7 +263,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} Emits true when the user is logged into any of the roles, otherwise false.
    */
   watchAnyUserRole$(allowedRoles: Array<string>) {
-    return this.#loggedInRolesSubject$.pipe(map(roles => this.isUserInAnyRole(allowedRoles)));
+    return this.#loggedInRolesSubject$.pipe(map(() => this.isUserInAnyRole(allowedRoles)));
   }
 
   /**
@@ -293,7 +282,7 @@ export class IdentityService {
    * @returns {Observable<boolean>} Emits true when the user is logged into any of the claims, otherwise false.
    */
   watchAnyUserClaim$(allowedClaims: Array<ClaimDto>) {
-    return this.#loggedInClaimsSubject$.pipe(map(_ => this.hasAnyUserClaim(allowedClaims)));
+    return this.#loggedInClaimsSubject$.pipe(map(() => this.hasAnyUserClaim(allowedClaims)));
   }
 
   /**
@@ -485,7 +474,7 @@ export class IdentityService {
    * @param {SendMagicLinkEmailRequestDto} sendMagicLinkEmailRequest - The email address to send the magic link email to.
    * @returns {Observable<boolean>} An observable containing the result of the operation.
    */
-  requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkEmailRequestDto) {
+  requestMagicLinkEmail(sendMagicLinkEmailRequest: SendMagicLinkRequestDto) {
     return this.#dataService.requestMagicLinkEmail(sendMagicLinkEmailRequest);
   }
 
@@ -534,7 +523,7 @@ export class IdentityService {
    * @param {ConfirmChangeEmailRequestDto} confirmChangeEmailRequest - The request object containing email change confirmation information.
    * @returns {Observable<boolean>} An observable containing true if successful.
    */
-  confirmEmailChange(confirmChangeEmailRequest: ConfirmChangeEmailRequestDto) {
+  confirmEmailChange(confirmChangeEmailRequest: ConfirmEmailChangeRequestDto) {
     return this.#dataService.confirmEmailChange(confirmChangeEmailRequest);
   }
 }

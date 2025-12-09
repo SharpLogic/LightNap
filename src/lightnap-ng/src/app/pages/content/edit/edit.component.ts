@@ -9,12 +9,9 @@ import {
     ShowByPermissionsDirective,
     StaticContentDto,
     StaticContentReadAccess,
-    StaticContentReadAccesses,
     StaticContentStatus,
-    StaticContentStatuses,
-    StaticContentSupportedLanguageDto,
+    StaticContentSupportedLanguage,
     StaticContentType,
-    StaticContentTypes,
     ToStringPipe,
     TypeHelpers,
 } from "@core";
@@ -68,9 +65,9 @@ export class EditComponent {
 
   form = this.#fb.group({
     key: this.#fb.nonNullable.control("", [Validators.required]),
-    status: this.#fb.nonNullable.control<StaticContentStatus>(StaticContentStatuses.Draft, [Validators.required]),
-    type: this.#fb.nonNullable.control<StaticContentType>(StaticContentTypes.Page, [Validators.required]),
-    readAccess: this.#fb.nonNullable.control<StaticContentReadAccess>(StaticContentReadAccesses.Explicit, [Validators.required]),
+    status: this.#fb.nonNullable.control<StaticContentStatus>(StaticContentStatus.Draft, [Validators.required]),
+    type: this.#fb.nonNullable.control<StaticContentType>(StaticContentType.Page, [Validators.required]),
+    readAccess: this.#fb.nonNullable.control<StaticContentReadAccess>(StaticContentReadAccess.Explicit, [Validators.required]),
     editorRoles: this.#fb.nonNullable.control(""),
     readerRoles: this.#fb.nonNullable.control(""),
   });
@@ -91,8 +88,8 @@ export class EditComponent {
           status: content.status,
           type: content.type,
           readAccess: content.readAccess,
-          editorRoles: content.editorRoles,
-          readerRoles: content.readerRoles,
+          editorRoles: content.editorRoles!,
+          readerRoles: content.readerRoles!,
         });
         this.pageUrl.set(window.location.origin + "/content/" + content.key);
       })
@@ -102,7 +99,7 @@ export class EditComponent {
   languages = computed(() => this.#contentService.getSupportedLanguages());
 
   asContent = TypeHelpers.cast<StaticContentDto>;
-  asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguageDto>>;
+  asLanguages = TypeHelpers.cast<Array<StaticContentSupportedLanguage>>;
 
   #previousTabName = "settings";
 
@@ -115,7 +112,7 @@ export class EditComponent {
   update() {
     const value = {
       ...this.form.getRawValue(),
-      readerRoles: this.form.value.readAccess === StaticContentReadAccesses.Explicit ? this.form.value.readerRoles : undefined,
+      readerRoles: this.form.value.readAccess === StaticContentReadAccess.Explicit ? this.form.value.readerRoles : undefined,
     };
 
     this.#contentService.updateStaticContent(this.key(), value).subscribe({

@@ -8,9 +8,9 @@ import {
     UserSettingKey,
     UserSettingKeys,
 } from "@core/backend-api";
-import { LightNapWebApiService } from "@core/backend-api/index.service";
 import { filter, map, Observable, of, shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 @Injectable({
   providedIn: "root",
@@ -69,7 +69,7 @@ export class ProfileService {
    * @returns {Observable<Profile>} An observable containing the updated profile.
    */
   updateProfile(updateProfileRequest: UpdateProfileRequestDto) {
-    return this.#dataService.updateProfile(updateProfileRequest);
+    return this.#dataService.updateMyProfile(updateProfileRequest);
   }
 
   /**
@@ -80,7 +80,7 @@ export class ProfileService {
   getSettings() {
     if (this.#settings.length) return of(this.#settings);
     if (!this.#settings$) {
-      this.#settings$ = this.#dataService.getSettings().pipe(
+      this.#settings$ = this.#dataService.getMyUserSettings().pipe(
         shareReplay(1),
         tap(settings => (this.#settings = settings))
       );
@@ -113,7 +113,7 @@ export class ProfileService {
    */
   setSetting<T>(key: UserSettingKey, value: T) {
     return this.#dataService
-      .setSetting(<SetUserSettingRequestDto>{
+      .setMyUserSetting(<SetUserSettingRequestDto>{
         key,
         value: JSON.stringify(value),
       })
@@ -170,7 +170,7 @@ export class ProfileService {
    * @returns {Observable<Array<ExternalLoginDto>>} An observable containing the list of external logins.
    */
   getExternalLogins() {
-    return this.#dataService.getExternalLogins();
+    return this.#dataService.getMyExternalLogins();
   }
 
   /**
@@ -181,6 +181,6 @@ export class ProfileService {
    * @returns {Observable<boolean>} An observable indicating whether the removal was successful.
    */
   removeExternalLogin(loginProvider: string, providerKey: string) {
-    return this.#dataService.removeExternalLogin(loginProvider, providerKey);
+    return this.#dataService.removeMyExternalLogin(loginProvider, providerKey);
   }
 }

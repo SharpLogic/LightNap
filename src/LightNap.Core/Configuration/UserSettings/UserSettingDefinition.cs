@@ -3,16 +3,16 @@
     /// <summary>
     /// Represents a definition for a user setting, including its key, value, access level, and activation status.
     /// </summary>
-    /// <param name="key">The setting key.</param>
-    /// <param name="defaultJson">The default value for the setting.</param>
-    /// <param name="accessLevel">The access level required for the user setting.</param>
-    /// <param name="isActive">
+    /// <param name="Key">The setting key.</param>
+    /// <param name="DefaultJson">The default value for the setting.</param>
+    /// <param name="AccessLevel">The access level required for the user setting.</param>
+    /// <param name="IsActive">
     /// True if the setting is currently active. If false the setting is generally ignored by the system. Set this to false if
     /// you have existing settings you want to phase out but not automatically purge from the store (which happens if you remove).
     /// </param>
     public record UserSettingDefinition(
         string Key,
-        string DefaultValue,
+        string DefaultJson,
         UserSettingAccessLevel AccessLevel,
         bool IsActive
     )

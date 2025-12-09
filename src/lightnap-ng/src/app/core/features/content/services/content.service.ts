@@ -1,25 +1,18 @@
 import { inject, Injectable } from "@angular/core";
-import { ExtendedMap } from "@core";
+import { CreateStaticContentDto, CreateStaticContentLanguageDto, ExtendedMap, SearchStaticContentRequestDto, UpdateStaticContentDto, UpdateStaticContentLanguageDto } from "@core";
 import { UserSettingKeys } from "@core/backend-api/user-setting-key";
-import {
-  CreateStaticContentDto,
-  CreateStaticContentLanguageDto,
-  SearchStaticContentRequestDto,
-  UpdateStaticContentDto,
-  UpdateStaticContentLanguageDto,
-} from "@core/backend-api/dtos/static-contents";
-import { ContentDataService } from "@core/backend-api/services/content-data.service";
+import { PublishedContent } from "../entities";
+import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
 import { IdentityService } from "@core/services/identity.service";
 import { ProfileService } from "@core/services/profile.service";
-import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
-import { catchError, map, Observable, of, shareReplay, switchMap, take, tap } from "rxjs";
-import { PublishedContent } from "../entities";
+import { shareReplay, Observable, switchMap, of, map, catchError, tap } from "rxjs";
+import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 @Injectable({
   providedIn: "root",
 })
 export class ContentService {
-  #dataService = inject(ContentDataService);
+  #dataService = inject(LightNapWebApiService);
   #identityService = inject(IdentityService);
   #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
