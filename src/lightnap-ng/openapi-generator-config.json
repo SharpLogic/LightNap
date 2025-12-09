@@ -1,9 +1,0 @@
-{
-  "generatorName": "typescript-angular",
-  "inputSpec": "http://localhost:7266/swagger/v1/swagger.json",
-  "outputDir": "./src/app/core/backend-api",
-  "additionalProperties": {
-    "apiModulePrefix": "Api",
-    "ngVersion": "21"
-  }
-}

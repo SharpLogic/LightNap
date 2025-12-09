@@ -18,7 +18,7 @@
     "test:headless": "ng test --watch=false --browsers=ChromeHeadless",
     "test:debug": "ng test --browsers=Chrome --watch=true --source-map",
     "e2e": "cypress run",
-    "e2e:backend": "node run-e2e-backend.js",
+    "e2e:backend": "node scripts/run-e2e-backend.js",
     "e2e:open": "cypress open",
     "e2e:ci": "cypress run --record --parallel",
     "e2e:mocks": "cypress run --env useMocks=true",
@@ -29,7 +29,7 @@
     "update:angular": "ng update @angular/core @angular/cli && npm run build",
     "update:all": "npm run update:angular && npm run update:deps",
     "update:all:test": "npm run update:all && npm run test:ci",
-    "sync-with-rest-api": "openapi-generator-cli generate"
+    "generate:api": "node scripts/generate-api.js"
   },
   "private": true,
   "dependencies": {
@@ -61,7 +61,6 @@
     "@angular/build": "^21.0.2",
     "@angular/cli": "^21.0.2",
     "@angular/compiler-cli": "^21.0.3",
-    "@openapitools/openapi-generator-cli": "^2.25.2",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/jasmine": "~5.1.13",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
@@ -80,6 +79,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "npm-check-updates": "^19.1.2",
+    "openapi-typescript-codegen": "^0.29.0",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.17",
