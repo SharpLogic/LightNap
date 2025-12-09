@@ -3,7 +3,7 @@ module.exports = {
         input: {
             target: "https://localhost:7266/swagger/v1/swagger.json",
             override: {
-                transformer: "./orval.unwrapper.js",
+                transformer: "./scripts/orval.unwrapper.js",
             },
         },
         output: {
