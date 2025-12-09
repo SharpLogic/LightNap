@@ -145,7 +145,7 @@ export class AdminUsersService {
    * @returns {Observable<boolean>} An observable with a result of true if successful.
    */
   addUserToRole(userId: string, role: string) {
-    return this.#dataService.addUserToRole(userId, role);
+    return this.#dataService.addUserToRole(role, userId);
   }
 
   /**
@@ -155,7 +155,7 @@ export class AdminUsersService {
    * @returns {Observable<RoleDto>} An observable with a result of true if successful.
    */
   removeUserFromRole(userId: string, role: string) {
-    return this.#dataService.removeUserFromRole(userId, role);
+    return this.#dataService.removeUserFromRole(role, userId);
   }
 
   /**
