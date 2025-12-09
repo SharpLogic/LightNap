@@ -1,7 +1,7 @@
 import { Injectable, inject } from "@angular/core";
 import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { Observable, Subject } from "rxjs";
-import { NotificationDto } from "../dtos";
+import { NotificationDto } from "../models";
 import { IdentityService } from "@core/services/identity.service";
 
 @Injectable({

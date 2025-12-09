@@ -1,6 +1,6 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { StaticContentReadAccess, StaticContentReadAccesses, StaticContentReadAccessListItems } from "@core/backend-api";
+import { StaticContentReadAccess, StaticContentReadAccessListItems } from "@core/backend-api";
 import { SelectListItemComponent } from "@core/components/select-list-item/select-list-item.component";
 import { ListItem } from "@core/models/list-item";
 import { SelectModule } from "primeng/select";
@@ -20,7 +20,7 @@ import { SelectModule } from "primeng/select";
 export class ContentReadAccessPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentReadAccess | null = StaticContentReadAccesses.Explicit;
+  value: StaticContentReadAccess | null = StaticContentReadAccess.Explicit;
   disabled = false;
 
   get options() {
