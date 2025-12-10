@@ -1,25 +1,23 @@
-import { getTestBed, resolveComponentResources } from '@angular/core/testing';
+import { getTestBed } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 import { vi, expect, beforeEach } from 'vitest';
 
-// First, initialize the Angular testing environment.
+// Initialize the Angular testing environment.
+// Note: BrowserDynamicTestingModule is marked as deprecated but is still the best option
+// for module-based testing in Angular 21. This will remain necessary until all components
+// are converted to standalone, at which point you can remove this entire initialization.
+//
+// Migration path for future versions:
+// 1. Convert components to standalone: @Component({ standalone: true, ... })
+// 2. Remove this initTestEnvironment call
+// 3. Tests will use standalone components directly in configureTestingModule
 getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),
 );
-
-// Resolve component resources before each test to enable external templates
-// This is required for Vitest's jsdom environment unlike Karma which resolved automatically
-beforeEach(async () => {
-  try {
-    await resolveComponentResources();
-  } catch (e) {
-    // Silently ignore if there are no components to resolve
-  }
-});
 
 // Add Jasmine-compatible matchers to expect
 const jasmineMatcher = {
@@ -71,7 +69,7 @@ declare global {
       toHaveBeenCalled(): boolean;
       toHaveBeenCalledWith(...args: any[]): boolean;
     }
-    
+
     interface SpyObj<T> {
       [K in keyof T]: T[K] extends (...args: any[]) => any
         ? ReturnType<T[K]> extends Promise<infer U>
@@ -80,7 +78,7 @@ declare global {
         : T[K];
     }
   }
-  
+
   const jasmine: {
     createSpyObj: <T>(baseName: string, methodNames: string[]) => jasmine.SpyObj<T>;
     createSpy: (name: string, originalFn?: any) => jasmine.Spy;
@@ -92,7 +90,7 @@ declare global {
 (globalThis as any).jasmine = {
   createSpyObj: <T>(baseName: string, methodNames: string[]): jasmine.SpyObj<T> => {
     const spy: any = {};
-    
+
     methodNames.forEach(methodName => {
       const viSpy = vi.fn();
       viSpy.and = {
@@ -119,16 +117,16 @@ declare global {
           return viSpy;
         },
       };
-      
+
       viSpy.toHaveBeenCalled = () => viSpy.mock.calls.length > 0;
       viSpy.toHaveBeenCalledWith = (...args: any[]) =>
         viSpy.mock.calls.some(callArgs =>
           JSON.stringify(callArgs) === JSON.stringify(args)
         );
-      
+
       spy[methodName] = viSpy;
     });
-    
+
     return spy as jasmine.SpyObj<T>;
   },
 

@@ -36,7 +36,7 @@ Component 'ComponentName' is not resolved:
 Did you run and wait for 'resolveComponentResources()'?
 ```
 
-**Root Cause**: 
+**Root Cause**:
 - Vitest with jsdom requires explicit resource resolution for components with external templates
 - Unlike Karma which automatically resolved resources, Vitest requires manual handling
 
@@ -83,7 +83,7 @@ beforeEach(async () => {
 Error: done() callback is deprecated, use promise instead
 ```
 
-**Root Cause**: 
+**Root Cause**:
 - Vitest deprecates done() callbacks in favor of async/await or returning promises
 - Observable tests currently use done callback patterns from Jasmine era
 
@@ -295,7 +295,7 @@ it('should call polling function immediately', async () => {
       resolve();
     });
   });
-  
+
   pollingManager.start();
   await promise;
 });
@@ -303,17 +303,17 @@ it('should call polling function immediately', async () => {
 // Or use modern timer functions
 it('should respect interval', async () => {
   vi.useFakeTimers();
-  
+
   const calls = [];
   pollingManager.onTick$.subscribe(() => {
     calls.push(Date.now());
   });
-  
+
   pollingManager.start({ interval: 1000 });
-  
+
   vi.advanceTimersByTime(3500);
   expect(calls.length).toBeGreaterThanOrEqual(3);
-  
+
   vi.useRealTimers();
 });
 ```
