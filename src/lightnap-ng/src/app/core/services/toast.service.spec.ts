@@ -8,10 +8,10 @@ describe("ToastService", () => {
   let messageServiceSpy: jasmine.SpyObj<MessageService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj("MessageService", ["add"]);
+    const messageSpy = jasmine.createSpyObj<MessageService>("MessageService", ["add"]);
 
     TestBed.configureTestingModule({
-      providers: [provideZonelessChangeDetection(), ToastService, { provide: MessageService, useValue: spy }],
+      providers: [provideZonelessChangeDetection(), ToastService, { provide: MessageService, useValue: messageSpy }],
     });
 
     service = TestBed.inject(ToastService);
@@ -22,75 +22,77 @@ describe("ToastService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should call MessageService.add with correct parameters for success", () => {
-    const message = "Success message";
-    const title = "Success";
+  describe("toast notifications", () => {
+    it("should call MessageService.add with correct parameters for success", () => {
+      const message = "Success message";
+      const title = "Success";
 
-    service.success(message);
+      service.success(message);
 
-    expect(messageServiceSpy.add).toHaveBeenCalledWith({
-      key: "global",
-      detail: message,
-      severity: "success",
-      summary: title,
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: "global",
+        detail: message,
+        severity: "success",
+        summary: title,
+      });
     });
-  });
 
-  it("should call MessageService.add with correct parameters for info", () => {
-    const message = "Info message";
-    const title = "Info";
+    it("should call MessageService.add with correct parameters for info", () => {
+      const message = "Info message";
+      const title = "Info";
 
-    service.info(message);
+      service.info(message);
 
-    expect(messageServiceSpy.add).toHaveBeenCalledWith({
-      key: "global",
-      detail: message,
-      severity: "info",
-      summary: title,
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: "global",
+        detail: message,
+        severity: "info",
+        summary: title,
+      });
     });
-  });
 
-  it("should call MessageService.add with correct parameters for error", () => {
-    const message = "Error message";
-    const title = "Error";
+    it("should call MessageService.add with correct parameters for error", () => {
+      const message = "Error message";
+      const title = "Error";
 
-    service.error(message);
+      service.error(message);
 
-    expect(messageServiceSpy.add).toHaveBeenCalledWith({
-      key: "global",
-      detail: message,
-      severity: "error",
-      summary: title,
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: "global",
+        detail: message,
+        severity: "error",
+        summary: title,
+      });
     });
-  });
 
-  it("should call MessageService.add with correct parameters for warn", () => {
-    const message = "Warning message";
-    const title = "Warning";
+    it("should call MessageService.add with correct parameters for warn", () => {
+      const message = "Warning message";
+      const title = "Warning";
 
-    service.warn(message);
+      service.warn(message);
 
-    expect(messageServiceSpy.add).toHaveBeenCalledWith({
-      key: "global",
-      detail: message,
-      severity: "warn",
-      summary: title,
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: "global",
+        detail: message,
+        severity: "warn",
+        summary: title,
+      });
     });
-  });
 
-  it("should call MessageService.add with custom key", () => {
-    const message = "Custom message";
-    const title = "Custom";
-    const severity = "info";
-    const key = "customKey";
+    it("should call MessageService.add with custom key", () => {
+      const message = "Custom message";
+      const title = "Custom";
+      const severity = "info";
+      const key = "customKey";
 
-    service.show(message, title, severity, key);
+      service.show(message, title, severity, key);
 
-    expect(messageServiceSpy.add).toHaveBeenCalledWith({
-      key: key,
-      detail: message,
-      severity: severity,
-      summary: title,
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: key,
+        detail: message,
+        severity: severity,
+        summary: title,
+      });
     });
   });
 });
