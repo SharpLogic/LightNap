@@ -1,4 +1,4 @@
-import { getTestBed } from '@angular/core/testing';
+import { getTestBed, resolveComponentResources } from '@angular/core/testing';
 import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
@@ -10,6 +10,16 @@ getTestBed().initTestEnvironment(
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(),
 );
+
+// Resolve component resources before each test to enable external templates
+// This is required for Vitest's jsdom environment unlike Karma which resolved automatically
+beforeEach(async () => {
+  try {
+    await resolveComponentResources();
+  } catch (e) {
+    // Silently ignore if there are no components to resolve
+  }
+});
 
 // Add Jasmine-compatible matchers to expect
 const jasmineMatcher = {
