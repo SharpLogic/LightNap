@@ -88,16 +88,6 @@
                         "styles": ["src/styles.css"],
                         "scripts": [],
                         "codeCoverage": false
-                    },
-                    "configurations": {
-                        "coverage": {
-                            "codeCoverage": true,
-                            "codeCoverageExclude": [
-                                "src/testing/**",
-                                "src/**/*.spec.ts",
-                                "src/environments/**"
-                            ]
-                        }
                     }
                 },
                 "e2e": {
