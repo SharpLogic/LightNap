@@ -29,5 +29,15 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
-    }
+    },
+    /* Include and exclude cypress folder to make sure cypress types are not included for jasmine tests
+     * I don't know why this works, but it does.
+    **/
+    "include": [
+        "src",
+        "node_modules/cypress"
+    ],
+    "exclude": [
+        "node_modules/cypress"
+    ]
 }

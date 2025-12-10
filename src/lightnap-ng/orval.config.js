@@ -16,7 +16,7 @@ module.exports = {
             mock: true,
             namingConvention: "kebab-case",
             override: {
-                useDates: true
+                useDates: true,
             },
         },
         hooks: {

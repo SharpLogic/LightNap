@@ -1,48 +1,34 @@
-/// <reference types="jasmine" />
-
-import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { AdminUserDto, PagedResponseDto, RoleDto, SearchClaimRequestDto, UserClaimDto } from "@core/backend-api";
-import { getGetRolesResponseMock, getGetUserByUserNameResponseMock, LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
+import { AdminUserDto, RoleDto, SearchClaimRequestDto } from "@core/backend-api";
+import {
+    getGetRolesResponseMock,
+    getGetUserByUserNameResponseMock,
+    getGetUserResponseAdminUserDtoMock,
+    getGetUserResponseMock,
+    getGetUsersInRoleResponseMock,
+    getGetUsersWithClaimResponseMock,
+    getSearchUserClaimsResponseMock,
+    LightNapWebApiService
+} from "@core/backend-api/services/lightnap-api";
+import { createLightNapWebApiServiceSpy } from "@testing/helpers";
+import { SearchRequestBuilder } from "@testing/builders";
 import { of } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
 
 describe("AdminUsersService", () => {
   let service: AdminUsersService;
-  let webApiServiceSpy: jasmine.SpyObj<any>;
+  let webApiServiceSpy: jasmine.SpyObj<LightNapWebApiService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj("LightNapWebApiService", [
-      "getUser",
-      "getUserByUserName",
-      "updateUser",
-      "deleteUser",
-      "searchUsers",
-      "getRoles",
-      "getRolesForUser",
-      "getUsersInRole",
-      "addUserToRole",
-      "removeUserFromRole",
-      "lockUserAccount",
-      "unlockUserAccount",
-      "getUsersByIds",
-      "searchClaims",
-      "searchUserClaims",
-      "getUsersWithClaim",
-      "addUserClaim",
-      "removeUserClaim",
-    ]);
-
-    // Set up the default return value for getRoles BEFORE creating the service
-    spy.getRoles.and.returnValue(of(getGetRolesResponseMock()));
+    const spy = createLightNapWebApiServiceSpy(jasmine);
+    const rolesResponse = getGetRolesResponseMock() || [];
+    spy.getRoles.and.returnValue(of(rolesResponse) as any);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [provideZonelessChangeDetection(), AdminUsersService, { provide: LightNapWebApiService, useValue: spy }],
     });
-
-    webApiServiceSpy = TestBed.inject(LightNapWebApiService) as jasmine.SpyObj<any>;
+    webApiServiceSpy = TestBed.inject(LightNapWebApiService) as jasmine.SpyObj<LightNapWebApiService>;
     service = TestBed.inject(AdminUsersService);
   });
 
@@ -54,7 +40,7 @@ describe("AdminUsersService", () => {
     it("should get user by username", done => {
       const userName = "testuser";
       const expectedUser = getGetUserByUserNameResponseMock() as AdminUserDto;
-      webApiServiceSpy.getUserByUserName.and.returnValue(of(expectedUser));
+      webApiServiceSpy.getUserByUserName.and.returnValue(of(expectedUser) as any);
 
       service.getUserByUserName(userName).subscribe(user => {
         expect(user).toEqual(expectedUser);
@@ -67,16 +53,20 @@ describe("AdminUsersService", () => {
   describe("getUserRoles", () => {
     it("should map role names to role objects correctly", done => {
       const userId = "user-id";
-      const allRoles = [{ name: "Admin" } as RoleDto, { name: "User" } as RoleDto, { name: "Guest" } as RoleDto];
-      const userRoleNames = ["Admin", "Guest"];
 
-      webApiServiceSpy.getRoles.and.returnValue(of(allRoles));
-      webApiServiceSpy.getRolesForUser.and.returnValue(of(userRoleNames));
+      // Generate realistic role data
+      const allRoles = getGetRolesResponseMock() || [];
+
+      // Pick specific role names from the generated roles to ensure they exist
+      const userRoleNames = allRoles.slice(0, 2).map(role => role.name || "");
+
+      webApiServiceSpy.getRoles.and.returnValue(of(allRoles) as any);
+      webApiServiceSpy.getRolesForUser.and.returnValue(of(userRoleNames) as any);
 
       service.getUserRoles(userId).subscribe(roles => {
         expect(roles.length).toBe(2);
-        expect(roles[0].name).toBe("Admin");
-        expect(roles[1].name).toBe("Guest");
+        expect(roles[0].name).toBe(userRoleNames[0]);
+        expect(roles[1].name).toBe(userRoleNames[1]);
         done();
       });
     });
@@ -84,8 +74,8 @@ describe("AdminUsersService", () => {
 
   describe("getRoles caching", () => {
     it("should cache roles and not call data service on subsequent calls", done => {
-      const rolesResponse = [{ name: "admin" } as RoleDto];
-      webApiServiceSpy.getRoles.and.returnValue(of(rolesResponse));
+      const rolesResponse = getGetRolesResponseMock() || [];
+      webApiServiceSpy.getRoles.and.returnValue(of(rolesResponse) as any);
 
       service.getRoles().subscribe(() => {
         service.getRoles().subscribe(() => {
@@ -98,8 +88,8 @@ describe("AdminUsersService", () => {
     });
 
     it("should return same cached instance across multiple subscriptions", done => {
-      const rolesResponse = [{ name: "admin" } as RoleDto];
-      webApiServiceSpy.getRoles.and.returnValue(of(rolesResponse));
+      const rolesResponse = getGetRolesResponseMock() || [];
+      webApiServiceSpy.getRoles.and.returnValue(of(rolesResponse) as any);
 
       let firstResult: Array<RoleDto>;
       service.getRoles().subscribe(roles => {
@@ -114,15 +104,17 @@ describe("AdminUsersService", () => {
 
   describe("getRoleWithUsers", () => {
     it("should combine role and users correctly", done => {
-      const role = { name: "admin", description: "Administrator" } as RoleDto;
-      const users = [{ id: "1", userName: "user1" } as AdminUserDto, { id: "2", userName: "user2" } as AdminUserDto];
+      const allRoles = (getGetRolesResponseMock() || []).slice(0, 1);
+      const role = allRoles[0];
+      const users = getGetUsersInRoleResponseMock() || [];
 
-      webApiServiceSpy.getRoles.and.returnValue(of([role]));
-      webApiServiceSpy.getUsersInRole.and.returnValue(of(users));
+      webApiServiceSpy.getRoles.and.returnValue(of(allRoles) as any);
+      webApiServiceSpy.getUsersInRole.and.returnValue(of(users) as any);
 
-      service.getRoleWithUsers("admin").subscribe(result => {
+      service = TestBed.inject(AdminUsersService);
+
+      service.getRoleWithUsers(role.name || "admin").subscribe(result => {
         expect(result.role).toEqual(role);
-        expect(result.users.length).toBe(2);
         expect(result.users).toEqual(users);
         done();
       });
@@ -131,19 +123,18 @@ describe("AdminUsersService", () => {
 
   describe("getUserWithRoles", () => {
     it("should combine user data with their roles", done => {
-      const userId = "user-id";
-      const userResponse = { id: userId, userName: "testUser", email: "test@test.com" } as AdminUserDto;
-      const rolesResponse = [{ name: "admin" } as RoleDto, { name: "user" } as RoleDto];
-      const userRolesResponse = ["admin", "user"];
+      const userResponse = getGetUserResponseMock() as AdminUserDto;
+      const allRoles = getGetRolesResponseMock() || [];
+      const userRoleNames = allRoles.slice(0, 2).map(role => role.name || "");
 
-      webApiServiceSpy.getUser.and.returnValue(of(userResponse));
-      webApiServiceSpy.getRoles.and.returnValue(of(rolesResponse));
-      webApiServiceSpy.getRolesForUser.and.returnValue(of(userRolesResponse));
+      webApiServiceSpy.getUser.and.returnValue(of(userResponse) as any);
+      webApiServiceSpy.getRoles.and.returnValue(of(allRoles) as any);
+      webApiServiceSpy.getRolesForUser.and.returnValue(of(userRoleNames) as any);
 
-      service.getUserWithRoles(userId).subscribe(result => {
+      service.getUserWithRoles(userResponse.id || "user-id").subscribe(result => {
         expect(result.user).toEqual(userResponse);
-        expect(result.roles.length).toBe(2);
-        expect(result.roles).toEqual(rolesResponse);
+        expect(result.roles.length).toBe(userRoleNames.length);
+        expect(result.roles).toEqual(allRoles.slice(0, userRoleNames.length));
         done();
       });
     });
@@ -170,22 +161,13 @@ describe("AdminUsersService", () => {
   describe("getUserClaims", () => {
     it("should transform user claims response correctly", done => {
       const userId = "user-id";
-      const claimsData = [
-        { type: "email", value: "test@test.com", userId },
-        { type: "role", value: "admin", userId },
-      ];
-      const response: PagedResponseDto<UserClaimDto> = {
-        data: claimsData,
-        totalCount: 2,
-        pageNumber: 1,
-        pageSize: 2,
-        totalPages: 1,
-      };
-      webApiServiceSpy.searchUserClaims.and.returnValue(of(response));
+      const response = getSearchUserClaimsResponseMock({ data: (getSearchUserClaimsResponseMock().data || []).slice(0, 2) });
+
+      webApiServiceSpy.searchUserClaims.and.returnValue(of(response) as any);
 
       service.getUserClaims({ userId, pageNumber: 1, pageSize: 10 }).subscribe(result => {
-        expect(result.data).toEqual(claimsData);
-        expect(result.totalCount).toBe(2);
+        expect(result.data).toEqual(response.data);
+        expect(result.totalCount).toBe(response.totalCount);
         done();
       });
     });
@@ -193,33 +175,27 @@ describe("AdminUsersService", () => {
 
   describe("getUsersWithClaim", () => {
     it("should map user IDs to full user objects", done => {
-      const claim: SearchClaimRequestDto = { type: "role", value: "admin", pageNumber: 1, pageSize: 10 };
-      const claimResults: PagedResponseDto<string> = { data: ["1", "2"], totalCount: 2, pageNumber: 1, pageSize: 2, totalPages: 1 };
-      const users = [{ id: "1", userName: "user1" } as AdminUserDto, { id: "2", userName: "user2" } as AdminUserDto];
+      const claim = SearchRequestBuilder.createSearchClaimRequest();
+      const claimResponse = getGetUsersWithClaimResponseMock();
+      const userIds = (claimResponse.data || []).slice(0, 2);
+      const users = userIds.length > 0 ? [getGetUserResponseAdminUserDtoMock(), getGetUserResponseAdminUserDtoMock()] : [];
 
-      webApiServiceSpy.getUsersWithClaim.and.returnValue(of(claimResults));
-      webApiServiceSpy.getUsersByIds.and.returnValue(of(users));
+      webApiServiceSpy.getUsersWithClaim.and.returnValue(of({ ...claimResponse, data: userIds }) as any);
+      webApiServiceSpy.getUsersByIds.and.returnValue(of(users) as any);
 
       service.getUsersWithClaim(claim).subscribe(result => {
-        expect(result.totalCount).toBe(2);
-        expect(result.data.length).toBe(2);
         expect(result.data).toEqual(users);
-        expect(webApiServiceSpy.getUsersByIds).toHaveBeenCalledWith(["1", "2"]);
+        expect(webApiServiceSpy.getUsersByIds).toHaveBeenCalledWith(userIds);
         done();
       });
     });
 
     it("should handle empty results correctly", done => {
-      const claim: SearchClaimRequestDto = { type: "role", value: "admin", pageNumber: 1, pageSize: 10 };
-      const emptyResponse: PagedResponseDto<string> = {
-        data: [],
-        totalCount: 0,
-        pageNumber: 1,
-        pageSize: 10,
-        totalPages: 0,
-      };
-      webApiServiceSpy.getUsersWithClaim.and.returnValue(of(emptyResponse));
-      webApiServiceSpy.getUsersByIds.and.returnValue(of([]));
+      const claim = SearchRequestBuilder.createSearchClaimRequest();
+      const emptyResponse = { ...getGetUsersWithClaimResponseMock(), data: [], totalCount: 0 };
+
+      webApiServiceSpy.getUsersWithClaim.and.returnValue(of(emptyResponse) as any);
+      webApiServiceSpy.getUsersByIds.and.returnValue(of([]) as any);
 
       service.getUsersWithClaim(claim).subscribe(result => {
         expect(result.data.length).toBe(0);

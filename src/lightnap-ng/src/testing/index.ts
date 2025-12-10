@@ -19,6 +19,7 @@
 export * from './mocks';
 export * from './builders';
 export * from './matchers';
+export * from './helpers';
 export * from './test.module';
 export * from './test-helpers';
 

@@ -1,18 +1,18 @@
 import { Injectable, inject } from "@angular/core";
 import {
-    AdminSearchUsersRequestDto,
-    AdminUpdateUserRequestDto,
-    AdminUserDto,
-    ClaimDto,
-    ErrorApiResponse,
-    PagedResponseDto,
-    RoleDto,
-    SearchClaimRequestDto,
-    SearchClaimsRequestDto,
-    SearchUserClaimsRequestDto,
+  AdminSearchUsersRequestDto,
+  AdminUpdateUserRequestDto,
+  AdminUserDto,
+  ClaimDto,
+  ErrorApiResponse,
+  PagedResponseDto,
+  RoleDto,
+  SearchClaimRequestDto,
+  SearchClaimsRequestDto,
+  SearchUserClaimsRequestDto,
 } from "@core/backend-api";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
-import { Observable, forkJoin, map, of, shareReplay, switchMap, throwError } from "rxjs";
+import { Observable, forkJoin, map, of, shareReplay, switchMap, tap, throwError } from "rxjs";
 import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 
 /**
@@ -25,11 +25,7 @@ import { AdminUserWithRoles, RoleWithAdminUsers } from "../entities";
 })
 export class AdminUsersService {
   #webApiService = inject(LightNapWebApiService);
-
-  #roles$ = this.#webApiService
-    .getRoles()
-    .pipe(map(roles => roles || []))
-    .pipe(shareReplay({ bufferSize: 1, refCount: false }));
+  #roles$: Observable<RoleDto[]> | null = null;
 
   /**
    * Gets a user by their ID.
@@ -92,6 +88,12 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getRoles(): Observable<Array<RoleDto>> {
+    if (!this.#roles$) {
+      this.#roles$ = this.#webApiService.getRoles().pipe(
+        map(roles => roles || []),
+        shareReplay({ bufferSize: 1, refCount: false })
+      );
+    }
     return this.#roles$;
   }
 
@@ -110,9 +112,13 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
-    return forkJoin([this.getRoles(), this.#webApiService.getRolesForUser(userId).pipe(map(userRoles => userRoles || []))]).pipe(
-      map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!))
-    );
+    return forkJoin([
+      this.getRoles(),
+      this.#webApiService.getRolesForUser(userId).pipe(
+        tap(x => console.log("User roles for userId", userId, x)),
+        map(userRoles => userRoles || [])
+      ),
+    ]).pipe(map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!)));
   }
 
   /**
