@@ -1,7 +1,12 @@
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { UpdateProfileRequestDto, LayoutConfigDto } from "@core/backend-api";
-import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
+import {
+  getGetProfileResponseMock,
+  getGetMyUserSettingsResponseMock,
+  getSetMyUserSettingResponseMock,
+  LightNapWebApiService,
+} from "@core/backend-api/services/lightnap-api";
 import { createLightNapWebApiServiceSpy } from "@testing/helpers";
 import { of } from "rxjs";
 import { IdentityService } from "./identity.service";
@@ -45,7 +50,8 @@ describe("ProfileService", () => {
 
   describe("profile management", () => {
     it("should get profile", () => {
-      webApiServiceSpy.getProfile.and.returnValue(of({} as any));
+      const profileResponse = getGetProfileResponseMock();
+      webApiServiceSpy.getProfile.and.returnValue(of(profileResponse) as any);
 
       service.getProfile().subscribe();
 
@@ -54,7 +60,8 @@ describe("ProfileService", () => {
 
     it("should update profile", () => {
       const updateProfileRequest: UpdateProfileRequestDto = {} as any;
-      webApiServiceSpy.updateMyProfile.and.returnValue(of({} as any));
+      const profileResponse = getGetProfileResponseMock();
+      webApiServiceSpy.updateMyProfile.and.returnValue(of(profileResponse) as any);
 
       service.updateProfile(updateProfileRequest).subscribe();
 
@@ -64,7 +71,8 @@ describe("ProfileService", () => {
 
   describe("settings management", () => {
     it("should get settings", () => {
-      webApiServiceSpy.getMyUserSettings.and.returnValue(of([{}] as any));
+      const settingsResponse = getGetMyUserSettingsResponseMock();
+      webApiServiceSpy.getMyUserSettings.and.returnValue(of(settingsResponse) as any);
 
       service.getSettings().subscribe();
 
@@ -74,7 +82,8 @@ describe("ProfileService", () => {
 
     it("should update settings", () => {
       const browserSettings: LayoutConfigDto = {} as any;
-      webApiServiceSpy.setMyUserSetting.and.returnValue(of({} as any));
+      const settingResponse = getSetMyUserSettingResponseMock();
+      webApiServiceSpy.setMyUserSetting.and.returnValue(of(settingResponse) as any);
 
       service.setSetting("BrowserSettings", browserSettings).subscribe();
 
@@ -84,8 +93,13 @@ describe("ProfileService", () => {
     it("should update style settings", () => {
       const clientSettings: LayoutConfigDto = { source: "server" } as any;
       const serverSettings: LayoutConfigDto = { source: "client" } as any;
-      webApiServiceSpy.getMyUserSettings.and.returnValue(of([{ key: "BrowserSettings", value: JSON.stringify(serverSettings) }] as any));
-      webApiServiceSpy.setMyUserSetting.and.returnValue(of({} as any));
+      const settingsResponse = [
+        { key: "BrowserSettings", value: JSON.stringify(serverSettings) },
+      ] as any;
+      const settingResponse = getSetMyUserSettingResponseMock();
+
+      webApiServiceSpy.getMyUserSettings.and.returnValue(of(settingsResponse) as any);
+      webApiServiceSpy.setMyUserSetting.and.returnValue(of(settingResponse) as any);
 
       service.updateStyleSettings(clientSettings).subscribe();
 

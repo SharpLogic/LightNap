@@ -2,7 +2,14 @@ import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { ChangePasswordRequestDto, NewPasswordRequestDto, RegisterRequestDto, ResetPasswordRequestDto, VerifyCodeRequestDto } from "@core";
-import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
+import {
+  getLogInResponseMock,
+  getRegisterResponseMock,
+  getNewPasswordResponseMock,
+  getVerifyCodeResponseMock,
+  getGetDevicesResponseMock,
+  LightNapWebApiService,
+} from "@core/backend-api/services/lightnap-api";
 import { createLightNapWebApiServiceSpy } from "@testing/helpers";
 import { IdentityDtoBuilder } from "@testing/builders";
 import { of, throwError } from "rxjs";
@@ -40,7 +47,7 @@ describe("IdentityService", () => {
 
     webApiServiceSpy = TestBed.inject(LightNapWebApiService) as jasmine.SpyObj<LightNapWebApiService>;
     // Configure default return values that throw to catch unconfigured mocks
-    webApiServiceSpy.getAccessToken.and.returnValue(of({} as any));
+    webApiServiceSpy.getAccessToken.and.returnValue(of(null as any));
 
     service = TestBed.inject(IdentityService);
   });
@@ -59,7 +66,8 @@ describe("IdentityService", () => {
     it("should log in and set token", done => {
       const token = IdentityDtoBuilder.createTestToken();
       const loginRequest = IdentityDtoBuilder.createLoginRequest();
-      webApiServiceSpy.logIn.and.returnValue(of({ accessToken: token, type: "AccessToken" }) as any);
+      const loginResponse = getLogInResponseMock({ accessToken: token });
+      webApiServiceSpy.logIn.and.returnValue(of(loginResponse) as any);
 
       service.logIn(loginRequest).subscribe({
         next: () => {
@@ -102,7 +110,8 @@ describe("IdentityService", () => {
     it("should register and set token", done => {
       const token = IdentityDtoBuilder.createTestToken();
       const registerRequest: RegisterRequestDto = IdentityDtoBuilder.createRegisterRequest() as any;
-      webApiServiceSpy.register.and.returnValue(of({ accessToken: token, type: "AccessToken" }) as any);
+      const registerResponse = getRegisterResponseMock({ accessToken: token });
+      webApiServiceSpy.register.and.returnValue(of(registerResponse) as any);
 
       service.register(registerRequest).subscribe({
         next: () => {
@@ -131,8 +140,8 @@ describe("IdentityService", () => {
 
     it("should detect when a token is expired", done => {
       const expiredToken = IdentityDtoBuilder.createExpiredToken();
-
-      webApiServiceSpy.logIn.and.returnValue(of({ accessToken: expiredToken, type: "AccessToken" }) as any);
+      const loginResponse = getLogInResponseMock({ accessToken: expiredToken });
+      webApiServiceSpy.logIn.and.returnValue(of(loginResponse) as any);
       service.logIn({} as any).subscribe({
         next: () => {
           expect(service.isTokenExpired()).toBeTrue();
@@ -191,7 +200,8 @@ describe("IdentityService", () => {
     it("should set new password and set token", done => {
       const token = IdentityDtoBuilder.createTestToken();
       const newPasswordRequest: NewPasswordRequestDto = IdentityDtoBuilder.createNewPasswordRequest() as any;
-      webApiServiceSpy.newPassword.and.returnValue(of({ accessToken: token, type: "AccessToken" }) as any);
+      const newPasswordResponse = getNewPasswordResponseMock({ accessToken: token });
+      webApiServiceSpy.newPassword.and.returnValue(of(newPasswordResponse) as any);
 
       service.newPassword(newPasswordRequest).subscribe({
         next: () => {
@@ -217,7 +227,8 @@ describe("IdentityService", () => {
 
   describe("device management", () => {
     it("should get devices", done => {
-      webApiServiceSpy.getDevices.and.returnValue(of({} as any));
+      const devicesResponse = getGetDevicesResponseMock();
+      webApiServiceSpy.getDevices.and.returnValue(of(devicesResponse) as any);
 
       service.getDevices().subscribe({
         next: () => {
@@ -246,7 +257,8 @@ describe("IdentityService", () => {
         claimType: "claimValue",
       });
 
-      webApiServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }) as any);
+      const loginResponse = getLogInResponseMock({ accessToken: tokenWithClaims });
+      webApiServiceSpy.logIn.and.returnValue(of(loginResponse) as any);
       service.logIn({} as any).subscribe({
         next: () => {
           const hasClaim = service.hasUserClaim({ type: "claimType", value: "claimValue" });
@@ -270,7 +282,8 @@ describe("IdentityService", () => {
         }
       });
 
-      webApiServiceSpy.logIn.and.returnValue(of({ accessToken: tokenWithClaims, type: "AccessToken" }) as any);
+      const loginResponse = getLogInResponseMock({ accessToken: tokenWithClaims });
+      webApiServiceSpy.logIn.and.returnValue(of(loginResponse) as any);
       service.logIn({} as any).subscribe();
     });
   });
