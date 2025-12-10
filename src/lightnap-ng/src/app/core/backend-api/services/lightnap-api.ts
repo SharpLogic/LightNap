@@ -18,7 +18,6 @@ import type {
   AdminExternalLoginDtoPagedResponseDto,
   AdminSearchUsersRequestDto,
   AdminUpdateUserRequestDto,
-  AdminUserDto,
   ChangeEmailRequestDto,
   ChangePasswordRequestDto,
   ClaimDtoPagedResponseDto,
@@ -72,7 +71,6 @@ import type {
   SetUserSettingRequestDto,
   StaticContentDto,
   StaticContentDtoPagedResponseDto,
-  StaticContentLanguageDto,
   StaticContentSupportedLanguageDto,
   StringPagedResponseDto,
   SupportedExternalLoginDto,
@@ -87,6 +85,34 @@ import type {
   UserSettingDto,
   VerifyCodeRequestDto,
   VerifyEmailRequestDto,
+} from "../models";
+
+import { faker } from "@faker-js/faker";
+
+import { HttpResponse, delay, http } from "msw";
+import type { RequestHandlerOptions } from "msw";
+
+import {
+  ExternalLoginSuccessType,
+  LoginSuccessType,
+  NotificationStatus,
+  NotificationType,
+  StaticContentFormat,
+  StaticContentReadAccess,
+  StaticContentStatus,
+  StaticContentType,
+  StaticContentUserVisibility,
+} from "../models";
+import type {
+  AdminExternalLoginDto,
+  AdminUserDto,
+  ClaimDto,
+  ExternalLoginDto,
+  PrivilegedUserDto,
+  PublicUserDto,
+  PublishedStaticContentDto,
+  StaticContentLanguageDto,
+  UserClaimDto,
 } from "../models";
 
 interface HttpClientOptions {
@@ -1385,3 +1411,2369 @@ export type LockUserAccountClientResult = NonNullable<boolean>;
 export type UnlockUserAccountClientResult = NonNullable<boolean>;
 export type GetUserSettingsClientResult = NonNullable<UserSettingDto[] | null>;
 export type SetUserSettingClientResult = NonNullable<UserSettingDto>;
+
+export const getGetPublishedStaticContentResponsePublishedStaticContentDtoMock = (
+  overrideResponse: Partial<PublishedStaticContentDto> = {}
+): PublishedStaticContentDto => ({
+  ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) },
+  ...overrideResponse,
+});
+
+export const getGetPublishedStaticContentResponseStaticContentLanguageDtoMock = (
+  overrideResponse: Partial<StaticContentLanguageDto> = {}
+): StaticContentLanguageDto => ({
+  ...{
+    ...{
+      ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) },
+    },
+    staticContentId: faker.number.int({ min: undefined, max: undefined }),
+    languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    lastModifiedUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetPublishedStaticContentResponseMock = (
+  overrideResponse: Partial<PublishedStaticContentResultDto> = {}
+): PublishedStaticContentResultDto => ({
+  visibility: faker.helpers.arrayElement(Object.values(StaticContentUserVisibility)),
+  content: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getGetPublishedStaticContentResponsePublishedStaticContentDtoMock() },
+      { ...getGetPublishedStaticContentResponseStaticContentLanguageDtoMock() },
+    ]),
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getGetSupportedLanguagesResponseMock = (): StaticContentSupportedLanguageDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    languageName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getCreateStaticContentResponseMock = (overrideResponse: Partial<StaticContentDto> = {}): StaticContentDto => ({
+  id: faker.number.int({ min: undefined, max: undefined }),
+  type: faker.helpers.arrayElement(Object.values(StaticContentType)),
+  key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(Object.values(StaticContentStatus)),
+  readAccess: faker.helpers.arrayElement(Object.values(StaticContentReadAccess)),
+  editorRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  readerRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  statusChangedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  statusChangedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  ...overrideResponse,
+});
+
+export const getGetStaticContentResponseMock = (overrideResponse: Partial<StaticContentDto> = {}): StaticContentDto => ({
+  id: faker.number.int({ min: undefined, max: undefined }),
+  type: faker.helpers.arrayElement(Object.values(StaticContentType)),
+  key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(Object.values(StaticContentStatus)),
+  readAccess: faker.helpers.arrayElement(Object.values(StaticContentReadAccess)),
+  editorRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  readerRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  statusChangedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  statusChangedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  ...overrideResponse,
+});
+
+export const getUpdateStaticContentResponseMock = (overrideResponse: Partial<StaticContentDto> = {}): StaticContentDto => ({
+  id: faker.number.int({ min: undefined, max: undefined }),
+  type: faker.helpers.arrayElement(Object.values(StaticContentType)),
+  key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  status: faker.helpers.arrayElement(Object.values(StaticContentStatus)),
+  readAccess: faker.helpers.arrayElement(Object.values(StaticContentReadAccess)),
+  editorRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  readerRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  statusChangedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  statusChangedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  ...overrideResponse,
+});
+
+export const getDeleteStaticContentResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getSearchStaticContentResponseMock = (
+  overrideResponse: Partial<StaticContentDtoPagedResponseDto> = {}
+): StaticContentDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.number.int({ min: undefined, max: undefined }),
+    type: faker.helpers.arrayElement(Object.values(StaticContentType)),
+    key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    status: faker.helpers.arrayElement(Object.values(StaticContentStatus)),
+    readAccess: faker.helpers.arrayElement(Object.values(StaticContentReadAccess)),
+    editorRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    readerRoles: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    statusChangedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    statusChangedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    lastModifiedByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  })),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getGetStaticContentLanguageResponseMock = (): StaticContentLanguageDto => ({
+  ...{ ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) } },
+  staticContentId: faker.number.int({ min: undefined, max: undefined }),
+  languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+});
+
+export const getCreateStaticContentLanguageResponseMock = (): StaticContentLanguageDto => ({
+  ...{ ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) } },
+  staticContentId: faker.number.int({ min: undefined, max: undefined }),
+  languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+});
+
+export const getUpdateStaticContentLanguageResponseMock = (): StaticContentLanguageDto => ({
+  ...{ ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) } },
+  staticContentId: faker.number.int({ min: undefined, max: undefined }),
+  languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+  lastModifiedUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+});
+
+export const getDeleteStaticContentLanguageResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetStaticContentLanguagesResponseMock = (): StaticContentLanguageDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    ...{
+      ...{ content: faker.string.alpha({ length: { min: 10, max: 20 } }), format: faker.helpers.arrayElement(Object.values(StaticContentFormat)) },
+    },
+    staticContentId: faker.number.int({ min: undefined, max: undefined }),
+    languageCode: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    createdByUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+    lastModifiedDate: faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    lastModifiedUserId: faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+  }));
+
+export const getGetSupportedExternalLoginsResponseMock = (): SupportedExternalLoginDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    providerName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    loginUrl: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getSearchExternalLoginsResponseMock = (
+  overrideResponse: Partial<AdminExternalLoginDtoPagedResponseDto> = {}
+): AdminExternalLoginDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    ...{
+      ...{
+        loginProvider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        providerDisplayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getRemoveExternalLoginResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetExternalLoginResultResponseMock = (overrideResponse: Partial<ExternalLoginSuccessDto> = {}): ExternalLoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(ExternalLoginSuccessType)),
+  email: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  userName: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getCompleteExternalLoginResponseMock = (overrideResponse: Partial<LoginSuccessDto> = {}): LoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(LoginSuccessType)),
+  accessToken: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getCompleteExternalLoginRegistrationResponseMock = (overrideResponse: Partial<LoginSuccessDto> = {}): LoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(LoginSuccessType)),
+  accessToken: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getLogInResponseMock = (overrideResponse: Partial<LoginSuccessDto> = {}): LoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(LoginSuccessType)),
+  accessToken: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getRegisterResponseMock = (overrideResponse: Partial<LoginSuccessDto> = {}): LoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(LoginSuccessType)),
+  accessToken: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getLogOutResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getChangePasswordResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getChangeEmailResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getConfirmEmailChangeResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getResetPasswordResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getNewPasswordResponseMock = (overrideResponse: Partial<LoginSuccessDto> = {}): LoginSuccessDto => ({
+  type: faker.helpers.arrayElement(Object.values(LoginSuccessType)),
+  accessToken: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
+
+export const getVerifyCodeResponseMock = (): string | null =>
+  faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]);
+
+export const getGetAccessTokenResponseMock = (): string | null =>
+  faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]);
+
+export const getRequestVerificationEmailResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getVerifyEmailResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getRequestMagicLinkEmailResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetDevicesResponseMock = (): DeviceDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    lastSeen: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    ipAddress: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    details: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getRevokeDeviceResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetProfileResponseMock = (overrideResponse: Partial<ProfileDto> = {}): ProfileDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getUpdateMyProfileResponseMock = (overrideResponse: Partial<ProfileDto> = {}): ProfileDto => ({
+  id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getSearchMyNotificationsResponseMock = (): NotificationSearchResultsDto => ({
+  ...{
+    ...{
+      data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+        id: faker.number.int({ min: undefined, max: undefined }),
+        timestamp: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        status: faker.helpers.arrayElement(Object.values(NotificationStatus)),
+        type: faker.helpers.arrayElement(Object.values(NotificationType)),
+        data: {
+          [faker.string.alphanumeric(5)]: {},
+        },
+      })),
+      pageNumber: faker.number.int({ min: undefined, max: undefined }),
+      pageSize: faker.number.int({ min: undefined, max: undefined }),
+      totalCount: faker.number.int({ min: undefined, max: undefined }),
+      totalPages: faker.number.int({ min: undefined, max: undefined }),
+    },
+  },
+  unreadCount: faker.number.int({ min: undefined, max: undefined }),
+});
+
+export const getMarkAllMyNotificationsAsReadResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getMarkMyNotificationAsReadResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetMyUserClaimsResponseClaimDtoMock = (overrideResponse: Partial<ClaimDto> = {}): ClaimDto => ({
+  ...{ type: faker.string.alpha({ length: { min: 10, max: 20 } }), value: faker.string.alpha({ length: { min: 10, max: 20 } }) },
+  ...overrideResponse,
+});
+
+export const getGetMyUserClaimsResponseUserClaimDtoMock = (overrideResponse: Partial<UserClaimDto> = {}): UserClaimDto => ({
+  ...{
+    ...{ ...{ type: faker.string.alpha({ length: { min: 10, max: 20 } }), value: faker.string.alpha({ length: { min: 10, max: 20 } }) } },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetMyUserClaimsResponseMock = (overrideResponse: Partial<ClaimDtoPagedResponseDto> = {}): ClaimDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+    faker.helpers.arrayElement([{ ...getGetMyUserClaimsResponseClaimDtoMock() }, { ...getGetMyUserClaimsResponseUserClaimDtoMock() }])
+  ),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getGetMyUserSettingsResponseMock = (): UserSettingDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    value: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastModifiedDate: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  }));
+
+export const getSetMyUserSettingResponseMock = (overrideResponse: Partial<UserSettingDto> = {}): UserSettingDto => ({
+  key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  value: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdDate: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    undefined,
+  ]),
+  lastModifiedDate: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getGetMyExternalLoginsResponseExternalLoginDtoMock = (overrideResponse: Partial<ExternalLoginDto> = {}): ExternalLoginDto => ({
+  ...{
+    loginProvider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    providerDisplayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetMyExternalLoginsResponseAdminExternalLoginDtoMock = (
+  overrideResponse: Partial<AdminExternalLoginDto> = {}
+): AdminExternalLoginDto => ({
+  ...{
+    ...{
+      ...{
+        loginProvider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        providerDisplayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetMyExternalLoginsResponseMock = ():
+  | GetMyExternalLogins200OneItem[]
+  | null
+  | GetMyExternalLogins200TwoItem[]
+  | null
+  | GetMyExternalLogins200ThreeItem[]
+  | null =>
+  faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyExternalLoginsResponseExternalLoginDtoMock() },
+        { ...getGetMyExternalLoginsResponseAdminExternalLoginDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyExternalLoginsResponseExternalLoginDtoMock() },
+        { ...getGetMyExternalLoginsResponseAdminExternalLoginDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyExternalLoginsResponseExternalLoginDtoMock() },
+        { ...getGetMyExternalLoginsResponseAdminExternalLoginDtoMock() },
+      ])
+    ),
+  ]);
+
+export const getRemoveMyExternalLoginResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetUserResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
+  ...{
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserResponseAdminUserDtoMock = (overrideResponse: Partial<AdminUserDto> = {}): AdminUserDto => ({
+  ...{
+    ...{
+      ...{
+        ...{
+          ...{
+            id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+          },
+        },
+        email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    lockoutEnd: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserResponsePrivilegedUserDtoMock = (overrideResponse: Partial<PrivilegedUserDto> = {}): PrivilegedUserDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+      },
+    },
+    email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserResponseMock = (): GetUser200One | GetUser200Two | GetUser200Three =>
+  faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getGetUserResponsePublicUserDtoMock() },
+      { ...getGetUserResponseAdminUserDtoMock() },
+      { ...getGetUserResponsePrivilegedUserDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getGetUserResponsePublicUserDtoMock() },
+      { ...getGetUserResponseAdminUserDtoMock() },
+      { ...getGetUserResponsePrivilegedUserDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getGetUserResponsePublicUserDtoMock() },
+      { ...getGetUserResponseAdminUserDtoMock() },
+      { ...getGetUserResponsePrivilegedUserDtoMock() },
+    ]),
+  ]);
+
+export const getUpdateUserResponseMock = (): AdminUserDto => ({
+  ...{
+    ...{
+      ...{
+        ...{
+          id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+          createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        },
+      },
+      email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    },
+  },
+  lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  lockoutEnd: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    undefined,
+  ]),
+});
+
+export const getDeleteUserResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetUserByUserNameResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
+  ...{
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserByUserNameResponseAdminUserDtoMock = (overrideResponse: Partial<AdminUserDto> = {}): AdminUserDto => ({
+  ...{
+    ...{
+      ...{
+        ...{
+          ...{
+            id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+          },
+        },
+        email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    lockoutEnd: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserByUserNameResponsePrivilegedUserDtoMock = (overrideResponse: Partial<PrivilegedUserDto> = {}): PrivilegedUserDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+      },
+    },
+    email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUserByUserNameResponseMock = (): GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three =>
+  faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getGetUserByUserNameResponsePublicUserDtoMock() },
+      { ...getGetUserByUserNameResponseAdminUserDtoMock() },
+      { ...getGetUserByUserNameResponsePrivilegedUserDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getGetUserByUserNameResponsePublicUserDtoMock() },
+      { ...getGetUserByUserNameResponseAdminUserDtoMock() },
+      { ...getGetUserByUserNameResponsePrivilegedUserDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getGetUserByUserNameResponsePublicUserDtoMock() },
+      { ...getGetUserByUserNameResponseAdminUserDtoMock() },
+      { ...getGetUserByUserNameResponsePrivilegedUserDtoMock() },
+    ]),
+  ]);
+
+export const getSearchUsersResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
+  ...{
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  },
+  ...overrideResponse,
+});
+
+export const getSearchUsersResponseAdminUserDtoMock = (overrideResponse: Partial<AdminUserDto> = {}): AdminUserDto => ({
+  ...{
+    ...{
+      ...{
+        ...{
+          ...{
+            id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+          },
+        },
+        email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    lockoutEnd: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getSearchUsersResponsePrivilegedUserDtoMock = (overrideResponse: Partial<PrivilegedUserDto> = {}): PrivilegedUserDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+      },
+    },
+    email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getSearchUsersResponseMock = (overrideResponse: Partial<PublicUserDtoPagedResponseDto> = {}): PublicUserDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+    faker.helpers.arrayElement([
+      { ...getSearchUsersResponsePublicUserDtoMock() },
+      { ...getSearchUsersResponseAdminUserDtoMock() },
+      { ...getSearchUsersResponsePrivilegedUserDtoMock() },
+    ])
+  ),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getGetUsersByIdsResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
+  ...{
+    id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUsersByIdsResponseAdminUserDtoMock = (overrideResponse: Partial<AdminUserDto> = {}): AdminUserDto => ({
+  ...{
+    ...{
+      ...{
+        ...{
+          ...{
+            id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+          },
+        },
+        email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    lockoutEnd: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUsersByIdsResponsePrivilegedUserDtoMock = (overrideResponse: Partial<PrivilegedUserDto> = {}): PrivilegedUserDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+      },
+    },
+    email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetUsersByIdsResponseMock = ():
+  | GetUsersByIds200OneItem[]
+  | null
+  | GetUsersByIds200TwoItem[]
+  | null
+  | GetUsersByIds200ThreeItem[]
+  | null =>
+  faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetUsersByIdsResponsePublicUserDtoMock() },
+        { ...getGetUsersByIdsResponseAdminUserDtoMock() },
+        { ...getGetUsersByIdsResponsePrivilegedUserDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetUsersByIdsResponsePublicUserDtoMock() },
+        { ...getGetUsersByIdsResponseAdminUserDtoMock() },
+        { ...getGetUsersByIdsResponsePrivilegedUserDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetUsersByIdsResponsePublicUserDtoMock() },
+        { ...getGetUsersByIdsResponseAdminUserDtoMock() },
+        { ...getGetUsersByIdsResponsePrivilegedUserDtoMock() },
+      ])
+    ),
+  ]);
+
+export const getGetRolesResponseMock = (): RoleDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    name: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  }));
+
+export const getGetRolesForUserResponseMock = (): string[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => faker.string.alpha({ length: { min: 10, max: 20 } }));
+
+export const getGetUsersInRoleResponseMock = (): AdminUserDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    ...{
+      ...{
+        ...{
+          ...{
+            id: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            userName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+            createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+          },
+        },
+        email: faker.string.alpha({ length: { min: 10, max: 20 } }),
+      },
+    },
+    lastModifiedDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    lockoutEnd: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  }));
+
+export const getAddUserToRoleResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getRemoveUserFromRoleResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getSearchClaimsResponseClaimDtoMock = (overrideResponse: Partial<ClaimDto> = {}): ClaimDto => ({
+  ...{ type: faker.string.alpha({ length: { min: 10, max: 20 } }), value: faker.string.alpha({ length: { min: 10, max: 20 } }) },
+  ...overrideResponse,
+});
+
+export const getSearchClaimsResponseUserClaimDtoMock = (overrideResponse: Partial<UserClaimDto> = {}): UserClaimDto => ({
+  ...{
+    ...{ ...{ type: faker.string.alpha({ length: { min: 10, max: 20 } }), value: faker.string.alpha({ length: { min: 10, max: 20 } }) } },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getSearchClaimsResponseMock = (overrideResponse: Partial<ClaimDtoPagedResponseDto> = {}): ClaimDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+    faker.helpers.arrayElement([{ ...getSearchClaimsResponseClaimDtoMock() }, { ...getSearchClaimsResponseUserClaimDtoMock() }])
+  ),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getSearchUserClaimsResponseMock = (overrideResponse: Partial<UserClaimDtoPagedResponseDto> = {}): UserClaimDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    ...{ ...{ type: faker.string.alpha({ length: { min: 10, max: 20 } }), value: faker.string.alpha({ length: { min: 10, max: 20 } }) } },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getGetUsersWithClaimResponseMock = (overrideResponse: Partial<StringPagedResponseDto> = {}): StringPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+    faker.string.alpha({ length: { min: 10, max: 20 } })
+  ),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getAddUserClaimResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getRemoveUserClaimResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getLockUserAccountResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getUnlockUserAccountResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetUserSettingsResponseMock = (): UserSettingDto[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    value: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    createdDate: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastModifiedDate: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+  }));
+
+export const getSetUserSettingResponseMock = (overrideResponse: Partial<UserSettingDto> = {}): UserSettingDto => ({
+  key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  value: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  createdDate: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    undefined,
+  ]),
+  lastModifiedDate: faker.helpers.arrayElement([
+    faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getGetPublishedStaticContentMockHandler = (
+  overrideResponse?:
+    | PublishedStaticContentResultDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<PublishedStaticContentResultDto> | PublishedStaticContentResultDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Content/published/:key/:languageCode",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetPublishedStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetSupportedLanguagesMockHandler = (
+  overrideResponse?:
+    | StaticContentSupportedLanguageDto[]
+    | null
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) => Promise<StaticContentSupportedLanguageDto[] | null> | StaticContentSupportedLanguageDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Content/supported-languages",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetSupportedLanguagesResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getCreateStaticContentMockHandler = (
+  overrideResponse?: StaticContentDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<StaticContentDto> | StaticContentDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Content",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getCreateStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetStaticContentMockHandler = (
+  overrideResponse?: StaticContentDto | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<StaticContentDto> | StaticContentDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Content/:key",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUpdateStaticContentMockHandler = (
+  overrideResponse?: StaticContentDto | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<StaticContentDto> | StaticContentDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/Content/:key",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getDeleteStaticContentMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Content/:key",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchStaticContentMockHandler = (
+  overrideResponse?:
+    | StaticContentDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<StaticContentDtoPagedResponseDto> | StaticContentDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Content/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchStaticContentResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetStaticContentLanguageMockHandler = (
+  overrideResponse?:
+    | StaticContentLanguageDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<StaticContentLanguageDto> | StaticContentLanguageDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Content/:key/languages/:languageCode",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetStaticContentLanguageResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getCreateStaticContentLanguageMockHandler = (
+  overrideResponse?:
+    | StaticContentLanguageDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<StaticContentLanguageDto> | StaticContentLanguageDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Content/:key/languages/:languageCode",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getCreateStaticContentLanguageResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUpdateStaticContentLanguageMockHandler = (
+  overrideResponse?:
+    | StaticContentLanguageDto
+    | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<StaticContentLanguageDto> | StaticContentLanguageDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/Content/:key/languages/:languageCode",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateStaticContentLanguageResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getDeleteStaticContentLanguageMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Content/:key/languages/:languageCode",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteStaticContentLanguageResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetStaticContentLanguagesMockHandler = (
+  overrideResponse?:
+    | StaticContentLanguageDto[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<StaticContentLanguageDto[] | null> | StaticContentLanguageDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Content/:key/languages",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetStaticContentLanguagesResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetSupportedExternalLoginsMockHandler = (
+  overrideResponse?:
+    | SupportedExternalLoginDto[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<SupportedExternalLoginDto[] | null> | SupportedExternalLoginDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/ExternalLogin/supported",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetSupportedExternalLoginsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchExternalLoginsMockHandler = (
+  overrideResponse?:
+    | AdminExternalLoginDtoPagedResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0]
+      ) => Promise<AdminExternalLoginDtoPagedResponseDto> | AdminExternalLoginDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/ExternalLogin/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchExternalLoginsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRemoveExternalLoginMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/ExternalLogin/remove/:userId/:loginProvider/:providerKey",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRemoveExternalLoginResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetExternalLoginResultMockHandler = (
+  overrideResponse?:
+    | ExternalLoginSuccessDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ExternalLoginSuccessDto> | ExternalLoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/ExternalLogin/result/:confirmationToken",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetExternalLoginResultResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getCompleteExternalLoginMockHandler = (
+  overrideResponse?: LoginSuccessDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<LoginSuccessDto> | LoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/ExternalLogin/complete/:confirmationToken",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getCompleteExternalLoginResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getCompleteExternalLoginRegistrationMockHandler = (
+  overrideResponse?: LoginSuccessDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<LoginSuccessDto> | LoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/ExternalLogin/register/:confirmationToken",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getCompleteExternalLoginRegistrationResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getLogInMockHandler = (
+  overrideResponse?: LoginSuccessDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<LoginSuccessDto> | LoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/login",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getLogInResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRegisterMockHandler = (
+  overrideResponse?: LoginSuccessDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<LoginSuccessDto> | LoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/register",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRegisterResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getLogOutMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Identity/logout",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getLogOutResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getChangePasswordMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/change-password",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getChangePasswordResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getChangeEmailMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/change-email",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getChangeEmailResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getConfirmEmailChangeMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/confirm-email-change",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getConfirmEmailChangeResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getResetPasswordMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/reset-password",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getResetPasswordResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getNewPasswordMockHandler = (
+  overrideResponse?: LoginSuccessDto | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<LoginSuccessDto> | LoginSuccessDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/new-password",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getNewPasswordResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getVerifyCodeMockHandler = (
+  overrideResponse?: string | null | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<string | null> | string | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/verify-code",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getVerifyCodeResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetAccessTokenMockHandler = (
+  overrideResponse?: string | null | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<string | null> | string | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Identity/access-token",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetAccessTokenResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRequestVerificationEmailMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/request-verification-email",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRequestVerificationEmailResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getVerifyEmailMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/verify-email",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getVerifyEmailResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRequestMagicLinkEmailMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Identity/request-magic-link",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRequestMagicLinkEmailResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetDevicesMockHandler = (
+  overrideResponse?: DeviceDto[] | null | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<DeviceDto[] | null> | DeviceDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Identity/devices",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetDevicesResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRevokeDeviceMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Identity/devices/:deviceId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRevokeDeviceResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetProfileMockHandler = (
+  overrideResponse?: ProfileDto | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ProfileDto> | ProfileDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/users/me/profile",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetProfileResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUpdateMyProfileMockHandler = (
+  overrideResponse?: ProfileDto | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<ProfileDto> | ProfileDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/users/me/profile",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateMyProfileResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchMyNotificationsMockHandler = (
+  overrideResponse?:
+    | NotificationSearchResultsDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<NotificationSearchResultsDto> | NotificationSearchResultsDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/users/me/notifications",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchMyNotificationsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getMarkAllMyNotificationsAsReadMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/users/me/notifications/mark-all-as-read",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getMarkAllMyNotificationsAsReadResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getMarkMyNotificationAsReadMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/users/me/notifications/:id/mark-as-read",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getMarkMyNotificationAsReadResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetMyUserClaimsMockHandler = (
+  overrideResponse?:
+    | ClaimDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ClaimDtoPagedResponseDto> | ClaimDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/users/me/claims",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetMyUserClaimsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetMyUserSettingsMockHandler = (
+  overrideResponse?:
+    | UserSettingDto[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<UserSettingDto[] | null> | UserSettingDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/users/me/settings",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetMyUserSettingsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSetMyUserSettingMockHandler = (
+  overrideResponse?: UserSettingDto | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<UserSettingDto> | UserSettingDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.patch(
+    "*/api/users/me/settings",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSetMyUserSettingResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetMyExternalLoginsMockHandler = (
+  overrideResponse?:
+    | GetMyExternalLogins200OneItem[]
+    | null
+    | GetMyExternalLogins200TwoItem[]
+    | null
+    | GetMyExternalLogins200ThreeItem[]
+    | null
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) =>
+        | Promise<GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null>
+        | GetMyExternalLogins200OneItem[]
+        | null
+        | GetMyExternalLogins200TwoItem[]
+        | null
+        | GetMyExternalLogins200ThreeItem[]
+        | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/users/me/external-logins",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetMyExternalLoginsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRemoveMyExternalLoginMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/users/me/external-logins/:loginProvider/:providerKey",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRemoveMyExternalLoginResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUserMockHandler = (
+  overrideResponse?:
+    | GetUser200One
+    | GetUser200Two
+    | GetUser200Three
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) => Promise<GetUser200One | GetUser200Two | GetUser200Three> | GetUser200One | GetUser200Two | GetUser200Three),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/:userId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUserResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUpdateUserMockHandler = (
+  overrideResponse?: AdminUserDto | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<AdminUserDto> | AdminUserDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/Users/:userId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateUserResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getDeleteUserMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Users/:userId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteUserResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUserByUserNameMockHandler = (
+  overrideResponse?:
+    | GetUserByUserName200One
+    | GetUserByUserName200Two
+    | GetUserByUserName200Three
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) =>
+        | Promise<GetUserByUserName200One | GetUserByUserName200Two | GetUserByUserName200Three>
+        | GetUserByUserName200One
+        | GetUserByUserName200Two
+        | GetUserByUserName200Three),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/user-name/:userName",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUserByUserNameResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchUsersMockHandler = (
+  overrideResponse?:
+    | PublicUserDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<PublicUserDtoPagedResponseDto> | PublicUserDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchUsersResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUsersByIdsMockHandler = (
+  overrideResponse?:
+    | GetUsersByIds200OneItem[]
+    | null
+    | GetUsersByIds200TwoItem[]
+    | null
+    | GetUsersByIds200ThreeItem[]
+    | null
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0]
+      ) =>
+        | Promise<GetUsersByIds200OneItem[] | null | GetUsersByIds200TwoItem[] | null | GetUsersByIds200ThreeItem[] | null>
+        | GetUsersByIds200OneItem[]
+        | null
+        | GetUsersByIds200TwoItem[]
+        | null
+        | GetUsersByIds200ThreeItem[]
+        | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/get-by-ids",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUsersByIdsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetRolesMockHandler = (
+  overrideResponse?: RoleDto[] | null | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<RoleDto[] | null> | RoleDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/roles",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetRolesResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetRolesForUserMockHandler = (
+  overrideResponse?: string[] | null | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<string[] | null> | string[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/:userId/roles",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetRolesForUserResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUsersInRoleMockHandler = (
+  overrideResponse?:
+    | AdminUserDto[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<AdminUserDto[] | null> | AdminUserDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/roles/:role",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUsersInRoleResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getAddUserToRoleMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/roles/:role/:userId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getAddUserToRoleResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRemoveUserFromRoleMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Users/roles/:role/:userId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRemoveUserFromRoleResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchClaimsMockHandler = (
+  overrideResponse?:
+    | ClaimDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<ClaimDtoPagedResponseDto> | ClaimDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/claims/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchClaimsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSearchUserClaimsMockHandler = (
+  overrideResponse?:
+    | UserClaimDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<UserClaimDtoPagedResponseDto> | UserClaimDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/user-claims/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchUserClaimsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUsersWithClaimMockHandler = (
+  overrideResponse?:
+    | StringPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<StringPagedResponseDto> | StringPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/claim-users",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUsersWithClaimResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getAddUserClaimMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/:userId/claims",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getAddUserClaimResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getRemoveUserClaimMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Users/:userId/claims",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRemoveUserClaimResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getLockUserAccountMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/:userId/lock",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getLockUserAccountResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUnlockUserAccountMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Users/:userId/unlock",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUnlockUserAccountResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetUserSettingsMockHandler = (
+  overrideResponse?:
+    | UserSettingDto[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<UserSettingDto[] | null> | UserSettingDto[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Users/:userId/settings",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetUserSettingsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getSetUserSettingMockHandler = (
+  overrideResponse?: UserSettingDto | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<UserSettingDto> | UserSettingDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/Users/:userId/settings",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSetUserSettingResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+export const getLightNapWebApiMock = () => [
+  getGetPublishedStaticContentMockHandler(),
+  getGetSupportedLanguagesMockHandler(),
+  getCreateStaticContentMockHandler(),
+  getGetStaticContentMockHandler(),
+  getUpdateStaticContentMockHandler(),
+  getDeleteStaticContentMockHandler(),
+  getSearchStaticContentMockHandler(),
+  getGetStaticContentLanguageMockHandler(),
+  getCreateStaticContentLanguageMockHandler(),
+  getUpdateStaticContentLanguageMockHandler(),
+  getDeleteStaticContentLanguageMockHandler(),
+  getGetStaticContentLanguagesMockHandler(),
+  getGetSupportedExternalLoginsMockHandler(),
+  getSearchExternalLoginsMockHandler(),
+  getRemoveExternalLoginMockHandler(),
+  getGetExternalLoginResultMockHandler(),
+  getCompleteExternalLoginMockHandler(),
+  getCompleteExternalLoginRegistrationMockHandler(),
+  getLogInMockHandler(),
+  getRegisterMockHandler(),
+  getLogOutMockHandler(),
+  getChangePasswordMockHandler(),
+  getChangeEmailMockHandler(),
+  getConfirmEmailChangeMockHandler(),
+  getResetPasswordMockHandler(),
+  getNewPasswordMockHandler(),
+  getVerifyCodeMockHandler(),
+  getGetAccessTokenMockHandler(),
+  getRequestVerificationEmailMockHandler(),
+  getVerifyEmailMockHandler(),
+  getRequestMagicLinkEmailMockHandler(),
+  getGetDevicesMockHandler(),
+  getRevokeDeviceMockHandler(),
+  getGetProfileMockHandler(),
+  getUpdateMyProfileMockHandler(),
+  getSearchMyNotificationsMockHandler(),
+  getMarkAllMyNotificationsAsReadMockHandler(),
+  getMarkMyNotificationAsReadMockHandler(),
+  getGetMyUserClaimsMockHandler(),
+  getGetMyUserSettingsMockHandler(),
+  getSetMyUserSettingMockHandler(),
+  getGetMyExternalLoginsMockHandler(),
+  getRemoveMyExternalLoginMockHandler(),
+  getGetUserMockHandler(),
+  getUpdateUserMockHandler(),
+  getDeleteUserMockHandler(),
+  getGetUserByUserNameMockHandler(),
+  getSearchUsersMockHandler(),
+  getGetUsersByIdsMockHandler(),
+  getGetRolesMockHandler(),
+  getGetRolesForUserMockHandler(),
+  getGetUsersInRoleMockHandler(),
+  getAddUserToRoleMockHandler(),
+  getRemoveUserFromRoleMockHandler(),
+  getSearchClaimsMockHandler(),
+  getSearchUserClaimsMockHandler(),
+  getGetUsersWithClaimMockHandler(),
+  getAddUserClaimMockHandler(),
+  getRemoveUserClaimMockHandler(),
+  getLockUserAccountMockHandler(),
+  getUnlockUserAccountMockHandler(),
+  getGetUserSettingsMockHandler(),
+  getSetUserSettingMockHandler(),
+];

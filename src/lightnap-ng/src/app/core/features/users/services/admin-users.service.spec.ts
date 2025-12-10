@@ -1,9 +1,10 @@
 /// <reference types="jasmine" />
 
+import { HttpClientTestingModule } from "@angular/common/http/testing";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { AdminUserDto, PagedResponseDto, RoleDto, SearchClaimRequestDto, UserClaimDto } from "@core/backend-api";
-import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
+import { getGetRolesResponseMock, getGetUserByUserNameResponseMock, LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { of } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
 
@@ -34,9 +35,10 @@ describe("AdminUsersService", () => {
     ]);
 
     // Set up the default return value for getRoles BEFORE creating the service
-    spy.getRoles.and.returnValue(of([]));
+    spy.getRoles.and.returnValue(of(getGetRolesResponseMock()));
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [provideZonelessChangeDetection(), AdminUsersService, { provide: LightNapWebApiService, useValue: spy }],
     });
 
@@ -51,7 +53,7 @@ describe("AdminUsersService", () => {
   describe("getUserByUserName", () => {
     it("should get user by username", done => {
       const userName = "testuser";
-      const expectedUser = { id: "1", userName } as AdminUserDto;
+      const expectedUser = getGetUserByUserNameResponseMock() as AdminUserDto;
       webApiServiceSpy.getUserByUserName.and.returnValue(of(expectedUser));
 
       service.getUserByUserName(userName).subscribe(user => {

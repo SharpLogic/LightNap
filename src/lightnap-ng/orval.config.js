@@ -13,11 +13,11 @@ module.exports = {
             schemas: "src/app/core/backend-api/models",
             client: "angular",
             httpClient: true,
-            mock: false,
+            mock: true,
             namingConvention: "kebab-case",
             override: {
                 useDates: true
-            }
+            },
         },
         hooks: {
             afterAllFilesWrite: "prettier --write",
