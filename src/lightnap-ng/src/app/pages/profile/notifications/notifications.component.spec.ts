@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
@@ -14,10 +15,10 @@ import { Router } from "@angular/router";
 describe("NotificationsComponent", () => {
   let component: NotificationsComponent;
   let fixture: ComponentFixture<NotificationsComponent>;
-  let mockIdentityService: jasmine.SpyObj<IdentityService>;
-  let mockNotificationService: jasmine.SpyObj<NotificationService>;
-  let mockToastService: jasmine.SpyObj<ToastService>;
-  let mockRouter: jasmine.SpyObj<Router>;
+  let mockIdentityService: MockedObject<IdentityService>;
+  let mockNotificationService: MockedObject<NotificationService>;
+  let mockToastService: MockedObject<ToastService>;
+  let mockRouter: MockedObject<Router>;
 
   const mockNotifications: NotificationItem[] = [
     {
@@ -49,19 +50,25 @@ describe("NotificationsComponent", () => {
   };
 
   beforeEach(async () => {
-    mockIdentityService = jasmine.createSpyObj("IdentityService", ["watchLoggedIn$"]);
-    mockNotificationService = jasmine.createSpyObj("NotificationService", [
-      "searchNotifications",
-      "markNotificationAsRead",
-      "markAllNotificationsAsRead",
-    ]);
-    mockToastService = jasmine.createSpyObj("ToastService", ["success"]);
-    mockRouter = jasmine.createSpyObj("Router", ["navigate"]);
+    mockIdentityService = {
+      watchLoggedIn$: vi.fn().mockName("IdentityService.watchLoggedIn$"),
+    } as MockedObject<IdentityService>;
+    mockNotificationService = {
+      searchNotifications: vi.fn().mockName("NotificationService.searchNotifications"),
+      markNotificationAsRead: vi.fn().mockName("NotificationService.markNotificationAsRead"),
+      markAllNotificationsAsRead: vi.fn().mockName("NotificationService.markAllNotificationsAsRead"),
+    } as MockedObject<NotificationService>;
+    mockToastService = {
+      success: vi.fn().mockName("ToastService.success"),
+    } as MockedObject<ToastService>;
+    mockRouter = {
+      navigate: vi.fn().mockName("Router.navigate"),
+    } as MockedObject<Router>;
 
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
-    mockNotificationService.searchNotifications.and.returnValue(of(mockSearchResults));
-    mockNotificationService.markNotificationAsRead.and.returnValue(of(true));
-    mockNotificationService.markAllNotificationsAsRead.and.returnValue(of(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
+    mockNotificationService.searchNotifications.mockReturnValue(of(mockSearchResults));
+    mockNotificationService.markNotificationAsRead.mockReturnValue(of(true));
+    mockNotificationService.markAllNotificationsAsRead.mockReturnValue(of(true));
 
     await TestBed.configureTestingModule({
       imports: [NotificationsComponent],
@@ -168,11 +175,11 @@ describe("NotificationsComponent", () => {
     });
 
     it("should reload notifications after marking all as read", () => {
-      const initialCallCount = mockNotificationService.searchNotifications.calls.count();
+      const initialCallCount = vi.mocked(mockNotificationService.searchNotifications).mock.calls.length;
 
       component.markAllAsRead();
 
-      expect(mockNotificationService.searchNotifications.calls.count()).toBe(initialCallCount + 1);
+      expect(vi.mocked(mockNotificationService.searchNotifications).mock.calls.length).toBe(initialCallCount + 1);
       expect(mockNotificationService.searchNotifications).toHaveBeenCalledWith({
         pageSize: 10,
         pageNumber: 1,
@@ -182,7 +189,7 @@ describe("NotificationsComponent", () => {
     it("should set errors on mark all as read failure", () => {
       const errorResponse = { errorMessages: ["Failed to mark notifications as read"] };
 
-      mockNotificationService.markAllNotificationsAsRead.and.returnValue(throwError(() => errorResponse));
+      mockNotificationService.markAllNotificationsAsRead.mockReturnValue(throwError(() => errorResponse));
 
       component.markAllAsRead();
 

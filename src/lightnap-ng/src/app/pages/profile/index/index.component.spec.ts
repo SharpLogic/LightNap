@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
@@ -16,11 +17,11 @@ import { ToastService } from "@core/services/toast.service";
 describe("IndexComponent", () => {
   let component: IndexComponent;
   let fixture: ComponentFixture<IndexComponent>;
-  let mockIdentityService: jasmine.SpyObj<IdentityService>;
-  let mockProfileService: jasmine.SpyObj<ProfileService>;
-  let mockRouteAliasService: jasmine.SpyObj<RouteAliasService>;
-  let mockBlockUiService: jasmine.SpyObj<BlockUiService>;
-  let mockToastService: jasmine.SpyObj<ToastService>;
+  let mockIdentityService: MockedObject<IdentityService>;
+  let mockProfileService: MockedObject<ProfileService>;
+  let mockRouteAliasService: MockedObject<RouteAliasService>;
+  let mockBlockUiService: MockedObject<BlockUiService>;
+  let mockToastService: MockedObject<ToastService>;
 
   const mockProfile: ProfileDto = {
     id: "1",
@@ -29,18 +30,32 @@ describe("IndexComponent", () => {
   };
 
   beforeEach(async () => {
-    mockIdentityService = jasmine.createSpyObj("IdentityService", ["logOut", "watchLoggedIn$"]);
-    mockProfileService = jasmine.createSpyObj("ProfileService", ["getProfile", "updateProfile"]);
-    mockRouteAliasService = jasmine.createSpyObj("RouteAliasService", ["navigate", "getRoute"]);
-    mockBlockUiService = jasmine.createSpyObj("BlockUiService", ["show", "hide"]);
-    mockToastService = jasmine.createSpyObj("ToastService", ["success"]);
+    mockIdentityService = {
+      logOut: vi.fn().mockName("IdentityService.logOut"),
+      watchLoggedIn$: vi.fn().mockName("IdentityService.watchLoggedIn$"),
+    } as MockedObject<IdentityService>;
+    mockProfileService = {
+      getProfile: vi.fn().mockName("ProfileService.getProfile"),
+      updateProfile: vi.fn().mockName("ProfileService.updateProfile"),
+    } as MockedObject<ProfileService>;
+    mockRouteAliasService = {
+      navigate: vi.fn().mockName("RouteAliasService.navigate"),
+      getRoute: vi.fn().mockName("RouteAliasService.getRoute"),
+    } as MockedObject<RouteAliasService>;
+    mockBlockUiService = {
+      show: vi.fn().mockName("BlockUiService.show"),
+      hide: vi.fn().mockName("BlockUiService.hide"),
+    } as MockedObject<BlockUiService>;
+    mockToastService = {
+      success: vi.fn().mockName("ToastService.success"),
+    } as MockedObject<ToastService>;
 
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
-    mockProfileService.getProfile.and.returnValue(of(mockProfile));
-    mockProfileService.updateProfile.and.returnValue(of(mockProfile));
-    mockIdentityService.logOut.and.returnValue(of(true));
-    mockRouteAliasService.getRoute.and.returnValue(["/profile", "change-email"]);
-    mockRouteAliasService.navigate.and.returnValue(Promise.resolve(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
+    mockProfileService.getProfile.mockReturnValue(of(mockProfile));
+    mockProfileService.updateProfile.mockReturnValue(of(mockProfile));
+    mockIdentityService.logOut.mockReturnValue(of(true));
+    mockRouteAliasService.getRoute.mockReturnValue(["/profile", "change-email"]);
+    mockRouteAliasService.navigate.mockReturnValue(Promise.resolve(true));
 
     await TestBed.configureTestingModule({
       imports: [IndexComponent, ReactiveFormsModule],
@@ -109,7 +124,7 @@ describe("IndexComponent", () => {
     it("should set errors on profile update failure", () => {
       const errorResponse = { errorMessages: ["Failed to update profile"] };
 
-      mockProfileService.updateProfile.and.returnValue(throwError(() => errorResponse));
+      mockProfileService.updateProfile.mockReturnValue(throwError(() => errorResponse));
 
       component.updateProfile();
 
@@ -119,7 +134,7 @@ describe("IndexComponent", () => {
     it("should hide block UI even on profile update error", () => {
       const errorResponse = { errorMessages: ["Failed to update profile"] };
 
-      mockProfileService.updateProfile.and.returnValue(throwError(() => errorResponse));
+      mockProfileService.updateProfile.mockReturnValue(throwError(() => errorResponse));
 
       component.updateProfile();
 
@@ -146,7 +161,7 @@ describe("IndexComponent", () => {
     it("should set errors on logout failure", () => {
       const errorResponse = { errorMessages: ["Failed to logout"] };
 
-      mockIdentityService.logOut.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.logOut.mockReturnValue(throwError(() => errorResponse));
 
       component.logOut();
 
@@ -156,7 +171,7 @@ describe("IndexComponent", () => {
     it("should hide block UI even on logout error", () => {
       const errorResponse = { errorMessages: ["Failed to logout"] };
 
-      mockIdentityService.logOut.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.logOut.mockReturnValue(throwError(() => errorResponse));
 
       component.logOut();
 

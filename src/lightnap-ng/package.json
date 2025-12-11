@@ -67,8 +67,8 @@
     "@tailwindcss/postcss": "^4.1.17",
     "@typescript-eslint/eslint-plugin": "^8.48.1",
     "@typescript-eslint/parser": "^8.48.1",
-    "@vitest/coverage-v8": "^1.2.0",
-    "@vitest/ui": "^1.2.0",
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
     "autoprefixer": "^10.4.22",
     "cypress": "^15.7.1",
     "eslint": "^9.39.1",
@@ -76,13 +76,13 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^5.5.4",
-    "jsdom": "^24.0.0",
+    "jsdom": "^27.3.0",
     "msw": "^2.12.4",
     "npm-check-updates": "^19.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.17",
     "typescript": "~5.9.3",
-    "vitest": "^1.2.0"
+    "vitest": "^4.0.15"
   }
 }

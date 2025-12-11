@@ -78,6 +78,9 @@
                 "extract-i18n": {
                     "builder": "@angular/build:extract-i18n"
                 },
+                "test": {
+                    "builder": "@angular/build:unit-test"
+                },
                 "e2e": {
                     "builder": "@cypress/schematic:cypress",
                     "options": {
@@ -98,10 +101,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "src/**/*.ts",
-                            "src/**/*.html"
-                        ]
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
                     }
                 }
             }

@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
@@ -13,21 +14,27 @@ import { APP_NAME } from "@core";
 describe("ConfirmEmailChangeComponent", () => {
   let component: ConfirmEmailChangeComponent;
   let fixture: ComponentFixture<ConfirmEmailChangeComponent>;
-  let mockIdentityService: jasmine.SpyObj<IdentityService>;
-  let mockBlockUiService: jasmine.SpyObj<BlockUiService>;
-  let mockRouteAliasService: jasmine.SpyObj<RouteAliasService>;
+  let mockIdentityService: MockedObject<IdentityService>;
+  let mockBlockUiService: MockedObject<BlockUiService>;
+  let mockRouteAliasService: MockedObject<RouteAliasService>;
 
   class MockRouteAliasService {
-    navigateWithExtras = jasmine.createSpy("navigateWithExtras");
+    navigateWithExtras = vi.fn();
   }
 
   beforeEach(async () => {
-    mockIdentityService = jasmine.createSpyObj("IdentityService", ["confirmEmailChange", "watchLoggedIn$"]);
-    mockBlockUiService = jasmine.createSpyObj("BlockUiService", ["show", "hide"]);
+    mockIdentityService = {
+      confirmEmailChange: vi.fn().mockName("IdentityService.confirmEmailChange"),
+      watchLoggedIn$: vi.fn().mockName("IdentityService.watchLoggedIn$"),
+    } as MockedObject<IdentityService>;
+    mockBlockUiService = {
+      show: vi.fn().mockName("BlockUiService.show"),
+      hide: vi.fn().mockName("BlockUiService.hide"),
+    } as MockedObject<BlockUiService>;
     mockRouteAliasService = new MockRouteAliasService() as any;
 
-    mockIdentityService.confirmEmailChange.and.returnValue(of(true));
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
+    mockIdentityService.confirmEmailChange.mockReturnValue(of(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
 
     await TestBed.configureTestingModule({
       imports: [ConfirmEmailChangeComponent],
@@ -103,7 +110,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should hide block UI even on error", () => {
       const errorResponse = { errorMessages: ["Invalid confirmation code"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 
@@ -112,7 +119,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should set errors on confirmation failure", () => {
       const errorResponse = { errorMessages: ["Invalid confirmation code", "Code expired"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 
@@ -121,7 +128,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should not navigate on error", () => {
       const errorResponse = { errorMessages: ["Invalid confirmation code"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 
@@ -153,7 +160,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should display errors when present", () => {
       const errorResponse = { errorMessages: ["Invalid code"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 
@@ -198,7 +205,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should handle network errors", () => {
       const errorResponse = { errorMessages: ["Network error"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 
@@ -207,7 +214,7 @@ describe("ConfirmEmailChangeComponent", () => {
 
     it("should handle multiple error messages", () => {
       const errorResponse = { errorMessages: ["Error 1", "Error 2", "Error 3"] };
-      mockIdentityService.confirmEmailChange.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.confirmEmailChange.mockReturnValue(throwError(() => errorResponse));
 
       fixture.detectChanges();
 

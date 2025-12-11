@@ -1,3 +1,5 @@
+import { vi } from 'vitest';
+
 /**
  * General test helper utilities
  */
@@ -10,21 +12,32 @@ export async function flushPromises(): Promise<void> {
 }
 
 /**
- * Create a spy object with typed methods
+ * Create a spy object with mocked methods (Vitest native replacement for jasmine.createSpyObj)
  */
-export function createSpyObj<T>(
-  baseName: string,
-  methods: (keyof T)[]
-): jasmine.SpyObj<T> {
-  return jasmine.createSpyObj(baseName, methods as string[]);
+export function createSpyObj<T>(baseName: string, methodNames: string[]): T {
+  const spy: any = {};
+  methodNames.forEach(methodName => {
+    spy[methodName] = vi.fn();
+  });
+  return spy as T;
+}
+
+/**
+ * Create a single spy (Vitest native replacement for jasmine.createSpy)
+ */
+export function createSpy(name: string, fn?: (...args: any[]) => any) {
+  return vi.fn().mockName(name);
 }
 
 /**
  * Create a partial spy object (only some methods are spies)
  */
-export function createPartialSpy<T>(base: Partial<T>, spyMethods: (keyof T)[]): jasmine.SpyObj<T> {
-  const spy = jasmine.createSpyObj('PartialSpy', spyMethods as string[]);
-  return Object.assign(spy, base);
+export function createPartialSpy<T>(base: Partial<T>, spyMethods: (keyof T)[]): T {
+  const spy: any = base ? { ...base } : {};
+  spyMethods.forEach(method => {
+    spy[method] = vi.fn();
+  });
+  return spy as T;
 }
 
 /**
@@ -88,12 +101,12 @@ export function createMockActivatedRouteSnapshot(overrides?: any): any {
     children: [],
     ...overrides,
   };
-  
+
   // Set root to self if no parent
   if (!mockSnapshot.root) {
     mockSnapshot.root = mockSnapshot;
   }
-  
+
   return mockSnapshot;
 }
 

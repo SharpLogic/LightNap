@@ -1,3 +1,4 @@
+import type { MockedObject } from "vitest";
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from "@angular/common/http";
 import { provideZonelessChangeDetection } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
@@ -9,96 +10,100 @@ import { environment } from "src/environments/environment";
 import { apiResponseInterceptor } from "./api-response-interceptor";
 
 describe("apiResponseInterceptor", () => {
-  let identityService: jasmine.SpyObj<IdentityService>;
-  let routeAliasService: jasmine.SpyObj<RouteAliasService>;
-  let next: HttpHandlerFn;
+    let identityService: MockedObject<IdentityService>;
+    let routeAliasService: MockedObject<RouteAliasService>;
+    let next: HttpHandlerFn;
 
-  beforeEach(() => {
-    const identityServiceSpy = jasmine.createSpyObj("IdentityService", ["logOut"]);
-    const routeAliasServiceSpy = jasmine.createSpyObj("RouteAliasService", ["navigate"]);
+    beforeEach(() => {
+        const identityServiceSpy = {
+            logOut: vi.fn().mockName("IdentityService.logOut")
+        };
+        const routeAliasServiceSpy = {
+            navigate: vi.fn().mockName("RouteAliasService.navigate")
+        };
 
-    TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        { provide: IdentityService, useValue: identityServiceSpy },
-        { provide: RouteAliasService, useValue: routeAliasServiceSpy },
-      ],
+        TestBed.configureTestingModule({
+            providers: [
+                provideZonelessChangeDetection(),
+                { provide: IdentityService, useValue: identityServiceSpy },
+                { provide: RouteAliasService, useValue: routeAliasServiceSpy },
+            ],
+        });
+
+        identityService = TestBed.inject(IdentityService) as MockedObject<IdentityService>;
+        routeAliasService = TestBed.inject(RouteAliasService) as MockedObject<RouteAliasService>;
+
+        next = vi.fn().mockReturnValue(of(new HttpResponse({ status: 200 })));
     });
 
-    identityService = TestBed.inject(IdentityService) as jasmine.SpyObj<IdentityService>;
-    routeAliasService = TestBed.inject(RouteAliasService) as jasmine.SpyObj<RouteAliasService>;
+    it("should handle 401 error by logging out and navigating to login", async () => {
+        const request = new HttpRequest("GET", "/test");
+        const errorResponse = new HttpErrorResponse({ status: 401 });
 
-    next = jasmine.createSpy().and.returnValue(of(new HttpResponse({ status: 200 })));
-  });
+        next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-  it("should handle 401 error by logging out and navigating to login", done => {
-    const request = new HttpRequest("GET", "/test");
-    const errorResponse = new HttpErrorResponse({ status: 401 });
-
-    next = jasmine.createSpy().and.returnValue(throwError(() => errorResponse));
-
-    TestBed.runInInjectionContext(() => {
-      apiResponseInterceptor(request, next).subscribe({
-        error: (event: HttpEvent<unknown>) => {
-          expect(identityService.logOut).toHaveBeenCalled();
-          expect(routeAliasService.navigate).toHaveBeenCalledWith("login");
-          done();
-        },
-      });
+        TestBed.runInInjectionContext(() => {
+            apiResponseInterceptor(request, next).subscribe({
+                error: (event: HttpEvent<unknown>) => {
+                    expect(identityService.logOut).toHaveBeenCalled();
+                    expect(routeAliasService.navigate).toHaveBeenCalledWith("login");
+                    ;
+                },
+            });
+        });
     });
-  });
 
-  it("should log error in non-production environment", done => {
-    const request = new HttpRequest("GET", "/test");
-    const errorResponse = new HttpErrorResponse({ status: 500 });
+    it("should log error in non-production environment", async () => {
+        const request = new HttpRequest("GET", "/test");
+        const errorResponse = new HttpErrorResponse({ status: 500 });
 
-    spyOn(console, "error");
-    environment.production = false;
+        vi.spyOn(console, "error");
+        environment.production = false;
 
-    next = jasmine.createSpy().and.returnValue(throwError(() => errorResponse));
+        next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    TestBed.runInInjectionContext(() => {
-      apiResponseInterceptor(request, next).subscribe({
-        error: (event: HttpEvent<unknown>) => {
-          expect(console.error).toHaveBeenCalledWith(errorResponse);
-          done();
-        },
-      });
+        TestBed.runInInjectionContext(() => {
+            apiResponseInterceptor(request, next).subscribe({
+                error: (event: HttpEvent<unknown>) => {
+                    expect(console.error).toHaveBeenCalledWith(errorResponse);
+                    ;
+                },
+            });
+        });
     });
-  });
 
-  it("should not log error in production environment", done => {
-    const request = new HttpRequest("GET", "/test");
-    const errorResponse = new HttpErrorResponse({ status: 500 });
+    it("should not log error in production environment", async () => {
+        const request = new HttpRequest("GET", "/test");
+        const errorResponse = new HttpErrorResponse({ status: 500 });
 
-    spyOn(console, "error");
-    environment.production = true;
+        vi.spyOn(console, "error");
+        environment.production = true;
 
-    next = jasmine.createSpy().and.returnValue(throwError(() => errorResponse));
+        next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    TestBed.runInInjectionContext(() => {
-      apiResponseInterceptor(request, next).subscribe({
-        error: (event: HttpEvent<unknown>) => {
-          expect(console.error).not.toHaveBeenCalled();
-          done();
-        },
-      });
+        TestBed.runInInjectionContext(() => {
+            apiResponseInterceptor(request, next).subscribe({
+                error: (event: HttpEvent<unknown>) => {
+                    expect(console.error).not.toHaveBeenCalled();
+                    ;
+                },
+            });
+        });
     });
-  });
 
-  it("should return HttpErrorApiResponse on error", done => {
-    const request = new HttpRequest("GET", "/test");
-    const errorResponse = new HttpErrorResponse({ status: 500 });
+    it("should return HttpErrorApiResponse on error", async () => {
+        const request = new HttpRequest("GET", "/test");
+        const errorResponse = new HttpErrorResponse({ status: 500 });
 
-    next = jasmine.createSpy().and.returnValue(throwError(() => errorResponse));
+        next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    TestBed.runInInjectionContext(() => {
-      apiResponseInterceptor(request, next).subscribe({
-        error: (event: HttpErrorApiResponse<any>) => {
-          expect(event).toBeInstanceOf(HttpErrorApiResponse);
-          done();
-        },
-      });
+        TestBed.runInInjectionContext(() => {
+            apiResponseInterceptor(request, next).subscribe({
+                error: (event: HttpErrorApiResponse<any>) => {
+                    expect(event).toBeInstanceOf(HttpErrorApiResponse);
+                    ;
+                },
+            });
+        });
     });
-  });
 });

@@ -6,74 +6,75 @@ import { MockIdentityService, MockRouteAliasService, createMockActivatedRouteSna
 import { IdentityService } from '@core/services/identity.service';
 import { RouteAliasService } from '@core/features/routing/services/route-alias-service';
 import { firstValueFrom } from 'rxjs';
+import { describe, it, beforeEach, vi } from 'vitest';
 
 describe('loggedInGuard', () => {
-  let mockIdentity: MockIdentityService;
-  let mockRouteAlias: MockRouteAliasService;
-  let route: ActivatedRouteSnapshot;
-  let state: RouterStateSnapshot;
+    let mockIdentity: MockIdentityService;
+    let mockRouteAlias: MockRouteAliasService;
+    let route: ActivatedRouteSnapshot;
+    let state: RouterStateSnapshot;
 
-  beforeEach(() => {
-    mockIdentity = new MockIdentityService();
-    mockRouteAlias = new MockRouteAliasService();
+    beforeEach(() => {
+        mockIdentity = new MockIdentityService();
+        mockRouteAlias = new MockRouteAliasService();
 
-    TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        { provide: IdentityService, useValue: mockIdentity },
-        { provide: RouteAliasService, useValue: mockRouteAlias },
-        { provide: Router, useValue: { createUrlTree: jasmine.createSpy() } },
-      ],
+        TestBed.configureTestingModule({
+            providers: [
+                provideZonelessChangeDetection(),
+                { provide: IdentityService, useValue: mockIdentity },
+                { provide: RouteAliasService, useValue: mockRouteAlias },
+                { provide: Router, useValue: { createUrlTree: vi.fn() } },
+            ],
+        });
+
+        route = createMockActivatedRouteSnapshot();
+        state = createMockRouterStateSnapshot('/protected');
     });
 
-    route = createMockActivatedRouteSnapshot();
-    state = createMockRouterStateSnapshot('/protected');
-  });
+    it('should allow access when user is logged in', async () => {
+        mockIdentity.setLoggedIn('token', ['User']);
 
-  it('should allow access when user is logged in', async () => {
-    mockIdentity.setLoggedIn('token', ['User']);
+        const result = await TestBed.runInInjectionContext(async () => {
+            return firstValueFrom(loggedInGuard(route, state));
+        });
 
-    const result = await TestBed.runInInjectionContext(async () => {
-      return firstValueFrom(loggedInGuard(route, state));
+        expect(result).toBe(true);
     });
 
-    expect(result).toBe(true);
-  });
+    it('should deny access when user is not logged in', async () => {
+        mockIdentity.setLoggedOut();
+        mockRouteAlias.getRoute = vi.fn().mockReturnValue(['/', 'login']);
 
-  it('should deny access when user is not logged in', async () => {
-    mockIdentity.setLoggedOut();
-    mockRouteAlias.getRoute = jasmine.createSpy('getRoute').and.returnValue(['/', 'login']);
+        const result = await TestBed.runInInjectionContext(async () => {
+            return firstValueFrom(loggedInGuard(route, state));
+        });
 
-    const result = await TestBed.runInInjectionContext(async () => {
-      return firstValueFrom(loggedInGuard(route, state));
+        expect(result).not.toBe(true);
+        expect(mockRouteAlias.getRoute).toHaveBeenCalledWith('login');
     });
 
-    expect(result).not.toBe(true);
-    expect(mockRouteAlias.getRoute).toHaveBeenCalledWith('login');
-  });
+    it('should set redirect URL when denying access', async () => {
+        mockIdentity.setLoggedOut();
+        mockRouteAlias.getRoute = vi.fn().mockReturnValue(['/', 'login']);
+        const setRedirectUrlSpy = vi.spyOn(mockIdentity as any, 'setRedirectUrl');
 
-  it('should set redirect URL when denying access', async () => {
-    mockIdentity.setLoggedOut();
-    mockRouteAlias.getRoute = jasmine.createSpy('getRoute').and.returnValue(['/', 'login']);
-    const setRedirectUrlSpy = spyOn(mockIdentity, 'setRedirectUrl');
+        await TestBed.runInInjectionContext(async () => {
+            return firstValueFrom(loggedInGuard(route, state));
+        });
 
-    await TestBed.runInInjectionContext(async () => {
-      return firstValueFrom(loggedInGuard(route, state));
+        expect(setRedirectUrlSpy).toHaveBeenCalledWith('/protected');
     });
 
-    expect(setRedirectUrlSpy).toHaveBeenCalledWith('/protected');
-  });
+    it('should handle different URLs', async () => {
+        mockIdentity.setLoggedOut();
+        mockRouteAlias.getRoute = vi.fn().mockReturnValue(['/', 'login']);
+        const setRedirectUrlSpy = vi.spyOn(mockIdentity as any, 'setRedirectUrl');
+        const customState = createMockRouterStateSnapshot('/admin/settings');
 
-  it('should handle different URLs', async () => {
-    mockIdentity.setLoggedOut();
-    mockRouteAlias.getRoute = jasmine.createSpy('getRoute').and.returnValue(['/', 'login']);
-    const setRedirectUrlSpy = spyOn(mockIdentity, 'setRedirectUrl');
-    const customState = createMockRouterStateSnapshot('/admin/settings');
+        await TestBed.runInInjectionContext(async () => {
+            return firstValueFrom(loggedInGuard(route, customState));
+        });
 
-    await TestBed.runInInjectionContext(async () => {
-      return firstValueFrom(loggedInGuard(route, customState));
+        expect(setRedirectUrlSpy).toHaveBeenCalledWith('/admin/settings');
     });
-
-    expect(setRedirectUrlSpy).toHaveBeenCalledWith('/admin/settings');
-  });
 });

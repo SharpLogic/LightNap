@@ -6,6 +6,7 @@ import { ListItem } from "@core/models/list-item";
     selector: 'ln-select-list-item',
     templateUrl: './select-list-item.component.html',
     imports: [],
+    standalone: true,
 })
 export class SelectListItemComponent {
     @Input() label = signal("");

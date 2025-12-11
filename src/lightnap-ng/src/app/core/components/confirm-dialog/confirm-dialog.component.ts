@@ -7,6 +7,7 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
   selector: "ln-confirm-dialog",
   templateUrl: "./confirm-dialog.component.html",
   imports: [ConfirmDialogModule, ButtonModule],
+  standalone: true,
 })
 export class ConfirmDialogComponent {
     readonly confirmText = input("Confirm");
