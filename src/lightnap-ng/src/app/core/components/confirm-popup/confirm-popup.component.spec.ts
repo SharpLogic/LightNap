@@ -3,6 +3,7 @@ import { provideZonelessChangeDetection } from '@angular/core';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ConfirmPopupComponent } from './confirm-popup.component';
 import { ConfirmationService, PrimeIcons } from 'primeng/api';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('ConfirmPopupComponent', () => {
     let component: ConfirmPopupComponent;

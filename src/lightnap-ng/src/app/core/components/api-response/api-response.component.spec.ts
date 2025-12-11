@@ -4,6 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ApiResponseComponent } from './api-response.component';
 import { of, throwError } from 'rxjs';
 import { ErrorApiResponse, SuccessApiResponse } from '@core/backend-api';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('ApiResponseComponent', () => {
     let component: ApiResponseComponent<string>;

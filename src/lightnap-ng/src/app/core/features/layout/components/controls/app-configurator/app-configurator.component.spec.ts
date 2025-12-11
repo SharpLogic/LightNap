@@ -5,6 +5,7 @@ import { provideNoopAnimations } from "@angular/platform-browser/animations";
 import { AppConfiguratorComponent } from "./app-configurator.component";
 import { LayoutService } from "@core/features/layout/services/layout.service";
 import { LayoutConfigDto } from "@core/backend-api";
+import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("AppConfiguratorComponent", () => {
     let component: AppConfiguratorComponent;

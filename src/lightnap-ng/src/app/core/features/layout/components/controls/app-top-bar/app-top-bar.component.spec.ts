@@ -9,6 +9,7 @@ import { LayoutConfigDto } from "@core/backend-api";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { AppTopBarComponent } from "./app-top-bar.component";
 import { MessageService } from "primeng/api";
+import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("AppTopBarComponent", () => {
     let mockLayoutService: any;
