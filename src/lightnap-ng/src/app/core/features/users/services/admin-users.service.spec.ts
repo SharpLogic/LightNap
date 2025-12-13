@@ -59,6 +59,10 @@ describe("AdminUsersService", () => {
       // Pick specific role names from the generated roles to ensure they exist
       const userRoleNames = allRoles.slice(0, 2).map(role => role.name || "");
 
+      if (userRoleNames.length < 2) {
+        throw new Error("Not enough roles generated for testing.");
+      }
+
       webApiServiceSpy.getRoles.mockReturnValue(of(allRoles) as any);
       webApiServiceSpy.getRolesForUser.mockReturnValue(of(userRoleNames) as any);
 

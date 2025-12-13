@@ -10,6 +10,8 @@ import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { AppTopBarComponent } from "./app-top-bar.component";
 import { MessageService } from "primeng/api";
 import { describe, beforeEach, vi, it, expect } from "vitest";
+import { MockNotificationHubService } from "@testing/mocks/mock-notification-hub.service";
+import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
 
 describe("AppTopBarComponent", () => {
     let mockLayoutService: any;
@@ -51,6 +53,7 @@ describe("AppTopBarComponent", () => {
                 provideRouter([]),
                 { provide: LayoutService, useValue: mockLayoutService },
                 { provide: RouteAliasService, useClass: MockRouteAliasService },
+                { provide: NotificationHubService, useClass: MockNotificationHubService },
                 MessageService,
             ],
         }).compileComponents();

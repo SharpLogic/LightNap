@@ -11,6 +11,7 @@ import { RouteAliasService } from "@core/features/routing/services/route-alias-s
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
+import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("NewPasswordComponent", () => {
     let component: NewPasswordComponent;

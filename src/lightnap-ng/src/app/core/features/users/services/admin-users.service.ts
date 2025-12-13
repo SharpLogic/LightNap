@@ -112,13 +112,9 @@ export class AdminUsersService {
    * @returns {Observable<Array<RoleDto>>} An observable containing the roles.
    */
   getUserRoles(userId: string) {
-    return forkJoin([
-      this.getRoles(),
-      this.#webApiService.getRolesForUser(userId).pipe(
-        tap(x => console.log("User roles for userId", userId, x)),
-        map(userRoles => userRoles || [])
-      ),
-    ]).pipe(map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!)));
+    return forkJoin([this.getRoles(), this.#webApiService.getRolesForUser(userId).pipe(map(userRoles => userRoles || []))]).pipe(
+      map(([roles, userRoles]) => userRoles.map(userRole => roles.find(role => role.name === userRole)!))
+    );
   }
 
   /**

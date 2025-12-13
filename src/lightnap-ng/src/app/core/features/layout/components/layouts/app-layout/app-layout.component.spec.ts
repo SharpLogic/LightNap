@@ -14,6 +14,8 @@ import { MenuService } from "@core/features/layout/services/menu.service";
 import { BreadcrumbService } from "@core/features/layout/services/breadcrumb.service";
 import { MenuItem, MessageService } from "primeng/api";
 import { describe, beforeEach, vi, it, expect } from "vitest";
+import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
+import { MockNotificationHubService } from "@testing/mocks/mock-notification-hub.service";
 
 describe("AppLayoutComponent", () => {
     let component: AppLayoutComponent;
@@ -85,6 +87,7 @@ describe("AppLayoutComponent", () => {
                 { provide: RouteAliasService, useClass: MockRouteAliasService },
                 { provide: MenuService, useValue: mockMenuService },
                 { provide: BreadcrumbService, useValue: mockBreadcrumbService },
+                { provide: NotificationHubService, useClass: MockNotificationHubService },
                 MessageService,
             ],
         }).compileComponents();

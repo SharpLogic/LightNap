@@ -17,7 +17,7 @@
     "test:coverage": "ng test --watch=false --code-coverage",
     "test:coverage:open": "ng test --watch=false --code-coverage && start coverage/lightnap-ng/index.html",
     "test:headless": "ng test --watch=false",
-    "test:debug": "ng test --browsers=Chrome --watch=true",
+    "test:debug": "ng test --watch=true",
     "e2e": "cypress run",
     "e2e:backend": "node scripts/run-e2e-backend.js",
     "e2e:open": "cypress open",
@@ -84,6 +84,7 @@
     "prettier": "^3.7.4",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.15"
   }
 }
