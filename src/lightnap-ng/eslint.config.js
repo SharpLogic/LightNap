@@ -88,7 +88,12 @@ module.exports = [
                     caughtErrorsIgnorePattern: "^_",
                 },
             ],
-            "prettier/prettier": "error",
+            "prettier/prettier": [
+                "error",
+                {
+                    endofLine: "auto",
+                },
+            ],
             "linebreak-style": ["error", "windows"],
         },
     },
