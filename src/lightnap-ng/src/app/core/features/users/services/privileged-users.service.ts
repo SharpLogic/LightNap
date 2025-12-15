@@ -1,12 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import {
-    ClaimDto,
-    PagedResponseDto,
-    PrivilegedSearchUsersRequestDto,
-    PrivilegedUserDto,
-    RoleDto,
-    SearchClaimRequestDto,
-} from "@core/backend-api";
+import { ClaimDto, PagedResponseDto, PrivilegedSearchUsersRequestDto, PrivilegedUserDto, RoleDto, SearchClaimRequestDto } from "@core/backend-api";
 import { Observable } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
 

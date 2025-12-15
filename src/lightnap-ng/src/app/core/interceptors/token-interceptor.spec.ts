@@ -7,63 +7,63 @@ import { IdentityService } from "@core/services/identity.service";
 import { tokenInterceptor } from "./token-interceptor";
 
 describe("tokenInterceptor", () => {
-    let httpMock: HttpTestingController;
-    let httpClient: HttpClient;
-    let identityService: MockedObject<IdentityService>;
+  let httpMock: HttpTestingController;
+  let httpClient: HttpClient;
+  let identityService: MockedObject<IdentityService>;
 
-    beforeEach(() => {
-        const identityServiceSpy = {
-            getBearerToken: vi.fn().mockName("IdentityService.getBearerToken")
-        };
+  beforeEach(() => {
+    const identityServiceSpy = {
+      getBearerToken: vi.fn().mockName("IdentityService.getBearerToken"),
+    };
 
-        TestBed.configureTestingModule({
-            providers: [
-                provideZonelessChangeDetection(),
-                provideHttpClient(withInterceptors([tokenInterceptor])),
-                provideHttpClientTesting(),
-                { provide: IdentityService, useValue: identityServiceSpy },
-            ],
-        });
-
-        httpMock = TestBed.inject(HttpTestingController);
-        httpClient = TestBed.inject(HttpClient);
-        identityService = TestBed.inject(IdentityService) as MockedObject<IdentityService>;
+    TestBed.configureTestingModule({
+      providers: [
+        provideZonelessChangeDetection(),
+        provideHttpClient(withInterceptors([tokenInterceptor])),
+        provideHttpClientTesting(),
+        { provide: IdentityService, useValue: identityServiceSpy },
+      ],
     });
 
-    afterEach(() => {
-        httpMock.verify();
-    });
+    httpMock = TestBed.inject(HttpTestingController);
+    httpClient = TestBed.inject(HttpClient);
+    identityService = TestBed.inject(IdentityService) as MockedObject<IdentityService>;
+  });
 
-    it("should add Authorization header for API requests", () => {
-        const token = "Bearer test-token";
-        identityService.getBearerToken.mockReturnValue(token);
+  afterEach(() => {
+    httpMock.verify();
+  });
 
-        httpClient.get("/api/data").subscribe();
+  it("should add Authorization header for API requests", () => {
+    const token = "Bearer test-token";
+    identityService.getBearerToken.mockReturnValue(token);
 
-        const req = httpMock.expectOne("/api/data");
-        expect(req.request.headers.has("Authorization")).toBeTruthy();
-        expect(req.request.headers.get("Authorization")).toBe(token);
-        expect(req.request.withCredentials).toBe(true);
-        req.flush({});
-    });
+    httpClient.get("/api/data").subscribe();
 
-    it("should not add Authorization header for non-API requests", () => {
-        httpClient.get("http://otherapi.example.com/data").subscribe();
+    const req = httpMock.expectOne("/api/data");
+    expect(req.request.headers.has("Authorization")).toBeTruthy();
+    expect(req.request.headers.get("Authorization")).toBe(token);
+    expect(req.request.withCredentials).toBe(true);
+    req.flush({});
+  });
 
-        const req = httpMock.expectOne("http://otherapi.example.com/data");
-        expect(req.request.headers.has("Authorization")).toBeFalsy();
-        expect(req.request.withCredentials).toBeFalsy();
-        req.flush({});
-    });
+  it("should not add Authorization header for non-API requests", () => {
+    httpClient.get("http://otherapi.example.com/data").subscribe();
 
-    it("should not add Authorization header if token is not available", () => {
-        identityService.getBearerToken.mockReturnValue(undefined);
+    const req = httpMock.expectOne("http://otherapi.example.com/data");
+    expect(req.request.headers.has("Authorization")).toBeFalsy();
+    expect(req.request.withCredentials).toBeFalsy();
+    req.flush({});
+  });
 
-        httpClient.get("/api/data").subscribe();
+  it("should not add Authorization header if token is not available", () => {
+    identityService.getBearerToken.mockReturnValue(undefined);
 
-        const req = httpMock.expectOne("/api/data");
-        expect(req.request.headers.has("Authorization")).toBeFalsy();
-        expect(req.request.withCredentials).toBe(true);
-        req.flush({});
-    });
+    httpClient.get("/api/data").subscribe();
+
+    const req = httpMock.expectOne("/api/data");
+    expect(req.request.headers.has("Authorization")).toBeFalsy();
+    expect(req.request.withCredentials).toBe(true);
+    req.flush({});
+  });
 });

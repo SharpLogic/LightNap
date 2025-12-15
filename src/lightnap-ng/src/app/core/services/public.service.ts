@@ -5,5 +5,5 @@ import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
   providedIn: "root",
 })
 export class PublicService {
-    #webApiService = inject(LightNapWebApiService);
+  #webApiService = inject(LightNapWebApiService);
 }

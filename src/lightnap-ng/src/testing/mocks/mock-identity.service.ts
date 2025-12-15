@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { ClaimDto } from '@core/backend-api';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { ClaimDto } from "@core/backend-api";
+import { Observable, of, ReplaySubject } from "rxjs";
 
 /**
  * Mock IdentityService for testing
- * 
+ *
  * Provides a simplified implementation of IdentityService with configurable behavior
  */
 @Injectable()
@@ -12,7 +12,7 @@ export class MockIdentityService {
   private loggedInSubject$ = new ReplaySubject<boolean>(1);
   private loggedInRolesSubject$ = new ReplaySubject<string[]>(1);
   private loggedInClaimsSubject$ = new ReplaySubject<Map<string, string[]>>(1);
-  
+
   private mockToken?: string;
   private mockClaims = new Map<string, string[]>();
   private mockRoles: string[] = [];
@@ -48,7 +48,7 @@ export class MockIdentityService {
   }
 
   logIn(loginRequest: any): Observable<any> {
-    return of({ accessToken: 'mock-token', type: 'AccessToken' });
+    return of({ accessToken: "mock-token", type: "AccessToken" });
   }
 
   logOut(): Observable<boolean> {
@@ -57,11 +57,11 @@ export class MockIdentityService {
   }
 
   register(registerRequest: any): Observable<any> {
-    return of({ accessToken: 'mock-token', type: 'AccessToken' });
+    return of({ accessToken: "mock-token", type: "AccessToken" });
   }
 
   verifyCode(verifyCodeRequest: any): Observable<string> {
-    return of('mock-token');
+    return of("mock-token");
   }
 
   resetPassword(resetPasswordRequest: any): Observable<any> {
@@ -69,7 +69,7 @@ export class MockIdentityService {
   }
 
   newPassword(newPasswordRequest: any): Observable<any> {
-    return of({ accessToken: 'mock-token', type: 'AccessToken' });
+    return of({ accessToken: "mock-token", type: "AccessToken" });
   }
 
   requestMagicLinkEmail(request: any): Observable<boolean> {

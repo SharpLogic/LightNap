@@ -1,6 +1,6 @@
 /**
  * Builder for user-related DTOs
- * 
+ *
  * Provides fluent API for creating test user data
  */
 
@@ -50,9 +50,9 @@ export class UserDtoBuilder {
    */
   static createAdminUser(overrides?: Partial<any>): any {
     return this.createUser({
-      userName: 'adminuser',
-      email: 'admin@example.com',
-      roles: ['Administrator'],
+      userName: "adminuser",
+      email: "admin@example.com",
+      roles: ["Administrator"],
       ...overrides,
     });
   }
@@ -63,9 +63,9 @@ export class UserDtoBuilder {
   static createDevice(overrides?: Partial<any>): any {
     return {
       id: `device-${Date.now()}`,
-      name: 'Test Device',
-      os: 'Windows',
-      browser: 'Chrome',
+      name: "Test Device",
+      os: "Windows",
+      browser: "Chrome",
       lastUsed: new Date().toISOString(),
       isCurrent: false,
       ...overrides,

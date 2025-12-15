@@ -8,200 +8,200 @@ import { LayoutConfigDto } from "@core/backend-api";
 import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("AppConfiguratorComponent", () => {
-    let component: AppConfiguratorComponent;
-    let fixture: ComponentFixture<AppConfiguratorComponent>;
-    let mockLayoutService: any;
+  let component: AppConfiguratorComponent;
+  let fixture: ComponentFixture<AppConfiguratorComponent>;
+  let mockLayoutService: any;
 
-    beforeEach(async () => {
-        const configSignal = signal<LayoutConfigDto>({
-            preset: "Aura",
-            primary: "blue",
-            surface: "slate",
-            darkTheme: false,
-            menuMode: "static",
-        });
-
-        mockLayoutService = {
-            layoutConfig: configSignal,
-            isDarkTheme: signal(false),
-            preset: signal("Aura"),
-            primaryPalette: signal("blue"),
-            surfacePalette: signal("slate"),
-            menuMode: signal("static"),
-            primaryColors: signal([
-                { name: "blue", palette: { "500": "#3b82f6" } },
-                { name: "green", palette: { "500": "#10b981" } },
-                { name: "noir", palette: { "500": "#000000" } },
-            ]),
-            surfaces: [
-                { name: "slate", palette: { "200": "#e2e8f0", "800": "#1e293b" } },
-                { name: "zinc", palette: { "200": "#e4e4e7", "800": "#27272a" } },
-                { name: "noir", palette: { "200": "#000000", "800": "#000000" } },
-            ],
-            presets: { Aura: {}, Lara: {}, Nora: {} },
-            colors: [],
-            menuModeOptions: [
-                { label: "Static", value: "static" },
-                { label: "Overlay", value: "overlay" },
-            ],
-            appName: "LightNap Test",
-            onMenuToggle: vi.fn(),
-        };
-
-        await TestBed.configureTestingModule({
-            imports: [AppConfiguratorComponent],
-            providers: [
-                provideZonelessChangeDetection(),
-                provideNoopAnimations(),
-                provideRouter([]),
-                { provide: LayoutService, useValue: mockLayoutService },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(AppConfiguratorComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+  beforeEach(async () => {
+    const configSignal = signal<LayoutConfigDto>({
+      preset: "Aura",
+      primary: "blue",
+      surface: "slate",
+      darkTheme: false,
+      menuMode: "static",
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+    mockLayoutService = {
+      layoutConfig: configSignal,
+      isDarkTheme: signal(false),
+      preset: signal("Aura"),
+      primaryPalette: signal("blue"),
+      surfacePalette: signal("slate"),
+      menuMode: signal("static"),
+      primaryColors: signal([
+        { name: "blue", palette: { "500": "#3b82f6" } },
+        { name: "green", palette: { "500": "#10b981" } },
+        { name: "noir", palette: { "500": "#000000" } },
+      ]),
+      surfaces: [
+        { name: "slate", palette: { "200": "#e2e8f0", "800": "#1e293b" } },
+        { name: "zinc", palette: { "200": "#e4e4e7", "800": "#27272a" } },
+        { name: "noir", palette: { "200": "#000000", "800": "#000000" } },
+      ],
+      presets: { Aura: {}, Lara: {}, Nora: {} },
+      colors: [],
+      menuModeOptions: [
+        { label: "Static", value: "static" },
+        { label: "Overlay", value: "overlay" },
+      ],
+      appName: "LightNap Test",
+      onMenuToggle: vi.fn(),
+    };
 
-    it("should inject LayoutService", () => {
-        expect(component.layoutService).toBe(mockLayoutService);
-    });
+    await TestBed.configureTestingModule({
+      imports: [AppConfiguratorComponent],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideNoopAnimations(),
+        provideRouter([]),
+        { provide: LayoutService, useValue: mockLayoutService },
+      ],
+    }).compileComponents();
 
-    it("should load presets from LayoutService", () => {
-        expect(component.presets).toEqual(["Aura", "Lara", "Nora"]);
-    });
+    fixture = TestBed.createComponent(AppConfiguratorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it("should show menu mode button when not on identity page", () => {
-        expect(component.showMenuModeButton()).toBe(true);
-    });
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
 
-    it("should render primary color section", () => {
-        const primarySection = fixture.nativeElement.querySelector(".flex.flex-col.gap-4 > div:first-child");
-        expect(primarySection).toBeTruthy();
-        const primaryLabel = primarySection.querySelector("span");
-        expect(primaryLabel?.textContent).toBe("Primary");
-    });
+  it("should inject LayoutService", () => {
+    expect(component.layoutService).toBe(mockLayoutService);
+  });
 
-    it("should render primary color buttons", () => {
-        const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
-        expect(primaryButtons.length).toBe(3);
-    });
+  it("should load presets from LayoutService", () => {
+    expect(component.presets).toEqual(["Aura", "Lara", "Nora"]);
+  });
 
-    it("should apply outline to selected primary color", () => {
-        const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
-        const selectedButton = Array.from(primaryButtons).find((btn: any) => btn.classList.contains("outline-primary"));
-        expect(selectedButton).toBeTruthy();
-    });
+  it("should show menu mode button when not on identity page", () => {
+    expect(component.showMenuModeButton()).toBe(true);
+  });
 
-    it("should update primary color when button clicked", () => {
-        const updateSpy = vi.fn();
-        mockLayoutService.layoutConfig.update = updateSpy;
+  it("should render primary color section", () => {
+    const primarySection = fixture.nativeElement.querySelector(".flex.flex-col.gap-4 > div:first-child");
+    expect(primarySection).toBeTruthy();
+    const primaryLabel = primarySection.querySelector("span");
+    expect(primaryLabel?.textContent).toBe("Primary");
+  });
 
-        component.changePrimaryColor("green");
+  it("should render primary color buttons", () => {
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
+    expect(primaryButtons.length).toBe(3);
+  });
 
-        expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
-    });
+  it("should apply outline to selected primary color", () => {
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
+    const selectedButton = Array.from(primaryButtons).find((btn: any) => btn.classList.contains("outline-primary"));
+    expect(selectedButton).toBeTruthy();
+  });
 
-    it("should render surface color section", () => {
-        const surfaceSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div")[1];
-        expect(surfaceSection).toBeTruthy();
-        const surfaceLabel = surfaceSection.querySelector("span");
-        expect(surfaceLabel?.textContent).toBe("Surface");
-    });
+  it("should update primary color when button clicked", () => {
+    const updateSpy = vi.fn();
+    mockLayoutService.layoutConfig.update = updateSpy;
 
-    it("should render surface color buttons", () => {
-        const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
-        expect(surfaceButtons.length).toBe(3);
-    });
+    component.changePrimaryColor("green");
 
-    it("should apply outline to selected surface color", () => {
-        const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
-        const selectedButton = Array.from(surfaceButtons).find((btn: any) => btn.classList.contains("outline-primary"));
-        expect(selectedButton).toBeTruthy();
-    });
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
+  });
 
-    it("should update surface color when button clicked", () => {
-        const updateSpy = vi.fn();
-        mockLayoutService.layoutConfig.update = updateSpy;
+  it("should render surface color section", () => {
+    const surfaceSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div")[1];
+    expect(surfaceSection).toBeTruthy();
+    const surfaceLabel = surfaceSection.querySelector("span");
+    expect(surfaceLabel?.textContent).toBe("Surface");
+  });
 
-        component.changeSurfaceColor("zinc");
+  it("should render surface color buttons", () => {
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
+    expect(surfaceButtons.length).toBe(3);
+  });
 
-        expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
-    });
+  it("should apply outline to selected surface color", () => {
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
+    const selectedButton = Array.from(surfaceButtons).find((btn: any) => btn.classList.contains("outline-primary"));
+    expect(selectedButton).toBeTruthy();
+  });
 
-    it("should render presets section", () => {
-        const presetsSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-2")[0];
-        expect(presetsSection).toBeTruthy();
-        const presetsLabel = presetsSection.querySelector("span");
-        expect(presetsLabel?.textContent).toBe("Presets");
-    });
+  it("should update surface color when button clicked", () => {
+    const updateSpy = vi.fn();
+    mockLayoutService.layoutConfig.update = updateSpy;
 
-    it("should render presets select button", () => {
-        const presetsSelectButton = fixture.nativeElement.querySelector("p-selectbutton");
-        expect(presetsSelectButton).toBeTruthy();
-    });
+    component.changeSurfaceColor("zinc");
 
-    it("should update preset when changed", () => {
-        const updateSpy = vi.fn();
-        mockLayoutService.layoutConfig.update = updateSpy;
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
+  });
 
-        component.changePreset("Lara");
+  it("should render presets section", () => {
+    const presetsSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-2")[0];
+    expect(presetsSection).toBeTruthy();
+    const presetsLabel = presetsSection.querySelector("span");
+    expect(presetsLabel?.textContent).toBe("Presets");
+  });
 
-        expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
-    });
+  it("should render presets select button", () => {
+    const presetsSelectButton = fixture.nativeElement.querySelector("p-selectbutton");
+    expect(presetsSelectButton).toBeTruthy();
+  });
 
-    it("should render menu mode section when showMenuModeButton is true", () => {
-        const menuModeSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-2")[1];
-        expect(menuModeSection).toBeTruthy();
-        const menuModeLabel = menuModeSection.querySelector("span");
-        expect(menuModeLabel?.textContent).toBe("Menu Mode");
-    });
+  it("should update preset when changed", () => {
+    const updateSpy = vi.fn();
+    mockLayoutService.layoutConfig.update = updateSpy;
 
-    it("should render menu mode select button", () => {
-        const selectButtons = fixture.nativeElement.querySelectorAll("p-selectbutton");
-        expect(selectButtons.length).toBe(2); // presets + menu mode
-    });
+    component.changePreset("Lara");
 
-    it("should update menu mode when changed", () => {
-        const updateSpy = vi.fn();
-        mockLayoutService.layoutConfig.update = updateSpy;
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
+  });
 
-        component.changeMenuMode("overlay");
+  it("should render menu mode section when showMenuModeButton is true", () => {
+    const menuModeSection = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-2")[1];
+    expect(menuModeSection).toBeTruthy();
+    const menuModeLabel = menuModeSection.querySelector("span");
+    expect(menuModeLabel?.textContent).toBe("Menu Mode");
+  });
 
-        expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
-    });
+  it("should render menu mode select button", () => {
+    const selectButtons = fixture.nativeElement.querySelectorAll("p-selectbutton");
+    expect(selectButtons.length).toBe(2); // presets + menu mode
+  });
 
-    it("should hide menu mode section when showMenuModeButton is false", () => {
-        component.showMenuModeButton.set(false);
-        fixture.detectChanges();
+  it("should update menu mode when changed", () => {
+    const updateSpy = vi.fn();
+    mockLayoutService.layoutConfig.update = updateSpy;
 
-        const selectButtons = fixture.nativeElement.querySelectorAll("p-selectbutton");
-        expect(selectButtons.length).toBe(1); // only presets
-    });
+    component.changeMenuMode("overlay");
 
-    it("should apply special styling for noir primary color", () => {
-        const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
-        const noirButton = Array.from(primaryButtons).find((btn: any) => btn.getAttribute("title") === "noir");
-        expect(noirButton).toBeTruthy();
-    });
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
+  });
 
-    it("should apply different surface colors based on dark theme", () => {
-        // Light theme
-        mockLayoutService.isDarkTheme.set(false);
-        fixture.detectChanges();
+  it("should hide menu mode section when showMenuModeButton is false", () => {
+    component.showMenuModeButton.set(false);
+    fixture.detectChanges();
 
-        const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
-        expect(surfaceButtons.length).toBeGreaterThan(0);
+    const selectButtons = fixture.nativeElement.querySelectorAll("p-selectbutton");
+    expect(selectButtons.length).toBe(1); // only presets
+  });
 
-        // Dark theme
-        mockLayoutService.isDarkTheme.set(true);
-        fixture.detectChanges();
+  it("should apply special styling for noir primary color", () => {
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
+    const noirButton = Array.from(primaryButtons).find((btn: any) => btn.getAttribute("title") === "noir");
+    expect(noirButton).toBeTruthy();
+  });
 
-        const darkSurfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
-        expect(darkSurfaceButtons.length).toBeGreaterThan(0);
-    });
+  it("should apply different surface colors based on dark theme", () => {
+    // Light theme
+    mockLayoutService.isDarkTheme.set(false);
+    fixture.detectChanges();
+
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
+    expect(surfaceButtons.length).toBeGreaterThan(0);
+
+    // Dark theme
+    mockLayoutService.isDarkTheme.set(true);
+    fixture.detectChanges();
+
+    const darkSurfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
+    expect(darkSurfaceButtons.length).toBeGreaterThan(0);
+  });
 });

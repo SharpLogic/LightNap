@@ -7,27 +7,27 @@ import { ApiResponseType } from "./models";
  * @template T - The type of the result.
  */
 export class SuccessApiResponse<T> implements ApiResponseDto<T> {
-    /**
-     * The type of the API response.
-     * @default "Success"
-     */
-    type: ApiResponseType = ApiResponseType.Success;
+  /**
+   * The type of the API response.
+   * @default "Success"
+   */
+  type: ApiResponseType = ApiResponseType.Success;
 
-    /**
-     * An array of error messages. This will be empty for a successful response.
-     * @default []
-     */
-    errorMessages = [];
+  /**
+   * An array of error messages. This will be empty for a successful response.
+   * @default []
+   */
+  errorMessages = [];
 
-    /**
-     * Indicates whether the API call succeeded.
-     * @default true
-     */
-    succeeded = true;
+  /**
+   * Indicates whether the API call succeeded.
+   * @default true
+   */
+  succeeded = true;
 
-    /**
-     * Creates an instance of SuccessApiResponse.
-     * @param result - The result of the API call.
-     */
-    constructor(public result: T) {}
+  /**
+   * Creates an instance of SuccessApiResponse.
+   * @param result - The result of the API call.
+   */
+  constructor(public result: T) {}
 }

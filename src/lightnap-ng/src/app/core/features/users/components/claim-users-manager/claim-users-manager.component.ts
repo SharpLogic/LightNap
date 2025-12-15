@@ -1,4 +1,3 @@
-
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { PagedResponseDto } from "@core/backend-api/paged-response-dto";
@@ -31,8 +30,8 @@ import { UserLinkComponent } from "../user-link/user-link.component";
     ErrorListComponent,
     UserPickerComponent,
     UserLinkComponent,
-    ConfirmPopupComponent
-],
+    ConfirmPopupComponent,
+  ],
 })
 export class ClaimUsersManagerComponent {
   #usersService = inject(PrivilegedUsersService);

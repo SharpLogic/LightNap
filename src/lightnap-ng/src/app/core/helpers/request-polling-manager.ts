@@ -10,7 +10,10 @@ export class RequestPollingManager<T> {
   #stopPolling$ = new Subject<void>();
   #isPaused = false;
 
-  constructor(private pollingFn: () => Observable<T>, private intervalMillis: number) {}
+  constructor(
+    private pollingFn: () => Observable<T>,
+    private intervalMillis: number
+  ) {}
 
   /**
    * Starts the polling process with an optional initial delay.

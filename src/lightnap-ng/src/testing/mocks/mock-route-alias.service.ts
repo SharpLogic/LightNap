@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 /**
  * Mock RouteAliasService for testing
- * 
+ *
  * Tracks navigation calls without performing actual routing
  */
 @Injectable()
@@ -28,7 +28,7 @@ export class MockRouteAliasService {
   }
 
   getRoute(alias: string): string[] {
-    return ['/', alias];
+    return ["/", alias];
   }
 
   reset(): void {

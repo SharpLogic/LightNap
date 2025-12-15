@@ -1,106 +1,100 @@
 import { beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
-import { TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
-import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { VersionCheckService } from './version-check.service';
-import { Subject } from 'rxjs';
+import { TestBed } from "@angular/core/testing";
+import { provideZonelessChangeDetection } from "@angular/core";
+import { SwUpdate, VersionReadyEvent } from "@angular/service-worker";
+import { VersionCheckService } from "./version-check.service";
+import { Subject } from "rxjs";
 
-describe('VersionCheckService', () => {
-    let service: VersionCheckService;
-    let swUpdateSpy: MockedObject<SwUpdate>;
-    let versionUpdatesSubject: Subject<VersionReadyEvent>;
+describe("VersionCheckService", () => {
+  let service: VersionCheckService;
+  let swUpdateSpy: MockedObject<SwUpdate>;
+  let versionUpdatesSubject: Subject<VersionReadyEvent>;
 
-    beforeEach(() => {
-        versionUpdatesSubject = new Subject<VersionReadyEvent>();
+  beforeEach(() => {
+    versionUpdatesSubject = new Subject<VersionReadyEvent>();
 
-        swUpdateSpy = {
-            checkForUpdate: vi.fn().mockName("SwUpdate.checkForUpdate"),
-            activateUpdate: vi.fn().mockName("SwUpdate.activateUpdate")
-        } as MockedObject<SwUpdate>;
+    swUpdateSpy = {
+      checkForUpdate: vi.fn().mockName("SwUpdate.checkForUpdate"),
+      activateUpdate: vi.fn().mockName("SwUpdate.activateUpdate"),
+    } as MockedObject<SwUpdate>;
 
-        Object.defineProperty(swUpdateSpy, 'isEnabled', {
-            get: () => true,
-            configurable: true,
-        });
-
-        Object.defineProperty(swUpdateSpy, 'versionUpdates', {
-            get: () => versionUpdatesSubject.asObservable(),
-            configurable: true,
-        });
-
-        swUpdateSpy.activateUpdate.mockReturnValue(Promise.resolve(true));
-
-        TestBed.configureTestingModule({
-            providers: [
-                provideZonelessChangeDetection(),
-                VersionCheckService,
-                { provide: SwUpdate, useValue: swUpdateSpy },
-            ],
-        });
-
-        service = TestBed.inject(VersionCheckService);
+    Object.defineProperty(swUpdateSpy, "isEnabled", {
+      get: () => true,
+      configurable: true,
     });
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
+    Object.defineProperty(swUpdateSpy, "versionUpdates", {
+      get: () => versionUpdatesSubject.asObservable(),
+      configurable: true,
     });
 
-    describe('update detection', () => {
-        it('should start update check when service worker is enabled', () => {
-            service.startUpdateCheck();
-            expect(swUpdateSpy.versionUpdates).toBeDefined();
-        });
+    swUpdateSpy.activateUpdate.mockReturnValue(Promise.resolve(true));
 
-        it('should emit when new version is ready', async () => {
-            service.versionUpdated$.subscribe((updated) => {
-                expect(updated).toBe(true);
-                ;
-            });
-
-            service.startUpdateCheck();
-
-            // Simulate VERSION_READY event
-            versionUpdatesSubject.next({
-                type: 'VERSION_READY',
-                currentVersion: { hash: 'old' },
-                latestVersion: { hash: 'new' },
-            });
-        });
-
-        it('should not emit for non-VERSION_READY events', async () => {
-            let emitted = false;
-
-            service.versionUpdated$.subscribe(() => {
-                emitted = true;
-            });
-
-            service.startUpdateCheck();
-
-            // Simulate different event type
-            versionUpdatesSubject.next({
-                type: 'VERSION_DETECTED',
-                version: { hash: 'new' },
-            } as any);
-
-            setTimeout(() => {
-                expect(emitted).toBe(false);
-                ;
-            }, 100);
-        });
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection(), VersionCheckService, { provide: SwUpdate, useValue: swUpdateSpy }],
     });
 
-    describe('service worker handling', () => {
-        // Note: activateUpdate() calls location.reload() which cannot be tested without causing page reload
-        // This method is tested through integration testing
+    service = TestBed.inject(VersionCheckService);
+  });
 
-        it('should handle service worker disabled', () => {
-            Object.defineProperty(swUpdateSpy, 'isEnabled', {
-                get: () => false,
-                configurable: true,
-            });
+  it("should be created", () => {
+    expect(service).toBeTruthy();
+  });
 
-            // Should not throw
-            expect(() => service.startUpdateCheck()).not.toThrow();
-        });
+  describe("update detection", () => {
+    it("should start update check when service worker is enabled", () => {
+      service.startUpdateCheck();
+      expect(swUpdateSpy.versionUpdates).toBeDefined();
     });
+
+    it("should emit when new version is ready", async () => {
+      service.versionUpdated$.subscribe(updated => {
+        expect(updated).toBe(true);
+      });
+
+      service.startUpdateCheck();
+
+      // Simulate VERSION_READY event
+      versionUpdatesSubject.next({
+        type: "VERSION_READY",
+        currentVersion: { hash: "old" },
+        latestVersion: { hash: "new" },
+      });
+    });
+
+    it("should not emit for non-VERSION_READY events", async () => {
+      let emitted = false;
+
+      service.versionUpdated$.subscribe(() => {
+        emitted = true;
+      });
+
+      service.startUpdateCheck();
+
+      // Simulate different event type
+      versionUpdatesSubject.next({
+        type: "VERSION_DETECTED",
+        version: { hash: "new" },
+      } as any);
+
+      setTimeout(() => {
+        expect(emitted).toBe(false);
+      }, 100);
+    });
+  });
+
+  describe("service worker handling", () => {
+    // Note: activateUpdate() calls location.reload() which cannot be tested without causing page reload
+    // This method is tested through integration testing
+
+    it("should handle service worker disabled", () => {
+      Object.defineProperty(swUpdateSpy, "isEnabled", {
+        get: () => false,
+        configurable: true,
+      });
+
+      // Should not throw
+      expect(() => service.startUpdateCheck()).not.toThrow();
+    });
+  });
 });

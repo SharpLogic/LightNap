@@ -4,16 +4,16 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import {
-    RoutePipe,
-    setApiErrors,
-    ShowByPermissionsDirective,
-    StaticContentDto,
-    StaticContentReadAccess,
-    StaticContentStatus,
-    StaticContentSupportedLanguageDto,
-    StaticContentType,
-    ToStringPipe,
-    TypeHelpers,
+  RoutePipe,
+  setApiErrors,
+  ShowByPermissionsDirective,
+  StaticContentDto,
+  StaticContentReadAccess,
+  StaticContentStatus,
+  StaticContentSupportedLanguageDto,
+  StaticContentType,
+  ToStringPipe,
+  TypeHelpers,
 } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";

@@ -1,8 +1,4 @@
-import {
-    PublishedStaticContentResultDto,
-    StaticContentFormat,
-    StaticContentUserVisibility
-} from "@core/backend-api";
+import { PublishedStaticContentResultDto, StaticContentFormat, StaticContentUserVisibility } from "@core/backend-api";
 
 export class PublishedContent {
   readonly visibility: StaticContentUserVisibility;

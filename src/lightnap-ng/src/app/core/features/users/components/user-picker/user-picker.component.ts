@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, forwardRef, inject, Input, Output, signal } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AdminSearchUsersRequestDto, AdminUserDto, ApplicationUserSortBy } from "@core/backend-api";
@@ -7,8 +6,8 @@ import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplet
 import { finalize } from "rxjs";
 
 @Component({
-  selector: 'ln-user-picker',
-  templateUrl: './user-picker.component.html',
+  selector: "ln-user-picker",
+  templateUrl: "./user-picker.component.html",
   imports: [FormsModule, AutoCompleteModule],
   providers: [
     {
@@ -45,7 +44,7 @@ export class UserPickerComponent implements ControlValueAccessor {
       .searchUsers(request)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: (response) => {
+        next: response => {
           this.users.set(response.data || []);
         },
         error: () => {

@@ -11,166 +11,166 @@ import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { LayoutConfigDto } from "@core/backend-api";
 
 describe("PublicLayoutComponent", () => {
-    let component: PublicLayoutComponent;
-    let fixture: ComponentFixture<PublicLayoutComponent>;
-    let mockLayoutService: any;
-    let mockIdentityService: any;
+  let component: PublicLayoutComponent;
+  let fixture: ComponentFixture<PublicLayoutComponent>;
+  let mockLayoutService: any;
+  let mockIdentityService: any;
 
-    beforeEach(async () => {
-        const layoutConfigSignal = signal<LayoutConfigDto>({
-            preset: "Aura",
-            primary: "blue",
-            surface: "slate",
-            darkTheme: false,
-            menuMode: "static",
-        });
-
-        mockLayoutService = {
-            layoutConfig: layoutConfigSignal,
-            isDarkTheme: signal(false),
-            appName: "LightNap Test",
-        };
-
-        mockIdentityService = {
-            watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
-            logOut: vi.fn().mockReturnValue(of(void 0)),
-        };
-
-        await TestBed.configureTestingModule({
-            imports: [PublicLayoutComponent],
-            providers: [
-                provideZonelessChangeDetection(),
-                provideNoopAnimations(),
-                provideRouter([]),
-                { provide: LayoutService, useValue: mockLayoutService },
-                { provide: IdentityService, useValue: mockIdentityService },
-                { provide: RouteAliasService, useClass: MockRouteAliasService },
-            ],
-        }).compileComponents();
-
-        fixture = TestBed.createComponent(PublicLayoutComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+  beforeEach(async () => {
+    const layoutConfigSignal = signal<LayoutConfigDto>({
+      preset: "Aura",
+      primary: "blue",
+      surface: "slate",
+      darkTheme: false,
+      menuMode: "static",
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+    mockLayoutService = {
+      layoutConfig: layoutConfigSignal,
+      isDarkTheme: signal(false),
+      appName: "LightNap Test",
+    };
 
-    it("should inject LayoutService", () => {
-        expect(component.layoutService).toBe(mockLayoutService);
-    });
+    mockIdentityService = {
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
+      logOut: vi.fn().mockReturnValue(of(void 0)),
+    };
 
-    it("should inject IdentityService", () => {
-        expect(component.identityService).toBe(mockIdentityService);
-    });
+    await TestBed.configureTestingModule({
+      imports: [PublicLayoutComponent],
+      providers: [
+        provideZonelessChangeDetection(),
+        provideNoopAnimations(),
+        provideRouter([]),
+        { provide: LayoutService, useValue: mockLayoutService },
+        { provide: IdentityService, useValue: mockIdentityService },
+        { provide: RouteAliasService, useClass: MockRouteAliasService },
+      ],
+    }).compileComponents();
 
-    it("should watch logged in status on init", () => {
-        expect(mockIdentityService.watchLoggedIn$).toHaveBeenCalled();
-    });
+    fixture = TestBed.createComponent(PublicLayoutComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-    it("should render container with min-h-screen", () => {
-        const container = fixture.nativeElement.querySelector(".min-h-screen");
-        expect(container).toBeTruthy();
-    });
+  it("should create", () => {
+    expect(component).toBeTruthy();
+  });
 
-    it("should render header with background and shadow", () => {
-        const header = fixture.nativeElement.querySelector(".bg-surface-0.dark\\:bg-surface-900.mb-4.shadow.h-20");
-        expect(header).toBeTruthy();
-    });
+  it("should inject LayoutService", () => {
+    expect(component.layoutService).toBe(mockLayoutService);
+  });
 
-    it("should render logo link", () => {
-        const logoLink = fixture.nativeElement.querySelector("a.flex.items-center");
-        expect(logoLink).toBeTruthy();
-    });
+  it("should inject IdentityService", () => {
+    expect(component.identityService).toBe(mockIdentityService);
+  });
 
-    it("should render logo image with light theme", () => {
-        mockLayoutService.isDarkTheme.set(false);
-        fixture.detectChanges();
+  it("should watch logged in status on init", () => {
+    expect(mockIdentityService.watchLoggedIn$).toHaveBeenCalled();
+  });
 
-        const logo = fixture.nativeElement.querySelector("img[alt*='Logo']");
-        expect(logo).toBeTruthy();
-        expect(logo.src).toContain("logo-light.png");
-    });
+  it("should render container with min-h-screen", () => {
+    const container = fixture.nativeElement.querySelector(".min-h-screen");
+    expect(container).toBeTruthy();
+  });
 
-    it("should render logo image with dark theme", () => {
-        mockLayoutService.isDarkTheme.set(true);
-        fixture.detectChanges();
+  it("should render header with background and shadow", () => {
+    const header = fixture.nativeElement.querySelector(".bg-surface-0.dark\\:bg-surface-900.mb-4.shadow.h-20");
+    expect(header).toBeTruthy();
+  });
 
-        const logo = fixture.nativeElement.querySelector("img[alt*='Logo']");
-        expect(logo).toBeTruthy();
-        expect(logo.src).toContain("logo-dark.png");
-    });
+  it("should render logo link", () => {
+    const logoLink = fixture.nativeElement.querySelector("a.flex.items-center");
+    expect(logoLink).toBeTruthy();
+  });
 
-    it("should render app name", () => {
-        const appName = fixture.nativeElement.querySelector(".text-2xl");
-        expect(appName).toBeTruthy();
-        expect(appName.textContent).toContain("LightNap Test");
-    });
+  it("should render logo image with light theme", () => {
+    mockLayoutService.isDarkTheme.set(false);
+    fixture.detectChanges();
 
-    it("should render router-outlet", () => {
-        const routerOutlet = fixture.nativeElement.querySelector("router-outlet");
-        expect(routerOutlet).toBeTruthy();
-    });
+    const logo = fixture.nativeElement.querySelector("img[alt*='Logo']");
+    expect(logo).toBeTruthy();
+    expect(logo.src).toContain("logo-light.png");
+  });
 
-    it("should render login and register buttons when not logged in", () => {
-        mockIdentityService.watchLoggedIn$.mockReturnValue(of(false));
-        fixture = TestBed.createComponent(PublicLayoutComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+  it("should render logo image with dark theme", () => {
+    mockLayoutService.isDarkTheme.set(true);
+    fixture.detectChanges();
 
-        const buttons = fixture.nativeElement.querySelectorAll("p-button");
-        const buttonLabels = Array.from(buttons).map((btn: any) => btn.getAttribute("label"));
+    const logo = fixture.nativeElement.querySelector("img[alt*='Logo']");
+    expect(logo).toBeTruthy();
+    expect(logo.src).toContain("logo-dark.png");
+  });
 
-        expect(buttonLabels).toContain("Login");
-        expect(buttonLabels).toContain("Register");
-    });
+  it("should render app name", () => {
+    const appName = fixture.nativeElement.querySelector(".text-2xl");
+    expect(appName).toBeTruthy();
+    expect(appName.textContent).toContain("LightNap Test");
+  });
 
-    it("should render app and logout buttons when logged in", () => {
-        mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
-        fixture = TestBed.createComponent(PublicLayoutComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+  it("should render router-outlet", () => {
+    const routerOutlet = fixture.nativeElement.querySelector("router-outlet");
+    expect(routerOutlet).toBeTruthy();
+  });
 
-        const buttons = fixture.nativeElement.querySelectorAll("p-button");
-        const buttonLabels = Array.from(buttons).map((btn: any) => btn.getAttribute("label"));
+  it("should render login and register buttons when not logged in", () => {
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(false));
+    fixture = TestBed.createComponent(PublicLayoutComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
 
-        expect(buttonLabels).toContain("App");
-        expect(buttonLabels).toContain("Logout");
-    });
+    const buttons = fixture.nativeElement.querySelectorAll("p-button");
+    const buttonLabels = Array.from(buttons).map((btn: any) => btn.getAttribute("label"));
 
-    it("should call logOut when logout button clicked", () => {
-        mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
-        fixture = TestBed.createComponent(PublicLayoutComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+    expect(buttonLabels).toContain("Login");
+    expect(buttonLabels).toContain("Register");
+  });
 
-        component.logOutClicked();
+  it("should render app and logout buttons when logged in", () => {
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
+    fixture = TestBed.createComponent(PublicLayoutComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
 
-        expect(mockIdentityService.logOut).toHaveBeenCalled();
-    });
+    const buttons = fixture.nativeElement.querySelectorAll("p-button");
+    const buttonLabels = Array.from(buttons).map((btn: any) => btn.getAttribute("label"));
 
-    it("should have logOutClicked method", () => {
-        expect(component.logOutClicked).toBeDefined();
-    });
+    expect(buttonLabels).toContain("App");
+    expect(buttonLabels).toContain("Logout");
+  });
 
-    it("should render main content container", () => {
-        const contentContainer = fixture.nativeElement.querySelector(".flex.flex-column.justify-center > .container");
-        expect(contentContainer).toBeTruthy();
-    });
+  it("should call logOut when logout button clicked", () => {
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
+    fixture = TestBed.createComponent(PublicLayoutComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
 
-    it("should render header container with flex layout", () => {
-        const headerContainer = fixture.nativeElement.querySelector(".container.h-full.px-4.flex.items-center.justify-between");
-        expect(headerContainer).toBeTruthy();
-    });
+    component.logOutClicked();
 
-    it("should have logo with hover effect", () => {
-        const logoLink = fixture.nativeElement.querySelector("a.hover\\:no-underline");
-        expect(logoLink).toBeTruthy();
-    });
+    expect(mockIdentityService.logOut).toHaveBeenCalled();
+  });
 
-    it("should render buttons with gap", () => {
-        const buttonContainer = fixture.nativeElement.querySelector(".flex.items-center.justify-between.gap-2");
-        expect(buttonContainer).toBeTruthy();
-    });
+  it("should have logOutClicked method", () => {
+    expect(component.logOutClicked).toBeDefined();
+  });
+
+  it("should render main content container", () => {
+    const contentContainer = fixture.nativeElement.querySelector(".flex.flex-column.justify-center > .container");
+    expect(contentContainer).toBeTruthy();
+  });
+
+  it("should render header container with flex layout", () => {
+    const headerContainer = fixture.nativeElement.querySelector(".container.h-full.px-4.flex.items-center.justify-between");
+    expect(headerContainer).toBeTruthy();
+  });
+
+  it("should have logo with hover effect", () => {
+    const logoLink = fixture.nativeElement.querySelector("a.hover\\:no-underline");
+    expect(logoLink).toBeTruthy();
+  });
+
+  it("should render buttons with gap", () => {
+    const buttonContainer = fixture.nativeElement.querySelector(".flex.items-center.justify-between.gap-2");
+    expect(buttonContainer).toBeTruthy();
+  });
 });

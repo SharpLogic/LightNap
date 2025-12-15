@@ -24,7 +24,7 @@
  *   // ✅ No manual maintenance
  */
 
-import { vi } from 'vitest';
+import { vi } from "vitest";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 
 /**

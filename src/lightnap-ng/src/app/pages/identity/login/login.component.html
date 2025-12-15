@@ -10,7 +10,14 @@
           <p-inputGroup>
             <input id="login" data-cy="login-username" type="text" placeholder="Email/User Name" pInputText formControlName="login" />
             <p-inputgroup-addon>
-              <p-button data-cy="login-magic-link" icon="pi pi-sparkles" title="Send Magic Link" pRipple (onClick)="sendMagicLink()" [disabled]="!showMagicLink.valid" />
+              <p-button
+                data-cy="login-magic-link"
+                icon="pi pi-sparkles"
+                title="Send Magic Link"
+                pRipple
+                (onClick)="sendMagicLink()"
+                [disabled]="!showMagicLink.valid"
+              />
             </p-inputgroup-addon>
           </p-inputGroup>
         </div>

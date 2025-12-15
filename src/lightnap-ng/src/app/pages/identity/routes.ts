@@ -63,6 +63,6 @@ export const Routes: AppRoute[] = [
   {
     path: "external-logins",
     title: "External Logins",
-    children: ExternalLoginRoutes
+    children: ExternalLoginRoutes,
   },
 ];

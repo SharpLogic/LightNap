@@ -1,13 +1,6 @@
 <ln-api-response [apiResponse]="setting()">
   <ng-template #success let-value>
-    <p-select
-      [ngModel]="value"
-      (ngModelChange)="change($event)"
-      [options]="options()"
-      optionLabel="label"
-      optionValue="value"
-      class="w-full"
-    >
+    <p-select [ngModel]="value" (ngModelChange)="change($event)" [options]="options()" optionLabel="label" optionValue="value" class="w-full">
       <ng-template let-option #item>
         <ln-select-list-item [listItem]="option" />
       </ng-template>

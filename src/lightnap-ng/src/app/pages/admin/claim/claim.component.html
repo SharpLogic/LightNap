@@ -20,7 +20,8 @@
         [rows]="pageSize"
         [totalRecords]="usersForClaimResults.totalCount"
         [lazy]="true"
-        (onLazyLoad)="loadUsersLazy($event)">
+        (onLazyLoad)="loadUsersLazy($event)"
+      >
         <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>

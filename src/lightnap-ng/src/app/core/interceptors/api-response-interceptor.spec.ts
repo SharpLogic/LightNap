@@ -36,7 +36,7 @@ describe("apiResponseInterceptor", () => {
     const errorResponse = new HttpErrorResponse({ status: 401 });
     next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
           error: () => {
@@ -56,7 +56,7 @@ describe("apiResponseInterceptor", () => {
     environment.production = false;
     next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
           error: () => {
@@ -75,7 +75,7 @@ describe("apiResponseInterceptor", () => {
     environment.production = true;
     next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
           error: () => {
@@ -92,7 +92,7 @@ describe("apiResponseInterceptor", () => {
     const errorResponse = new HttpErrorResponse({ status: 500 });
     next = vi.fn().mockReturnValue(throwError(() => errorResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
           error: (event: HttpErrorApiResponse<any>) => {
@@ -112,7 +112,7 @@ describe("apiResponseInterceptor", () => {
     });
     next = vi.fn().mockReturnValue(of(successResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
           next: (event: any) => {
@@ -130,10 +130,10 @@ describe("apiResponseInterceptor", () => {
     const errorResponse = new HttpResponse({ status: 200, body: apiError });
     next = vi.fn().mockReturnValue(of(errorResponse));
 
-    await new Promise<void>((resolve) => {
+    await new Promise<void>(resolve => {
       TestBed.runInInjectionContext(() => {
         apiResponseInterceptor(request, next).subscribe({
-          error: (event) => {
+          error: event => {
             expect(event).toEqual(apiError);
             resolve();
           },

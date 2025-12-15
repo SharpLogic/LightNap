@@ -1,4 +1,3 @@
-
 import { Component, computed, inject, input } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -14,16 +13,7 @@ import { startWith, Subject, switchMap } from "rxjs";
 
 @Component({
   selector: "user-claims",
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
-    RoutePipe,
-    TableModule,
-    InputTextModule,
-    ButtonModule,
-    ConfirmPopupComponent,
-    ApiResponseComponent
-],
+  imports: [ReactiveFormsModule, RouterLink, RoutePipe, TableModule, InputTextModule, ButtonModule, ConfirmPopupComponent, ApiResponseComponent],
   templateUrl: "./user-claims.component.html",
 })
 export class UserClaimsComponent {

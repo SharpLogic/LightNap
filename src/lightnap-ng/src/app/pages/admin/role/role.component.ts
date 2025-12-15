@@ -1,4 +1,3 @@
-
 import { Component, inject, input, OnInit, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -26,8 +25,8 @@ import { Observable } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    UserPickerComponent
-],
+    UserPickerComponent,
+  ],
 })
 export class RoleComponent implements OnInit {
   readonly #adminService = inject(AdminUsersService);

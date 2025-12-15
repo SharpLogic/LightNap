@@ -16,8 +16,7 @@
  * Use Orval mock handlers (getGetProfileMockHandler, etc.) in your tests instead.
  */
 
-export * from './mocks';
-export * from './builders';
-export * from './helpers';
-export * from './test-helpers';
-
+export * from "./mocks";
+export * from "./builders";
+export * from "./helpers";
+export * from "./test-helpers";

@@ -46,7 +46,7 @@ export class ExternalLoginService {
    * @param {string} providerKey - The provider key of the external login.
    * @returns {Observable<void>} An observable indicating the completion of the operation.
    */
-  removeExternalLogin(userId: string, loginProvider: string, providerKey: string){
+  removeExternalLogin(userId: string, loginProvider: string, providerKey: string) {
     return this.#webApiService.removeExternalLogin(userId, loginProvider, providerKey);
   }
 
@@ -57,9 +57,7 @@ export class ExternalLoginService {
    * @returns {Observable<LoginSuccessResult>} An observable containing the result of the operation.
    */
   getExternalLoginResult(confirmationToken: string) {
-    return this.#identityService.getLoggedIn$().pipe(
-      switchMap(_ => this.#webApiService.getExternalLoginResult(confirmationToken))
-    );
+    return this.#identityService.getLoggedIn$().pipe(switchMap(_ => this.#webApiService.getExternalLoginResult(confirmationToken)));
   }
 
   /**

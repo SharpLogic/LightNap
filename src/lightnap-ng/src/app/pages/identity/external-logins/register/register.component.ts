@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
               });
               break;
             default:
-                this.#routeAlias.navigateWithExtras("external-login-callback", this.token(), { replaceUrl: true });
+              this.#routeAlias.navigateWithExtras("external-login-callback", this.token(), { replaceUrl: true });
               break;
           }
         },

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, Subject } from "rxjs";
 
 /**
  * Mock TimerService for testing
- * 
+ *
  * Allows manual control of timer emissions
  */
 @Injectable()

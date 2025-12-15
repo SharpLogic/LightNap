@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { EmptyPagedResponse, NotificationItem, NotificationSearchResults, setApiErrors, TypeHelpers } from "@core";

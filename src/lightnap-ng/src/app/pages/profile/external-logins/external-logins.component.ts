@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { ExternalLoginDto, RoutePipe, setApiErrors, TypeHelpers } from "@core";
@@ -13,16 +12,7 @@ import { TableModule } from "primeng/table";
 
 @Component({
   templateUrl: "./external-logins.component.html",
-  imports: [
-    TableModule,
-    ButtonModule,
-    ErrorListComponent,
-    PanelModule,
-    ApiResponseComponent,
-    ConfirmDialogComponent,
-    RouterLink,
-    RoutePipe
-],
+  imports: [TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent, RouterLink, RoutePipe],
 })
 export class ExternalLoginsComponent {
   readonly #profileService = inject(ProfileService);

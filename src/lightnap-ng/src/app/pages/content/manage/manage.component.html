@@ -4,7 +4,14 @@
 
     <p-panel data-cy="manage-contents-panel" header="Manage Contents">
       <ng-template #icons>
-        <p-button data-cy="create-content-button" pTooltip="Create New Content" icon="pi pi-plus" severity="success" label="Create" (onClick)="showCreateDialog()" />
+        <p-button
+          data-cy="create-content-button"
+          pTooltip="Create New Content"
+          icon="pi pi-plus"
+          severity="success"
+          label="Create"
+          (onClick)="showCreateDialog()"
+        />
       </ng-template>
       <form [formGroup]="form" class="my-2">
         <div class="flex gap-2 flex-wrap">
@@ -83,7 +90,7 @@
   </ng-template>
 </ln-api-response>
 
-<p-dialog data-cy="create-content-dialog" header="Create New Content" [(visible)]="createDialogVisible" [modal]="true" [style]="{width: '30rem'}">
+<p-dialog data-cy="create-content-dialog" header="Create New Content" [(visible)]="createDialogVisible" [modal]="true" [style]="{ width: '30rem' }">
   <form [formGroup]="createForm" class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
       <label for="contentKey">Key</label>

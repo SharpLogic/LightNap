@@ -1,12 +1,12 @@
 import { inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import {
-    LayoutConfigDto,
-    SetUserSettingRequestDto,
-    UpdateProfileRequestDto,
-    UserSettingDto,
-    UserSettingKey,
-    UserSettingKeys,
+  LayoutConfigDto,
+  SetUserSettingRequestDto,
+  UpdateProfileRequestDto,
+  UserSettingDto,
+  UserSettingKey,
+  UserSettingKeys,
 } from "@core/backend-api";
 import { filter, map, Observable, of, shareReplay, switchMap, tap } from "rxjs";
 import { IdentityService } from "./identity.service";

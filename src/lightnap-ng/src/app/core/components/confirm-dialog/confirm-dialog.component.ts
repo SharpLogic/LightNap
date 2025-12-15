@@ -10,12 +10,12 @@ import { ConfirmDialogModule } from "primeng/confirmdialog";
   standalone: true,
 })
 export class ConfirmDialogComponent {
-    readonly confirmText = input("Confirm");
-    readonly confirmSeverity = input<ButtonSeverity>("danger");
-    readonly confirmIcon = input(PrimeIcons.TRASH);
-    readonly rejectText = input("Cancel");
-    readonly rejectSeverity = input<ButtonSeverity>("secondary");
-    readonly rejectIcon = input(PrimeIcons.UNDO);
-    readonly key = input("");
-    readonly appendTo = input<HTMLElement | ElementRef | TemplateRef<any> | string | null | undefined | any>(undefined);
+  readonly confirmText = input("Confirm");
+  readonly confirmSeverity = input<ButtonSeverity>("danger");
+  readonly confirmIcon = input(PrimeIcons.TRASH);
+  readonly rejectText = input("Cancel");
+  readonly rejectSeverity = input<ButtonSeverity>("secondary");
+  readonly rejectIcon = input(PrimeIcons.UNDO);
+  readonly key = input("");
+  readonly appendTo = input<HTMLElement | ElementRef | TemplateRef<any> | string | null | undefined | any>(undefined);
 }

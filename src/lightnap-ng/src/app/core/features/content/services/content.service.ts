@@ -1,5 +1,12 @@
 import { inject, Injectable } from "@angular/core";
-import { CreateStaticContentDto, CreateStaticContentLanguageDto, ExtendedMap, SearchStaticContentRequestDto, UpdateStaticContentDto, UpdateStaticContentLanguageDto } from "@core";
+import {
+  CreateStaticContentDto,
+  CreateStaticContentLanguageDto,
+  ExtendedMap,
+  SearchStaticContentRequestDto,
+  UpdateStaticContentDto,
+  UpdateStaticContentLanguageDto,
+} from "@core";
 import { UserSettingKeys } from "@core/backend-api/user-setting-key";
 import { PublishedContent } from "../entities";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
@@ -17,7 +24,10 @@ export class ContentService {
   #profileService = inject(ProfileService);
   #usersService = inject(PrivilegedUsersService);
 
-  #supportedLanguages$ = this.#webApiService.getSupportedLanguages().pipe(map(languages => languages ?? []), shareReplay({ bufferSize: 1, refCount: false }));
+  #supportedLanguages$ = this.#webApiService.getSupportedLanguages().pipe(
+    map(languages => languages ?? []),
+    shareReplay({ bufferSize: 1, refCount: false })
+  );
 
   #publishedContentCache = new ExtendedMap<string, Observable<PublishedContent | null>>();
 

@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -25,8 +24,8 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     RoutePipe,
     ErrorListComponent,
     ApiResponseComponent,
-    CheckboxModule
-],
+    CheckboxModule,
+  ],
 })
 export class ClaimsComponent {
   readonly pageSize = 10;
