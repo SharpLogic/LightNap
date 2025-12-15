@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ContentService } from "@core/features/content/services/content.service";

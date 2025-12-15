@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -26,8 +25,8 @@ import { debounceTime, startWith, Subject, switchMap } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     CheckboxModule,
-    ConfirmDialogComponent
-],
+    ConfirmDialogComponent,
+  ],
 })
 export class ExternalLoginsComponent {
   readonly pageSize = 10;
@@ -71,17 +70,17 @@ export class ExternalLoginsComponent {
   }
 
   removeExternalLogin(event: any, userId: string, loginProvider: string, providerKey: string) {
-      this.#confirmationService.confirm({
-        header: "Confirm Removal",
-        message: `Are you sure that you want to remove this external login?`,
-        target: event.target,
-        key: `${userId}:${loginProvider}:${providerKey}`,
-        accept: () => {
-          this.#externalLoginService.removeExternalLogin(userId, loginProvider, providerKey).subscribe({
-            next: () => this.#lazyLoadEventSubject.next({ first: 0 }),
-            error: setApiErrors(this.errors),
-          });
-        },
-      });
-    }
+    this.#confirmationService.confirm({
+      header: "Confirm Removal",
+      message: `Are you sure that you want to remove this external login?`,
+      target: event.target,
+      key: `${userId}:${loginProvider}:${providerKey}`,
+      accept: () => {
+        this.#externalLoginService.removeExternalLogin(userId, loginProvider, providerKey).subscribe({
+          next: () => this.#lazyLoadEventSubject.next({ first: 0 }),
+          error: setApiErrors(this.errors),
+        });
+      },
+    });
+  }
 }

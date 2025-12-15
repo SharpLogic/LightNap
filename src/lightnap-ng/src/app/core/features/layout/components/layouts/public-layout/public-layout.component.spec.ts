@@ -32,8 +32,8 @@ describe("PublicLayoutComponent", () => {
     };
 
     mockIdentityService = {
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
-      logOut: jasmine.createSpy("logOut").and.returnValue(of(void 0)),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
+      logOut: vi.fn().mockReturnValue(of(void 0)),
     };
 
     await TestBed.configureTestingModule({
@@ -114,7 +114,7 @@ describe("PublicLayoutComponent", () => {
   });
 
   it("should render login and register buttons when not logged in", () => {
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(false));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(false));
     fixture = TestBed.createComponent(PublicLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -127,7 +127,7 @@ describe("PublicLayoutComponent", () => {
   });
 
   it("should render app and logout buttons when logged in", () => {
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
     fixture = TestBed.createComponent(PublicLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -140,7 +140,7 @@ describe("PublicLayoutComponent", () => {
   });
 
   it("should call logOut when logout button clicked", () => {
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
     fixture = TestBed.createComponent(PublicLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,18 +1,16 @@
+using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Database;
+using LightNap.Core.Configuration.Email;
+using LightNap.Core.Extensions;
 using LightNap.Core.Hubs;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Extensions;
 using LightNap.WebApi.Middleware;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.OpenApi;
-using System.Reflection;
-using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.FileProviders;
 using StackExchange.Redis;
-using LightNap.Core.Extensions;
-using LightNap.Core.Configuration.Authentication;
-using LightNap.Core.Configuration.Email;
-using LightNap.Core.Configuration.Database;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,34 +58,9 @@ builder.Services.AddControllers().AddJsonOptions((options) =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-
-    // Add JWT auth to Swagger
-    string securityDefinitionName = "Bearer";
-    options.AddSecurityDefinition(securityDefinitionName, new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header token using the Bearer scheme. Example: \"Bearer {paste this token}\"",
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT"
-    });
-
-    // Require the Bearer token for all operations (adds the Authorize button in Swagger UI)
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference(securityDefinitionName, document)] = []
-    });
-});
-
-builder.Services.AddDatabaseServices(builder.Configuration, databaseSettings)
+builder.Services
+    .AddSwaggerServices()
+    .AddDatabaseServices(builder.Configuration, databaseSettings)
     .AddEmailServices(emailSettings)
     .AddApplicationServices()
     .AddIdentityServices(jwtSettings, appSettings)

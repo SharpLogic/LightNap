@@ -9,8 +9,9 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
+import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("NewPasswordComponent", () => {
   let component: NewPasswordComponent;
@@ -21,19 +22,19 @@ describe("NewPasswordComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      newPassword: jasmine.createSpy("newPassword").and.returnValue(
+      newPassword: vi.fn().mockReturnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
-      redirectLoggedInUser: jasmine.createSpy("redirectLoggedInUser"),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
+      redirectLoggedInUser: vi.fn(),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -131,12 +132,12 @@ describe("NewPasswordComponent", () => {
       component.newPassword();
 
       expect(mockIdentityService.newPassword).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           email: "test@example.com",
           password: "newpassword123",
           token: "reset-token-123",
           rememberMe: true,
-          deviceDetails: jasmine.any(String),
+          deviceDetails: expect.any(String),
         })
       );
     });
@@ -164,9 +165,9 @@ describe("NewPasswordComponent", () => {
     });
 
     it("should redirect logged in user on AccessToken success", () => {
-      mockIdentityService.newPassword.and.returnValue(
+      mockIdentityService.newPassword.mockReturnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       );
@@ -182,12 +183,12 @@ describe("NewPasswordComponent", () => {
     });
 
     it("should navigate to verify-code on TwoFactorRequired", () => {
-      mockIdentityService.newPassword.and.returnValue(
+      mockIdentityService.newPassword.mockReturnValue(
         of({
-          type: LoginSuccessTypes.TwoFactorRequired,
+          type: LoginSuccessType.TwoFactorRequired,
         })
       );
-      spyOn(mockRouteAliasService, "navigate");
+      vi.spyOn(mockRouteAliasService, "navigate");
 
       component.form.patchValue({
         password: "newpassword123",
@@ -201,7 +202,7 @@ describe("NewPasswordComponent", () => {
 
     it("should set errors on password reset failure", () => {
       const errorResponse = { errorMessages: ["Invalid or expired token"] };
-      mockIdentityService.newPassword.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.newPassword.mockReturnValue(throwError(() => errorResponse));
 
       component.form.patchValue({
         password: "newpassword123",

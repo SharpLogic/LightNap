@@ -1,3 +1,5 @@
+import { vi } from "vitest";
+
 /**
  * General test helper utilities
  */
@@ -10,21 +12,32 @@ export async function flushPromises(): Promise<void> {
 }
 
 /**
- * Create a spy object with typed methods
+ * Create a spy object with mocked methods (Vitest native replacement for jasmine.createSpyObj)
  */
-export function createSpyObj<T>(
-  baseName: string,
-  methods: (keyof T)[]
-): jasmine.SpyObj<T> {
-  return jasmine.createSpyObj(baseName, methods as string[]);
+export function createSpyObj<T>(baseName: string, methodNames: string[]): T {
+  const spy: any = {};
+  methodNames.forEach(methodName => {
+    spy[methodName] = vi.fn();
+  });
+  return spy as T;
+}
+
+/**
+ * Create a single spy (Vitest native replacement for jasmine.createSpy)
+ */
+export function createSpy(name: string, fn?: (...args: any[]) => any) {
+  return vi.fn().mockName(name);
 }
 
 /**
  * Create a partial spy object (only some methods are spies)
  */
-export function createPartialSpy<T>(base: Partial<T>, spyMethods: (keyof T)[]): jasmine.SpyObj<T> {
-  const spy = jasmine.createSpyObj('PartialSpy', spyMethods as string[]);
-  return Object.assign(spy, base);
+export function createPartialSpy<T>(base: Partial<T>, spyMethods: (keyof T)[]): T {
+  const spy: any = base ? { ...base } : {};
+  spyMethods.forEach(method => {
+    spy[method] = vi.fn();
+  });
+  return spy as T;
 }
 
 /**
@@ -64,7 +77,7 @@ export function collectValues<T>(observable: any, count: number): Promise<T[]> {
 /**
  * Create a mock HttpErrorResponse
  */
-export function createHttpError(status: number, message: string = 'Error'): any {
+export function createHttpError(status: number, message: string = "Error"): any {
   return {
     status,
     statusText: message,
@@ -88,19 +101,19 @@ export function createMockActivatedRouteSnapshot(overrides?: any): any {
     children: [],
     ...overrides,
   };
-  
+
   // Set root to self if no parent
   if (!mockSnapshot.root) {
     mockSnapshot.root = mockSnapshot;
   }
-  
+
   return mockSnapshot;
 }
 
 /**
  * Create a mock RouterStateSnapshot
  */
-export function createMockRouterStateSnapshot(url: string = '/'): any {
+export function createMockRouterStateSnapshot(url: string = "/"): any {
   return {
     url,
     root: createMockActivatedRouteSnapshot(),
@@ -133,7 +146,7 @@ export function queryAllByCss<T = HTMLElement>(fixture: any, selector: string): 
  */
 export function getTextContent(fixture: any, selector: string): string {
   const element = queryByCss(fixture, selector);
-  return element ? element.textContent?.trim() || '' : '';
+  return element ? element.textContent?.trim() || "" : "";
 }
 
 /**
@@ -154,7 +167,7 @@ export function setInputValue(fixture: any, selector: string, value: string): vo
   const input = queryByCss<HTMLInputElement>(fixture, selector);
   if (input) {
     input.value = value;
-    input.dispatchEvent(new Event('input'));
+    input.dispatchEvent(new Event("input"));
     fixture.detectChanges();
   }
 }
@@ -162,15 +175,11 @@ export function setInputValue(fixture: any, selector: string, value: string): vo
 /**
  * Wait for a condition to be true
  */
-export async function waitFor(
-  condition: () => boolean,
-  timeout: number = 1000,
-  interval: number = 50
-): Promise<void> {
+export async function waitFor(condition: () => boolean, timeout: number = 1000, interval: number = 50): Promise<void> {
   const startTime = Date.now();
   while (!condition()) {
     if (Date.now() - startTime > timeout) {
-      throw new Error('Timeout waiting for condition');
+      throw new Error("Timeout waiting for condition");
     }
     await new Promise(resolve => setTimeout(resolve, interval));
   }

@@ -23,11 +23,7 @@ describe("RouteAliasService", () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        RouteAliasService,
-        { provide: Router, useValue: { config: mockRoutes, navigate: jasmine.createSpy("navigate") } },
-      ],
+      providers: [provideZonelessChangeDetection(), RouteAliasService, { provide: Router, useValue: { config: mockRoutes, navigate: vi.fn() } }],
     });
 
     service = TestBed.inject(RouteAliasService);
@@ -64,11 +60,7 @@ describe("RouteAliasService", () => {
 
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
-      providers: [
-        provideZonelessChangeDetection(),
-        { provide: Router, useValue: { config: duplicateRoutes, navigate: jasmine.createSpy("navigate") } },
-        RouteAliasService,
-      ],
+      providers: [provideZonelessChangeDetection(), { provide: Router, useValue: { config: duplicateRoutes, navigate: vi.fn() } }, RouteAliasService],
     });
 
     expect(() => {

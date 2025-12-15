@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
 
 describe("LoginComponent", () => {
@@ -21,20 +21,20 @@ describe("LoginComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      logIn: jasmine.createSpy("logIn").and.returnValue(
+      logIn: vi.fn().mockReturnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
-      requestMagicLinkEmail: jasmine.createSpy("requestMagicLinkEmail").and.returnValue(of(void 0)),
-      redirectLoggedInUser: jasmine.createSpy("redirectLoggedInUser"),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
+      requestMagicLinkEmail: vi.fn().mockReturnValue(of(void 0)),
+      redirectLoggedInUser: vi.fn(),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -117,7 +117,7 @@ describe("LoginComponent", () => {
       login: "user@example.com",
       password: "password123",
       rememberMe: false,
-      deviceDetails: jasmine.any(String),
+      deviceDetails: expect.any(String),
     });
   });
 
@@ -144,9 +144,9 @@ describe("LoginComponent", () => {
   });
 
   it("should redirect logged in user on successful login with AccessToken", () => {
-    mockIdentityService.logIn.and.returnValue(
+    mockIdentityService.logIn.mockReturnValue(
       of({
-        type: LoginSuccessTypes.AccessToken,
+        type: LoginSuccessType.AccessToken,
         accessToken: "test-token",
       })
     );
@@ -162,13 +162,13 @@ describe("LoginComponent", () => {
   });
 
   it("should navigate to verify-code on TwoFactorRequired", () => {
-    mockIdentityService.logIn.and.returnValue(
+    mockIdentityService.logIn.mockReturnValue(
       of({
-        type: LoginSuccessTypes.TwoFactorRequired,
+        type: LoginSuccessType.TwoFactorRequired,
       })
     );
 
-    spyOn(mockRouteAliasService, "navigate");
+    vi.spyOn(mockRouteAliasService, "navigate");
 
     component.form.patchValue({
       login: "user@example.com",
@@ -181,13 +181,13 @@ describe("LoginComponent", () => {
   });
 
   it("should navigate to email-verification-required on EmailVerificationRequired", () => {
-    mockIdentityService.logIn.and.returnValue(
+    mockIdentityService.logIn.mockReturnValue(
       of({
-        type: LoginSuccessTypes.EmailVerificationRequired,
+        type: LoginSuccessType.EmailVerificationRequired,
       })
     );
 
-    spyOn(mockRouteAliasService, "navigate");
+    vi.spyOn(mockRouteAliasService, "navigate");
 
     component.form.patchValue({
       login: "user@example.com",
@@ -201,7 +201,7 @@ describe("LoginComponent", () => {
 
   it("should set errors on login failure", () => {
     const errorResponse = { errorMessages: ["Invalid credentials"] };
-    mockIdentityService.logIn.and.returnValue(throwError(() => errorResponse));
+    mockIdentityService.logIn.mockReturnValue(throwError(() => errorResponse));
 
     component.form.patchValue({
       login: "user@example.com",
@@ -232,7 +232,7 @@ describe("LoginComponent", () => {
   });
 
   it("should navigate to magic-link-sent after successful magic link send", () => {
-    spyOn(mockRouteAliasService, "navigate");
+    vi.spyOn(mockRouteAliasService, "navigate");
 
     component.form.controls.login.setValue("user@example.com");
     component.sendMagicLink();
@@ -242,7 +242,7 @@ describe("LoginComponent", () => {
 
   it("should set errors on magic link send failure", () => {
     const errorResponse = { errorMessages: ["Email not found"] };
-    mockIdentityService.requestMagicLinkEmail.and.returnValue(throwError(() => errorResponse));
+    mockIdentityService.requestMagicLinkEmail.mockReturnValue(throwError(() => errorResponse));
 
     component.form.controls.login.setValue("nonexistent@example.com");
     component.sendMagicLink();
@@ -292,17 +292,13 @@ describe("LoginComponent", () => {
 
   it("should render forgot password link", () => {
     const links = fixture.nativeElement.querySelectorAll("a");
-    const forgotPasswordLink = Array.from(links).find((link: any) =>
-      link.textContent.includes("Forgot password")
-    );
+    const forgotPasswordLink = Array.from(links).find((link: any) => link.textContent.includes("Forgot password"));
     expect(forgotPasswordLink).toBeTruthy();
   });
 
   it("should render create account link", () => {
     const links = fixture.nativeElement.querySelectorAll("a");
-    const createAccountLink = Array.from(links).find((link: any) =>
-      link.textContent.includes("I need to create an account")
-    );
+    const createAccountLink = Array.from(links).find((link: any) => link.textContent.includes("I need to create an account"));
     expect(createAccountLink).toBeTruthy();
   });
 

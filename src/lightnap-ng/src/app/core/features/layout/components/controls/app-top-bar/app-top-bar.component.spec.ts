@@ -9,6 +9,9 @@ import { LayoutConfigDto } from "@core/backend-api";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { AppTopBarComponent } from "./app-top-bar.component";
 import { MessageService } from "primeng/api";
+import { describe, beforeEach, vi, it, expect } from "vitest";
+import { MockNotificationHubService } from "@testing/mocks/mock-notification-hub.service";
+import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
 
 describe("AppTopBarComponent", () => {
   let mockLayoutService: any;
@@ -29,7 +32,7 @@ describe("AppTopBarComponent", () => {
       layoutConfig: layoutConfigSignal,
       isDarkTheme: signal(false),
       appName: "LightNap Test",
-      toggleMenu: jasmine.createSpy("toggleMenu"),
+      toggleMenu: vi.fn(),
       presets: { Aura: {}, Lara: {}, Nora: {} },
       surfaces: [],
       colors: [],
@@ -50,6 +53,7 @@ describe("AppTopBarComponent", () => {
         provideRouter([]),
         { provide: LayoutService, useValue: mockLayoutService },
         { provide: RouteAliasService, useClass: MockRouteAliasService },
+        { provide: NotificationHubService, useClass: MockNotificationHubService },
         MessageService,
       ],
     }).compileComponents();
@@ -225,7 +229,7 @@ describe("AppTopBarComponent", () => {
     const fixture = TestBed.createComponent(AppTopBarComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const profileIcon = compiled.querySelector('.layout-topbar-menu i.pi-user');
+    const profileIcon = compiled.querySelector(".layout-topbar-menu i.pi-user");
 
     expect(profileIcon).toBeTruthy();
   });

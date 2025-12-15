@@ -1,3 +1,4 @@
+import { afterEach, beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
 import { HttpClient, provideHttpClient, withInterceptors } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideZonelessChangeDetection } from "@angular/core";
@@ -8,10 +9,12 @@ import { tokenInterceptor } from "./token-interceptor";
 describe("tokenInterceptor", () => {
   let httpMock: HttpTestingController;
   let httpClient: HttpClient;
-  let identityService: jasmine.SpyObj<IdentityService>;
+  let identityService: MockedObject<IdentityService>;
 
   beforeEach(() => {
-    const identityServiceSpy = jasmine.createSpyObj("IdentityService", ["getBearerToken"]);
+    const identityServiceSpy = {
+      getBearerToken: vi.fn().mockName("IdentityService.getBearerToken"),
+    };
 
     TestBed.configureTestingModule({
       providers: [
@@ -24,7 +27,7 @@ describe("tokenInterceptor", () => {
 
     httpMock = TestBed.inject(HttpTestingController);
     httpClient = TestBed.inject(HttpClient);
-    identityService = TestBed.inject(IdentityService) as jasmine.SpyObj<IdentityService>;
+    identityService = TestBed.inject(IdentityService) as MockedObject<IdentityService>;
   });
 
   afterEach(() => {
@@ -33,14 +36,14 @@ describe("tokenInterceptor", () => {
 
   it("should add Authorization header for API requests", () => {
     const token = "Bearer test-token";
-    identityService.getBearerToken.and.returnValue(token);
+    identityService.getBearerToken.mockReturnValue(token);
 
     httpClient.get("/api/data").subscribe();
 
     const req = httpMock.expectOne("/api/data");
     expect(req.request.headers.has("Authorization")).toBeTruthy();
     expect(req.request.headers.get("Authorization")).toBe(token);
-    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.withCredentials).toBe(true);
     req.flush({});
   });
 
@@ -54,13 +57,13 @@ describe("tokenInterceptor", () => {
   });
 
   it("should not add Authorization header if token is not available", () => {
-    identityService.getBearerToken.and.returnValue(undefined);
+    identityService.getBearerToken.mockReturnValue(undefined);
 
     httpClient.get("/api/data").subscribe();
 
     const req = httpMock.expectOne("/api/data");
     expect(req.request.headers.has("Authorization")).toBeFalsy();
-    expect(req.request.withCredentials).toBeTrue();
+    expect(req.request.withCredentials).toBe(true);
     req.flush({});
   });
 });

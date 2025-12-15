@@ -1,9 +1,9 @@
-import { canDeactivateGuard } from './can-deactivate.guard';
-import { OnCanDeactivate } from './can-deactivate';
-import { of } from 'rxjs';
+import { canDeactivateGuard } from "./can-deactivate.guard";
+import { OnCanDeactivate } from "./can-deactivate";
+import { of } from "rxjs";
 
-describe('canDeactivateGuard', () => {
-  it('should allow deactivation when component does not implement canDeactivate', () => {
+describe("canDeactivateGuard", () => {
+  it("should allow deactivation when component does not implement canDeactivate", () => {
     const component = {} as OnCanDeactivate;
 
     const result = canDeactivateGuard(component, null as any, null as any, null as any);
@@ -11,9 +11,9 @@ describe('canDeactivateGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should call component canDeactivate when implemented', () => {
+  it("should call component canDeactivate when implemented", () => {
     const component: OnCanDeactivate = {
-      canDeactivate: jasmine.createSpy('canDeactivate').and.returnValue(true),
+      canDeactivate: vi.fn().mockReturnValue(true),
     };
 
     const result = canDeactivateGuard(component, null as any, null as any, null as any);
@@ -22,9 +22,9 @@ describe('canDeactivateGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should return false when component canDeactivate returns false', () => {
+  it("should return false when component canDeactivate returns false", () => {
     const component: OnCanDeactivate = {
-      canDeactivate: jasmine.createSpy('canDeactivate').and.returnValue(false),
+      canDeactivate: vi.fn().mockReturnValue(false),
     };
 
     const result = canDeactivateGuard(component, null as any, null as any, null as any);
@@ -32,9 +32,9 @@ describe('canDeactivateGuard', () => {
     expect(result).toBe(false);
   });
 
-  it('should handle observable return from canDeactivate', () => {
+  it("should handle observable return from canDeactivate", () => {
     const component: OnCanDeactivate = {
-      canDeactivate: jasmine.createSpy('canDeactivate').and.returnValue(of(true)),
+      canDeactivate: vi.fn().mockReturnValue(of(true)),
     };
 
     const result = canDeactivateGuard(component, null as any, null as any, null as any);
@@ -42,9 +42,9 @@ describe('canDeactivateGuard', () => {
     expect(result).toBeTruthy();
   });
 
-  it('should handle promise return from canDeactivate', () => {
+  it("should handle promise return from canDeactivate", () => {
     const component: OnCanDeactivate = {
-      canDeactivate: jasmine.createSpy('canDeactivate').and.returnValue(Promise.resolve(false)),
+      canDeactivate: vi.fn().mockReturnValue(Promise.resolve(false)),
     };
 
     const result = canDeactivateGuard(component, null as any, null as any, null as any);

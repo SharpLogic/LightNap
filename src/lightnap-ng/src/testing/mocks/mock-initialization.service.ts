@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, of, ReplaySubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable, of, ReplaySubject } from "rxjs";
 
 /**
  * Mock InitializationService for testing
- * 
+ *
  * Simulates application initialization state
  */
 @Injectable()

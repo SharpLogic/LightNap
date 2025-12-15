@@ -4,7 +4,7 @@ using LightNap.Core.UserSettings.Dto.Response;
 
 namespace LightNap.Core.Extensions
 {
-    public static class UserSettingExtensions
+    internal static class UserSettingExtensions
     {
         /// <summary>
         /// Converts a <see cref="UserSetting"/> entity to its corresponding <see cref="UserSettingDto"/> representation.
@@ -25,14 +25,14 @@ namespace LightNap.Core.Extensions
         /// <summary>
         /// Converts a <see cref="UserSettingDefinition"/> entity to its corresponding <see cref="UserSettingDto"/> representation.
         /// </summary>
-        /// <param name="userSetting">The <see cref="UserSettingDefinition"/> entity to convert.</param>
+        /// <param name="userSettingDefinition">The <see cref="UserSettingDefinition"/> entity to convert.</param>
         /// <returns>A <see cref="UserSettingDto"/> containing the key, value, created date, and last modified date.</returns>
         internal static UserSettingDto ToDto(this UserSettingDefinition userSettingDefinition)
         {
             return new UserSettingDto()
             {
                 Key = userSettingDefinition.Key,
-                Value = userSettingDefinition.DefaultValue,
+                Value = userSettingDefinition.DefaultJson,
             };
         }
     }

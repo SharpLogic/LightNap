@@ -41,7 +41,6 @@ namespace LightNap.Core.Identity.Interfaces
         /// </summary>
         /// <param name="requestDto">The data transfer object containing the new email.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        /// <exception cref="UserFriendlyApiException">Thrown when the email change fails.</exception>
         Task ChangeEmailAsync(ChangeEmailRequestDto requestDto);
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace LightNap.Core.Identity.Interfaces
         /// </summary>
         /// <param name="requestDto">The data transfer object containing the new email and the confirmation code.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        /// <exception cref="UserFriendlyApiException">Thrown when the email confirmation fails.</exception>
         Task ConfirmEmailChangeAsync(ConfirmEmailChangeRequestDto requestDto);
 
         /// <summary>

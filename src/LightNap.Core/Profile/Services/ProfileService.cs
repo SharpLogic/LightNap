@@ -17,7 +17,7 @@ namespace LightNap.Core.Profile.Services
         /// Retrieves the profile of the specified user.  
         /// </summary>  
         /// <returns>A <see cref="ProfileDto"/> containing the user's profile.</returns>  
-        public async Task<ProfileDto> GetProfileAsync()
+        public async Task<ProfileDto> GetMyProfileAsync()
         {
             var user = await db.Users.FindAsync(userContext.GetUserId()) ?? throw new UserFriendlyApiException("Please log in");
             return user.ToLoggedInUserDto();

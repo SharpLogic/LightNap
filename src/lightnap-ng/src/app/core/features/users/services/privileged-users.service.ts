@@ -1,15 +1,7 @@
-import { Injectable, inject } from "@angular/core";
-import { map, Observable, of, switchMap } from "rxjs";
+import { inject, Injectable } from "@angular/core";
+import { ClaimDto, PagedResponseDto, PrivilegedSearchUsersRequestDto, PrivilegedUserDto, RoleDto, SearchClaimRequestDto } from "@core/backend-api";
+import { Observable } from "rxjs";
 import { AdminUsersService } from "./admin-users.service";
-import {
-  AdminUserDto,
-  ClaimDto,
-  PagedResponseDto,
-  PrivilegedSearchUsersRequestDto,
-  PrivilegedUserDto,
-  RoleDto,
-  SearchClaimRequestDto,
-} from "@core/backend-api";
 
 /**
  * Service for privileged endpoint access.

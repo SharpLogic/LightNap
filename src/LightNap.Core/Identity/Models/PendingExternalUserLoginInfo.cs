@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace LightNap.Core.Identity.Models
 {
-    public class PendingExternalUserLoginInfo : UserLoginInfo
+    internal class PendingExternalUserLoginInfo : UserLoginInfo
     {
         // Track claims so that to enable the frontend to offer default values when the user need to register.
         public string? Email { get; set; }

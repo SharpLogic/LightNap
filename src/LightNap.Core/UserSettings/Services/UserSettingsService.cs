@@ -42,11 +42,11 @@ namespace LightNap.Core.UserSettings.Services
             }
 
             var definition = UserSettingsConfig.GetActiveSetting(key);
-            if (string.IsNullOrEmpty(definition.DefaultValue))
+            if (string.IsNullOrEmpty(definition.DefaultJson))
             {
                 return default!;
             }
-            return JsonSerializer.Deserialize<T>(UserSettingsConfig.GetActiveSetting(key).DefaultValue)!;
+            return JsonSerializer.Deserialize<T>(UserSettingsConfig.GetActiveSetting(key).DefaultJson)!;
         }
 
         /// <summary>

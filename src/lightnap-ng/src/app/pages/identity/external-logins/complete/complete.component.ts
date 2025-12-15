@@ -1,7 +1,7 @@
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { LoginSuccessTypes, setApiErrors } from "@core";
+import { LoginSuccessType, setApiErrors } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
@@ -43,13 +43,13 @@ export class CompleteComponent {
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
-            case LoginSuccessTypes.TwoFactorRequired:
+            case LoginSuccessType.TwoFactorRequired:
               alert("Check your email for two-factor verification.");
               break;
-            case LoginSuccessTypes.AccessToken:
+            case LoginSuccessType.AccessToken:
               this.#identityService.redirectLoggedInUser();
               break;
-            case LoginSuccessTypes.EmailVerificationRequired:
+            case LoginSuccessType.EmailVerificationRequired:
               this.#routeAlias.navigate("email-verification-required");
               break;
             default:

@@ -14,11 +14,11 @@ export class IdentityDtoBuilder {
     const exp = expiresInSeconds ? now + expiresInSeconds : now + 3600; // Default 1 hour
 
     // Header and payload
-    const header = { alg: 'HS256', typ: 'JWT' };
+    const header = { alg: "HS256", typ: "JWT" };
     const payload = {
-      sub: '12345678-1234-1234-1234-123456789012',
-      name: 'Test User',
-      email: 'test@example.com',
+      sub: "12345678-1234-1234-1234-123456789012",
+      name: "Test User",
+      email: "test@example.com",
       iat: now,
       exp: exp,
     };
@@ -26,7 +26,7 @@ export class IdentityDtoBuilder {
     // Base64 encode (simplified for testing)
     const base64Header = btoa(JSON.stringify(header));
     const base64Payload = btoa(JSON.stringify(payload));
-    const signature = 'test-signature';
+    const signature = "test-signature";
 
     return `${base64Header}.${base64Payload}.${signature}`;
   }
@@ -43,11 +43,11 @@ export class IdentityDtoBuilder {
    */
   static createTokenWithClaims(claims: Record<string, any>): string {
     const now = Math.floor(Date.now() / 1000);
-    const header = { alg: 'HS256', typ: 'JWT' };
+    const header = { alg: "HS256", typ: "JWT" };
     const payload = {
-      sub: '12345678-1234-1234-1234-123456789012',
-      name: 'Test User',
-      email: 'test@example.com',
+      sub: "12345678-1234-1234-1234-123456789012",
+      name: "Test User",
+      email: "test@example.com",
       iat: now,
       exp: now + 3600,
       ...claims,
@@ -55,7 +55,7 @@ export class IdentityDtoBuilder {
 
     const base64Header = btoa(JSON.stringify(header));
     const base64Payload = btoa(JSON.stringify(payload));
-    const signature = 'test-signature';
+    const signature = "test-signature";
 
     return `${base64Header}.${base64Payload}.${signature}`;
   }
@@ -65,8 +65,8 @@ export class IdentityDtoBuilder {
    */
   static createLoginRequest(overrides?: Partial<any>): any {
     return {
-      userName: 'testuser',
-      password: 'Test123!',
+      userName: "testuser",
+      password: "Test123!",
       rememberMe: false,
       ...overrides,
     };
@@ -77,10 +77,10 @@ export class IdentityDtoBuilder {
    */
   static createRegisterRequest(overrides?: Partial<any>): any {
     return {
-      userName: 'newuser',
-      email: 'newuser@example.com',
-      password: 'Test123!',
-      confirmPassword: 'Test123!',
+      userName: "newuser",
+      email: "newuser@example.com",
+      password: "Test123!",
+      confirmPassword: "Test123!",
       ...overrides,
     };
   }
@@ -90,7 +90,7 @@ export class IdentityDtoBuilder {
    */
   static createResetPasswordRequest(overrides?: Partial<any>): any {
     return {
-      email: 'user@example.com',
+      email: "user@example.com",
       ...overrides,
     };
   }
@@ -100,9 +100,9 @@ export class IdentityDtoBuilder {
    */
   static createNewPasswordRequest(overrides?: Partial<any>): any {
     return {
-      token: 'reset-token',
-      password: 'NewPass123!',
-      confirmPassword: 'NewPass123!',
+      token: "reset-token",
+      password: "NewPass123!",
+      confirmPassword: "NewPass123!",
       ...overrides,
     };
   }
@@ -112,7 +112,7 @@ export class IdentityDtoBuilder {
    */
   static createVerifyCodeRequest(overrides?: Partial<any>): any {
     return {
-      code: '123456',
+      code: "123456",
       rememberMe: false,
       ...overrides,
     };
@@ -123,9 +123,9 @@ export class IdentityDtoBuilder {
    */
   static createChangePasswordRequest(overrides?: Partial<any>): any {
     return {
-      currentPassword: 'OldPass123!',
-      newPassword: 'NewPass123!',
-      confirmPassword: 'NewPass123!',
+      currentPassword: "OldPass123!",
+      newPassword: "NewPass123!",
+      confirmPassword: "NewPass123!",
       ...overrides,
     };
   }
@@ -136,7 +136,7 @@ export class IdentityDtoBuilder {
   static createLoginSuccessResult(overrides?: Partial<any>): any {
     return {
       accessToken: this.createTestToken(),
-      type: 'AccessToken',
+      type: "AccessToken",
       ...overrides,
     };
   }

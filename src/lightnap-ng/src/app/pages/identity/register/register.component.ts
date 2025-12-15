@@ -1,7 +1,6 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { LoginSuccessTypes, RoutePipe, setApiErrors } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { confirmPasswordValidator } from "@core/helpers/form-helpers";
@@ -13,6 +12,7 @@ import { CheckboxModule } from "primeng/checkbox";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { finalize } from "rxjs";
+import { LoginSuccessType, RoutePipe, setApiErrors } from "@core";
 
 @Component({
   templateUrl: "./register.component.html",
@@ -64,13 +64,13 @@ export class RegisterComponent {
       .subscribe({
         next: loginResult => {
           switch (loginResult.type) {
-            case LoginSuccessTypes.TwoFactorRequired:
+            case LoginSuccessType.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.form.value.email);
               break;
-            case LoginSuccessTypes.AccessToken:
+            case LoginSuccessType.AccessToken:
               this.#identityService.redirectLoggedInUser();
               break;
-            case LoginSuccessTypes.EmailVerificationRequired:
+            case LoginSuccessType.EmailVerificationRequired:
               this.#routeAlias.navigate("email-verification-required");
               break;
             default:

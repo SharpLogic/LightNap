@@ -1,6 +1,6 @@
 import { Component, forwardRef, input } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { StaticContentStatus, StaticContentStatuses, StaticContentStatusListItems } from "@core/backend-api";
+import { StaticContentStatus, StaticContentStatusListItems } from "@core/backend-api";
 import { SelectListItemComponent } from "@core/components/select-list-item/select-list-item.component";
 import { ListItem } from "@core/models/list-item";
 import { SelectModule } from "primeng/select";
@@ -20,7 +20,7 @@ import { SelectModule } from "primeng/select";
 export class ContentStatusPickerComponent implements ControlValueAccessor {
   showAnyOption = input<boolean>(false);
 
-  value: StaticContentStatus | null = StaticContentStatuses.Draft;
+  value: StaticContentStatus | null = StaticContentStatus.Draft;
   disabled = false;
 
   get options() {

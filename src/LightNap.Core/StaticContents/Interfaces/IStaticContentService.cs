@@ -100,6 +100,6 @@ namespace LightNap.Core.StaticContents.Interfaces
         /// Retrieves the list of supported language codes for static content.
         /// </summary>
         /// <returns>A read-only list of supported languages.</returns>
-        IReadOnlyList<StaticContentSupportedLanguage> GetSupportedLanguages();
+        IReadOnlyList<StaticContentSupportedLanguageDto> GetSupportedLanguages();
     }
 }

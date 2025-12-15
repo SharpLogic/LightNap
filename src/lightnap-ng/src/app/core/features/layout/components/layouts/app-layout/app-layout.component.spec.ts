@@ -13,6 +13,9 @@ import { provideHttpClient } from "@angular/common/http";
 import { MenuService } from "@core/features/layout/services/menu.service";
 import { BreadcrumbService } from "@core/features/layout/services/breadcrumb.service";
 import { MenuItem, MessageService } from "primeng/api";
+import { describe, beforeEach, vi, it, expect } from "vitest";
+import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
+import { MockNotificationHubService } from "@testing/mocks/mock-notification-hub.service";
 
 describe("AppLayoutComponent", () => {
   let component: AppLayoutComponent;
@@ -55,7 +58,7 @@ describe("AppLayoutComponent", () => {
       presets: { Aura: {}, Lara: {}, Nora: {} },
       menuModeOptions: [],
       appName: "LightNap Test",
-      onMenuToggle: jasmine.createSpy("onMenuToggle"),
+      onMenuToggle: vi.fn(),
       overlayOpen$: overlayOpenSubject.asObservable(),
     };
 
@@ -84,6 +87,7 @@ describe("AppLayoutComponent", () => {
         { provide: RouteAliasService, useClass: MockRouteAliasService },
         { provide: MenuService, useValue: mockMenuService },
         { provide: BreadcrumbService, useValue: mockBreadcrumbService },
+        { provide: NotificationHubService, useClass: MockNotificationHubService },
         MessageService,
       ],
     }).compileComponents();
@@ -218,12 +222,12 @@ describe("AppLayoutComponent", () => {
   });
 
   it("should update layout state when hideMenu is called", () => {
-    const updateSpy = jasmine.createSpy("update");
+    const updateSpy = vi.fn();
     mockLayoutService.layoutState.update = updateSpy;
 
     component.hideMenu();
 
-    expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("should have isOutsideClicked method", () => {
@@ -255,7 +259,7 @@ describe("AppLayoutComponent", () => {
   });
 
   it("should cleanup outside click listener on destroy", () => {
-    component.menuOutsideClickListener = jasmine.createSpy("listener");
+    component.menuOutsideClickListener = vi.fn();
 
     component.ngOnDestroy();
 

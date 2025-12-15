@@ -17,20 +17,18 @@ describe("BlockUiService", () => {
     expect(service).toBeTruthy();
   });
 
-  it("should emit show event with correct parameters", done => {
+  it("should emit show event with correct parameters", async () => {
     const blockUiParams: BlockUiParams = { message: "Loading..." };
     service.onShow$.subscribe(params => {
       expect(params).toEqual(blockUiParams);
-      done();
     });
     service.show(blockUiParams);
   });
 
-  it("should emit hide event", done => {
+  it("should emit hide event", async () => {
     service.onHide$.subscribe({
       next: () => {
-        expect(true).toBeTrue();
-        done();
+        expect(true).toBe(true);
       },
     });
     service.hide();

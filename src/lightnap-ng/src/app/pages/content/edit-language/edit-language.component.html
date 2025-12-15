@@ -14,8 +14,8 @@
         @if (language.lastModifiedDate) {
           <p class="text-sm">
             Last Updated {{ language.lastModifiedDate | date: "medium" }} by
-            @if (language.lastModifiedByUserId) {
-              <ln-user-link [userId]="language.lastModifiedByUserId" />
+            @if (language.lastModifiedUserId) {
+              <ln-user-link [userId]="language.lastModifiedUserId" />
             }
           </p>
         }

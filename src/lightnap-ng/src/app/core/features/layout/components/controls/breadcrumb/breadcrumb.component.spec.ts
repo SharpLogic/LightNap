@@ -8,6 +8,7 @@ import { BreadcrumbService } from "../../../services/breadcrumb.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
 import { MenuItem } from "primeng/api";
+import { describe, beforeEach, expect, it } from "vitest";
 
 describe("BreadcrumbComponent", () => {
   let component: BreadcrumbComponent;
@@ -70,10 +71,7 @@ describe("BreadcrumbComponent", () => {
   });
 
   it("should render breadcrumb items with labels", () => {
-    const items: MenuItem[] = [
-      { label: "Admin" },
-      { label: "Users" },
-    ];
+    const items: MenuItem[] = [{ label: "Admin" }, { label: "Users" }];
 
     breadcrumbsSubject.next(items);
     fixture.detectChanges();
@@ -83,9 +81,7 @@ describe("BreadcrumbComponent", () => {
   });
 
   it("should handle breadcrumb items with icons", () => {
-    const items: MenuItem[] = [
-      { label: "Settings", icon: "pi pi-cog" },
-    ];
+    const items: MenuItem[] = [{ label: "Settings", icon: "pi pi-cog" }];
 
     breadcrumbsSubject.next(items);
     fixture.detectChanges();
@@ -94,9 +90,7 @@ describe("BreadcrumbComponent", () => {
   });
 
   it("should handle breadcrumb items with routerLink", () => {
-    const items: MenuItem[] = [
-      { label: "Profile", routerLink: ["/profile"] },
-    ];
+    const items: MenuItem[] = [{ label: "Profile", routerLink: ["/profile"] }];
 
     breadcrumbsSubject.next(items);
     fixture.detectChanges();
@@ -105,11 +99,7 @@ describe("BreadcrumbComponent", () => {
   });
 
   it("should handle multiple breadcrumb items", () => {
-    const items: MenuItem[] = [
-      { label: "Admin", routerLink: ["/admin"] },
-      { label: "Users", routerLink: ["/admin", "users"] },
-      { label: "Edit" },
-    ];
+    const items: MenuItem[] = [{ label: "Admin", routerLink: ["/admin"] }, { label: "Users", routerLink: ["/admin", "users"] }, { label: "Edit" }];
 
     breadcrumbsSubject.next(items);
     fixture.detectChanges();

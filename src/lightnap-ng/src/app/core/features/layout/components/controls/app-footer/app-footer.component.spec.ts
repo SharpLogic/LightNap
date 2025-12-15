@@ -1,13 +1,15 @@
-import { provideZonelessChangeDetection } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { beforeEach, describe, expect, it } from "vitest";
 import { AppFooterComponent } from "./app-footer.component";
 
 describe("AppFooterComponent", () => {
+  let fixture: ComponentFixture<AppFooterComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppFooterComponent],
-      providers: [provideZonelessChangeDetection()],
     }).compileComponents();
+    fixture = TestBed.createComponent(AppFooterComponent);
   });
 
   it("should create", () => {

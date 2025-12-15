@@ -20,13 +20,13 @@ describe("VerifyCodeComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      verifyCode: jasmine.createSpy("verifyCode").and.returnValue(of(void 0)),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
+      verifyCode: vi.fn().mockReturnValue(of(void 0)),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -94,11 +94,11 @@ describe("VerifyCodeComponent", () => {
       component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           code: "123456",
           login: "test@example.com",
           rememberMe: true,
-          deviceDetails: jasmine.any(String),
+          deviceDetails: expect.any(String),
         })
       );
     });
@@ -124,7 +124,7 @@ describe("VerifyCodeComponent", () => {
     });
 
     it("should navigate to user-home on success", () => {
-      spyOn(mockRouteAliasService, "navigate");
+      vi.spyOn(mockRouteAliasService, "navigate");
       component.form.patchValue({
         code: "123456",
       });
@@ -136,7 +136,7 @@ describe("VerifyCodeComponent", () => {
 
     it("should set errors on verification failure", () => {
       const errorResponse = { errorMessages: ["Invalid verification code"] };
-      mockIdentityService.verifyCode.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.verifyCode.mockReturnValue(throwError(() => errorResponse));
 
       component.form.patchValue({
         code: "000000",
@@ -156,7 +156,7 @@ describe("VerifyCodeComponent", () => {
       component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           rememberMe: false,
         })
       );
@@ -180,7 +180,7 @@ describe("VerifyCodeComponent", () => {
     });
 
     it("should render verify button", () => {
-      const verifyButton = fixture.nativeElement.querySelector('p-button');
+      const verifyButton = fixture.nativeElement.querySelector("p-button");
       expect(verifyButton).toBeTruthy();
     });
 
@@ -221,7 +221,7 @@ describe("VerifyCodeComponent", () => {
       component.verify();
 
       expect(mockIdentityService.verifyCode).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           login: "test@example.com",
         })
       );

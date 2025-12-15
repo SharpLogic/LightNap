@@ -1,6 +1,6 @@
 /**
  * Builder for paged response DTOs
- * 
+ *
  * Provides convenient methods for creating paged test data
  */
 
@@ -35,12 +35,7 @@ export class PagedResponseBuilder {
   /**
    * Create a multi-page response
    */
-  static createMultiPage<T>(
-    data: T[],
-    page: number,
-    pageSize: number,
-    totalCount: number
-  ): any {
+  static createMultiPage<T>(data: T[], page: number, pageSize: number, totalCount: number): any {
     return {
       data,
       page,

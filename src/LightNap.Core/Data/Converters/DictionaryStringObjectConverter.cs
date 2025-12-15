@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace LightNap.Core.Data.Converters
 {
-    public class DictionaryStringObjectConverter : ValueConverter<Dictionary<string, object>, string>
+    internal class DictionaryStringObjectConverter : ValueConverter<Dictionary<string, object>, string>
     {
         public DictionaryStringObjectConverter()
             : base(

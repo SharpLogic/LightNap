@@ -1,14 +1,13 @@
-
 import { Component, EventEmitter, forwardRef, inject, Input, Output, signal } from "@angular/core";
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { AdminUserDto, PublicSearchUsersRequestDto, SearchUsersSortBy } from "@core/backend-api";
+import { AdminSearchUsersRequestDto, AdminUserDto, ApplicationUserSortBy } from "@core/backend-api";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
 import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplete";
 import { finalize } from "rxjs";
 
 @Component({
-  selector: 'ln-user-picker',
-  templateUrl: './user-picker.component.html',
+  selector: "ln-user-picker",
+  templateUrl: "./user-picker.component.html",
   imports: [FormsModule, AutoCompleteModule],
   providers: [
     {
@@ -33,9 +32,9 @@ export class UserPickerComponent implements ControlValueAccessor {
   searchUsers(event: { query: string }) {
     this.loading = true;
 
-    const request: PublicSearchUsersRequestDto = {
+    const request: AdminSearchUsersRequestDto = {
       userName: event.query,
-      sortBy: SearchUsersSortBy.UserName,
+      sortBy: ApplicationUserSortBy.UserName,
       reverseSort: false,
       pageNumber: 1,
       pageSize: 10,
@@ -45,7 +44,7 @@ export class UserPickerComponent implements ControlValueAccessor {
       .searchUsers(request)
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
-        next: (response: any) => {
+        next: response => {
           this.users.set(response.data || []);
         },
         error: () => {
@@ -73,7 +72,7 @@ export class UserPickerComponent implements ControlValueAccessor {
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {
+  setDisabledState?(_isDisabled: boolean): void {
     // Optionally implement if you want to support disabling the picker
   }
 }

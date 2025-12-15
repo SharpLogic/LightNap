@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, type MockedObject } from "vitest";
 import { provideZonelessChangeDetection, signal } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
@@ -7,7 +8,7 @@ import { MenuItem } from "primeng/api";
 import { AppSidebarComponent } from "./app-sidebar.component";
 
 describe("AppSidebarComponent", () => {
-  let mockMenuService: jasmine.SpyObj<MenuService>;
+  let mockMenuService: MockedObject<MenuService>;
   let menuItemsSignal: ReturnType<typeof signal<MenuItem[]>>;
 
   beforeEach(async () => {
@@ -16,18 +17,13 @@ describe("AppSidebarComponent", () => {
       { label: "Profile", icon: "pi pi-user", routerLink: "/profile" },
     ]);
 
-    mockMenuService = jasmine.createSpyObj("MenuService", [], {
+    mockMenuService = {
       menuItems: menuItemsSignal,
-    });
+    } as unknown as MockedObject<MenuService>;
 
     await TestBed.configureTestingModule({
       imports: [AppSidebarComponent],
-      providers: [
-        provideZonelessChangeDetection(),
-        provideNoopAnimations(),
-        provideRouter([]),
-        { provide: MenuService, useValue: mockMenuService },
-      ],
+      providers: [provideZonelessChangeDetection(), provideNoopAnimations(), provideRouter([]), { provide: MenuService, useValue: mockMenuService }],
     }).compileComponents();
   });
 

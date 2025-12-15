@@ -10,8 +10,19 @@
     /// </remarks>
     public enum UserSettingAccessLevel
     {
+        /// <summary>
+        /// Specifies read and write access permissions for a user.
+        /// </summary>
         UserReadWrite,
+
+        /// <summary>
+        /// User can only read settings without the ability to modify them.
+        /// </summary>  
         UserRead,
+
+        /// <summary>
+        /// Administrator level access with full control over all settings.
+        /// </summary>
         Admin,
     }
 }

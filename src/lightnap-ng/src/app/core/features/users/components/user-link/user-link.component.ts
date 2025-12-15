@@ -1,9 +1,8 @@
-
 import { Component, computed, inject, input } from "@angular/core";
-import { PublicUserDto } from "@core/backend-api/dtos/users/response/public-user-dto";
 import { TypeHelpers } from "@core/helpers/type-helpers";
 import { PublicUsersService } from "@core/features/users/services/public-users.service";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
+import { PublicUserDto } from "@core/backend-api";
 
 @Component({
   selector: "ln-user-link",

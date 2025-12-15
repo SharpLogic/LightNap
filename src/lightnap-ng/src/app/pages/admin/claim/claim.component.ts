@@ -1,4 +1,3 @@
-
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterLink } from "@angular/router";
@@ -28,8 +27,8 @@ import { startWith, Subject, switchMap } from "rxjs";
     ErrorListComponent,
     ApiResponseComponent,
     ConfirmPopupComponent,
-    UserPickerComponent
-],
+    UserPickerComponent,
+  ],
 })
 export class ClaimComponent {
   readonly pageSize = 10;

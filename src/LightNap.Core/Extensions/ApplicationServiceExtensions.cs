@@ -37,6 +37,7 @@ namespace LightNap.Core.Extensions
         /// Adds an SMTP email service implementation to the service collection.
         /// </summary>
         /// <param name="services">The service collection.</param>
+        /// <param name="smtpSettings">The SMPT settings.</param>
         /// <returns>The updated service collection.</returns>
         public static IServiceCollection AddSmtpEmailSender(this IServiceCollection services, SmtpSettings smtpSettings)
         {

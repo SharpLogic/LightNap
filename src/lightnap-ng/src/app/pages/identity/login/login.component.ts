@@ -2,7 +2,7 @@ import { Component, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { RouterModule } from "@angular/router";
-import { LoginSuccessTypes, RoutePipe, setApiErrors } from "@core";
+import { LoginSuccessType, RoutePipe, setApiErrors } from "@core";
 import { BrandedCardComponent } from "@core/components/branded-card/branded-card.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
@@ -69,13 +69,13 @@ export class LoginComponent {
       .subscribe({
         next: result => {
           switch (result.type) {
-            case LoginSuccessTypes.TwoFactorRequired:
+            case LoginSuccessType.TwoFactorRequired:
               this.#routeAlias.navigate("verify-code", this.form.value.login);
               break;
-            case LoginSuccessTypes.AccessToken:
+            case LoginSuccessType.AccessToken:
               this.#identityService.redirectLoggedInUser();
               break;
-            case LoginSuccessTypes.EmailVerificationRequired:
+            case LoginSuccessType.EmailVerificationRequired:
               this.#routeAlias.navigate("email-verification-required");
               break;
             default:

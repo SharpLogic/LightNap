@@ -20,13 +20,13 @@ describe("ResetPasswordComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      resetPassword: jasmine.createSpy("resetPassword").and.returnValue(of(void 0)),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
+      resetPassword: vi.fn().mockReturnValue(of(void 0)),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -114,7 +114,7 @@ describe("ResetPasswordComponent", () => {
     });
 
     it("should navigate to reset-instructions-sent on success", () => {
-      spyOn(mockRouteAliasService, "navigate");
+      vi.spyOn(mockRouteAliasService, "navigate");
       component.form.patchValue({
         email: "test@example.com",
       });
@@ -126,7 +126,7 @@ describe("ResetPasswordComponent", () => {
 
     it("should set errors on password reset failure", () => {
       const errorResponse = { errorMessages: ["Email not found"] };
-      mockIdentityService.resetPassword.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.resetPassword.mockReturnValue(throwError(() => errorResponse));
 
       component.form.patchValue({
         email: "nonexistent@example.com",

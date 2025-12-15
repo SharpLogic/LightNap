@@ -52,7 +52,8 @@ export class MenuService {
         { label: "Users", icon: "pi pi-fw pi-users", routerLink: this.#routeAlias.getRoute("admin-users") },
         { label: "Roles", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("admin-roles") },
         { label: "Claims", icon: "pi pi-fw pi-shield", routerLink: this.#routeAlias.getRoute("admin-claims") },
-        { label: "External Logins", icon: "pi pi-fw pi-globe", routerLink: this.#routeAlias.getRoute("admin-external-logins") },],
+        { label: "External Logins", icon: "pi pi-fw pi-globe", routerLink: this.#routeAlias.getRoute("admin-external-logins") },
+      ],
     },
   ];
 

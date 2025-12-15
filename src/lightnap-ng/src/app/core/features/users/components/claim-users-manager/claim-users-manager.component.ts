@@ -1,8 +1,7 @@
-
 import { Component, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { PagedResponseDto } from "@core/backend-api/dtos/paged-response-dto";
-import { PrivilegedUserDto } from "@core/backend-api/dtos/users/response/privileged-user-dto";
+import { PagedResponseDto } from "@core/backend-api/paged-response-dto";
+import { PrivilegedUserDto } from "@core/backend-api";
 import { EmptyPagedResponse } from "@core/backend-api/empty-paged-response";
 import { UserPickerComponent } from "@core/features/users/components/user-picker/user-picker.component";
 import { PrivilegedUsersService } from "@core/features/users/services/privileged-users.service";
@@ -31,8 +30,8 @@ import { UserLinkComponent } from "../user-link/user-link.component";
     ErrorListComponent,
     UserPickerComponent,
     UserLinkComponent,
-    ConfirmPopupComponent
-],
+    ConfirmPopupComponent,
+  ],
 })
 export class ClaimUsersManagerComponent {
   #usersService = inject(PrivilegedUsersService);

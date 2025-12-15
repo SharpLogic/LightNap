@@ -5,6 +5,7 @@ import { provideNoopAnimations } from "@angular/platform-browser/animations";
 import { AppConfiguratorComponent } from "./app-configurator.component";
 import { LayoutService } from "@core/features/layout/services/layout.service";
 import { LayoutConfigDto } from "@core/backend-api";
+import { describe, beforeEach, vi, it, expect } from "vitest";
 
 describe("AppConfiguratorComponent", () => {
   let component: AppConfiguratorComponent;
@@ -44,7 +45,7 @@ describe("AppConfiguratorComponent", () => {
         { label: "Overlay", value: "overlay" },
       ],
       appName: "LightNap Test",
-      onMenuToggle: jasmine.createSpy("onMenuToggle"),
+      onMenuToggle: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -86,29 +87,23 @@ describe("AppConfiguratorComponent", () => {
   });
 
   it("should render primary color buttons", () => {
-    const primaryButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:first-child button"
-    );
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
     expect(primaryButtons.length).toBe(3);
   });
 
   it("should apply outline to selected primary color", () => {
-    const primaryButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:first-child button"
-    );
-    const selectedButton = Array.from(primaryButtons).find((btn: any) =>
-      btn.classList.contains("outline-primary")
-    );
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
+    const selectedButton = Array.from(primaryButtons).find((btn: any) => btn.classList.contains("outline-primary"));
     expect(selectedButton).toBeTruthy();
   });
 
   it("should update primary color when button clicked", () => {
-    const updateSpy = jasmine.createSpy("update");
+    const updateSpy = vi.fn();
     mockLayoutService.layoutConfig.update = updateSpy;
 
     component.changePrimaryColor("green");
 
-    expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("should render surface color section", () => {
@@ -119,29 +114,23 @@ describe("AppConfiguratorComponent", () => {
   });
 
   it("should render surface color buttons", () => {
-    const surfaceButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:nth-child(2) button"
-    );
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
     expect(surfaceButtons.length).toBe(3);
   });
 
   it("should apply outline to selected surface color", () => {
-    const surfaceButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:nth-child(2) button"
-    );
-    const selectedButton = Array.from(surfaceButtons).find((btn: any) =>
-      btn.classList.contains("outline-primary")
-    );
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
+    const selectedButton = Array.from(surfaceButtons).find((btn: any) => btn.classList.contains("outline-primary"));
     expect(selectedButton).toBeTruthy();
   });
 
   it("should update surface color when button clicked", () => {
-    const updateSpy = jasmine.createSpy("update");
+    const updateSpy = vi.fn();
     mockLayoutService.layoutConfig.update = updateSpy;
 
     component.changeSurfaceColor("zinc");
 
-    expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("should render presets section", () => {
@@ -157,12 +146,12 @@ describe("AppConfiguratorComponent", () => {
   });
 
   it("should update preset when changed", () => {
-    const updateSpy = jasmine.createSpy("update");
+    const updateSpy = vi.fn();
     mockLayoutService.layoutConfig.update = updateSpy;
 
     component.changePreset("Lara");
 
-    expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("should render menu mode section when showMenuModeButton is true", () => {
@@ -178,12 +167,12 @@ describe("AppConfiguratorComponent", () => {
   });
 
   it("should update menu mode when changed", () => {
-    const updateSpy = jasmine.createSpy("update");
+    const updateSpy = vi.fn();
     mockLayoutService.layoutConfig.update = updateSpy;
 
     component.changeMenuMode("overlay");
 
-    expect(updateSpy).toHaveBeenCalledWith(jasmine.any(Function));
+    expect(updateSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 
   it("should hide menu mode section when showMenuModeButton is false", () => {
@@ -195,12 +184,8 @@ describe("AppConfiguratorComponent", () => {
   });
 
   it("should apply special styling for noir primary color", () => {
-    const primaryButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:first-child button"
-    );
-    const noirButton = Array.from(primaryButtons).find(
-      (btn: any) => btn.getAttribute("title") === "noir"
-    );
+    const primaryButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:first-child button");
+    const noirButton = Array.from(primaryButtons).find((btn: any) => btn.getAttribute("title") === "noir");
     expect(noirButton).toBeTruthy();
   });
 
@@ -209,18 +194,14 @@ describe("AppConfiguratorComponent", () => {
     mockLayoutService.isDarkTheme.set(false);
     fixture.detectChanges();
 
-    const surfaceButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:nth-child(2) button"
-    );
+    const surfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
     expect(surfaceButtons.length).toBeGreaterThan(0);
 
     // Dark theme
     mockLayoutService.isDarkTheme.set(true);
     fixture.detectChanges();
 
-    const darkSurfaceButtons = fixture.nativeElement.querySelectorAll(
-      ".flex.flex-col.gap-4 > div:nth-child(2) button"
-    );
+    const darkSurfaceButtons = fixture.nativeElement.querySelectorAll(".flex.flex-col.gap-4 > div:nth-child(2) button");
     expect(darkSurfaceButtons.length).toBeGreaterThan(0);
   });
 });

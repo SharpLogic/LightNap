@@ -1,8 +1,8 @@
-﻿namespace LightNap.Core.UserSettings.Dto.Request
-{
-    public class SetUserSettingRequestDto
-    {
-        public required string Key { get; set; }
-        public required string Value { get; set; }
-    }
-}
+﻿namespace LightNap.Core.UserSettings.Dto.Request;
+
+/// <summary>
+/// Data transfer object for setting a user setting.
+/// </summary>
+/// <param name="Key">The unique identifier for the user setting.</param>
+/// <param name="Value">The value to assign to the user setting.</param>
+public record SetUserSettingRequestDto(string Key, string Value) { }

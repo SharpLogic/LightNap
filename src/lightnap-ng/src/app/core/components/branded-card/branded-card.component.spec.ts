@@ -1,26 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideZonelessChangeDetection } from '@angular/core';
-import { BrandedCardComponent } from './branded-card.component';
-import { LayoutService } from '@core/features/layout/services/layout.service';
-import { Component, signal } from '@angular/core';
+import { beforeEach, describe, expect, it, type MockedObject } from "vitest";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideZonelessChangeDetection } from "@angular/core";
+import { BrandedCardComponent } from "./branded-card.component";
+import { LayoutService } from "@core/features/layout/services/layout.service";
+import { Component, signal } from "@angular/core";
 
-describe('BrandedCardComponent', () => {
+describe("BrandedCardComponent", () => {
   let component: BrandedCardComponent;
   let fixture: ComponentFixture<BrandedCardComponent>;
-  let mockLayoutService: jasmine.SpyObj<LayoutService>;
+  let mockLayoutService: MockedObject<LayoutService>;
 
   beforeEach(() => {
-    mockLayoutService = jasmine.createSpyObj<LayoutService>('LayoutService', [], {
+    mockLayoutService = {
       isDarkTheme: signal(false),
-      appName: 'TestApp',
-    });
+      appName: "TestApp",
+    } as unknown as MockedObject<LayoutService>;
 
     TestBed.configureTestingModule({
       imports: [BrandedCardComponent],
-      providers: [
-        provideZonelessChangeDetection(),
-        { provide: LayoutService, useValue: mockLayoutService },
-      ],
+      providers: [provideZonelessChangeDetection(), { provide: LayoutService, useValue: mockLayoutService }],
     });
 
     fixture = TestBed.createComponent(BrandedCardComponent);
@@ -28,59 +26,56 @@ describe('BrandedCardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-  describe('Logo Display', () => {
-    it('should inject LayoutService', () => {
+  describe("Logo Display", () => {
+    it("should inject LayoutService", () => {
       expect(component.layoutService).toBe(mockLayoutService);
     });
 
-    it('should display light theme logo when isDarkTheme is false', () => {
+    it("should display light theme logo when isDarkTheme is false", () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const img = compiled.querySelector('img');
+      const img = compiled.querySelector("img");
 
-      expect(img?.src).toContain('logo-light.png');
+      expect(img?.src).toContain("logo-light.png");
     });
 
-    it('should display dark theme logo when isDarkTheme is true', () => {
+    it("should display dark theme logo when isDarkTheme is true", () => {
       // Create new mock service with dark theme
-      const darkThemeMock = jasmine.createSpyObj<LayoutService>('LayoutService', [], {
+      const darkThemeMock = {
         isDarkTheme: signal(true),
-        appName: 'TestApp',
-      });
+        appName: "TestApp",
+      };
 
       // Reset TestBed for this specific test
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [BrandedCardComponent],
-        providers: [
-          provideZonelessChangeDetection(),
-          { provide: LayoutService, useValue: darkThemeMock },
-        ],
+        providers: [provideZonelessChangeDetection(), { provide: LayoutService, useValue: darkThemeMock }],
       });
 
       fixture = TestBed.createComponent(BrandedCardComponent);
       fixture.detectChanges();
 
       const compiled = fixture.nativeElement as HTMLElement;
-      const img = compiled.querySelector('img');
+      const img = compiled.querySelector("img");
 
-      expect(img?.src).toContain('logo-dark.png');
+      expect(img?.src).toContain("logo-dark.png");
     });
 
-    it('should display alt text with app name', () => {
+    it("should display alt text with app name", () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const img = compiled.querySelector('img');
+      const img = compiled.querySelector("img");
 
-      expect(img?.alt).toBe('TestApp logo');
+      expect(img?.alt).toBe("TestApp logo");
     });
   });
 
-  describe('Content Projection', () => {
+  describe("Content Projection", () => {
     @Component({
-      selector: 'ln-test-host',
+      selector: "ln-test-host",
       template: `
         <ln-branded-card>
           <div title>Test Title</div>
@@ -92,26 +87,26 @@ describe('BrandedCardComponent', () => {
     })
     class TestHostComponent {}
 
-    it('should project title content', () => {
+    it("should project title content", () => {
       const hostFixture = TestBed.createComponent(TestHostComponent);
       hostFixture.detectChanges();
 
       const compiled = hostFixture.nativeElement as HTMLElement;
-      const titleDiv = compiled.querySelector('.text-3xl');
+      const titleDiv = compiled.querySelector(".text-3xl");
 
-      expect(titleDiv?.textContent?.trim()).toBe('Test Title');
+      expect(titleDiv?.textContent?.trim()).toBe("Test Title");
     });
 
-    it('should project subtitle content', () => {
+    it("should project subtitle content", () => {
       const hostFixture = TestBed.createComponent(TestHostComponent);
       hostFixture.detectChanges();
 
       const compiled = hostFixture.nativeElement as HTMLElement;
-      const spans = compiled.querySelectorAll('span');
+      const spans = compiled.querySelectorAll("span");
       let subtitleFound = false;
 
-      spans.forEach((span) => {
-        if (span.textContent?.trim() === 'Test Subtitle') {
+      spans.forEach(span => {
+        if (span.textContent?.trim() === "Test Subtitle") {
           subtitleFound = true;
         }
       });
@@ -119,47 +114,47 @@ describe('BrandedCardComponent', () => {
       expect(subtitleFound).toBe(true);
     });
 
-    it('should project default content', () => {
+    it("should project default content", () => {
       const hostFixture = TestBed.createComponent(TestHostComponent);
       hostFixture.detectChanges();
 
       const compiled = hostFixture.nativeElement as HTMLElement;
-      const cardContent = compiled.textContent || '';
+      const cardContent = compiled.textContent || "";
 
-      expect(cardContent).toContain('Test Content');
+      expect(cardContent).toContain("Test Content");
     });
 
-    it('should render card with all three content areas', () => {
+    it("should render card with all three content areas", () => {
       const hostFixture = TestBed.createComponent(TestHostComponent);
       hostFixture.detectChanges();
 
       const compiled = hostFixture.nativeElement as HTMLElement;
-      const cardContent = compiled.textContent || '';
+      const cardContent = compiled.textContent || "";
 
-      expect(cardContent).toContain('Test Title');
-      expect(cardContent).toContain('Test Subtitle');
-      expect(cardContent).toContain('Test Content');
+      expect(cardContent).toContain("Test Title");
+      expect(cardContent).toContain("Test Subtitle");
+      expect(cardContent).toContain("Test Content");
     });
   });
 
-  describe('Structure and Styling', () => {
-    it('should have the gradient wrapper div', () => {
+  describe("Structure and Styling", () => {
+    it("should have the gradient wrapper div", () => {
       const compiled = fixture.nativeElement as HTMLElement;
       const gradientDiv = compiled.querySelector('[style*="linear-gradient"]');
 
       expect(gradientDiv).toBeTruthy();
     });
 
-    it('should have the surface background div', () => {
+    it("should have the surface background div", () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const surfaceDiv = compiled.querySelector('.bg-surface-0');
+      const surfaceDiv = compiled.querySelector(".bg-surface-0");
 
       expect(surfaceDiv).toBeTruthy();
     });
 
-    it('should have centered content container', () => {
+    it("should have centered content container", () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      const centerDiv = compiled.querySelector('.text-center');
+      const centerDiv = compiled.querySelector(".text-center");
 
       expect(centerDiv).toBeTruthy();
     });

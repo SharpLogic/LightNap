@@ -1,14 +1,14 @@
-import { TestBed } from '@angular/core/testing';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { provideZonelessChangeDetection } from '@angular/core';
-import { claimGuard } from './claim.guard';
-import { MockIdentityService, MockRouteAliasService, createMockActivatedRouteSnapshot } from '@testing';
-import { IdentityService } from '@core/services/identity.service';
-import { RouteAliasService } from '@core/features/routing/services/route-alias-service';
-import { ClaimDto } from '@core/backend-api';
-import { firstValueFrom, of } from 'rxjs';
+import { TestBed } from "@angular/core/testing";
+import { ActivatedRouteSnapshot } from "@angular/router";
+import { provideZonelessChangeDetection } from "@angular/core";
+import { claimGuard } from "./claim.guard";
+import { MockIdentityService, MockRouteAliasService, createMockActivatedRouteSnapshot } from "@testing";
+import { IdentityService } from "@core/services/identity.service";
+import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
+import { ClaimDto } from "@core/backend-api";
+import { firstValueFrom, of } from "rxjs";
 
-describe('claimGuard', () => {
+describe("claimGuard", () => {
   let mockIdentity: MockIdentityService;
   let mockRouteAlias: MockRouteAliasService;
   let route: ActivatedRouteSnapshot;
@@ -28,12 +28,12 @@ describe('claimGuard', () => {
     route = createMockActivatedRouteSnapshot();
   });
 
-  it('should allow access when user has single required claim', async () => {
-    const claims = new Map([['permission', ['read']]]);
-    mockIdentity.setLoggedIn('token', [], claims);
-    
-    const claim: ClaimDto = { type: 'permission', value: 'read' };
-    spyOn(mockIdentity, 'watchUserPermission$').and.returnValue(mockIdentity.watchAnyUserClaim$([claim]));
+  it("should allow access when user has single required claim", async () => {
+    const claims = new Map([["permission", ["read"]]]);
+    mockIdentity.setLoggedIn("token", [], claims);
+
+    const claim: ClaimDto = { type: "permission", value: "read" };
+    vi.spyOn(mockIdentity, "watchUserPermission$").mockReturnValue(mockIdentity.watchAnyUserClaim$([claim]));
 
     const guard = claimGuard(claim);
 
@@ -44,15 +44,15 @@ describe('claimGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should allow access when user has any of multiple required claims', async () => {
-    const claims = new Map([['permission', ['write']]]);
-    mockIdentity.setLoggedIn('token', [], claims);
-    
+  it("should allow access when user has any of multiple required claims", async () => {
+    const claims = new Map([["permission", ["write"]]]);
+    mockIdentity.setLoggedIn("token", [], claims);
+
     const requiredClaims: ClaimDto[] = [
-      { type: 'permission', value: 'read' },
-      { type: 'permission', value: 'write' },
+      { type: "permission", value: "read" },
+      { type: "permission", value: "write" },
     ];
-    spyOn(mockIdentity, 'watchUserPermission$').and.returnValue(mockIdentity.watchAnyUserClaim$(requiredClaims));
+    vi.spyOn(mockIdentity, "watchUserPermission$").mockReturnValue(mockIdentity.watchAnyUserClaim$(requiredClaims));
 
     const guard = claimGuard(requiredClaims);
 
@@ -63,12 +63,12 @@ describe('claimGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should deny access when user lacks required claim', async () => {
-    mockIdentity.setLoggedIn('token', []);
-    mockRouteAlias.getRoute = jasmine.createSpy('getRoute').and.returnValue(['/', 'access-denied']);
-    
-    const claim: ClaimDto = { type: 'permission', value: 'admin' };
-    spyOn(mockIdentity, 'watchUserPermission$').and.returnValue(mockIdentity.watchAnyUserClaim$([claim]));
+  it("should deny access when user lacks required claim", async () => {
+    mockIdentity.setLoggedIn("token", []);
+    mockRouteAlias.getRoute = vi.fn().mockReturnValue(["/", "access-denied"]);
+
+    const claim: ClaimDto = { type: "permission", value: "admin" };
+    vi.spyOn(mockIdentity, "watchUserPermission$").mockReturnValue(mockIdentity.watchAnyUserClaim$([claim]));
 
     const guard = claimGuard(claim);
 
@@ -79,12 +79,12 @@ describe('claimGuard', () => {
     expect(result).not.toBe(true);
   });
 
-  it('should support custom redirect option', async () => {
-    mockIdentity.setLoggedIn('token', []);
-    spyOn(mockIdentity, 'watchUserPermission$').and.returnValue(mockIdentity.watchAnyUserClaim$([{ type: 'test', value: 'test' }]));
+  it("should support custom redirect option", async () => {
+    mockIdentity.setLoggedIn("token", []);
+    vi.spyOn(mockIdentity, "watchUserPermission$").mockReturnValue(mockIdentity.watchAnyUserClaim$([{ type: "test", value: "test" }]));
 
-    const claim: ClaimDto = { type: 'permission', value: 'special' };
-    const customRedirect = ['/', 'custom-denied'] as any;
+    const claim: ClaimDto = { type: "permission", value: "special" };
+    const customRedirect = ["/", "custom-denied"] as any;
     const guard = claimGuard(claim, { redirectTo: customRedirect });
 
     const result = await TestBed.runInInjectionContext(async () => {
@@ -94,10 +94,10 @@ describe('claimGuard', () => {
     expect(result).not.toBe(true);
   });
 
-  it('should handle empty claim array', async () => {
-    mockIdentity.setLoggedIn('token', []);
-    const watchPermSpy = spyOn(mockIdentity, 'watchUserPermission$');
-    watchPermSpy.and.returnValue(of(true));
+  it("should handle empty claim array", async () => {
+    mockIdentity.setLoggedIn("token", []);
+    const watchPermSpy = vi.spyOn(mockIdentity, "watchUserPermission$");
+    watchPermSpy.mockReturnValue(of(true));
 
     const guard = claimGuard([]);
 
@@ -108,12 +108,12 @@ describe('claimGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('should handle different claim types', async () => {
-    const claims = new Map([['resource', ['document-123']]]);
-    mockIdentity.setLoggedIn('token', [], claims);
-    
-    const claim: ClaimDto = { type: 'resource', value: 'document-123' };
-    spyOn(mockIdentity, 'watchUserPermission$').and.returnValue(mockIdentity.watchAnyUserClaim$([claim]));
+  it("should handle different claim types", async () => {
+    const claims = new Map([["resource", ["document-123"]]]);
+    mockIdentity.setLoggedIn("token", [], claims);
+
+    const claim: ClaimDto = { type: "resource", value: "document-123" };
+    vi.spyOn(mockIdentity, "watchUserPermission$").mockReturnValue(mockIdentity.watchAnyUserClaim$([claim]));
 
     const guard = claimGuard(claim);
 

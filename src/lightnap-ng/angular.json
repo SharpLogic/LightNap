@@ -79,26 +79,7 @@
                     "builder": "@angular/build:extract-i18n"
                 },
                 "test": {
-                    "builder": "@angular/build:karma",
-                    "options": {
-                        "polyfills": [],
-                        "tsConfig": "tsconfig.spec.json",
-                        "karmaConfig": "karma.conf.js",
-                        "assets": ["src/favicon.ico", "src/assets"],
-                        "styles": ["src/styles.css"],
-                        "scripts": [],
-                        "codeCoverage": false
-                    },
-                    "configurations": {
-                        "coverage": {
-                            "codeCoverage": true,
-                            "codeCoverageExclude": [
-                                "src/testing/**",
-                                "src/**/*.spec.ts",
-                                "src/environments/**"
-                            ]
-                        }
-                    }
+                    "builder": "@angular/build:unit-test"
                 },
                 "e2e": {
                     "builder": "@cypress/schematic:cypress",
@@ -120,10 +101,7 @@
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": [
-                            "src/**/*.ts",
-                            "src/**/*.html"
-                        ]
+                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
                     }
                 }
             }

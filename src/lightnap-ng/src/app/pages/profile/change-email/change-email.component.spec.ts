@@ -20,13 +20,13 @@ describe("ChangeEmailComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      changeEmail: jasmine.createSpy("changeEmail").and.returnValue(of(void 0)),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(true)),
+      changeEmail: vi.fn().mockReturnValue(of(void 0)),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(true)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -114,7 +114,7 @@ describe("ChangeEmailComponent", () => {
     });
 
     it("should navigate to change-email-requested on success", () => {
-      spyOn(mockRouteAliasService, "navigate");
+      vi.spyOn(mockRouteAliasService, "navigate");
       component.form.patchValue({
         newEmail: "newemail@example.com",
       });
@@ -126,7 +126,7 @@ describe("ChangeEmailComponent", () => {
 
     it("should set errors on email change failure", () => {
       const errorResponse = { errorMessages: ["Email already in use"] };
-      mockIdentityService.changeEmail.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.changeEmail.mockReturnValue(throwError(() => errorResponse));
 
       component.form.patchValue({
         newEmail: "existing@example.com",

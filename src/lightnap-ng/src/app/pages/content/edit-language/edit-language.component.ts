@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { StaticContentFormat, StaticContentFormats, StaticContentLanguageDto, TypeHelpers, setApiErrors } from "@core";
+import { StaticContentFormat, StaticContentLanguageDto, TypeHelpers, setApiErrors } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { ContentFormatPickerComponent } from "@core/features/content/components/content-format-picker/content-format-picker.component";
@@ -39,7 +39,7 @@ export class EditLanguageComponent {
 
   form = this.#fb.group({
     content: this.#fb.nonNullable.control(""),
-    format: this.#fb.nonNullable.control<StaticContentFormat>(StaticContentFormats.Html, [Validators.required]),
+    format: this.#fb.nonNullable.control<StaticContentFormat>(StaticContentFormat.Html, [Validators.required]),
   });
 
   errors = signal(new Array<string>());

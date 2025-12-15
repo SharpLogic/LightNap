@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { EmptyPagedResponse, NotificationItem, NotificationSearchResults, setApiErrors, TypeHelpers } from "@core";
@@ -25,7 +24,7 @@ export class NotificationsComponent {
 
   readonly #lazyLoadEventSubject = new Subject<TableLazyLoadEvent>();
   readonly notifications$ = this.#lazyLoadEventSubject.pipe(
-    switchMap(_ =>
+    switchMap(() =>
       this.#notificationService.searchNotifications({
         pageSize: this.pageSize,
         pageNumber: this.#currentPage,

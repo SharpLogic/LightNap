@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi, type MockedObject } from "vitest";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
 import { provideNoopAnimations } from "@angular/platform-browser/animations";
@@ -12,7 +13,7 @@ import { ConfirmationService } from "primeng/api";
 describe("DevicesComponent", () => {
   let component: DevicesComponent;
   let fixture: ComponentFixture<DevicesComponent>;
-  let mockIdentityService: jasmine.SpyObj<IdentityService>;
+  let mockIdentityService: MockedObject<IdentityService>;
   let confirmationService: ConfirmationService;
 
   const mockDevices: DeviceDto[] = [
@@ -31,11 +32,15 @@ describe("DevicesComponent", () => {
   ];
 
   beforeEach(async () => {
-    mockIdentityService = jasmine.createSpyObj("IdentityService", ["getDevices", "revokeDevice", "watchLoggedIn$"]);
+    mockIdentityService = {
+      getDevices: vi.fn().mockName("IdentityService.getDevices"),
+      revokeDevice: vi.fn().mockName("IdentityService.revokeDevice"),
+      watchLoggedIn$: vi.fn().mockName("IdentityService.watchLoggedIn$"),
+    } as MockedObject<IdentityService>;
 
-    mockIdentityService.getDevices.and.returnValue(of(mockDevices));
-    mockIdentityService.revokeDevice.and.returnValue(of(true));
-    mockIdentityService.watchLoggedIn$.and.returnValue(of(true));
+    mockIdentityService.getDevices.mockReturnValue(of(mockDevices));
+    mockIdentityService.revokeDevice.mockReturnValue(of(true));
+    mockIdentityService.watchLoggedIn$.mockReturnValue(of(true));
 
     await TestBed.configureTestingModule({
       imports: [DevicesComponent],
@@ -85,14 +90,14 @@ describe("DevicesComponent", () => {
   // Device Management Tests
   describe("Device Management", () => {
     it("should call confirmationService when revoking device", () => {
-      spyOn(confirmationService, "confirm").and.returnValue(confirmationService);
+      vi.spyOn(confirmationService, "confirm").mockReturnValue(confirmationService);
       const event = { target: document.createElement("button") };
       const deviceId = "device-1";
 
       component.revokeDevice(event, deviceId);
 
       expect(confirmationService.confirm).toHaveBeenCalledWith(
-        jasmine.objectContaining({
+        expect.objectContaining({
           header: "Confirm Revoke",
           message: "Are you sure that you want to revoke this device?",
           target: event.target,
@@ -105,7 +110,7 @@ describe("DevicesComponent", () => {
       const event = { target: document.createElement("button") };
       const deviceId = "device-1";
 
-      spyOn(confirmationService, "confirm").and.callFake((config: any) => {
+      vi.spyOn(confirmationService, "confirm").mockImplementation((config: any) => {
         config.accept();
         return confirmationService;
       });
@@ -119,15 +124,15 @@ describe("DevicesComponent", () => {
       const event = { target: document.createElement("button") };
       const deviceId = "device-1";
 
-      spyOn(confirmationService, "confirm").and.callFake((config: any) => {
+      vi.spyOn(confirmationService, "confirm").mockImplementation((config: any) => {
         config.accept();
         return confirmationService;
       });
 
-      const initialCallCount = mockIdentityService.getDevices.calls.count();
+      const initialCallCount = vi.mocked(mockIdentityService.getDevices).mock.calls.length;
       component.revokeDevice(event, deviceId);
 
-      expect(mockIdentityService.getDevices.calls.count()).toBe(initialCallCount + 1);
+      expect(vi.mocked(mockIdentityService.getDevices).mock.calls.length).toBe(initialCallCount + 1);
     });
 
     it("should set errors on revoke failure", () => {
@@ -135,8 +140,8 @@ describe("DevicesComponent", () => {
       const deviceId = "device-1";
       const errorResponse = { errorMessages: ["Failed to revoke device"] };
 
-      mockIdentityService.revokeDevice.and.returnValue(throwError(() => errorResponse));
-      spyOn(confirmationService, "confirm").and.callFake((config: any) => {
+      mockIdentityService.revokeDevice.mockReturnValue(throwError(() => errorResponse));
+      vi.spyOn(confirmationService, "confirm").mockImplementation((config: any) => {
         config.accept();
         return confirmationService;
       });
@@ -150,15 +155,15 @@ describe("DevicesComponent", () => {
       const event = { target: document.createElement("button") };
       const deviceId = "device-1";
 
-      spyOn(confirmationService, "confirm").and.callFake((config: any) => {
+      vi.spyOn(confirmationService, "confirm").mockImplementation((config: any) => {
         // Don't call accept
         return confirmationService;
       });
 
-      const initialCallCount = mockIdentityService.revokeDevice.calls.count();
+      const initialCallCount = vi.mocked(mockIdentityService.revokeDevice).mock.calls.length;
       component.revokeDevice(event, deviceId);
 
-      expect(mockIdentityService.revokeDevice.calls.count()).toBe(initialCallCount);
+      expect(vi.mocked(mockIdentityService.revokeDevice).mock.calls.length).toBe(initialCallCount);
     });
   });
 
@@ -192,20 +197,18 @@ describe("DevicesComponent", () => {
 
   // Data Display Tests
   describe("Data Display", () => {
-    it("should display devices in table", (done) => {
+    it("should display devices in table", async () => {
       component.devices$().subscribe(devices => {
         expect(devices).toEqual(mockDevices);
-        done();
       });
     });
 
-    it("should handle empty devices list", (done) => {
-      mockIdentityService.getDevices.and.returnValue(of([]));
+    it("should handle empty devices list", async () => {
+      mockIdentityService.getDevices.mockReturnValue(of([]));
       component.devices$.set(mockIdentityService.getDevices());
 
-      component.devices$().subscribe(devices => {
-        expect(devices.length).toBe(0);
-        done();
+      component.devices$().subscribe((devices: any) => {
+        expect(devices?.length).toBe(0);
       });
     });
 

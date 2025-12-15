@@ -9,7 +9,7 @@ import { IdentityService } from "@core/services/identity.service";
 import { BlockUiService } from "@core/services/block-ui.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { MockRouteAliasService } from "@testing/mocks/mock-route-alias.service";
-import { LoginSuccessTypes } from "@core/backend-api";
+import { LoginSuccessType } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
 
 describe("RegisterComponent", () => {
@@ -21,19 +21,19 @@ describe("RegisterComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      register: jasmine.createSpy("register").and.returnValue(
+      register: vi.fn().mockReturnValue(
         of({
-          type: LoginSuccessTypes.AccessToken,
+          type: LoginSuccessType.AccessToken,
           accessToken: "test-token",
         })
       ),
-      redirectLoggedInUser: jasmine.createSpy("redirectLoggedInUser"),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(false)),
+      redirectLoggedInUser: vi.fn(),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(false)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -175,7 +175,7 @@ describe("RegisterComponent", () => {
       confirmPassword: "password123",
       userName: "testuser",
       rememberMe: false,
-      deviceDetails: jasmine.any(String),
+      deviceDetails: expect.any(String),
     });
   });
 
@@ -208,9 +208,9 @@ describe("RegisterComponent", () => {
   });
 
   it("should redirect logged in user on successful registration with AccessToken", () => {
-    mockIdentityService.register.and.returnValue(
+    mockIdentityService.register.mockReturnValue(
       of({
-        type: LoginSuccessTypes.AccessToken,
+        type: LoginSuccessType.AccessToken,
         accessToken: "test-token",
       })
     );
@@ -229,13 +229,13 @@ describe("RegisterComponent", () => {
   });
 
   it("should navigate to verify-code on TwoFactorRequired", () => {
-    mockIdentityService.register.and.returnValue(
+    mockIdentityService.register.mockReturnValue(
       of({
-        type: LoginSuccessTypes.TwoFactorRequired,
+        type: LoginSuccessType.TwoFactorRequired,
       })
     );
 
-    spyOn(mockRouteAliasService, "navigate");
+    vi.spyOn(mockRouteAliasService, "navigate");
 
     component.form.patchValue({
       email: "test@example.com",
@@ -250,14 +250,14 @@ describe("RegisterComponent", () => {
     expect(mockRouteAliasService.navigate).toHaveBeenCalledWith("verify-code", "test@example.com");
   });
 
-  it("should navigate to email-verification-required on EmailVerificationRequired", () => {
-    mockIdentityService.register.and.returnValue(
+  it("should navigate to verify-email on EmailVerificationRequired", () => {
+    mockIdentityService.register.mockReturnValue(
       of({
-        type: LoginSuccessTypes.EmailVerificationRequired,
+        type: LoginSuccessType.EmailVerificationRequired,
       })
     );
 
-    spyOn(mockRouteAliasService, "navigate");
+    vi.spyOn(mockRouteAliasService, "navigate");
 
     component.form.patchValue({
       email: "test@example.com",
@@ -274,7 +274,7 @@ describe("RegisterComponent", () => {
 
   it("should set errors on registration failure", () => {
     const errorResponse = { errorMessages: ["Email already exists"] };
-    mockIdentityService.register.and.returnValue(throwError(() => errorResponse));
+    mockIdentityService.register.mockReturnValue(throwError(() => errorResponse));
 
     component.form.patchValue({
       email: "existing@example.com",
@@ -326,25 +326,19 @@ describe("RegisterComponent", () => {
 
   it("should render terms and conditions link", () => {
     const links = fixture.nativeElement.querySelectorAll("a");
-    const termsLink = Array.from(links).find((link: any) =>
-      link.textContent.includes("Terms and Conditions")
-    );
+    const termsLink = Array.from(links).find((link: any) => link.textContent.includes("Terms and Conditions"));
     expect(termsLink).toBeTruthy();
   });
 
   it("should render privacy policy link", () => {
     const links = fixture.nativeElement.querySelectorAll("a");
-    const privacyLink = Array.from(links).find((link: any) =>
-      link.textContent.includes("Privacy Policy")
-    );
+    const privacyLink = Array.from(links).find((link: any) => link.textContent.includes("Privacy Policy"));
     expect(privacyLink).toBeTruthy();
   });
 
   it("should render login link", () => {
     const links = fixture.nativeElement.querySelectorAll("a");
-    const loginLink = Array.from(links).find((link: any) =>
-      link.textContent.includes("I already have an account")
-    );
+    const loginLink = Array.from(links).find((link: any) => link.textContent.includes("I already have an account"));
     expect(loginLink).toBeTruthy();
   });
 

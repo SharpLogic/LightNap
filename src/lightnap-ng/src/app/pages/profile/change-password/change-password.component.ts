@@ -1,4 +1,3 @@
-
 import { Component, inject, signal } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { setApiErrors } from "@core";
@@ -16,15 +15,7 @@ import { finalize } from "rxjs";
 
 @Component({
   templateUrl: "./change-password.component.html",
-  imports: [
-    ButtonModule,
-    ErrorListComponent,
-    PasswordModule,
-    ReactiveFormsModule,
-    PanelModule,
-    InputGroupModule,
-    InputGroupAddonModule
-],
+  imports: [ButtonModule, ErrorListComponent, PasswordModule, ReactiveFormsModule, PanelModule, InputGroupModule, InputGroupAddonModule],
 })
 export class ChangePasswordComponent {
   readonly #identityService = inject(IdentityService);

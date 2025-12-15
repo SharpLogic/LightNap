@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { PagedResponseDto, PublicSearchUsersRequestDto, PublicUserDto } from "@core/backend-api";
+import { PagedResponseDto, AdminSearchUsersRequestDto, PublicUserDto } from "@core/backend-api";
 import { Observable, of } from "rxjs";
 import { PrivilegedUsersService } from "./privileged-users.service";
 
@@ -32,10 +32,10 @@ export class PublicUsersService {
 
   /**
    * Searches for users based on the search criteria.
-   * @param {PublicSearchUsersRequestDto} publicSearchUsersRequest - The search criteria.
+   * @param {AdminSearchUsersRequestDto} publicSearchUsersRequest - The search criteria.
    * @returns {Observable<Array<PublicUserDto>>} An observable containing the search results.
    */
-  searchUsers(publicSearchUsersRequest: PublicSearchUsersRequestDto) {
+  searchUsers(publicSearchUsersRequest: AdminSearchUsersRequestDto) {
     return this.#usersService.searchUsers(publicSearchUsersRequest) as Observable<PagedResponseDto<PublicUserDto>>;
   }
 

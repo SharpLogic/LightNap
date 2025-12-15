@@ -10,4 +10,4 @@ import { InjectionToken } from "@angular/core";
  * constructor(@Inject(APP_NAME) private appName: string) {}
  * ```
  */
-export const APP_NAME = new InjectionToken<string>('APP_NAME');
+export const APP_NAME = new InjectionToken<string>("APP_NAME");

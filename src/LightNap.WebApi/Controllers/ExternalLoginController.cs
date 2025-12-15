@@ -23,8 +23,7 @@ namespace LightNap.WebApi.Controllers
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
-        [HttpGet("supported")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
+        [HttpGet("supported", Name = nameof(GetSupportedExternalLogins))]
         public ApiResponseDto<IEnumerable<SupportedExternalLoginDto>> GetSupportedExternalLogins()
         {
             return new ApiResponseDto<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
@@ -34,14 +33,24 @@ namespace LightNap.WebApi.Controllers
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
-        [HttpPost("search")]
+        [HttpPost("search", Name = nameof(SearchExternalLogins))]
         [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>> SearchExternalLogins(SearchExternalLoginsRequestDto searchRequestDto)
         {
             return new ApiResponseDto<PagedResponseDto<AdminExternalLoginDto>>(await externalLoginService.SearchExternalLoginsAsync(searchRequestDto));
         }
 
-        [HttpDelete("remove/{userId}/{loginProvider}/{providerKey}")]
+        /// <summary>
+        /// Removes an external login association from the specified user account.
+        /// </summary>
+        /// <remarks>This operation requires administrator privileges. Removing an external login may
+        /// affect the user's ability to sign in using that provider.</remarks>
+        /// <param name="userId">The unique identifier of the user whose external login will be removed. Cannot be null or empty.</param>
+        /// <param name="loginProvider">The name of the external login provider (for example, "Google" or "Microsoft"). Cannot be null or empty.</param>
+        /// <param name="providerKey">The unique key provided by the external login provider that identifies the user's login. Cannot be null or
+        /// empty.</param>
+        /// <returns>An ApiResponseDto containing <see langword="true"/> if the external login was removed successfully.</returns>
+        [HttpDelete("remove/{userId}/{loginProvider}/{providerKey}", Name = nameof(RemoveExternalLogin))]
         [Authorize(Roles = Constants.Roles.Administrator)]
         public async Task<ApiResponseDto<bool>> RemoveExternalLogin(string userId, string loginProvider, string providerKey)
         {
@@ -54,9 +63,7 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpGet("result/{confirmationToken}")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
+        [HttpGet("result/{confirmationToken}", Name = nameof(GetExternalLoginResult))]
         public async Task<ApiResponseDto<ExternalLoginSuccessDto>> GetExternalLoginResult(string confirmationToken)
         {
             return new ApiResponseDto<ExternalLoginSuccessDto>(await externalLoginService.GetExternalLoginResultAsync(confirmationToken));
@@ -68,9 +75,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpPost("complete/{confirmationToken}")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
+        [HttpPost("complete/{confirmationToken}", Name = nameof(CompleteExternalLogin))]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLogin(string confirmationToken, ExternalLoginRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginAsync(confirmationToken, requestDto));
@@ -82,9 +87,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
-        [HttpPost("register/{confirmationToken}")]
-        [ProducesResponseType(typeof(ApiResponseDto<LoginSuccessDto>), 200)]
-        [ProducesResponseType(400)]
+        [HttpPost("register/{confirmationToken}", Name = nameof(CompleteExternalLoginRegistration))]
         public async Task<ApiResponseDto<LoginSuccessDto>> CompleteExternalLoginRegistration(string confirmationToken, ExternalLoginRegisterRequestDto requestDto)
         {
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));
@@ -94,11 +97,14 @@ namespace LightNap.WebApi.Controllers
         /// <summary>
         /// Initiates external authentication with the specified provider.
         /// </summary>
-        /// <param name="provider">The external authentication provider (e.g., Google, Microsoft, GitHub).</param>
-        /// <param name="returnUrl">The URL to redirect to after authentication.</param>
-        /// <returns>A challenge result that redirects to the external provider.</returns>
+        /// <remarks>
+        /// This endpoint redirects the user to the external authentication provider's login page.
+        /// After successful authentication, the provider will redirect back to the <see cref="LoginCallback"/> endpoint.
+        /// </remarks>
+        /// <param name="provider">The external authentication provider name (e.g., "Google", "Microsoft", "GitHub").</param>
+        /// <param name="returnUrl">Optional. The application URL to redirect to after authentication completes. Defaults to home page if not provided.</param>
+        /// <returns>A challenge result (HTTP 302) that redirects to the external provider's authentication endpoint.</returns>
         [HttpGet("login/{provider}")]
-        [ProducesResponseType(302)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Login(string provider, string? returnUrl)
         {
@@ -108,14 +114,19 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Handles the callback from an external authentication provider.
+        /// Handles the callback from an external authentication provider after user authentication.
         /// </summary>
-        /// <param name="returnUrl">The URL to redirect to after successful authentication.</param>
-        /// <param name="remoteError">Any error from the external provider.</param>
-        /// <returns>A redirect to the confirmation page or return URL, or an error response.</returns>
+        /// <remarks>
+        /// This endpoint is called by the external provider after the user completes authentication.
+        /// It processes the authentication response and redirects to the appropriate page:
+        /// - On success: redirects to `/identity/external-logins/callback` with authentication token
+        /// - On failure: redirects to `/identity/external-logins/error` with error details
+        /// </remarks>
+        /// <param name="returnUrl">Optional. The application URL to redirect to after the login flow completes. Defaults to "/" if not provided.</param>
+        /// <param name="remoteError">Optional. Error message returned by the external provider if authentication failed.</param>
+        /// <returns>An HTTP 302 redirect response directing the user to either the success callback page or the error page.</returns>
+        /// <exception cref="UserFriendlyApiException">Caught and handled gracefully with user-friendly error messages.</exception>
         [HttpGet("callback")]
-        [ProducesResponseType(302)]
-        [ProducesResponseType(400)]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> LoginCallback(string? returnUrl = null, string? remoteError = null)
         {

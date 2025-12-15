@@ -6,7 +6,7 @@ namespace LightNap.Core.Extensions
     /// <summary>
     /// Provides extension methods for converting RefreshToken objects to DeviceDto objects.
     /// </summary>
-    public static class RefreshTokenExtensions
+    internal static class RefreshTokenExtensions
     {
         /// <summary>
         /// Converts a RefreshToken object to a DeviceDto object.

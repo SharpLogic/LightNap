@@ -3,16 +3,8 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "outDir": "./out-tsc/spec",
-        "types": [
-            "jasmine"
-        ]
+        "types": ["vitest/globals"]
     },
-    "include": [
-        "src/**/*.spec.ts",
-        "src/**/*.d.ts"
-    ],
-    "exclude": [
-        "cypress/**/*",
-        "node_modules/**/*"
-    ]
+    "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
+    "exclude": ["cypress/**/*", "node_modules/**/*"]
 }

@@ -6,8 +6,8 @@ import { interval, Observable, Subject } from "rxjs";
   providedIn: "root",
 })
 export class TimerService {
-    #destroyRef = inject(DestroyRef);
-    #timers: { [index: number]: { subject: Subject<number>, observable$: Observable<number>} } = {};
+  #destroyRef = inject(DestroyRef);
+  #timers: { [index: number]: { subject: Subject<number>; observable$: Observable<number> } } = {};
 
   watchTimer$(milliseconds: number) {
     if (milliseconds < 0) {
@@ -18,9 +18,11 @@ export class TimerService {
       const subject = new Subject<number>();
       this.#timers[milliseconds] = { subject, observable$: subject.asObservable() };
 
-      interval(milliseconds).pipe(takeUntilDestroyed(this.#destroyRef)).subscribe({
-        next: () => this.#timers[milliseconds].subject.next(milliseconds),
-      });
+      interval(milliseconds)
+        .pipe(takeUntilDestroyed(this.#destroyRef))
+        .subscribe({
+          next: () => this.#timers[milliseconds].subject.next(milliseconds),
+        });
     }
     return this.#timers[milliseconds].observable$;
   }

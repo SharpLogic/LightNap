@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal } from "@angular/core";
-import { ExternalLoginSuccessTypes } from "@core";
+import { ExternalLoginSuccessType } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
@@ -29,22 +29,22 @@ export class CallbackComponent {
         this.#externalLoginService.getExternalLoginResult(this.token()).pipe(
           tap(loginResult => {
             switch (loginResult.type) {
-              case ExternalLoginSuccessTypes.AlreadyLinkedToDifferentAccount:
+              case ExternalLoginSuccessType.AlreadyLinkedToDifferentAccount:
                 this.errors.set([
                   "This external account is already linked to a different user account. Please use a different external account or log in with your existing account.",
                 ]);
                 break;
-              case ExternalLoginSuccessTypes.AlreadyLinked:
+              case ExternalLoginSuccessType.AlreadyLinked:
                 if (isLoggedIn) {
                   this.#routeAlias.navigateWithExtras("my-external-logins", null, { replaceUrl: true });
                 } else {
                   this.#routeAlias.navigateWithExtras("external-login-complete", this.token(), { replaceUrl: true });
                 }
                 break;
-              case ExternalLoginSuccessTypes.NewAccountLink:
+              case ExternalLoginSuccessType.NewAccountLink:
                 this.#routeAlias.navigateWithExtras("my-external-logins", null, { replaceUrl: true });
                 break;
-              case ExternalLoginSuccessTypes.RequiresRegistration:
+              case ExternalLoginSuccessType.RequiresRegistration:
                 this.#routeAlias.navigateWithExtras("external-login-register", this.token(), { replaceUrl: true });
                 break;
               default:

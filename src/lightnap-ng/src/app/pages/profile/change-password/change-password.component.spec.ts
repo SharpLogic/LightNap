@@ -19,18 +19,18 @@ describe("ChangePasswordComponent", () => {
 
   beforeEach(async () => {
     mockIdentityService = {
-      changePassword: jasmine.createSpy("changePassword").and.returnValue(of(void 0)),
-      watchLoggedIn$: jasmine.createSpy("watchLoggedIn$").and.returnValue(of(true)),
+      changePassword: vi.fn().mockReturnValue(of(void 0)),
+      watchLoggedIn$: vi.fn().mockReturnValue(of(true)),
     };
 
     mockBlockUiService = {
-      show: jasmine.createSpy("show"),
-      hide: jasmine.createSpy("hide"),
+      show: vi.fn(),
+      hide: vi.fn(),
     };
 
     mockToastService = {
-      success: jasmine.createSpy("success"),
-      error: jasmine.createSpy("error"),
+      success: vi.fn(),
+      error: vi.fn(),
     };
 
     await TestBed.configureTestingModule({
@@ -197,7 +197,7 @@ describe("ChangePasswordComponent", () => {
 
     it("should set errors on password change failure", () => {
       const errorResponse = { errorMessages: ["Current password is incorrect"] };
-      mockIdentityService.changePassword.and.returnValue(throwError(() => errorResponse));
+      mockIdentityService.changePassword.mockReturnValue(throwError(() => errorResponse));
 
       component.form.patchValue({
         currentPassword: "wrongpass",
