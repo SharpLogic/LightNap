@@ -4,6 +4,9 @@ using LightNap.Core.StaticContents.Models;
 
 namespace LightNap.Core.StaticContents.Dto.Request
 {
+    /// <summary>
+    /// Settings for a CMS search request.
+    /// </summary>
     public class SearchStaticContentRequestDto : PagedRequestDtoBase
     {
         /// <summary>

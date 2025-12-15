@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LightNap.Core.Extensions
 {
-    public static class IdentityUserClaimExtensions
+    internal static class IdentityUserClaimExtensions
     {
         /// <summary>
         /// Converts a UserClaim to a ClaimDto.

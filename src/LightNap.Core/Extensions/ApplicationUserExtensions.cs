@@ -17,7 +17,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to convert.</param>
         /// <returns>A ProfileDto object representing the logged-in user's profile.</returns>
-        public static ProfileDto ToLoggedInUserDto(this ApplicationUser user)
+        internal static ProfileDto ToLoggedInUserDto(this ApplicationUser user)
         {
             return new ProfileDto()
             {
@@ -50,7 +50,7 @@ namespace LightNap.Core.Extensions
         /// <param name="dto">The ExternalLoginRegisterRequestDto object containing the registration details.</param>
         /// <param name="twoFactorEnabled">A boolean indicating if two-factor authentication is enabled.</param>
         /// <returns>An ApplicationUser object created from the registration details.</returns>
-        public static ApplicationUser ToCreate(this ExternalLoginRegisterRequestDto dto, bool twoFactorEnabled)
+        internal static ApplicationUser ToCreate(this ExternalLoginRegisterRequestDto dto, bool twoFactorEnabled)
         {
             var user = new ApplicationUser()
             {
@@ -66,7 +66,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to update.</param>
         /// <param name="dto">The UpdateProfileDto object containing the updated values.</param>
-        public static void UpdateLoggedInUser(this ApplicationUser user,
+        internal static void UpdateLoggedInUser(this ApplicationUser user,
             // Suppress IDE0060 warning for unused parameter 'dto'. Remove this if actually using the parameter.
 #pragma warning disable IDE0060
             UpdateProfileRequestDto dto)
@@ -82,7 +82,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to convert.</param>
         /// <returns>An AdminUserDto object representing the ApplicationUser object.</returns>
-        public static AdminUserDto ToAdminUserDto(this ApplicationUser user)
+        internal static AdminUserDto ToAdminUserDto(this ApplicationUser user)
         {
             return new AdminUserDto()
             {
@@ -100,7 +100,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="users">The collection of ApplicationUser objects to convert.</param>
         /// <returns>A list of AdminUserDto objects representing the ApplicationUser objects.</returns>
-        public static List<AdminUserDto> ToAdminUserDtoList(this IEnumerable<ApplicationUser> users)
+        internal static List<AdminUserDto> ToAdminUserDtoList(this IEnumerable<ApplicationUser> users)
         {
             return [.. users.Select(user => user.ToAdminUserDto())];
         }
@@ -110,7 +110,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to convert.</param>
         /// <returns>An PrivilegedUserDto object representing the ApplicationUser object.</returns>
-        public static PrivilegedUserDto ToPrivilegedUserDto(this ApplicationUser user)
+        internal static PrivilegedUserDto ToPrivilegedUserDto(this ApplicationUser user)
         {
             return new PrivilegedUserDto()
             {
@@ -126,7 +126,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="users">The collection of ApplicationUser objects to convert.</param>
         /// <returns>A list of PrivilegedUserDto objects representing the ApplicationUser objects.</returns>
-        public static List<PrivilegedUserDto> ToPrivilegedUserDtoList(this IEnumerable<ApplicationUser> users)
+        internal static List<PrivilegedUserDto> ToPrivilegedUserDtoList(this IEnumerable<ApplicationUser> users)
         {
             return [.. users.Select(user => user.ToPrivilegedUserDto())];
         }
@@ -136,7 +136,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to convert.</param>
         /// <returns>An PublicUserDto object representing the ApplicationUser object.</returns>
-        public static PublicUserDto ToPublicUserDto(this ApplicationUser user)
+        internal static PublicUserDto ToPublicUserDto(this ApplicationUser user)
         {
             return new PublicUserDto()
             {
@@ -151,7 +151,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="users">The collection of ApplicationUser objects to convert.</param>
         /// <returns>A list of PublicUserDto objects representing the ApplicationUser objects.</returns>
-        public static List<PublicUserDto> ToPublicUserDtoList(this IEnumerable<ApplicationUser> users)
+        internal static List<PublicUserDto> ToPublicUserDtoList(this IEnumerable<ApplicationUser> users)
         {
             return [.. users.Select(user => user.ToPublicUserDto())];
         }
@@ -161,7 +161,7 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="user">The ApplicationUser object to update.</param>
         /// <param name="dto">The UpdateAdminUserDto object containing the updated values.</param>
-        public static void UpdateAdminUserDto(this ApplicationUser user,
+        internal static void UpdateAdminUserDto(this ApplicationUser user,
             // Suppress IDE0060 warning for unused parameter 'dto'. Remove this if actually using the parameter.
 #pragma warning disable IDE0060
             AdminUpdateUserRequestDto dto)

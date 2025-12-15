@@ -8,7 +8,7 @@ namespace LightNap.Core.Extensions
     /// <summary>
     /// Provides extension methods for converting between Notification and related DTOs.
     /// </summary>
-    public static class NotificationExtensions
+    internal static class NotificationExtensions
     {
         /// <summary>
         /// Converts a CreateNotificationDto to a Notification entity.

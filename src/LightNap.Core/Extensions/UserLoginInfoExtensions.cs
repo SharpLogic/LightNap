@@ -6,7 +6,7 @@ namespace LightNap.Core.Extensions
     /// <summary>
     /// Extension methods for converting <see cref="UserLoginInfo"/> objects to DTOs.
     /// </summary>
-    public static class UserLoginInfoExtensions
+    internal static class UserLoginInfoExtensions
     {
         /// <summary>
         /// Converts a <see cref="UserLoginInfo"/> object to an <see cref="ExternalLoginDto"/>.

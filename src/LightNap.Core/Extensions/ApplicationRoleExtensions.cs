@@ -6,7 +6,7 @@ namespace LightNap.Core.Extensions
     /// <summary>
     /// Provides extension methods for converting ApplicationRole objects to RoleDto objects.
     /// </summary>
-    public static class ApplicationRoleExtensions
+    internal static class ApplicationRoleExtensions
     {
         /// <summary>
         /// Converts an ApplicationRole object to a RoleDto object.

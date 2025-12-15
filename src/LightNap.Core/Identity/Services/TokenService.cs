@@ -23,6 +23,9 @@ namespace LightNap.Core.Services
         private readonly JsonWebTokenHandler _tokenHandler;
         private readonly JwtSettings _jwtSettings;
 
+        /// <summary>
+        /// The number of minutes configured for access token expiration.
+        /// </summary>
         public int ExpirationMinutes => this._jwtSettings.ExpirationMinutes;
 
         /// <summary>

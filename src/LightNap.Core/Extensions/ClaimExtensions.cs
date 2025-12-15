@@ -6,7 +6,7 @@ namespace LightNap.Core.Extensions
     /// <summary>
     /// Provides extension methods for converting Claim objects to ClaimDto objects.
     /// </summary>
-    public static class ClaimExtensions
+    internal static class ClaimExtensions
     {
         /// <summary>
         /// Converts a Claim object to a ClaimDto object.

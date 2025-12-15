@@ -4,6 +4,9 @@ using LightNap.Core.Notifications.Dto.Response;
 
 namespace LightNap.Core.Notifications.Interfaces
 {
+    /// <summary>
+    /// Service for managing in-app notifications.
+    /// </summary>
     public interface INotificationService
     {
         /// <summary>

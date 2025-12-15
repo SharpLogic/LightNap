@@ -6,7 +6,7 @@ using LightNap.Core.StaticContents.Enums;
 
 namespace LightNap.Core.Extensions
 {
-    public static class StaticContentExtensions
+    internal static class StaticContentExtensions
     {
         internal static StaticContentDto ToDto(this StaticContent staticContent)
         {
@@ -107,7 +107,7 @@ namespace LightNap.Core.Extensions
             };
         }
 
-        public static StaticContentLanguage ToEntity(this CreateStaticContentLanguageDto dto, int staticContentId, string language)
+        internal static StaticContentLanguage ToEntity(this CreateStaticContentLanguageDto dto, int staticContentId, string language)
         {
             var staticContentLanguage = new StaticContentLanguage()
             {
@@ -120,7 +120,7 @@ namespace LightNap.Core.Extensions
             return staticContentLanguage;
         }
 
-        public static void UpdateEntity(this UpdateStaticContentLanguageDto dto, StaticContentLanguage staticContentLanguage)
+        internal static void UpdateEntity(this UpdateStaticContentLanguageDto dto, StaticContentLanguage staticContentLanguage)
         {
             staticContentLanguage.Content = dto.Content;
             staticContentLanguage.Format = dto.Format;
