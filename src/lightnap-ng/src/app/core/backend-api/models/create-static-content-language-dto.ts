@@ -6,4 +6,7 @@
  */
 import type { UpdateStaticContentLanguageDto } from "./update-static-content-language-dto";
 
+/**
+ * Specifies the settings used to create a new CMS language item for an existing item.
+ */
 export type CreateStaticContentLanguageDto = UpdateStaticContentLanguageDto;

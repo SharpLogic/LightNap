@@ -7,8 +7,14 @@
 import type { StaticContentUserVisibility } from "./static-content-user-visibility";
 import type { PublishedStaticContentResultDtoContent } from "./published-static-content-result-dto-content";
 
+/**
+ * The result of a request for a specific CMS item based on user permissions.
+ */
 export interface PublishedStaticContentResultDto {
   visibility: StaticContentUserVisibility;
-  /** @nullable */
+  /**
+   * The CMS item.
+   * @nullable
+   */
   content?: PublishedStaticContentResultDtoContent;
 }

@@ -5,6 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
+/**
+ * Supported CMS content formats.
+ */
 export type StaticContentFormat = (typeof StaticContentFormat)[keyof typeof StaticContentFormat];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

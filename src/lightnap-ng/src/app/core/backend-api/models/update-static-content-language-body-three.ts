@@ -7,4 +7,7 @@
 import type { UpdateStaticContentLanguageDto } from "./update-static-content-language-dto";
 import type { CreateStaticContentLanguageDto } from "./create-static-content-language-dto";
 
+/**
+ * Specifies the settings to update the exiting language content of a CMS item with.
+ */
 export type UpdateStaticContentLanguageBodyThree = UpdateStaticContentLanguageDto | CreateStaticContentLanguageDto;

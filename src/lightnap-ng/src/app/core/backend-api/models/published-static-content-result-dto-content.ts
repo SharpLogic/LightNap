@@ -8,6 +8,7 @@ import type { PublishedStaticContentDto } from "./published-static-content-dto";
 import type { StaticContentLanguageDto } from "./static-content-language-dto";
 
 /**
+ * The CMS item.
  * @nullable
  */
 export type PublishedStaticContentResultDtoContent = PublishedStaticContentDto | StaticContentLanguageDto | null;

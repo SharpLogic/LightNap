@@ -6,7 +6,11 @@
  */
 import type { StaticContentFormat } from "./static-content-format";
 
+/**
+ * An end-user-ready CMS item.
+ */
 export interface PublishedStaticContentDto {
+  /** The content. */
   content: string;
   format: StaticContentFormat;
 }

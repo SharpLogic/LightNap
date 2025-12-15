@@ -6,7 +6,11 @@
  */
 import type { StaticContentFormat } from "./static-content-format";
 
+/**
+ * Specifies the settings to update the exiting language content of a CMS item with.
+ */
 export interface UpdateStaticContentLanguageDto {
+  /** The content. */
   content: string;
   format: StaticContentFormat;
 }

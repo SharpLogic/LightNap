@@ -5,6 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
+/**
+ * The user status of a notification.
+ */
 export type NotificationStatus = (typeof NotificationStatus)[keyof typeof NotificationStatus];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

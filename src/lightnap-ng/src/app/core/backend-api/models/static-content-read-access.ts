@@ -5,6 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
+/**
+ * The read access of a CMS item.
+ */
 export type StaticContentReadAccess = (typeof StaticContentReadAccess)[keyof typeof StaticContentReadAccess];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

@@ -5,6 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
+/**
+ * Types of notifications supported by the application.
+ */
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

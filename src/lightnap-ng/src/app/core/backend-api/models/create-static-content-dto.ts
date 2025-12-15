@@ -6,4 +6,7 @@
  */
 import type { UpdateStaticContentDto } from "./update-static-content-dto";
 
+/**
+ * Settings for creating a new CMS item.
+ */
 export type CreateStaticContentDto = UpdateStaticContentDto;

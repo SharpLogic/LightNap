@@ -5,6 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
+/**
+ * The type of CMS item.
+ */
 export type StaticContentType = (typeof StaticContentType)[keyof typeof StaticContentType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

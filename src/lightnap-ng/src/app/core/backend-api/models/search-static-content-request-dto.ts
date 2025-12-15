@@ -10,6 +10,9 @@ import type { StaticContentStatus } from "./static-content-status";
 import type { StaticContentType } from "./static-content-type";
 import type { StaticContentSortBy } from "./static-content-sort-by";
 
+/**
+ * Settings for a CMS search request.
+ */
 export type SearchStaticContentRequestDto = PagedRequestDtoBase & {
   /**
    * Substring key search filter.
