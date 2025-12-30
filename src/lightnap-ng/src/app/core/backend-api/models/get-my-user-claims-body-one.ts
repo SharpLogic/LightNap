@@ -13,6 +13,7 @@ import type { SearchClaimsRequestDto } from "./search-claims-request-dto";
 import type { SearchUserClaimsRequestDto } from "./search-user-claims-request-dto";
 import type { SearchStaticContentRequestDto } from "./search-static-content-request-dto";
 import type { SearchNotificationsRequestDto } from "./search-notifications-request-dto";
+import type { SearchIntegrationsRequestDto } from "./search-integrations-request-dto";
 import type { SearchExternalLoginsRequestDto } from "./search-external-logins-request-dto";
 
 /**
@@ -28,4 +29,5 @@ export type GetMyUserClaimsBodyOne =
   | SearchUserClaimsRequestDto
   | SearchStaticContentRequestDto
   | SearchNotificationsRequestDto
+  | SearchIntegrationsRequestDto
   | SearchExternalLoginsRequestDto;

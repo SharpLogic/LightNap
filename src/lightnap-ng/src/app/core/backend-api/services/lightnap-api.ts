@@ -16,6 +16,7 @@ import type {
   AddUserClaimBodyThree,
   AddUserClaimBodyTwo,
   AdminExternalLoginDtoPagedResponseDto,
+  AdminIntegrationDtoPagedResponseDto,
   AdminSearchUsersRequestDto,
   AdminUpdateUserRequestDto,
   ChangeEmailRequestDto,
@@ -25,6 +26,10 @@ import type {
   CompleteExternalLoginBodyThree,
   CompleteExternalLoginBodyTwo,
   ConfirmEmailChangeRequestDto,
+  CreateIntegrationRequestDto,
+  CreateMyIntegration200One,
+  CreateMyIntegration200Three,
+  CreateMyIntegration200Two,
   CreateStaticContentDto,
   CreateStaticContentLanguageDto,
   DeviceDto,
@@ -33,6 +38,9 @@ import type {
   GetMyExternalLogins200OneItem,
   GetMyExternalLogins200ThreeItem,
   GetMyExternalLogins200TwoItem,
+  GetMyIntegrations200OneItem,
+  GetMyIntegrations200ThreeItem,
+  GetMyIntegrations200TwoItem,
   GetMyUserClaimsBodyOne,
   GetMyUserClaimsBodyThree,
   GetMyUserClaimsBodyTwo,
@@ -63,6 +71,7 @@ import type {
   SearchClaimsBodyThree,
   SearchClaimsBodyTwo,
   SearchExternalLoginsRequestDto,
+  SearchIntegrationsRequestDto,
   SearchNotificationsRequestDto,
   SearchStaticContentRequestDto,
   SearchUserClaimsRequestDto,
@@ -74,6 +83,12 @@ import type {
   StaticContentSupportedLanguageDto,
   StringPagedResponseDto,
   SupportedExternalLoginDto,
+  UpdateMyIntegration200One,
+  UpdateMyIntegration200Three,
+  UpdateMyIntegration200Two,
+  UpdateMyIntegrationBodyOne,
+  UpdateMyIntegrationBodyThree,
+  UpdateMyIntegrationBodyTwo,
   UpdateProfileRequestDto,
   UpdateStaticContentBodyOne,
   UpdateStaticContentBodyThree,
@@ -105,9 +120,11 @@ import {
 } from "../models";
 import type {
   AdminExternalLoginDto,
+  AdminIntegrationDto,
   AdminUserDto,
   ClaimDto,
   ExternalLoginDto,
+  IntegrationDto,
   PrivilegedUserDto,
   PublicUserDto,
   PublishedStaticContentDto,
@@ -472,7 +489,7 @@ export class LightNapWebApiService {
   }
 
   /**
-   * @summary Confirms external login association with current user.
+   * @summary Gets the result of the external login operation to determine status and whether there are more steps.
    */
   getExternalLoginResult<TData = ExternalLoginSuccessDto>(
     confirmationToken: string,
@@ -494,7 +511,7 @@ export class LightNapWebApiService {
   }
 
   /**
-   * @summary Completes the external login when the account is already linked.
+   * @summary Completes the external login when the account is already linked with an existing account.
    */
   completeExternalLogin<TData = LoginSuccessDto>(
     confirmationToken: string,
@@ -520,7 +537,7 @@ export class LightNapWebApiService {
   }
 
   /**
-   * @summary Completes the external login registration when the user is not logged in yet.
+   * @summary Completes the external login when the user is registering a new account.
    */
   completeExternalLoginRegistration<TData = LoginSuccessDto>(
     confirmationToken: string,
@@ -795,6 +812,41 @@ export class LightNapWebApiService {
   }
 
   /**
+   * @summary Searches all integrations (admin only).
+   */
+  searchIntegrations<TData = AdminIntegrationDtoPagedResponseDto>(
+    searchIntegrationsRequestDto: SearchIntegrationsRequestDto,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  searchIntegrations<TData = AdminIntegrationDtoPagedResponseDto>(
+    searchIntegrationsRequestDto: SearchIntegrationsRequestDto,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  searchIntegrations<TData = AdminIntegrationDtoPagedResponseDto>(
+    searchIntegrationsRequestDto: SearchIntegrationsRequestDto,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  searchIntegrations<TData = AdminIntegrationDtoPagedResponseDto>(
+    searchIntegrationsRequestDto: SearchIntegrationsRequestDto,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.post<TData>(`/api/Integrations/search`, searchIntegrationsRequestDto, options);
+  }
+
+  /**
+   * @summary Deletes an integration by ID (admin only).
+   */
+  deleteIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  deleteIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  deleteIntegration<TData = boolean>(
+    integrationId: number,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  deleteIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe?: any }): Observable<any> {
+    return this.http.delete<TData>(`/api/Integrations/${integrationId}`, options);
+  }
+
+  /**
    * @summary Retrieves the profile of the current user.
    */
   getProfile<TData = ProfileDto>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
@@ -973,6 +1025,85 @@ export class LightNapWebApiService {
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
     return this.http.delete<TData>(`/api/users/me/external-logins/${loginProvider}/${providerKey}`, options);
+  }
+
+  /**
+   * @summary Retrieves all integrations for the current user.
+   */
+  getMyIntegrations<TData = GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null>(
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  getMyIntegrations<TData = GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null>(
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  getMyIntegrations<TData = GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null>(
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  getMyIntegrations<TData = GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null>(
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.get<TData>(`/api/users/me/integrations`, options);
+  }
+
+  /**
+   * @summary Creates a new integration for the current user.
+   */
+  createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
+    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
+    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
+    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
+    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.post<TData>(`/api/users/me/integrations`, createIntegrationRequestDto, options);
+  }
+
+  /**
+   * @summary Updates an integration for the current user.
+   */
+  updateMyIntegration<TData = UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>(
+    integrationId: number,
+    updateMyIntegrationBody: UpdateMyIntegrationBodyOne | UpdateMyIntegrationBodyTwo | UpdateMyIntegrationBodyThree,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  updateMyIntegration<TData = UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>(
+    integrationId: number,
+    updateMyIntegrationBody: UpdateMyIntegrationBodyOne | UpdateMyIntegrationBodyTwo | UpdateMyIntegrationBodyThree,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  updateMyIntegration<TData = UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>(
+    integrationId: number,
+    updateMyIntegrationBody: UpdateMyIntegrationBodyOne | UpdateMyIntegrationBodyTwo | UpdateMyIntegrationBodyThree,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  updateMyIntegration<TData = UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>(
+    integrationId: number,
+    updateMyIntegrationBody: UpdateMyIntegrationBodyOne | UpdateMyIntegrationBodyTwo | UpdateMyIntegrationBodyThree,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.put<TData>(`/api/users/me/integrations/${integrationId}`, updateMyIntegrationBody, options);
+  }
+
+  /**
+   * @summary Deletes an integration for the current user.
+   */
+  deleteMyIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  deleteMyIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  deleteMyIntegration<TData = boolean>(
+    integrationId: number,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  deleteMyIntegration<TData = boolean>(integrationId: number, options?: HttpClientOptions & { observe?: any }): Observable<any> {
+    return this.http.delete<TData>(`/api/users/me/integrations/${integrationId}`, options);
   }
 
   /**
@@ -1377,6 +1508,8 @@ export type VerifyEmailClientResult = NonNullable<boolean>;
 export type RequestMagicLinkEmailClientResult = NonNullable<boolean>;
 export type GetDevicesClientResult = NonNullable<DeviceDto[] | null>;
 export type RevokeDeviceClientResult = NonNullable<boolean>;
+export type SearchIntegrationsClientResult = NonNullable<AdminIntegrationDtoPagedResponseDto>;
+export type DeleteIntegrationClientResult = NonNullable<boolean>;
 export type GetProfileClientResult = NonNullable<ProfileDto>;
 export type UpdateMyProfileClientResult = NonNullable<ProfileDto>;
 export type SearchMyNotificationsClientResult = NonNullable<NotificationSearchResultsDto>;
@@ -1389,6 +1522,12 @@ export type GetMyExternalLoginsClientResult = NonNullable<
   GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null
 >;
 export type RemoveMyExternalLoginClientResult = NonNullable<boolean>;
+export type GetMyIntegrationsClientResult = NonNullable<
+  GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null
+>;
+export type CreateMyIntegrationClientResult = NonNullable<CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>;
+export type UpdateMyIntegrationClientResult = NonNullable<UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>;
+export type DeleteMyIntegrationClientResult = NonNullable<boolean>;
 export type GetUserClientResult = NonNullable<GetUser200One | GetUser200Two | GetUser200Three>;
 export type UpdateUserClientResult = NonNullable<AdminUserDto>;
 export type DeleteUserClientResult = NonNullable<boolean>;
@@ -1677,6 +1816,41 @@ export const getGetDevicesResponseMock = (): DeviceDto[] | null =>
 
 export const getRevokeDeviceResponseMock = (): boolean => faker.datatype.boolean();
 
+export const getSearchIntegrationsResponseMock = (
+  overrideResponse: Partial<AdminIntegrationDtoPagedResponseDto> = {}
+): AdminIntegrationDtoPagedResponseDto => ({
+  data: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    ...{
+      ...{
+        id: faker.number.int({ min: undefined, max: undefined }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        expiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        shareWithClient: faker.datatype.boolean(),
+        credentials: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        isExpired: faker.datatype.boolean(),
+        error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  pageNumber: faker.number.int({ min: undefined, max: undefined }),
+  pageSize: faker.number.int({ min: undefined, max: undefined }),
+  totalCount: faker.number.int({ min: undefined, max: undefined }),
+  totalPages: faker.number.int({ min: undefined, max: undefined }),
+  ...overrideResponse,
+});
+
+export const getDeleteIntegrationResponseMock = (): boolean => faker.datatype.boolean();
+
 export const getGetProfileResponseMock = (overrideResponse: Partial<ProfileDto> = {}): ProfileDto => ({
   id: faker.string.alpha({ length: { min: 10, max: 20 } }),
   email: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -1822,6 +1996,206 @@ export const getGetMyExternalLoginsResponseMock = ():
   ]);
 
 export const getRemoveMyExternalLoginResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetMyIntegrationsResponseIntegrationDtoMock = (overrideResponse: Partial<IntegrationDto> = {}): IntegrationDto => ({
+  ...{
+    id: faker.number.int({ min: undefined, max: undefined }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    expiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    shareWithClient: faker.datatype.boolean(),
+    credentials: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    isExpired: faker.datatype.boolean(),
+    error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  },
+  ...overrideResponse,
+});
+
+export const getGetMyIntegrationsResponseAdminIntegrationDtoMock = (overrideResponse: Partial<AdminIntegrationDto> = {}): AdminIntegrationDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.number.int({ min: undefined, max: undefined }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        expiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        shareWithClient: faker.datatype.boolean(),
+        credentials: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        isExpired: faker.datatype.boolean(),
+        error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getGetMyIntegrationsResponseMock = ():
+  | GetMyIntegrations200OneItem[]
+  | null
+  | GetMyIntegrations200TwoItem[]
+  | null
+  | GetMyIntegrations200ThreeItem[]
+  | null =>
+  faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyIntegrationsResponseIntegrationDtoMock() },
+        { ...getGetMyIntegrationsResponseAdminIntegrationDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyIntegrationsResponseIntegrationDtoMock() },
+        { ...getGetMyIntegrationsResponseAdminIntegrationDtoMock() },
+      ])
+    ),
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+      faker.helpers.arrayElement([
+        { ...getGetMyIntegrationsResponseIntegrationDtoMock() },
+        { ...getGetMyIntegrationsResponseAdminIntegrationDtoMock() },
+      ])
+    ),
+  ]);
+
+export const getCreateMyIntegrationResponseIntegrationDtoMock = (overrideResponse: Partial<IntegrationDto> = {}): IntegrationDto => ({
+  ...{
+    id: faker.number.int({ min: undefined, max: undefined }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    expiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    shareWithClient: faker.datatype.boolean(),
+    credentials: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    isExpired: faker.datatype.boolean(),
+    error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  },
+  ...overrideResponse,
+});
+
+export const getCreateMyIntegrationResponseAdminIntegrationDtoMock = (overrideResponse: Partial<AdminIntegrationDto> = {}): AdminIntegrationDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.number.int({ min: undefined, max: undefined }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        expiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        shareWithClient: faker.datatype.boolean(),
+        credentials: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        isExpired: faker.datatype.boolean(),
+        error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getCreateMyIntegrationResponseMock = (): CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three =>
+  faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getCreateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getCreateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getCreateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getCreateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getCreateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getCreateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+  ]);
+
+export const getUpdateMyIntegrationResponseIntegrationDtoMock = (overrideResponse: Partial<IntegrationDto> = {}): IntegrationDto => ({
+  ...{
+    id: faker.number.int({ min: undefined, max: undefined }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    expiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    shareWithClient: faker.datatype.boolean(),
+    credentials: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    isExpired: faker.datatype.boolean(),
+    error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  },
+  ...overrideResponse,
+});
+
+export const getUpdateMyIntegrationResponseAdminIntegrationDtoMock = (overrideResponse: Partial<AdminIntegrationDto> = {}): AdminIntegrationDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.number.int({ min: undefined, max: undefined }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        expiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        shareWithClient: faker.datatype.boolean(),
+        credentials: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        isExpired: faker.datatype.boolean(),
+        error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getUpdateMyIntegrationResponseMock = (): UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three =>
+  faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getUpdateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getUpdateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getUpdateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getUpdateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getUpdateMyIntegrationResponseIntegrationDtoMock() },
+      { ...getUpdateMyIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+  ]);
+
+export const getDeleteMyIntegrationResponseMock = (): boolean => faker.datatype.boolean();
 
 export const getGetUserResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
   ...{
@@ -2984,6 +3358,52 @@ export const getRevokeDeviceMockHandler = (
   );
 };
 
+export const getSearchIntegrationsMockHandler = (
+  overrideResponse?:
+    | AdminIntegrationDtoPagedResponseDto
+    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<AdminIntegrationDtoPagedResponseDto> | AdminIntegrationDtoPagedResponseDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Integrations/search",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSearchIntegrationsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getDeleteIntegrationMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/Integrations/:integrationId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteIntegrationResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
 export const getGetProfileMockHandler = (
   overrideResponse?: ProfileDto | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ProfileDto> | ProfileDto),
   options?: RequestHandlerOptions
@@ -3220,6 +3640,130 @@ export const getRemoveMyExternalLoginMockHandler = (
             ? await overrideResponse(info)
             : overrideResponse
           : getRemoveMyExternalLoginResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetMyIntegrationsMockHandler = (
+  overrideResponse?:
+    | GetMyIntegrations200OneItem[]
+    | null
+    | GetMyIntegrations200TwoItem[]
+    | null
+    | GetMyIntegrations200ThreeItem[]
+    | null
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) =>
+        | Promise<GetMyIntegrations200OneItem[] | null | GetMyIntegrations200TwoItem[] | null | GetMyIntegrations200ThreeItem[] | null>
+        | GetMyIntegrations200OneItem[]
+        | null
+        | GetMyIntegrations200TwoItem[]
+        | null
+        | GetMyIntegrations200ThreeItem[]
+        | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/users/me/integrations",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetMyIntegrationsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getCreateMyIntegrationMockHandler = (
+  overrideResponse?:
+    | CreateMyIntegration200One
+    | CreateMyIntegration200Two
+    | CreateMyIntegration200Three
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0]
+      ) =>
+        | Promise<CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>
+        | CreateMyIntegration200One
+        | CreateMyIntegration200Two
+        | CreateMyIntegration200Three),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/users/me/integrations",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getCreateMyIntegrationResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getUpdateMyIntegrationMockHandler = (
+  overrideResponse?:
+    | UpdateMyIntegration200One
+    | UpdateMyIntegration200Two
+    | UpdateMyIntegration200Three
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0]
+      ) =>
+        | Promise<UpdateMyIntegration200One | UpdateMyIntegration200Two | UpdateMyIntegration200Three>
+        | UpdateMyIntegration200One
+        | UpdateMyIntegration200Two
+        | UpdateMyIntegration200Three),
+  options?: RequestHandlerOptions
+) => {
+  return http.put(
+    "*/api/users/me/integrations/:integrationId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateMyIntegrationResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getDeleteMyIntegrationMockHandler = (
+  overrideResponse?: boolean | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<boolean> | boolean),
+  options?: RequestHandlerOptions
+) => {
+  return http.delete(
+    "*/api/users/me/integrations/:integrationId",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteMyIntegrationResponseMock(),
         { status: 200, headers: { "Content-Type": "text/plain" } }
       );
     },
@@ -3746,6 +4290,8 @@ export const getLightNapWebApiMock = () => [
   getRequestMagicLinkEmailMockHandler(),
   getGetDevicesMockHandler(),
   getRevokeDeviceMockHandler(),
+  getSearchIntegrationsMockHandler(),
+  getDeleteIntegrationMockHandler(),
   getGetProfileMockHandler(),
   getUpdateMyProfileMockHandler(),
   getSearchMyNotificationsMockHandler(),
@@ -3756,6 +4302,10 @@ export const getLightNapWebApiMock = () => [
   getSetMyUserSettingMockHandler(),
   getGetMyExternalLoginsMockHandler(),
   getRemoveMyExternalLoginMockHandler(),
+  getGetMyIntegrationsMockHandler(),
+  getCreateMyIntegrationMockHandler(),
+  getUpdateMyIntegrationMockHandler(),
+  getDeleteMyIntegrationMockHandler(),
   getGetUserMockHandler(),
   getUpdateUserMockHandler(),
   getDeleteUserMockHandler(),
