@@ -59,7 +59,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Confirms external login association with current user.
+        /// Gets the result of the external login operation to determine status and whether there are more steps.
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
         /// <returns>The API response containing the login result.</returns>
@@ -70,7 +70,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Completes the external login when the account is already linked.
+        /// Completes the external login when the account is already linked with an existing account.
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>
@@ -82,7 +82,7 @@ namespace LightNap.WebApi.Controllers
         }
 
         /// <summary>
-        /// Completes the external login registration when the user is not logged in yet.
+        /// Completes the external login when the user is registering a new account.
         /// </summary>
         /// <param name="confirmationToken">The completion token.</param>
         /// <param name="requestDto">The completion request DTO.</param>

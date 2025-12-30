@@ -12,6 +12,11 @@ namespace LightNap.Core.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         /// <summary>
+        /// Integrations in the DB.
+        /// </summary>
+        public DbSet<Integration> Integrations { get; set; } = null!;
+
+        /// <summary>
         /// Notifications in the DB.
         /// </summary>
         public DbSet<Notification> Notifications { get; set; } = null!;

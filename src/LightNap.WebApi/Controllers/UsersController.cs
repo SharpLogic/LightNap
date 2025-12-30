@@ -1,7 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Configuration.Authorization;
-using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Users.Dto.Request;
 using LightNap.Core.Users.Dto.Response;
@@ -303,6 +302,5 @@ namespace LightNap.WebApi.Controllers
         {
             return new ApiResponseDto<UserSettingDto>(await userSettingsService.SetUserSettingAsync(userId, setSettingDto));
         }
-
     }
 }

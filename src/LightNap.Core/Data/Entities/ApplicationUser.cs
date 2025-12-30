@@ -21,6 +21,11 @@ namespace LightNap.Core.Data.Entities
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
         /// <summary>
+        /// The integrations associated with the user.
+        /// </summary>
+        public ICollection<Integration>? Integrations { get; set; }
+
+        /// <summary>
         /// The notifications associated with the user.
         /// </summary>
         public ICollection<Notification>? Notifications { get; set; }

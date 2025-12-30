@@ -10,6 +10,8 @@ using LightNap.Core.Extensions;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Identity.Services;
+using LightNap.Core.Integrations.Interfaces;
+using LightNap.Core.Integrations.Services;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Interfaces;
 using LightNap.Core.Notifications.Services;
@@ -71,6 +73,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IExternalLoginService, ExternalLoginService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IUsersService, UsersService>();
+        services.AddScoped<IIntegrationsService, IntegrationsService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IPublicService, PublicService>();
         services.AddScoped<IClaimsService, ClaimsService>();
@@ -341,7 +344,7 @@ public static class ApplicationServiceExtensions
         services.AddRateLimiter(options =>
         {
             // Helper to get partition key (user ID or IP)
-            string GetPartitionKey(HttpContext httpContext)
+            static string GetPartitionKey(HttpContext httpContext)
             {
                 string? userId = httpContext.User.TryGetUserId();
                 return userId ?? (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");

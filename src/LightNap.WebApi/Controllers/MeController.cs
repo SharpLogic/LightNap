@@ -1,6 +1,9 @@
 using LightNap.Core.Api;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
+using LightNap.Core.Integrations.Dto.Request;
+using LightNap.Core.Integrations.Dto.Response;
+using LightNap.Core.Integrations.Interfaces;
 using LightNap.Core.Notifications.Dto.Request;
 using LightNap.Core.Notifications.Dto.Response;
 using LightNap.Core.Notifications.Interfaces;
@@ -19,8 +22,9 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Authorize]
     [Route("api/users/me")]
-    public class MeController(IProfileService profileService, INotificationService notificationService, IClaimsService claimsService, 
-        IUserSettingsService userSettingsService, IExternalLoginService externalLoginService) : ControllerBase
+    public class MeController(IProfileService profileService, INotificationService notificationService, IClaimsService claimsService,
+        IUserSettingsService userSettingsService, IExternalLoginService externalLoginService, IIntegrationsService integrationsService)
+            : ControllerBase
     {
         /// <summary>
         /// Retrieves the profile of the current user.
@@ -146,7 +150,7 @@ namespace LightNap.WebApi.Controllers
         [HttpGet("external-logins", Name = nameof(GetMyExternalLogins))]
         public async Task<ApiResponseDto<List<ExternalLoginDto>>> GetMyExternalLogins()
         {
-            return new ApiResponseDto<List<ExternalLoginDto>> (await externalLoginService.GetMyExternalLoginsAsync());
+            return new ApiResponseDto<List<ExternalLoginDto>>(await externalLoginService.GetMyExternalLoginsAsync());
         }
 
         /// <summary>
@@ -164,4 +168,61 @@ namespace LightNap.WebApi.Controllers
             return new ApiResponseDto<bool>(true);
         }
 
-    }}
+        #region Integrations
+
+        /// <summary>
+        /// Retrieves all integrations for the current user.
+        /// </summary>
+        /// <returns>The list of integrations.</returns>
+        /// <response code="200">Returns the list of integrations.</response>
+        [HttpGet("integrations", Name = nameof(GetMyIntegrations))]
+        public async Task<ApiResponseDto<List<IntegrationDto>>> GetMyIntegrations()
+        {
+            return new ApiResponseDto<List<IntegrationDto>>(await integrationsService.GetMyIntegrationsAsync());
+        }
+
+        /// <summary>
+        /// Creates a new integration for the current user.
+        /// </summary>
+        /// <param name="createIntegrationRequest">The integration creation parameters.</param>
+        /// <returns>The created integration details.</returns>
+        /// <response code="200">Returns the created integration details.</response>
+        /// <response code="400">If there was an error creating the integration.</response>
+        [HttpPost("integrations", Name = nameof(CreateMyIntegration))]
+        public async Task<ApiResponseDto<IntegrationDto>> CreateMyIntegration([FromBody] CreateIntegrationRequestDto createIntegrationRequest)
+        {
+            return new ApiResponseDto<IntegrationDto>(await integrationsService.CreateMyIntegrationAsync(createIntegrationRequest));
+        }
+
+        /// <summary>
+        /// Updates an integration for the current user.
+        /// </summary>
+        /// <param name="integrationId">The ID of the integration to update.</param>
+        /// <param name="updateIntegrationRequest">The integration update parameters.</param>
+        /// <returns>The updated integration details.</returns>
+        /// <response code="200">Returns the updated integration details.</response>
+        /// <response code="400">If there was an error updating the integration.</response>
+        [HttpPut("integrations/{integrationId}", Name = nameof(UpdateMyIntegration))]
+        public async Task<ApiResponseDto<IntegrationDto>> UpdateMyIntegration(int integrationId, [FromBody] UpdateIntegrationRequestDto updateIntegrationRequest)
+        {
+            return new ApiResponseDto<IntegrationDto>(await integrationsService.UpdateMyIntegrationAsync(integrationId, updateIntegrationRequest));
+        }
+
+        /// <summary>
+        /// Deletes an integration for the current user.
+        /// </summary>
+        /// <param name="integrationId">The ID of the integration to delete.</param>
+        /// <returns>True if the integration was successfully deleted.</returns>
+        /// <response code="200">Integration successfully deleted.</response>
+        /// <response code="400">If there was an error deleting the integration.</response>
+        [HttpDelete("integrations/{integrationId}", Name = nameof(DeleteMyIntegration))]
+        public async Task<ApiResponseDto<bool>> DeleteMyIntegration(int integrationId)
+        {
+            await integrationsService.DeleteMyIntegrationAsync(integrationId);
+            return new ApiResponseDto<bool>(true);
+        }
+
+        #endregion
+
+    }
+}
