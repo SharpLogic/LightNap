@@ -12,7 +12,7 @@ namespace LightNap.Core.Configuration.UserSettings
         /// Note: Removing a setting from this array may result in it being purged from the database. 
         /// Mark it as inactive instead if you want to retain existing values.
         /// </summary>
-        private static readonly UserSettingDefinition[] _allSettings =
+        public static readonly ReadOnlyCollection<UserSettingDefinition> AllSettings =
             [
                 new UserSettingDefinition(
                     Constants.UserSettingKeys.BrowserSettings,
@@ -31,20 +31,20 @@ namespace LightNap.Core.Configuration.UserSettings
         /// </summary>
         public static ReadOnlyDictionary<string, UserSettingDefinition> AllSettingsLookup { get; } =
             new ReadOnlyDictionary<string, UserSettingDefinition>(
-                UserSettingsConfig._allSettings.ToDictionary(us => us.Key, us => us)
+                UserSettingsConfig.AllSettings.ToDictionary(us => us.Key, us => us)
             );
 
         /// <summary>
         /// Gets a read-only collection of all settings available to administrators.
         /// </summary>
         public static ReadOnlyCollection<UserSettingDefinition> AdminSettings { get; } =
-            UserSettingsConfig._allSettings.ToList().AsReadOnly();
+            UserSettingsConfig.AllSettings.ToList().AsReadOnly();
 
         /// <summary>
         /// Gets a read-only collection of all settings available to users with read/write access.
         /// </summary>
         public static ReadOnlyCollection<UserSettingDefinition> UserSettings { get; } =
-            UserSettingsConfig._allSettings.Where(us => us.AccessLevel <= UserSettingAccessLevel.UserReadWrite).ToList().AsReadOnly();
+            UserSettingsConfig.AllSettings.Where(us => us.AccessLevel <= UserSettingAccessLevel.UserReadWrite).ToList().AsReadOnly();
 
         /// <summary>
         /// Retrieves the active setting definition for the specified key.

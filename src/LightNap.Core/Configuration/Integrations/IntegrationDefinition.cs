@@ -20,6 +20,19 @@ namespace LightNap.Core.Configuration.Integrations
         /// <summary>
         /// The services this integration supports.
         /// </summary>
-        public required List<IntegrationService> Services { get; init; }
+        public required HashSet<IntegrationService> Services { get; init; }
+
+        /// <summary>
+        /// Verifies that the specified integration service is supported by the current integration type.
+        /// </summary>
+        /// <param name="service">The integration service to check for support.</param>
+        /// <exception cref="InvalidOperationException">Thrown if the specified service is not supported by the current integration type.</exception>
+        public void AssertServiceSupported(IntegrationService service)
+        {
+            if (!this.Services.Contains(service))
+            {
+                throw new InvalidOperationException($"Integration of type {Type} does not support service {service}.");
+            }
+        }
     }
 }

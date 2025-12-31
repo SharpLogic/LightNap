@@ -1,4 +1,5 @@
 using LightNap.Core.Api;
+using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Integrations.Dto.Request;
@@ -7,6 +8,7 @@ using LightNap.Core.Integrations.Interfaces;
 using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 
 namespace LightNap.Core.Integrations.Services;
 
@@ -16,6 +18,18 @@ namespace LightNap.Core.Integrations.Services;
 public class IntegrationsService(ApplicationDbContext db, IUserContext userContext, IDataProtectionProvider dataProtectionProvider) : IIntegrationsService
 {
     private readonly IDataProtector _dataProtector = dataProtectionProvider.CreateProtector("IntegrationSecretsProtector");
+
+    /// <inheritdoc/>
+    public IReadOnlyCollection<IntegrationDefinition> GetSupportedIntegrations()
+    {
+        return IntegrationsConfig.AllIntegrations;
+    }
+
+    /// <inheritdoc/>
+    public IReadOnlyCollection<IntegrationCategoryDefinition> GetSupportedIntegrationCategories()
+    {
+        return IntegrationsConfig.AllIntegrationCategories;
+    }
 
     /// <inheritdoc/>
     public async Task<List<IntegrationDto>> GetMyIntegrationsAsync()

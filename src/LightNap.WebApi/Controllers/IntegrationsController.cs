@@ -1,5 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
+using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using LightNap.Core.Integrations.Interfaces;
@@ -16,6 +17,29 @@ namespace LightNap.WebApi.Controllers
     [Route("api/[controller]")]
     public class IntegrationsController(IIntegrationsService integrationsService) : ControllerBase
     {
+        /// <summary>
+        /// Retrieves a collection of all supported integration definitions.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing a read-only collection of <see cref="IntegrationDefinition"/>
+        /// objects representing the available integrations. The collection is empty if no integrations are supported.</returns>
+        [HttpGet("types", Name = nameof(GetSupportedIntegrations))]
+        public ApiResponseDto<IReadOnlyCollection<IntegrationDefinition>> GetSupportedIntegrations()
+        {
+            return new ApiResponseDto<IReadOnlyCollection<IntegrationDefinition>>(integrationsService.GetSupportedIntegrations());
+        }
+
+        /// <summary>
+        /// Retrieves a collection of all supported integration categories.
+        /// </summary>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing a read-only collection of <see
+        /// cref="IntegrationCategoryDefinition"/> objects representing the supported integration categories. The
+        /// collection will be empty if no categories are available.</returns>
+        [HttpGet("categories", Name = nameof(GetSupportedIntegrationCategories))]
+        public ApiResponseDto<IReadOnlyCollection<IntegrationCategoryDefinition>> GetSupportedIntegrationCategories()
+        {
+            return new ApiResponseDto<IReadOnlyCollection<IntegrationCategoryDefinition>>(integrationsService.GetSupportedIntegrationCategories());
+        }
+
         /// <summary>
         /// Searches all integrations (admin only).
         /// </summary>

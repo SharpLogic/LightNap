@@ -20,6 +20,6 @@ namespace LightNap.Core.Configuration.Integrations
         /// <summary>
         /// The services this category includes.
         /// </summary>
-        public required List<IntegrationService> Services { get; init; }
+        public required HashSet<IntegrationService> Services { get; init; }
     }
 }
