@@ -53,6 +53,8 @@ import type {
   GetUsersByIds200OneItem,
   GetUsersByIds200ThreeItem,
   GetUsersByIds200TwoItem,
+  IntegrationCategoryDefinition,
+  IntegrationDefinition,
   LoginRequestDto,
   LoginSuccessDto,
   NewPasswordRequestDto,
@@ -109,6 +111,9 @@ import type { RequestHandlerOptions } from "msw";
 
 import {
   ExternalLoginSuccessType,
+  IntegrationCategory,
+  IntegrationService,
+  IntegrationType,
   LoginSuccessType,
   NotificationStatus,
   NotificationType,
@@ -812,6 +817,36 @@ export class LightNapWebApiService {
   }
 
   /**
+   * @summary Retrieves a collection of all supported integration definitions.
+   */
+  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe?: any }): Observable<any> {
+    return this.http.get<TData>(`/api/Integrations/types`, options);
+  }
+
+  /**
+   * @summary Retrieves a collection of all supported integration categories.
+   */
+  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.get<TData>(`/api/Integrations/categories`, options);
+  }
+
+  /**
    * @summary Searches all integrations (admin only).
    */
   searchIntegrations<TData = AdminIntegrationDtoPagedResponseDto>(
@@ -1508,6 +1543,8 @@ export type VerifyEmailClientResult = NonNullable<boolean>;
 export type RequestMagicLinkEmailClientResult = NonNullable<boolean>;
 export type GetDevicesClientResult = NonNullable<DeviceDto[] | null>;
 export type RevokeDeviceClientResult = NonNullable<boolean>;
+export type GetSupportedIntegrationsClientResult = NonNullable<IntegrationDefinition[] | null>;
+export type GetSupportedIntegrationCategoriesClientResult = NonNullable<IntegrationCategoryDefinition[] | null>;
 export type SearchIntegrationsClientResult = NonNullable<AdminIntegrationDtoPagedResponseDto>;
 export type DeleteIntegrationClientResult = NonNullable<boolean>;
 export type GetProfileClientResult = NonNullable<ProfileDto>;
@@ -1815,6 +1852,20 @@ export const getGetDevicesResponseMock = (): DeviceDto[] | null =>
   }));
 
 export const getRevokeDeviceResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetSupportedIntegrationsResponseMock = (): IntegrationDefinition[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    type: faker.helpers.arrayElement(Object.values(IntegrationType)),
+    displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    services: faker.helpers.arrayElements(Object.values(IntegrationService)),
+  }));
+
+export const getGetSupportedIntegrationCategoriesResponseMock = (): IntegrationCategoryDefinition[] | null =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    category: faker.helpers.arrayElement(Object.values(IntegrationCategory)),
+    displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    services: faker.helpers.arrayElements(Object.values(IntegrationService)),
+  }));
 
 export const getSearchIntegrationsResponseMock = (
   overrideResponse: Partial<AdminIntegrationDtoPagedResponseDto> = {}
@@ -3358,6 +3409,58 @@ export const getRevokeDeviceMockHandler = (
   );
 };
 
+export const getGetSupportedIntegrationsMockHandler = (
+  overrideResponse?:
+    | IntegrationDefinition[]
+    | null
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<IntegrationDefinition[] | null> | IntegrationDefinition[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Integrations/types",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetSupportedIntegrationsResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
+export const getGetSupportedIntegrationCategoriesMockHandler = (
+  overrideResponse?:
+    | IntegrationCategoryDefinition[]
+    | null
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0]
+      ) => Promise<IntegrationCategoryDefinition[] | null> | IntegrationCategoryDefinition[] | null),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Integrations/categories",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetSupportedIntegrationCategoriesResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
 export const getSearchIntegrationsMockHandler = (
   overrideResponse?:
     | AdminIntegrationDtoPagedResponseDto
@@ -4290,6 +4393,8 @@ export const getLightNapWebApiMock = () => [
   getRequestMagicLinkEmailMockHandler(),
   getGetDevicesMockHandler(),
   getRevokeDeviceMockHandler(),
+  getGetSupportedIntegrationsMockHandler(),
+  getGetSupportedIntegrationCategoriesMockHandler(),
   getSearchIntegrationsMockHandler(),
   getDeleteIntegrationMockHandler(),
   getGetProfileMockHandler(),
