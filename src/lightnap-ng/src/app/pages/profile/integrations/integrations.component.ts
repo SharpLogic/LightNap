@@ -1,10 +1,10 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
-import { DeviceDto, setApiErrors, TypeHelpers } from "@core";
+import { Integration, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ConfirmDialogComponent } from "@core/components/confirm-dialog/confirm-dialog.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
-import { IdentityService } from "@core/services/identity.service";
+import { IntegrationsService } from "@core/features/integrations/services/integrations.service";
 import { ConfirmationService } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -15,25 +15,25 @@ import { TableModule } from "primeng/table";
   imports: [CommonModule, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
 })
 export class IntegrationsComponent {
-  readonly #devicesService = inject(IdentityService);
+  readonly #integrationsService = inject(IntegrationsService);
   readonly #confirmationService = inject(ConfirmationService);
 
-  readonly devices$ = signal(this.#devicesService.getDevices());
+  readonly integrations$ = signal(this.#integrationsService.getMyIntegrations());
 
   readonly errors = signal(new Array<string>());
 
-  readonly asDevices = TypeHelpers.cast<Array<DeviceDto>>;
-  readonly asDevice = TypeHelpers.cast<DeviceDto>;
+  readonly asIntegrations = TypeHelpers.cast<Array<Integration>>;
+  readonly asIntegration = TypeHelpers.cast<Integration>;
 
-  revokeDevice(event: any, deviceId: string) {
+  removeIntegration(event: any, integrationId: number) {
     this.#confirmationService.confirm({
       header: "Confirm Revoke",
-      message: `Are you sure that you want to revoke this device?`,
+      message: `Are you sure that you want to revoke this integration?`,
       target: event.target,
-      key: deviceId,
+      key: integrationId,
       accept: () => {
-        this.#devicesService.revokeDevice(deviceId).subscribe({
-          next: () => this.devices$.set(this.#devicesService.getDevices()),
+        this.#integrationsService.deleteMyIntegration(integrationId).subscribe({
+          next: () => this.integrations$.set(this.#integrationsService.getMyIntegrations()),
           error: setApiErrors(this.errors),
         });
       },

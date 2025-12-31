@@ -1,33 +1,33 @@
-<ln-api-response [apiResponse]="devices$()" errorMessage="Error loading devices" loadingMessage="Loading devices...">
-  <ng-template #success let-devicesAny>
-    @let devices = asDevices(devicesAny);
+<ln-api-response [apiResponse]="integrations$()" errorMessage="Error loading integrations" loadingMessage="Loading integrations...">
+  <ng-template #success let-integrationsAny>
+    @let integrations = asIntegrations(integrationsAny);
 
-    <p-panel header="Manage Your Devices">
-      <p-table [value]="devices">
+    <p-panel header="Manage Your Integrations">
+      <p-table [value]="integrations">
         <ng-template #header>
           <tr>
             <th><i class="pi pi-trash"></i></th>
-            <th>Last Seen</th>
-            <th>Details</th>
-            <th>IP Address</th>
+            <th>Friendly Name</th>
+            <th>Type</th>
+            <th>Created</th>
           </tr>
         </ng-template>
-        <ng-template #body let-deviceAny>
-          @let device = asDevice(deviceAny);
+        <ng-template #body let-integrationAny>
+          @let integration = asIntegration(integrationAny);
 
           <tr>
             <td>
-              <ln-confirm-dialog [key]="device.id" />
-              <p-button severity="danger" icon="pi pi-trash" title="Remove device" (onClick)="revokeDevice($event, device.id)" />
+              <ln-confirm-dialog [key]="integration.id" />
+              <p-button severity="danger" icon="pi pi-trash" title="Remove integration" (onClick)="removeIntegration($event, integration.id)" />
             </td>
-            <td>{{ device.lastSeen | date: "short" }}</td>
-            <td>{{ device.details }}</td>
-            <td>{{ device.ipAddress }}</td>
+            <td>{{ integration.integration.friendlyName }}</td>
+            <td>{{ integration.definition.displayName }}</td>
+            <td>{{ integration.integration.createdDate| date: "short" }}</td>
           </tr>
         </ng-template>
         <ng-template #emptymessage>
           <tr>
-            <td colspan="100%">There are no logged-in devices.</td>
+            <td colspan="100%">You don't have any integrations configured.</td>
           </tr>
         </ng-template>
       </p-table>
