@@ -18,7 +18,7 @@ namespace LightNap.Core.Notifications.Services
     /// <summary>  
     /// Service for managing user notifications.
     /// </summary>  
-    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext, IHubContext<NotificationsHub> hubContext) : INotificationService
+    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext, IHubContext<NotificationHub> hubContext) : INotificationService
     {
         /// <summary>
         /// Creates a notification for a specific user.
@@ -35,7 +35,7 @@ namespace LightNap.Core.Notifications.Services
 
             // Send notification to SignalR
             var notificationDto = notification.ToDto();
-            await hubContext.Clients.Group($"user:{userId}").SendAsync("ReceiveNotification", notificationDto);
+            await hubContext.SendNotificationToUserAsync(userId, notificationDto);
         }
 
         /// <summary>
