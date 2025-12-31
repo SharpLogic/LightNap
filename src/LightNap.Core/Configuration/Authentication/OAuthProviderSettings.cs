@@ -11,12 +11,12 @@ namespace LightNap.Core.Configuration.Authentication
         /// The client ID for the OAuth provider.
         /// </summary>
         [Required]
-        public required string ClientId { get; set; }
+        public required string ClientId { get; init; }
 
         /// <summary>
         /// The client secret for the OAuth provider.
         /// </summary>
         [Required]
-        public required string ClientSecret { get; set; }
+        public required string ClientSecret { get; init; }
     }
 }

@@ -10,6 +10,6 @@ namespace LightNap.Core.Configuration.Authentication
         /// <summary>
         /// Whether Windows authentication is enabled.
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled { get; init; }
     }
 }

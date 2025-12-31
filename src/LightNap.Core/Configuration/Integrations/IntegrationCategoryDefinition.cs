@@ -3,22 +3,22 @@ using LightNap.Core.Integrations.Models;
 namespace LightNap.Core.Configuration.Integrations
 {
     /// <summary>
-    /// Represents an integration definition.
+    /// Defines a category of integrations.
     /// </summary>
-    public record IntegrationDefinition
+    public record IntegrationCategoryDefinition
     {
         /// <summary>
-        /// The type of integration.
+        /// The integration category.
         /// </summary>
-        public required IntegrationType Type { get; init; }
+        public required IntegrationCategory Category { get; init; }
 
         /// <summary>
-        /// The display name of the integration.
+        /// The display name of the category.
         /// </summary>
         public required string DisplayName { get; init; }
 
         /// <summary>
-        /// The services this integration supports.
+        /// The services this category includes.
         /// </summary>
         public required List<IntegrationService> Services { get; init; }
     }

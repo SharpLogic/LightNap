@@ -10,16 +10,16 @@ namespace LightNap.Core.Configuration.Authentication
         /// <summary>
         /// Google OAuth settings.
         /// </summary>
-        public OAuthProviderSettings? Google { get; set; }
+        public OAuthProviderSettings? Google { get; init; }
 
         /// <summary>
         /// Microsoft OAuth settings.
         /// </summary>
-        public OAuthProviderSettings? Microsoft { get; set; }
+        public OAuthProviderSettings? Microsoft { get; init; }
 
         /// <summary>
         /// GitHub OAuth settings.
         /// </summary>
-        public OAuthProviderSettings? GitHub { get; set; }
+        public OAuthProviderSettings? GitHub { get; init; }
     }
 }

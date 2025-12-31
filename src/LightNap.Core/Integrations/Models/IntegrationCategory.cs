@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration.Integrations
+namespace LightNap.Core.Integrations.Models
 {
     /// <summary>
     /// Represents the categories of integration types.
