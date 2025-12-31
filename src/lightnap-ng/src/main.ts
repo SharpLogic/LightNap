@@ -3,7 +3,6 @@ import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { enableProdMode, inject, isDevMode, provideAppInitializer, provideZonelessChangeDetection } from "@angular/core";
 import { createCustomElement } from "@angular/elements";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemoryScrolling, withRouterConfig } from "@angular/router";
 import { provideServiceWorker } from "@angular/service-worker";
 import { APP_NAME } from "@core";
@@ -36,7 +35,7 @@ bootstrapApplication(AppComponent, {
     // 3. HTTP & Interceptors
     provideHttpClient(withInterceptors([tokenInterceptor, apiResponseInterceptor, dateInterceptor])),
 
-    // 4. Third-party libraries
+    // 4. PrimeNG and third-party libraries
     providePrimeNG({
       theme: {
         preset: Aura,

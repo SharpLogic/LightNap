@@ -18,7 +18,7 @@ namespace LightNap.Core.Notifications.Services
     /// <summary>  
     /// Service for managing user notifications.
     /// </summary>  
-    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext, IHubContext<NotificationHub> hubContext) : INotificationService
+    public class NotificationService(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IUserContext userContext, IHubContext<RealTimeHub, IRealTimeClient> hubContext) : INotificationService
     {
         /// <summary>
         /// Creates a notification for a specific user.

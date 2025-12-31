@@ -7,10 +7,10 @@ import { IdentityService } from "@core/services/identity.service";
 @Injectable({
   providedIn: "root",
 })
-export class NotificationHubService {
+export class RealTimeHubService {
   #identityService = inject(IdentityService);
   #hubConnection: HubConnection = new HubConnectionBuilder()
-    .withUrl("/api/hubs/notifications", {
+    .withUrl("/api/hubs/realtime", {
       accessTokenFactory: () => this.#identityService.getToken() || "",
     })
     .withAutomaticReconnect()
@@ -20,6 +20,8 @@ export class NotificationHubService {
 
   constructor() {
     this.#hubConnection.on("ReceiveNotification", (notification: NotificationDto) => {
+      // Ensure timestamp is a Date object. This is done automatically when deserialized via HTTP thanks to the Date interceptor, but SignalR isn't routed through it.
+      notification.timestamp = new Date(notification.timestamp ?? new Date());
       this.#notificationSubject.next(notification);
     });
   }

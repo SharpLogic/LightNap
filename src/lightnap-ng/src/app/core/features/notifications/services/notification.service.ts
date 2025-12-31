@@ -10,7 +10,7 @@ import {
   NotificationType,
   SearchNotificationsRequestDto,
 } from "@core";
-import { NotificationHubService } from "@core/backend-api/hubs/notification-hub.service";
+import { RealTimeHubService } from "@core/backend-api/hubs/real-time-hub.service";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
 import { AdminUsersService } from "@core/features/users/services/admin-users.service";
@@ -28,7 +28,7 @@ export class NotificationService {
   #adminService = inject(AdminUsersService);
   #routeAlias = inject(RouteAliasService);
   #toastService = inject(ToastService);
-  #hubService = inject(NotificationHubService);
+  #hubService = inject(RealTimeHubService);
 
   #notifications?: Array<NotificationItem>;
   #notificationsSubject = new ReplaySubject<Array<NotificationItem>>(1);

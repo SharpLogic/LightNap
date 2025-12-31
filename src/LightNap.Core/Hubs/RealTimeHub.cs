@@ -14,7 +14,7 @@ namespace LightNap.Core.Hubs;
 /// within the application.</remarks>
 /// <param name="userContext">The user context used to access information about the currently connected user.</param>
 [Authorize]
-public class NotificationHub(IUserContext userContext) : Hub<INotificationsClient>
+public class RealTimeHub(IUserContext userContext) : Hub<IRealTimeClient>
 {
     /// <summary>
     /// Called when a client connects to the hub.

@@ -22,19 +22,9 @@ namespace LightNap.Core.Extensions
         /// <param name="userId">The user identifier that determines the group to which the connection will be added. Cannot be null or
         /// empty.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static async Task AddToUserGroupAsync(this Hub<INotificationsClient> hub, string connectionId, string userId)
+        public static async Task AddToUserGroupAsync(this Hub<IRealTimeClient> hub, string connectionId, string userId)
         {
             await hub.Groups.AddToGroupAsync(connectionId, SignalRClientExtensions.FormatUserGroupName(userId));
-        }
-
-        /// <summary>
-        /// Sends a notification to a specific user by their ID.
-        /// </summary>
-        /// <param name="clients">The clients proxy for sending messages.</param>
-        /// <param name="notification">The notification DTO to send.</param>
-        public static async Task SendAsync(this IClientProxy clients, NotificationDto notification)
-        {
-            await clients.SendAsync("ReceiveNotification", notification);
         }
 
         /// <summary>
@@ -43,9 +33,9 @@ namespace LightNap.Core.Extensions
         /// <param name="hub">The hub for sending messages.</param>
         /// <param name="userId">The ID of the user to notify.</param>
         /// <param name="notification">The notification DTO to send.</param>
-        public static async Task SendNotificationToUserAsync(this IHubContext<NotificationHub> hub, string userId, NotificationDto notification)
+        public static async Task SendNotificationToUserAsync(this IHubContext<RealTimeHub, IRealTimeClient> hub, string userId, NotificationDto notification)
         {
-            await hub.Clients.Group(SignalRClientExtensions.FormatUserGroupName(userId)).SendAsync(notification);
+            await hub.Clients.Group(SignalRClientExtensions.FormatUserGroupName(userId)).ReceiveNotification(notification);
         }
 
         /// <summary>

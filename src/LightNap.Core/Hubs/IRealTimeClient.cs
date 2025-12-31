@@ -3,9 +3,10 @@ using LightNap.Core.Notifications.Dto.Response;
 namespace LightNap.Core.Hubs;
 
 /// <summary>
-/// Defines the contract for a notification client that can send notifications to users via a real-time notification hub.
+/// Defines a contract for clients that can receive real-time notifications from a notification hub.
 /// </summary>
-public interface INotificationsClient
+/// <remarks></remarks>
+public interface IRealTimeClient
 {
     /// <summary>
     /// Asynchronously sends a notification to the specified user via the real-time notification hub.

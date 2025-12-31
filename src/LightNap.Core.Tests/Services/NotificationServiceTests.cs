@@ -28,7 +28,7 @@ namespace LightNap.Core.Tests.Services
         private ApplicationDbContext _dbContext;
         private TestUserContext _userContext;
         private INotificationService _notificationService;
-        private Mock<IHubContext<NotificationHub>> _hubContextMock;
+        private Mock<IHubContext<RealTimeHub>> _hubContextMock;
 #pragma warning restore CS8618
 
         [TestInitialize]
@@ -45,12 +45,12 @@ namespace LightNap.Core.Tests.Services
             services.AddScoped<IUserContext>(sp => this._userContext);
 
             // Mock IHubContext<NotificationsHub>
-            this._hubContextMock = new Mock<IHubContext<NotificationHub>>();
+            this._hubContextMock = new Mock<IHubContext<RealTimeHub>>();
             var mockClients = new Mock<IHubClients>();
             var mockGroup = new Mock<IClientProxy>();
             mockClients.Setup(clients => clients.Group(It.IsAny<string>())).Returns(mockGroup.Object);
             this._hubContextMock.Setup(hub => hub.Clients).Returns(mockClients.Object);
-            services.AddScoped<IHubContext<NotificationHub>>(sp => this._hubContextMock.Object);
+            services.AddScoped<IHubContext<RealTimeHub>>(sp => this._hubContextMock.Object);
 
             services.AddScoped<INotificationService, NotificationService>();
 
