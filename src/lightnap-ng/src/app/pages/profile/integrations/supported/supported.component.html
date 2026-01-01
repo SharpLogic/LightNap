@@ -14,7 +14,7 @@
             <ng-template #footer>
               <div class="flex justify-end">
                 @if (provider.isConfiguredManually) {
-                  <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'create-integration' | route: provider.provider" />
+                  <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'connect-integration' | route: provider.provider" />
                 } @else {
                   <a pButton label="Connect" icon="pi pi-plus" severity="success" [href]="`/api/integrations/connect/${provider.provider}`"></a>
                 }

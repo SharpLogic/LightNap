@@ -1,4 +1,5 @@
 import { AppRoute } from "@core";
+import { Routes as IntegrationRoutes } from "./integrations/routes";
 
 export const Routes: AppRoute[] = [
   {
@@ -28,26 +29,7 @@ export const Routes: AppRoute[] = [
   {
     path: "integrations",
     data: { breadcrumb: "Integrations" },
-    children: [
-      {
-        path: "",
-        title: "Profile | Integrations",
-        data: { alias: "my-integrations", breadcrumb: "" },
-        loadComponent: () => import("./integrations/index/index.component").then(m => m.IndexComponent),
-      },
-      {
-        path: "supported",
-        title: "Profile | Supported Integrations",
-        data: { alias: "supported-integrations", breadcrumb: "Select An Integration" },
-        loadComponent: () => import("./integrations/supported-integrations/supported-integrations.component").then(m => m.SupportedIntegrationsComponent),
-      },
-      {
-        path: "create/:provider",
-        title: "Profile | Create An Integration",
-        data: { alias: "create-integration", breadcrumb: "Create" },
-        loadComponent: () => import("./integrations/create-integration/create-integration.component").then(m => m.CreateIntegrationComponent),
-      },
-    ],
+    children: IntegrationRoutes,
   },
   {
     path: "change-password",

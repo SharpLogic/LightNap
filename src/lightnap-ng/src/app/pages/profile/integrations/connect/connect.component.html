@@ -1,0 +1,32 @@
+<ln-api-response
+  [apiResponse]="providerDefinition$()"
+  errorMessage="Error loading integration definition"
+  loadingMessage="Loading integration definition..."
+>
+  <ng-template #success let-providerAny>
+    @let provider = asProvider(providerAny);
+
+    <p-panel header="Connect {{ provider.displayName }} Integration" class="max-w-prose">
+      <form [formGroup]="form" (ngSubmit)="createIntegration()">
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-1">
+            <label for="friendlyName">Friendly Name</label>
+            <input id="friendlyName" type="text" pInputText formControlName="friendlyName" />
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <label for="credentials">Credentials</label>
+            <textarea id="credentials" pInputTextarea formControlName="credentials" rows="5"></textarea>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <p-checkbox id="shareWithClient" formControlName="shareWithClient" binary="true"></p-checkbox>
+            <label for="shareWithClient">Share with Client</label>
+          </div>
+
+          <p-button type="submit" label="Create Integration" severity="success" [disabled]="form.invalid" />
+        </div>
+      </form>
+    </p-panel>
+  </ng-template>
+</ln-api-response>

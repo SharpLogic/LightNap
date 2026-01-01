@@ -1,10 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import {
-    CreateIntegrationRequestDto,
-    PagedResponseDto,
-    SearchIntegrationsRequestDto,
-    SupportedIntegrationsDto,
-    UpdateIntegrationRequestDto
+  CreateIntegrationRequestDto,
+  PagedResponseDto,
+  SearchIntegrationsRequestDto,
+  SupportedIntegrationsDto,
+  UpdateIntegrationRequestDto,
 } from "@core/backend-api";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { forkJoin, map, Observable, shareReplay } from "rxjs";
@@ -46,6 +46,10 @@ export class IntegrationsService {
         );
       })
     );
+  }
+
+  getMyIntegration(integrationId: number) {
+    return this.getMyIntegrations().pipe(map(integrations => integrations.find(i => i.integration.id === integrationId) || null));
   }
 
   searchIntegrations(searchIntegrationsRequestDto: SearchIntegrationsRequestDto) {

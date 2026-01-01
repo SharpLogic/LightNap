@@ -29,7 +29,9 @@
                 (onClick)="removeIntegration($event, integration.integration.id)"
               />
             </td>
-            <td>{{ integration.integration.friendlyName }}</td>
+            <td>
+              <a [routerLink]="'manage-integration' | route: integration.integration.id"> {{ integration.integration.friendlyName }}</a>
+            </td>
             <td>{{ integration.definition.displayName }}</td>
             <td>{{ integration.integration.createdDate | date: "short" }}</td>
           </tr>

@@ -10,10 +10,10 @@ import { PanelModule } from "primeng/panel";
 import { TagModule } from "primeng/tag";
 
 @Component({
-  templateUrl: "./supported-integrations.component.html",
+  templateUrl: "./supported.component.html",
   imports: [CommonModule, RouterLink, RoutePipe, ButtonModule, TagModule, PanelModule, CardModule, ApiResponseComponent],
 })
-export class SupportedIntegrationsComponent {
+export class SupportedComponent {
   readonly #integrationsService = inject(IntegrationsService);
 
   readonly providers$ = signal(this.#integrationsService.getSupportedProviders());
