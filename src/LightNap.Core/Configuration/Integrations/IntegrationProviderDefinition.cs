@@ -18,9 +18,19 @@ namespace LightNap.Core.Configuration.Integrations
         public required string DisplayName { get; init; }
 
         /// <summary>
+        /// The description of the integration.
+        /// </summary>
+        public required string Description { get; init; }
+
+        /// <summary>
         /// The features this integration supports.
         /// </summary>
         public required HashSet<IntegrationFeature> Features { get; init; }
+
+        /// <summary>
+        /// True if the integration is configured manually by the user on the frontend. Otherwise the user will be sent to the backend for OAuth or similar flows.
+        /// </summary>
+        public required bool IsConfiguredManually { get; init; }
 
         /// <summary>
         /// Verifies that the specified integration service is supported by the current integration type.

@@ -1,0 +1,28 @@
+<ln-api-response [apiResponse]="providers$()" errorMessage="Error loading supported integrations" loadingMessage="Loading supported integrations...">
+  <ng-template #success let-providersAny>
+    @let providers = asProviders(providersAny);
+
+    <p-panel header="Supported Integrations">
+      <div class="flex flex-wrap gap-4">
+        @for (provider of providers; track $index) {
+          <p-card [header]="provider.displayName" class="w-90">
+            <p>{{ provider.description }}</p>
+            @for (feature of provider.features; track $index) {
+              <p-tag [value]="feature" class="mr-2 mb-2" />
+            }
+
+            <ng-template #footer>
+              <div class="flex justify-end">
+                @if (provider.isConfiguredManually) {
+                  <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'create-integration' | route: provider.provider" />
+                } @else {
+                  <a pButton label="Connect" icon="pi pi-plus" severity="success" [href]="`/api/integrations/connect/${provider.provider}`"></a>
+                }
+              </div>
+            </ng-template>
+          </p-card>
+        }
+      </div>
+    </p-panel>
+  </ng-template>
+</ln-api-response>

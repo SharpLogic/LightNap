@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
-import { Integration, setApiErrors, TypeHelpers } from "@core";
+import { RouterLink } from "@angular/router";
+import { Integration, RoutePipe, setApiErrors, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { ConfirmDialogComponent } from "@core/components/confirm-dialog/confirm-dialog.component";
 import { ErrorListComponent } from "@core/components/error-list/error-list.component";
@@ -11,10 +12,10 @@ import { PanelModule } from "primeng/panel";
 import { TableModule } from "primeng/table";
 
 @Component({
-  templateUrl: "./integrations.component.html",
-  imports: [CommonModule, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
+  templateUrl: "./index.component.html",
+  imports: [CommonModule, RouterLink, RoutePipe, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
 })
-export class IntegrationsComponent {
+export class IndexComponent {
   readonly #integrationsService = inject(IntegrationsService);
   readonly #confirmationService = inject(ConfirmationService);
 

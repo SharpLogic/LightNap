@@ -1,11 +1,14 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Configuration.Integrations;
+using LightNap.Core.Identity.Services;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using LightNap.Core.Integrations.Interfaces;
+using LightNap.Core.Integrations.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace LightNap.WebApi.Controllers
 {
@@ -54,6 +57,17 @@ namespace LightNap.WebApi.Controllers
         {
             await integrationsService.DeleteIntegrationAsync(integrationId);
             return new ApiResponseDto<bool>(true);
+        }
+
+
+
+
+        [HttpGet("connect/{provider}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [AllowAnonymous]
+        public IActionResult Connect(IntegrationProvider provider)
+        {
+            return this.Redirect("https://quantcha.com");
         }
     }
 }

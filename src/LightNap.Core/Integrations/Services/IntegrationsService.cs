@@ -9,7 +9,6 @@ using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
-using System.Reflection.Metadata.Ecma335;
 
 namespace LightNap.Core.Integrations.Services;
 

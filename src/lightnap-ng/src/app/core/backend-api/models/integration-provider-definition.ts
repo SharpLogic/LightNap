@@ -14,6 +14,10 @@ export interface IntegrationProviderDefinition {
   provider: IntegrationProvider;
   /** The display name of the integration. */
   displayName: string;
+  /** The description of the integration. */
+  description: string;
   /** The features this integration supports. */
   features: IntegrationFeature[];
+  /** True if the integration is configured manually by the user on the frontend. Otherwise the user will be sent to the backend for OAuth or similar flows. */
+  isConfiguredManually: boolean;
 }

@@ -8,6 +8,8 @@ namespace LightNap.Core.Integrations.Models
         /// <summary>
         /// Test integration provider for development and testing purposes.
         /// </summary>
-        TestProvider
+        TestProvider,
+
+        TestProviderManual,
     }
 }

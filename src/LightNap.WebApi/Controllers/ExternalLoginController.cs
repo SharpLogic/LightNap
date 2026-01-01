@@ -93,7 +93,6 @@ namespace LightNap.WebApi.Controllers
             return new ApiResponseDto<LoginSuccessDto>(await externalLoginService.CompleteExternalLoginRegistrationAsync(confirmationToken, requestDto));
         }
 
-
         /// <summary>
         /// Initiates external authentication with the specified provider.
         /// </summary>

@@ -1,12 +1,10 @@
 import { inject, Injectable } from "@angular/core";
 import {
     CreateIntegrationRequestDto,
-    IntegrationCategory,
-    IntegrationFeature,
     PagedResponseDto,
     SearchIntegrationsRequestDto,
     SupportedIntegrationsDto,
-    UpdateIntegrationRequestDto,
+    UpdateIntegrationRequestDto
 } from "@core/backend-api";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { forkJoin, map, Observable, shareReplay } from "rxjs";
@@ -32,34 +30,8 @@ export class IntegrationsService {
     return this.#supportedIntegrations$;
   }
 
-  getSupportedCategories() {
-    return this.getSupportedIntegrations().pipe(map(integrations => integrations.categories));
-  }
-
-  getSupportedFeatures() {
-    return this.getSupportedIntegrations().pipe(map(integrations => integrations.features));
-  }
-
   getSupportedProviders() {
     return this.getSupportedIntegrations().pipe(map(integrations => integrations.providers));
-  }
-
-  getSupportedIntegrationsByFeature(feature: IntegrationFeature) {
-    return this.getSupportedIntegrations().pipe(
-      map(supported => supported.providers.filter(integration => integration.features.find(f => f === feature)))
-    );
-  }
-
-  getSupportedIntegrationsByCategory(category: IntegrationCategory) {
-    return this.getSupportedIntegrations().pipe(
-      map(supported => {
-        const categoryDefinition = supported.categories.find(c => c.category === category);
-        if (!categoryDefinition) {
-          return [];
-        }
-        return supported.providers.filter(integration => integration.features.some(f => categoryDefinition.features.includes(f)));
-      })
-    );
   }
 
   getMyIntegrations() {

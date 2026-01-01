@@ -1837,7 +1837,9 @@ export const getGetSupportedIntegrationsResponseMock = (overrideResponse: Partia
   providers: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
     provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
     displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    description: faker.string.alpha({ length: { min: 10, max: 20 } }),
     features: faker.helpers.arrayElements(Object.values(IntegrationFeature)),
+    isConfiguredManually: faker.datatype.boolean(),
   })),
   categories: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
     category: faker.helpers.arrayElement(Object.values(IntegrationCategory)),

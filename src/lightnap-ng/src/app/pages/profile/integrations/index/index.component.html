@@ -3,6 +3,10 @@
     @let integrations = asIntegrations(integrationsAny);
 
     <p-panel header="Manage Your Integrations">
+      <ng-template #icons>
+        <p-button [routerLink]="'supported-integrations' | route" severity="success" icon="pi pi-plus" label="Create" />
+      </ng-template>
+
       <p-table [value]="integrations">
         <ng-template #header>
           <tr>
