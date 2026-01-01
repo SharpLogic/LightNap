@@ -30,7 +30,7 @@ export class IntegrationsComponent {
       header: "Confirm Revoke",
       message: `Are you sure that you want to revoke this integration?`,
       target: event.target,
-      key: integrationId,
+      key: integrationId.toString(),
       accept: () => {
         this.#integrationsService.deleteMyIntegration(integrationId).subscribe({
           next: () => this.integrations$.set(this.#integrationsService.getMyIntegrations()),

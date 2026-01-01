@@ -1,4 +1,6 @@
-﻿namespace LightNap.Core.Integrations.Dto.Response;
+﻿using LightNap.Core.Integrations.Models;
+
+namespace LightNap.Core.Integrations.Dto.Response;
 
 /// <summary>
 /// DTO for a user integration.
@@ -18,12 +20,17 @@ public class IntegrationDto
     /// <summary>
     /// The external provider this integration is for.
     /// </summary>
-    public required string Provider { get; set; }
+    public required IntegrationProvider Provider { get; set; }
 
     /// <summary>
-    /// The expiration for integrations that need to be refreshed.
+    /// The expiration for integrations that can be automatically refreshed.
     /// </summary>
-    public DateTime? Expiration { get; set; }
+    public DateTime? CredentialsExpiration { get; set; }
+
+    /// <summary>
+    /// The expiration for integrations that need to be manually reauthorized.
+    /// </summary>
+    public DateTime? AuthorizationExpiration { get; set; }
 
     /// <summary>
     /// THe last time the integration was updated.

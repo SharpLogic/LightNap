@@ -1,6 +1,6 @@
-import { IntegrationDefinition, IntegrationDto } from "@core/backend-api";
+import { IntegrationProviderDefinition, IntegrationDto } from "@core/backend-api";
 
 export interface Integration {
   integration: IntegrationDto;
-  definition: IntegrationDefinition;
+  definition: IntegrationProviderDefinition;
 }

@@ -5,18 +5,17 @@
  * OpenAPI spec version: 1.0
  */
 import type { UpdateIntegrationRequestDto } from "./update-integration-request-dto";
+import type { IntegrationProvider } from "./integration-provider";
 
 /**
  * DTO for creating an integration.
  */
 export type CreateIntegrationRequestDto = UpdateIntegrationRequestDto & {
-  /** The integration provider. */
-  provider: string;
+  provider: IntegrationProvider;
 } & Required<
     Pick<
       UpdateIntegrationRequestDto & {
-        /** The integration provider. */
-        provider: string;
+        provider: IntegrationProvider;
       },
       "provider"
     >

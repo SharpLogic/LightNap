@@ -31,7 +31,7 @@ export class MenuService {
         { label: "Devices", icon: "pi pi-fw pi-mobile", routerLink: this.#routeAlias.getRoute("my-devices") },
         { label: "Change Password", icon: "pi pi-fw pi-lock", routerLink: this.#routeAlias.getRoute("change-password") },
         { label: "External Logins", icon: "pi pi-fw pi-globe", routerLink: this.#routeAlias.getRoute("my-external-logins") },
-      ],
+        { label: "Integrations", icon: "pi pi-fw pi-microchip", routerLink: this.#routeAlias.getRoute("my-integrations") },],
     },
   ];
 

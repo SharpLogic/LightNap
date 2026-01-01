@@ -18,26 +18,14 @@ namespace LightNap.WebApi.Controllers
     public class IntegrationsController(IIntegrationsService integrationsService) : ControllerBase
     {
         /// <summary>
-        /// Retrieves a collection of all supported integration definitions.
+        /// Retrieves a list of all supported integration types.
         /// </summary>
-        /// <returns>An <see cref="ApiResponseDto{T}"/> containing a read-only collection of <see cref="IntegrationDefinition"/>
-        /// objects representing the available integrations. The collection is empty if no integrations are supported.</returns>
+        /// <returns>An <see cref="ApiResponseDto{T}"/> containing a <see cref="SupportedIntegrationsDto"/> object with the
+        /// available integration types.</returns>
         [HttpGet("types", Name = nameof(GetSupportedIntegrations))]
-        public ApiResponseDto<IReadOnlyCollection<IntegrationDefinition>> GetSupportedIntegrations()
+        public ApiResponseDto<SupportedIntegrationsDto> GetSupportedIntegrations()
         {
-            return new ApiResponseDto<IReadOnlyCollection<IntegrationDefinition>>(integrationsService.GetSupportedIntegrations());
-        }
-
-        /// <summary>
-        /// Retrieves a collection of all supported integration categories.
-        /// </summary>
-        /// <returns>An <see cref="ApiResponseDto{T}"/> containing a read-only collection of <see
-        /// cref="IntegrationCategoryDefinition"/> objects representing the supported integration categories. The
-        /// collection will be empty if no categories are available.</returns>
-        [HttpGet("categories", Name = nameof(GetSupportedIntegrationCategories))]
-        public ApiResponseDto<IReadOnlyCollection<IntegrationCategoryDefinition>> GetSupportedIntegrationCategories()
-        {
-            return new ApiResponseDto<IReadOnlyCollection<IntegrationCategoryDefinition>>(integrationsService.GetSupportedIntegrationCategories());
+            return new ApiResponseDto<SupportedIntegrationsDto>(integrationsService.GetSupportedIntegrations());
         }
 
         /// <summary>

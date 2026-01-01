@@ -18,8 +18,8 @@ namespace LightNap.Core.Configuration.Integrations
         public required string DisplayName { get; init; }
 
         /// <summary>
-        /// The services this category includes.
+        /// The features this category includes.
         /// </summary>
-        public required HashSet<IntegrationService> Services { get; init; }
+        public required HashSet<IntegrationFeature> Features { get; init; }
     }
 }

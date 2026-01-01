@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Api;
+using LightNap.Core.Integrations.Models;
 
 namespace LightNap.Core.Integrations.Dto.Request;
 
@@ -10,7 +11,7 @@ public class SearchIntegrationsRequestDto : PagedRequestDtoBase
     /// <summary>
     /// The provider to filter by.
     /// </summary>
-    public string? Provider { get; set; }
+    public IntegrationProvider? Provider { get; set; }
 
     /// <summary>
     /// The user ID to filter for.

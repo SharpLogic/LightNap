@@ -2,8 +2,6 @@
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.VisualBasic;
-using System.Text;
 
 namespace LightNap.Core.Extensions
 {
@@ -18,12 +16,12 @@ namespace LightNap.Core.Extensions
         /// <returns></returns>
         public static Integration ToEntity(this CreateIntegrationRequestDto createDto, string userId, IDataProtector dataProtector)
         {
-            createDto.Credentials = createDto.Credentials ?? string.Empty;
+            createDto.Credentials ??= string.Empty;
 
             return new Integration()
             {
                 CreatedDate = DateTime.UtcNow,
-                EncryptedCredentials = dataProtector.Protect(createDto.Credentials!),
+                EncryptedCredentials = dataProtector.Protect(createDto.Credentials),
                 FriendlyName = createDto.FriendlyName,
                 LastUpdated = DateTime.UtcNow,
                 Provider = createDto.Provider,
@@ -62,10 +60,11 @@ namespace LightNap.Core.Extensions
         {
             return new IntegrationDto()
             {
+                AuthorizationExpiration = integration.AuthorizationExpiration,
                 CreatedDate = integration.CreatedDate,
                 Credentials = integration.ShareWithClient ? dataProtector.Unprotect(integration.EncryptedCredentials) : null,
+                CredentialsExpiration = integration.CredentialsExpiration,
                 Error = integration.Error,
-                Expiration = integration.Expiration,
                 FriendlyName = integration.FriendlyName,
                 Id = integration.Id,
                 IsExpired = integration.IsExpired,
@@ -85,10 +84,11 @@ namespace LightNap.Core.Extensions
         {
             return new AdminIntegrationDto()
             {
+                AuthorizationExpiration = integration.AuthorizationExpiration,
                 CreatedDate = integration.CreatedDate,
                 Credentials = integration.ShareWithClient ? dataProtector.Unprotect(integration.EncryptedCredentials) : null,
+                CredentialsExpiration = integration.CredentialsExpiration,
                 Error = integration.Error,
-                Expiration = integration.Expiration,
                 FriendlyName = integration.FriendlyName,
                 Id = integration.Id,
                 IsExpired = integration.IsExpired,

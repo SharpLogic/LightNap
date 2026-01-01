@@ -1,9 +1,6 @@
 using LightNap.Core.Api;
-using LightNap.Core.Configuration.Integrations;
-using LightNap.Core.Data.Entities;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
-using System.Collections.ObjectModel;
 
 namespace LightNap.Core.Integrations.Interfaces;
 
@@ -13,18 +10,11 @@ namespace LightNap.Core.Integrations.Interfaces;
 public interface IIntegrationsService
 {
     /// <summary>
-    /// Retrieves a list of all supported integration definitions.
+    /// Retrieves information about all integrations supported by the system.
     /// </summary>
-    /// <returns>A list of <see cref="IntegrationDefinition"/> objects representing the available integrations. The list is empty
-    /// if no integrations are supported.</returns>
-    IReadOnlyCollection<IntegrationDefinition> GetSupportedIntegrations();
-
-    /// <summary>
-    /// Retrieves a list of integration categories supported by the system.
-    /// </summary>
-    /// <returns>A list of <see cref="IntegrationCategoryDefinition"/> objects representing the supported integration categories.
-    /// The list is empty if no categories are available.</returns>
-    IReadOnlyCollection<IntegrationCategoryDefinition> GetSupportedIntegrationCategories();
+    /// <returns>A <see cref="SupportedIntegrationsDto"/> object containing details of the supported integrations. The object
+    /// will be empty if no integrations are available.</returns>
+    SupportedIntegrationsDto GetSupportedIntegrations();
 
     /// <summary>
     /// Gets the current user's integrations.

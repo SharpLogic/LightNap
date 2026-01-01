@@ -2,12 +2,11 @@ import { inject, Injectable } from "@angular/core";
 import {
     CreateIntegrationRequestDto,
     IntegrationCategory,
-    IntegrationCategoryDefinition,
-    IntegrationDefinition,
-    IntegrationService,
+    IntegrationFeature,
     PagedResponseDto,
     SearchIntegrationsRequestDto,
-    UpdateIntegrationRequestDto
+    SupportedIntegrationsDto,
+    UpdateIntegrationRequestDto,
 } from "@core/backend-api";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { forkJoin, map, Observable, shareReplay } from "rxjs";
@@ -21,8 +20,7 @@ import { AdminIntegration, Integration } from "../entities";
 })
 export class IntegrationsService {
   #webApiService = inject(LightNapWebApiService);
-  #supportedIntegrations$: Observable<Array<IntegrationDefinition>> | null = null;
-  #supportedIntegrationCategories$: Observable<Array<IntegrationCategoryDefinition>> | null = null;
+  #supportedIntegrations$: Observable<SupportedIntegrationsDto> | null = null;
 
   getSupportedIntegrations() {
     if (!this.#supportedIntegrations$) {
@@ -34,42 +32,44 @@ export class IntegrationsService {
     return this.#supportedIntegrations$;
   }
 
-  getSupportedIntegrationCategories() {
-    if (!this.#supportedIntegrationCategories$) {
-      this.#supportedIntegrationCategories$ = this.#webApiService.getSupportedIntegrationCategories().pipe(
-        map(categories => categories || []),
-        shareReplay({ bufferSize: 1, refCount: false })
-      );
-    }
-    return this.#supportedIntegrationCategories$;
+  getSupportedCategories() {
+    return this.getSupportedIntegrations().pipe(map(integrations => integrations.categories));
   }
 
-  getSupportedIntegrationsByService(service: IntegrationService) {
+  getSupportedFeatures() {
+    return this.getSupportedIntegrations().pipe(map(integrations => integrations.features));
+  }
+
+  getSupportedProviders() {
+    return this.getSupportedIntegrations().pipe(map(integrations => integrations.providers));
+  }
+
+  getSupportedIntegrationsByFeature(feature: IntegrationFeature) {
     return this.getSupportedIntegrations().pipe(
-      map(integrations => integrations.filter(integration => integration.services.find(s => s === service)))
+      map(supported => supported.providers.filter(integration => integration.features.find(f => f === feature)))
     );
   }
 
   getSupportedIntegrationsByCategory(category: IntegrationCategory) {
-    return forkJoin([this.getSupportedIntegrations(), this.getSupportedIntegrationCategories()]).pipe(
-      map(([integrations, categories]) => {
-        const categoryDefinition = categories.find(c => c.category === category);
+    return this.getSupportedIntegrations().pipe(
+      map(supported => {
+        const categoryDefinition = supported.categories.find(c => c.category === category);
         if (!categoryDefinition) {
           return [];
         }
-        return integrations.filter(integration => integration.services.some(s => categoryDefinition.services.includes(s)));
+        return supported.providers.filter(integration => integration.features.some(f => categoryDefinition.features.includes(f)));
       })
     );
   }
 
   getMyIntegrations() {
     return forkJoin([this.#webApiService.getMyIntegrations(), this.getSupportedIntegrations()]).pipe(
-      map(([integrationDtos, integrationDefinitions]) => {
+      map(([integrationDtos, supported]) => {
         return integrationDtos!.map(
           integrationDto =>
             <Integration>{
               integration: integrationDto,
-              definition: integrationDefinitions.find(definition => definition.type === integrationDto.provider)!,
+              definition: supported.providers.find(definition => definition.provider === integrationDto.provider)!,
             }
         );
       })
@@ -79,14 +79,14 @@ export class IntegrationsService {
   searchIntegrations(searchIntegrationsRequestDto: SearchIntegrationsRequestDto) {
     return forkJoin([this.#webApiService.searchIntegrations(searchIntegrationsRequestDto), this.getSupportedIntegrations()]).pipe(
       map(
-        ([results, integrationDefinitions]) =>
+        ([results, supported]) =>
           <PagedResponseDto<AdminIntegration>>{
             ...results!,
             data: results!.data.map(
               adminIntegrationDto =>
                 <AdminIntegration>{
                   integration: adminIntegrationDto,
-                  definition: integrationDefinitions.find(definition => definition.type === adminIntegrationDto.provider)!,
+                  definition: supported.providers.find(definition => definition.provider === adminIntegrationDto.provider)!,
                 }
             ),
           }

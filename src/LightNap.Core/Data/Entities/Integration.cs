@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Configuration;
+using LightNap.Core.Integrations.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace LightNap.Core.Data.Entities
@@ -31,12 +32,17 @@ namespace LightNap.Core.Data.Entities
         /// <summary>
         /// The external provider this integration is for.
         /// </summary>
-        public required string Provider { get; set; }
+        public required IntegrationProvider Provider { get; set; }
 
         /// <summary>
-        /// The expiration for integrations that need to be refreshed.
+        /// The expiration for integrations that can be automatically refreshed.
         /// </summary>
-        public DateTime? Expiration { get; set; }
+        public DateTime? CredentialsExpiration { get; set; }
+
+        /// <summary>
+        /// The expiration for integrations that need to be manually reauthorized.
+        /// </summary>
+        public DateTime? AuthorizationExpiration { get; set; }
 
         /// <summary>
         /// THe last time the integration was updated.

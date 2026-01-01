@@ -33,6 +33,7 @@ export type RouteAlias =
   | "profile"
   | "my-devices"
   | "my-external-logins"
+  | "my-integrations"
   | "my-notifications"
   | "change-email"
   | "change-email-requested"

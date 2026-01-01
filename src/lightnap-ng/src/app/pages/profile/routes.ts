@@ -26,6 +26,12 @@ export const Routes: AppRoute[] = [
     loadComponent: () => import("./external-logins/external-logins.component").then(m => m.ExternalLoginsComponent),
   },
   {
+    path: "integrations",
+    title: "Profile | Integrations",
+    data: { alias: "my-integrations", breadcrumb: "Integrations" },
+    loadComponent: () => import("./integrations/integrations.component").then(m => m.IntegrationsComponent),
+  },
+  {
     path: "change-password",
     title: "Profile | Change Password",
     data: { alias: "change-password", breadcrumb: "Change Password" },

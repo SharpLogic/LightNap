@@ -9,6 +9,7 @@ using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using System.Reflection.Metadata.Ecma335;
 
 namespace LightNap.Core.Integrations.Services;
 
@@ -20,15 +21,14 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
     private readonly IDataProtector _dataProtector = dataProtectionProvider.CreateProtector("IntegrationSecretsProtector");
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<IntegrationDefinition> GetSupportedIntegrations()
+    public SupportedIntegrationsDto GetSupportedIntegrations()
     {
-        return IntegrationsConfig.AllIntegrations;
-    }
-
-    /// <inheritdoc/>
-    public IReadOnlyCollection<IntegrationCategoryDefinition> GetSupportedIntegrationCategories()
-    {
-        return IntegrationsConfig.AllIntegrationCategories;
+        return new SupportedIntegrationsDto
+        {
+            Providers = new ReadOnlyCollection<IntegrationProviderDefinition>(IntegrationsConfig.Providers),
+            Categories = new ReadOnlyCollection<IntegrationCategoryDefinition>(IntegrationsConfig.Categories),
+            Features = new ReadOnlyCollection<IntegrationFeatureDefinition>(IntegrationsConfig.Features)
+        };
     }
 
     /// <inheritdoc/>

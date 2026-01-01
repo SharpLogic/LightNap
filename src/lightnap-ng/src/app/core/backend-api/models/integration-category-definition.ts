@@ -5,7 +5,7 @@
  * OpenAPI spec version: 1.0
  */
 import type { IntegrationCategory } from "./integration-category";
-import type { IntegrationService } from "./integration-service";
+import type { IntegrationFeature } from "./integration-feature";
 
 /**
  * Defines a category of integrations.
@@ -14,6 +14,6 @@ export interface IntegrationCategoryDefinition {
   category: IntegrationCategory;
   /** The display name of the category. */
   displayName: string;
-  /** The services this category includes. */
-  services: IntegrationService[];
+  /** The features this category includes. */
+  features: IntegrationFeature[];
 }

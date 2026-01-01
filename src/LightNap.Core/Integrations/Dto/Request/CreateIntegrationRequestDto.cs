@@ -1,4 +1,6 @@
-﻿namespace LightNap.Core.Integrations.Dto.Request;
+﻿using LightNap.Core.Integrations.Models;
+
+namespace LightNap.Core.Integrations.Dto.Request;
 
 /// <summary>
 /// DTO for creating an integration.
@@ -8,5 +10,5 @@ public class CreateIntegrationRequestDto : UpdateIntegrationRequestDto
     /// <summary>
     /// The integration provider.
     /// </summary>
-    public required string Provider { get; set; }
+    public required IntegrationProvider Provider { get; set; }
 }

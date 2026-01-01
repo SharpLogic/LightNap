@@ -53,8 +53,6 @@ import type {
   GetUsersByIds200OneItem,
   GetUsersByIds200ThreeItem,
   GetUsersByIds200TwoItem,
-  IntegrationCategoryDefinition,
-  IntegrationDefinition,
   LoginRequestDto,
   LoginSuccessDto,
   NewPasswordRequestDto,
@@ -85,6 +83,7 @@ import type {
   StaticContentSupportedLanguageDto,
   StringPagedResponseDto,
   SupportedExternalLoginDto,
+  SupportedIntegrationsDto,
   UpdateMyIntegration200One,
   UpdateMyIntegration200Three,
   UpdateMyIntegration200Two,
@@ -112,8 +111,8 @@ import type { RequestHandlerOptions } from "msw";
 import {
   ExternalLoginSuccessType,
   IntegrationCategory,
-  IntegrationService,
-  IntegrationType,
+  IntegrationFeature,
+  IntegrationProvider,
   LoginSuccessType,
   NotificationStatus,
   NotificationType,
@@ -817,33 +816,15 @@ export class LightNapWebApiService {
   }
 
   /**
-   * @summary Retrieves a collection of all supported integration definitions.
+   * @summary Retrieves a list of all supported integration types.
    */
-  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
-  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
-  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(
+  getSupportedIntegrations<TData = SupportedIntegrationsDto>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  getSupportedIntegrations<TData = SupportedIntegrationsDto>(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  getSupportedIntegrations<TData = SupportedIntegrationsDto>(
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
-  getSupportedIntegrations<TData = IntegrationDefinition[] | null>(options?: HttpClientOptions & { observe?: any }): Observable<any> {
+  getSupportedIntegrations<TData = SupportedIntegrationsDto>(options?: HttpClientOptions & { observe?: any }): Observable<any> {
     return this.http.get<TData>(`/api/Integrations/types`, options);
-  }
-
-  /**
-   * @summary Retrieves a collection of all supported integration categories.
-   */
-  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
-    options?: HttpClientOptions & { observe?: "body" }
-  ): Observable<TData>;
-  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
-    options?: HttpClientOptions & { observe: "events" }
-  ): Observable<HttpEvent<TData>>;
-  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
-    options?: HttpClientOptions & { observe: "response" }
-  ): Observable<AngularHttpResponse<TData>>;
-  getSupportedIntegrationCategories<TData = IntegrationCategoryDefinition[] | null>(
-    options?: HttpClientOptions & { observe?: any }
-  ): Observable<any> {
-    return this.http.get<TData>(`/api/Integrations/categories`, options);
   }
 
   /**
@@ -1543,8 +1524,7 @@ export type VerifyEmailClientResult = NonNullable<boolean>;
 export type RequestMagicLinkEmailClientResult = NonNullable<boolean>;
 export type GetDevicesClientResult = NonNullable<DeviceDto[] | null>;
 export type RevokeDeviceClientResult = NonNullable<boolean>;
-export type GetSupportedIntegrationsClientResult = NonNullable<IntegrationDefinition[] | null>;
-export type GetSupportedIntegrationCategoriesClientResult = NonNullable<IntegrationCategoryDefinition[] | null>;
+export type GetSupportedIntegrationsClientResult = NonNullable<SupportedIntegrationsDto>;
 export type SearchIntegrationsClientResult = NonNullable<AdminIntegrationDtoPagedResponseDto>;
 export type DeleteIntegrationClientResult = NonNullable<boolean>;
 export type GetProfileClientResult = NonNullable<ProfileDto>;
@@ -1853,19 +1833,23 @@ export const getGetDevicesResponseMock = (): DeviceDto[] | null =>
 
 export const getRevokeDeviceResponseMock = (): boolean => faker.datatype.boolean();
 
-export const getGetSupportedIntegrationsResponseMock = (): IntegrationDefinition[] | null =>
-  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-    type: faker.helpers.arrayElement(Object.values(IntegrationType)),
+export const getGetSupportedIntegrationsResponseMock = (overrideResponse: Partial<SupportedIntegrationsDto> = {}): SupportedIntegrationsDto => ({
+  providers: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
     displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    services: faker.helpers.arrayElements(Object.values(IntegrationService)),
-  }));
-
-export const getGetSupportedIntegrationCategoriesResponseMock = (): IntegrationCategoryDefinition[] | null =>
-  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    features: faker.helpers.arrayElements(Object.values(IntegrationFeature)),
+  })),
+  categories: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
     category: faker.helpers.arrayElement(Object.values(IntegrationCategory)),
     displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    services: faker.helpers.arrayElements(Object.values(IntegrationService)),
-  }));
+    features: faker.helpers.arrayElements(Object.values(IntegrationFeature)),
+  })),
+  features: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    feature: faker.helpers.arrayElement(Object.values(IntegrationFeature)),
+    displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  })),
+  ...overrideResponse,
+});
 
 export const getSearchIntegrationsResponseMock = (
   overrideResponse: Partial<AdminIntegrationDtoPagedResponseDto> = {}
@@ -1875,8 +1859,12 @@ export const getSearchIntegrationsResponseMock = (
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        expiration: faker.helpers.arrayElement([
+        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        credentialsExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        authorizationExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
         ]),
@@ -2052,8 +2040,12 @@ export const getGetMyIntegrationsResponseIntegrationDtoMock = (overrideResponse:
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    expiration: faker.helpers.arrayElement([
+    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    credentialsExpiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    authorizationExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
     ]),
@@ -2073,8 +2065,12 @@ export const getGetMyIntegrationsResponseAdminIntegrationDtoMock = (overrideResp
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        expiration: faker.helpers.arrayElement([
+        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        credentialsExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        authorizationExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
         ]),
@@ -2126,8 +2122,12 @@ export const getCreateMyIntegrationResponseIntegrationDtoMock = (overrideRespons
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    expiration: faker.helpers.arrayElement([
+    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    credentialsExpiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    authorizationExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
     ]),
@@ -2147,8 +2147,12 @@ export const getCreateMyIntegrationResponseAdminIntegrationDtoMock = (overrideRe
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        expiration: faker.helpers.arrayElement([
+        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        credentialsExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        authorizationExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
         ]),
@@ -2188,8 +2192,12 @@ export const getUpdateMyIntegrationResponseIntegrationDtoMock = (overrideRespons
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-    expiration: faker.helpers.arrayElement([
+    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    credentialsExpiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    authorizationExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
     ]),
@@ -2209,8 +2217,12 @@ export const getUpdateMyIntegrationResponseAdminIntegrationDtoMock = (overrideRe
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.string.alpha({ length: { min: 10, max: 20 } }),
-        expiration: faker.helpers.arrayElement([
+        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        credentialsExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        authorizationExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
         ]),
@@ -3411,9 +3423,8 @@ export const getRevokeDeviceMockHandler = (
 
 export const getGetSupportedIntegrationsMockHandler = (
   overrideResponse?:
-    | IntegrationDefinition[]
-    | null
-    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<IntegrationDefinition[] | null> | IntegrationDefinition[] | null),
+    | SupportedIntegrationsDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<SupportedIntegrationsDto> | SupportedIntegrationsDto),
   options?: RequestHandlerOptions
 ) => {
   return http.get(
@@ -3427,33 +3438,6 @@ export const getGetSupportedIntegrationsMockHandler = (
             ? await overrideResponse(info)
             : overrideResponse
           : getGetSupportedIntegrationsResponseMock(),
-        { status: 200, headers: { "Content-Type": "text/plain" } }
-      );
-    },
-    options
-  );
-};
-
-export const getGetSupportedIntegrationCategoriesMockHandler = (
-  overrideResponse?:
-    | IntegrationCategoryDefinition[]
-    | null
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0]
-      ) => Promise<IntegrationCategoryDefinition[] | null> | IntegrationCategoryDefinition[] | null),
-  options?: RequestHandlerOptions
-) => {
-  return http.get(
-    "*/api/Integrations/categories",
-    async info => {
-      await delay(1000);
-
-      return new HttpResponse(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === "function"
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetSupportedIntegrationCategoriesResponseMock(),
         { status: 200, headers: { "Content-Type": "text/plain" } }
       );
     },
@@ -4394,7 +4378,6 @@ export const getLightNapWebApiMock = () => [
   getGetDevicesMockHandler(),
   getRevokeDeviceMockHandler(),
   getGetSupportedIntegrationsMockHandler(),
-  getGetSupportedIntegrationCategoriesMockHandler(),
   getSearchIntegrationsMockHandler(),
   getDeleteIntegrationMockHandler(),
   getGetProfileMockHandler(),

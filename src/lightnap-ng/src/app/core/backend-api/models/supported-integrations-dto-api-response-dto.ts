@@ -4,18 +4,14 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { IntegrationDefinition } from "./integration-definition";
+import type { SupportedIntegrationsDto } from "./supported-integrations-dto";
 import type { ApiResponseType } from "./api-response-type";
 
 /**
  * Represents the response of an API call.
  */
-export interface IntegrationDefinitionIReadOnlyCollectionApiResponseDto {
-  /**
-   * Gets or sets the result of the API call.
-   * @nullable
-   */
-  result?: IntegrationDefinition[] | null;
+export interface SupportedIntegrationsDtoApiResponseDto {
+  result?: SupportedIntegrationsDto;
   type: ApiResponseType;
   /**
    * Gets or sets the error messages associated with the API response.
