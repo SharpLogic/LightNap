@@ -13,7 +13,17 @@ import { TableModule } from "primeng/table";
 
 @Component({
   templateUrl: "./index.component.html",
-  imports: [CommonModule, RouterLink, RoutePipe, TableModule, ButtonModule, ErrorListComponent, PanelModule, ApiResponseComponent, ConfirmDialogComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RoutePipe,
+    TableModule,
+    ButtonModule,
+    ErrorListComponent,
+    PanelModule,
+    ApiResponseComponent,
+    ConfirmDialogComponent,
+  ],
 })
 export class IndexComponent {
   readonly #integrationsService = inject(IntegrationsService);
