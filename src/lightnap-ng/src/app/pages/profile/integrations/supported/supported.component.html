@@ -2,27 +2,35 @@
   <ng-template #success let-providersAny>
     @let providers = asProviders(providersAny);
 
-    <p-panel header="Supported Integrations">
-      <div class="flex flex-wrap gap-4">
-        @for (provider of providers; track $index) {
-          <p-card [header]="provider.displayName" class="w-90">
-            <p>{{ provider.description }}</p>
-            @for (feature of provider.features; track $index) {
-              <p-tag [value]="feature" class="mr-2 mb-2" />
-            }
+    <div class="flex flex-wrap gap-4 mt-2">
+      @for (provider of providers; track $index) {
+        <p-card [header]="provider.displayName" class="w-90">
+          <div class="h-40 flex flex-col gap-2 justify-between">
+            <div>{{ provider.description }}</div>
+            <div>
+              @for (feature of provider.features; track $index) {
+                <p-tag [value]="feature" class="mr-2 mb-2" />
+              }
+            </div>
+          </div>
 
-            <ng-template #footer>
-              <div class="flex justify-end">
-                @if (provider.isConfiguredManually) {
-                  <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'connect-integration' | route: provider.provider" />
-                } @else {
-                  <a pButton label="Connect" icon="pi pi-plus" severity="success" [href]="`/api/integrations/connect/${provider.provider}`"></a>
-                }
-              </div>
-            </ng-template>
-          </p-card>
-        }
-      </div>
-    </p-panel>
+          <ng-template #footer>
+            <div class="flex justify-end">
+              @if (provider.isConfiguredManually) {
+                <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'connect-integration' | route: provider.provider" />
+              } @else {
+                <a
+                  pButton
+                  label="Connect"
+                  icon="pi pi-external-link"
+                  severity="success"
+                  [href]="`/api/integrations/connect/${provider.provider}`"
+                ></a>
+              }
+            </div>
+          </ng-template>
+        </p-card>
+      }
+    </div>
   </ng-template>
 </ln-api-response>

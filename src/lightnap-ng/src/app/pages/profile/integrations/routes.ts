@@ -10,19 +10,19 @@ export const Routes: AppRoute[] = [
   {
     path: "supported",
     title: "Profile | Supported Integrations",
-    data: { alias: "supported-integrations", breadcrumb: "Select An Integration" },
+    data: { alias: "supported-integrations", breadcrumb: "Supported Integrations" },
     loadComponent: () => import("./supported/supported.component").then(m => m.SupportedComponent),
-  },
-  {
-    path: "connect/:provider",
-    title: "Profile | Connect An Integration",
-    data: { alias: "connect-integration", breadcrumb: "Connect" },
-    loadComponent: () => import("./connect/connect.component").then(m => m.ConnectComponent),
   },
   {
     path: "manage/:integrationId",
     title: "Profile | Manage Integration",
     data: { alias: "manage-integration", breadcrumb: "Manage" },
     loadComponent: () => import("./manage/manage.component").then(m => m.ManageComponent),
+  },
+  {
+    path: "connect/:provider",
+    title: "Profile | Connect An Integration",
+    data: { alias: "connect-integration", breadcrumb: "Connect" },
+    loadComponent: () => import("./connect/connect.component").then(m => m.ConnectComponent),
   },
 ];
