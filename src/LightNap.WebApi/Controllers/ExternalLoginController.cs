@@ -107,6 +107,11 @@ namespace LightNap.WebApi.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Login(string provider, string? returnUrl)
         {
+            if (!supportedExternalLogins.Any(s => s.ProviderName.Equals(provider, StringComparison.OrdinalIgnoreCase)))
+            {
+                return BadRequest($"The external login provider '{provider}' is not supported.");
+            }
+
             var redirectUrl = Url.Action(nameof(LoginCallback), "ExternalLogin", new { returnUrl })!;
             var properties = externalLoginService.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return this.Challenge(properties, provider);
@@ -117,7 +122,7 @@ namespace LightNap.WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// This endpoint is called by the external provider after the user completes authentication.
-        /// It processes the authentication response and redirects to the appropriate page:
+        /// It processes the authentication response and redirects to the appropriate frontend page:
         /// - On success: redirects to `/identity/external-logins/callback` with authentication token
         /// - On failure: redirects to `/identity/external-logins/error` with error details
         /// </remarks>

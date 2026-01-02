@@ -10,6 +10,9 @@ namespace LightNap.Core.Integrations.Models
         /// </summary>
         TestProvider,
 
+        /// <summary>
+        /// Represents a provider used for manual testing scenarios.
+        /// </summary>
         TestProviderManual,
     }
 }

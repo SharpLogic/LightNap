@@ -1,4 +1,5 @@
-﻿using LightNap.Core.Api;
+﻿using AspNet.Security.OAuth.GitHub;
+using LightNap.Core.Api;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Database;
 using LightNap.Core.Configuration.Email;
@@ -30,7 +31,6 @@ using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
-using LightNap.WebApi.Filters;
 using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -190,7 +190,31 @@ public static class ApplicationServiceExtensions
             };
         });
 
-        // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc.
+        services.AddOAuthServices(authSettings);
+
+        services.AddAuthorizationBuilder()
+           .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds and configures external OAuth authentication providers and Windows authentication for the application based
+    /// on the specified authentication settings.
+    /// </summary>
+    /// <remarks>This method registers external authentication schemes such as Google, Microsoft, and GitHub
+    /// if they are configured in <paramref name="authSettings"/>. It also enables Windows authentication if specified.
+    /// Callback URLs for external providers will follow the pattern "/signin-{provider}" (e.g., "/signin-google"). To
+    /// add additional providers, see the official ASP.NET Core documentation on social authentication.</remarks>
+    /// <param name="services">The service collection to which authentication services will be added. Must not be null.</param>
+    /// <param name="authSettings">The authentication settings containing configuration for OAuth providers and Windows authentication. Must not be
+    /// null.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
+    public static IServiceCollection AddOAuthServices(this IServiceCollection services, AuthenticationSettings authSettings)
+    {
+        // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc. If in doubt, check the
+        // default authentication scheme for the provider, which should be in a constant like GoogleDefaults.AuthenticationScheme.
+
         // To add more providers, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social.
         var supportedExternalLogins = new List<SupportedExternalLoginDto>();
         var oAuthSettings = authSettings?.OAuth;
@@ -205,7 +229,7 @@ public static class ApplicationServiceExtensions
                         options.ClientId = oAuthSettings.Google.ClientId;
                         options.ClientSecret = oAuthSettings.Google.ClientSecret;
                     });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("Google", GoogleDefaults.DisplayName));
+                supportedExternalLogins.Add(new SupportedExternalLoginDto(GoogleDefaults.AuthenticationScheme, GoogleDefaults.DisplayName));
             }
 
             if (oAuthSettings.Microsoft is not null)
@@ -216,20 +240,18 @@ public static class ApplicationServiceExtensions
                         options.ClientId = oAuthSettings.Microsoft.ClientId;
                         options.ClientSecret = oAuthSettings.Microsoft.ClientSecret;
                     });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("Microsoft", MicrosoftAccountDefaults.DisplayName));
+                supportedExternalLogins.Add(new SupportedExternalLoginDto(MicrosoftAccountDefaults.AuthenticationScheme, MicrosoftAccountDefaults.DisplayName));
             }
 
             if (oAuthSettings.GitHub is not null)
             {
-                // You must install the NuGet package: AspNet.Security.OAuth.GitHub
-                // And add: using AspNet.Security.OAuth.GitHub;
                 services.AddAuthentication()
                     .AddGitHub(options =>
                     {
                         options.ClientId = oAuthSettings.GitHub.ClientId;
                         options.ClientSecret = oAuthSettings.GitHub.ClientSecret;
                     });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("GitHub", "GitHub"));
+                supportedExternalLogins.Add(new SupportedExternalLoginDto(GitHubAuthenticationDefaults.AuthenticationScheme, GitHubAuthenticationDefaults.DisplayName));
             }
         }
 
@@ -240,10 +262,7 @@ public static class ApplicationServiceExtensions
         }
 
         services.AddSingleton<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
-
-        services.AddAuthorizationBuilder()
-            .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));
-
+       
         return services;
     }
 
