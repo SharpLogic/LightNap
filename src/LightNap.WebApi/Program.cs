@@ -11,13 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.FileProviders;
 using StackExchange.Redis;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
 AuthenticationSettings authSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
-IntegrationsSettings integrationsSettings = builder.Configuration.GetRequiredSection<IntegrationsSettings>("Integrations");
 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
@@ -27,9 +27,6 @@ RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSec
 // Register configuration sections with validation.
 builder.Services.AddOptions<AuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
-    .ValidateDataAnnotations();
-builder.Services.AddOptions<IntegrationsSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("Integrations"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Jwt"))
@@ -46,6 +43,15 @@ builder.Services.AddOptions<RateLimitingSettings>()
 builder.Services.AddOptions<DatabaseSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Database"))
     .ValidateDataAnnotations();
+
+// Check if the Integrations section exists before configuring and validating it
+var integrationsSection = builder.Configuration.GetSection("Integrations");
+IntegrationsSettings? integrationsSettings = null;
+if (integrationsSection.Exists())
+{
+    integrationsSettings = integrationsSection.Get<IntegrationsSettings>()!;
+    Validator.ValidateObject(integrationsSettings, new ValidationContext(integrationsSettings), validateAllProperties: true);
+}
 
 // Check if the SeededUsers section exists before configuring and validating it
 var seededUsersSection = builder.Configuration.GetSection("SeededUsers");
@@ -70,8 +76,12 @@ builder.Services
     .AddApplicationServices()
     .AddIdentityServices(jwtSettings)
     .AddOAuthLoginServices(authSettings)
-    .AddOAuthIntegrationServices(integrationsSettings)
     .AddRateLimitingServices(rateLimitingSettings);
+
+if (integrationsSettings is not null)
+{
+    builder.Services.AddOAuthIntegrationServices(integrationsSettings);
+}
 
 // Configure HybridCache conditionally
 builder.Services.AddHybridCache(options =>

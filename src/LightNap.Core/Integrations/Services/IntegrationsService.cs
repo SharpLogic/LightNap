@@ -7,6 +7,7 @@ using LightNap.Core.Identity.Models;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using LightNap.Core.Integrations.Interfaces;
+using LightNap.Core.Integrations.Providers;
 using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -121,8 +122,8 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
         switch (loginInfo.LoginProvider)
         {
             case "Gmail":
-                GmailIntegrationService gmail = new GmailIntegrationService();
-                requestDto = await gmail.GetCreateIntegrationRequest(loginInfo);
+                GmailIntegrationProvider gmail = new GmailIntegrationProvider();
+                requestDto = await gmail.BuildCreateIntegrationRequest(loginInfo);
                 break;
             default:
                 throw new UserFriendlyApiException("Unsupported external provider");

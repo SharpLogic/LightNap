@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35312.102
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.WebApi", "LightNap.WebApi\LightNap.WebApi.csproj", "{EA38F962-A671-4B19-8336-01934841226B}"
 EndProject
@@ -14,6 +14,20 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.Sqlite", "LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Core.Tests", "LightNap.Core.Tests\LightNap.Core.Tests.csproj", "{129FA762-2B43-4190-96C6-3D6065B273BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{CAB4EC31-596D-4276-8925-252653453C69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Google", "Google", "{CF02957D-4331-4B58-A9A3-BD2866B05AB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github", "Github", "{CA958E5B-5F98-4350-B860-1A4FF094B998}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft", "Microsoft", "{063E0F09-4D46-4B98-9C11-DBD3FA9A66A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Integrations.Microsoft", "Integrations\Microsoft\LightNap.Integrations.Microsoft\LightNap.Integrations.Microsoft.csproj", "{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Integrations.Google", "Integrations\Google\LightNap.Integrations.Google\LightNap.Integrations.Google.csproj", "{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Integrations.Github", "Integrations\Github\LightNap.Integrations.Github\LightNap.Integrations.Github.csproj", "{36045E50-11A3-E0F5-D89C-5B8C13525622}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,9 +59,29 @@ Global
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36045E50-11A3-E0F5-D89C-5B8C13525622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36045E50-11A3-E0F5-D89C-5B8C13525622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36045E50-11A3-E0F5-D89C-5B8C13525622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36045E50-11A3-E0F5-D89C-5B8C13525622}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF02957D-4331-4B58-A9A3-BD2866B05AB3} = {CAB4EC31-596D-4276-8925-252653453C69}
+		{CA958E5B-5F98-4350-B860-1A4FF094B998} = {CAB4EC31-596D-4276-8925-252653453C69}
+		{063E0F09-4D46-4B98-9C11-DBD3FA9A66A2} = {CAB4EC31-596D-4276-8925-252653453C69}
+		{E38BC77F-CB29-A364-4FF3-6FD2B896F3B2} = {063E0F09-4D46-4B98-9C11-DBD3FA9A66A2}
+		{2E6C01C3-4107-76A4-61E9-4E9A1FAB4B34} = {CF02957D-4331-4B58-A9A3-BD2866B05AB3}
+		{36045E50-11A3-E0F5-D89C-5B8C13525622} = {CA958E5B-5F98-4350-B860-1A4FF094B998}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {178DA7E1-816E-4AA8-81A2-FA25000CA784}

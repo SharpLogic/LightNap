@@ -13,6 +13,8 @@ using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.Core.Identity.Services;
 using LightNap.Core.Integrations.Interfaces;
+using LightNap.Core.Integrations.Models;
+using LightNap.Core.Integrations.Providers;
 using LightNap.Core.Integrations.Services;
 using LightNap.Core.Interfaces;
 using LightNap.Core.Notifications.Interfaces;
@@ -271,9 +273,14 @@ public static class ApplicationServiceExtensions
     /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
     public static IServiceCollection AddOAuthIntegrationServices(this IServiceCollection services, IntegrationsSettings integrationsSettings)
     {
+        Dictionary<IntegrationProvider, IIntegrationProvider> providers = [];
+
         // Add external authentication schemes
         if (integrationsSettings.Gmail is not null)
         {
+            var gmailProvider = new GmailIntegrationProvider();
+            providers.Add(gmailProvider.Provider, gmailProvider);
+
             services.AddAuthentication()
                 .AddGoogle(
                 "Gmail",
@@ -282,13 +289,16 @@ public static class ApplicationServiceExtensions
                     options.ClientId = integrationsSettings.Gmail.ClientId;
                     options.ClientSecret = integrationsSettings.Gmail.ClientSecret;                    
                     options.CallbackPath = "/signin-gmail";
+                    options.SaveTokens = true;
+
                     options.AccessType = "offline";
                     options.Scope.Add("https://www.googleapis.com/auth/gmail.readonly");
                     options.Scope.Add("https://www.googleapis.com/auth/gmail.send");
-                    options.SaveTokens = true;
                     options.AdditionalAuthorizationParameters.Add("prompt", "consent");
                 });
         }
+
+        services.AddSingleton<IDictionary<IntegrationProvider, IIntegrationProvider>>(providers);
 
         return services;
     }
