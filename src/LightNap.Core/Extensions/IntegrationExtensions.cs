@@ -24,7 +24,7 @@ namespace LightNap.Core.Extensions
                 EncryptedCredentials = dataProtector.Protect(createDto.Credentials),
                 FriendlyName = createDto.FriendlyName,
                 LastUpdated = DateTime.UtcNow,
-                Provider = createDto.Provider,
+                ProviderKey = createDto.ProviderKey,
                 ShareWithClient = createDto.ShareWithClient,
                 UserId = userId,
             };
@@ -87,7 +87,7 @@ namespace LightNap.Core.Extensions
                 Id = integration.Id,
                 IsExpired = integration.IsExpired,
                 LastUpdated = integration.LastUpdated,
-                Provider = integration.Provider,
+                ProviderKey = integration.ProviderKey,
                 ShareWithClient = integration.ShareWithClient,
             };
         }
@@ -111,7 +111,7 @@ namespace LightNap.Core.Extensions
                 Id = integration.Id,
                 IsExpired = integration.IsExpired,
                 LastUpdated = integration.LastUpdated,
-                Provider = integration.Provider,
+                ProviderKey = integration.ProviderKey,
                 ShareWithClient = integration.ShareWithClient,
                 UserId = integration.UserId,
             };

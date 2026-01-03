@@ -10,5 +10,5 @@ public class CreateIntegrationRequestDto : UpdateIntegrationRequestDto
     /// <summary>
     /// The integration provider.
     /// </summary>
-    public required IntegrationProvider Provider { get; set; }
+    public required string ProviderKey { get; set; }
 }

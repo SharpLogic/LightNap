@@ -17,15 +17,15 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
-AuthenticationSettings authSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
-JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
-EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
-CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
-DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings>("Database");
-RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
+var authSettings = builder.Configuration.GetRequiredSection<WebApiAuthenticationSettings>("Authentication");
+var jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
+var emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
+var cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
+var databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+var rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
 // Register configuration sections with validation.
-builder.Services.AddOptions<AuthenticationSettings>()
+builder.Services.AddOptions<WebApiAuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()

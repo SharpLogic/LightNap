@@ -32,7 +32,7 @@ namespace LightNap.Core.Data.Entities
         /// <summary>
         /// The external provider this integration is for.
         /// </summary>
-        public required IntegrationProvider Provider { get; set; }
+        public required string ProviderKey { get; set; }
 
         /// <summary>
         /// The expiration for integrations that can be automatically refreshed.

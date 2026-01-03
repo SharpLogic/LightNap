@@ -1,10 +1,12 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
 using LightNap.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using StackExchange.Redis;
@@ -17,15 +19,17 @@ namespace LightNap.WebApi.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
-    public class ExternalLoginController(IExternalLoginService externalLoginService, IEnumerable<SupportedExternalLoginDto> supportedExternalLogins) : ControllerBase
+    public class ExternalLoginController(IExternalLoginService externalLoginService, SignInManager<ApplicationUser> signInManager) : ControllerBase
     {
         /// <summary>
         /// Gets the supported external login providers based on the application's configuration.
         /// </summary>
         /// <returns>The API response containing the list of options.</returns>
         [HttpGet("supported", Name = nameof(GetSupportedExternalLogins))]
-        public ApiResponseDto<IEnumerable<SupportedExternalLoginDto>> GetSupportedExternalLogins()
+        public async Task<ApiResponseDto<IEnumerable<SupportedExternalLoginDto>>> GetSupportedExternalLogins()
         {
+            var externalLoginSchemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+            var supportedExternalLogins = externalLoginSchemes.Select(scheme => new SupportedExternalLoginDto(scheme.Name, scheme.DisplayName ?? scheme.Name));
             return new ApiResponseDto<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
         }
 
@@ -105,9 +109,11 @@ namespace LightNap.WebApi.Controllers
         /// <returns>A challenge result (HTTP 302) that redirects to the external provider's authentication endpoint.</returns>
         [HttpGet("login/{provider}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Login(string provider, string? returnUrl)
+        public async Task<IActionResult> Login(string provider, string? returnUrl)
         {
-            if (!supportedExternalLogins.Any(s => s.ProviderName.Equals(provider, StringComparison.OrdinalIgnoreCase)))
+            var supportedExternalLogins = await this.GetSupportedExternalLogins();
+
+            if (!supportedExternalLogins.Result!.Any(s => s.ProviderName.Equals(provider, StringComparison.OrdinalIgnoreCase)))
             {
                 return BadRequest($"The external login provider '{provider}' is not supported.");
             }

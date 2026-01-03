@@ -60,9 +60,9 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
 
         var query = db.Integrations.AsQueryable();
 
-        if (searchDto.Provider is not null)
+        if (searchDto.ProviderKey is not null)
         {
-            query = query.Where(i => i.Provider == searchDto.Provider);
+            query = query.Where(i => i.ProviderKey == searchDto.ProviderKey);
         }
 
         if (searchDto.UserId is not null)
@@ -70,7 +70,7 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
             query = query.Where(i => i.UserId == searchDto.UserId);
         }
 
-        query = query.OrderBy(i => i.Provider).ThenBy(i => i.UserId);
+        query = query.OrderBy(i => i.ProviderKey).ThenBy(i => i.UserId);
 
         int skip = (searchDto.PageNumber - 1) * searchDto.PageSize;
 

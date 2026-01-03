@@ -22,15 +22,5 @@ namespace LightNap.Core.Configuration.Authentication
         /// True to require email verification before a user can log in.
         /// </summary>
         public bool RequireEmailVerification { get; set; }
-
-        /// <summary>
-        /// OAuth provider settings.
-        /// </summary>
-        public OAuthSettings? OAuth { get; init; }
-
-        /// <summary>
-        /// Windows authentication settings.
-        /// </summary>
-        public WindowsAuthSettings? WindowsAuth { get; init; }
     }
 }

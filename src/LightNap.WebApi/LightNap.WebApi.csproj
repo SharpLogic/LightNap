@@ -13,11 +13,7 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,6 +25,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Integrations\Github\LightNap.Integrations.Github\LightNap.Integrations.Github.csproj" />
+    <ProjectReference Include="..\Integrations\Google\LightNap.Integrations.Google\LightNap.Integrations.Google.csproj" />
+    <ProjectReference Include="..\Integrations\Microsoft\LightNap.Integrations.Microsoft\LightNap.Integrations.Microsoft.csproj" />
     <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
     <ProjectReference Include="..\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
     <ProjectReference Include="..\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />

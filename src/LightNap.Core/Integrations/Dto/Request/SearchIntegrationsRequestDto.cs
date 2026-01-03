@@ -11,7 +11,7 @@ public class SearchIntegrationsRequestDto : PagedRequestDtoBase
     /// <summary>
     /// The provider to filter by.
     /// </summary>
-    public IntegrationProvider? Provider { get; set; }
+    public string? ProviderKey { get; set; }
 
     /// <summary>
     /// The user ID to filter for.

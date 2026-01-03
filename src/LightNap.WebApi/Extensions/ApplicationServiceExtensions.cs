@@ -32,6 +32,7 @@ using LightNap.Core.UserSettings.Interfaces;
 using LightNap.Core.UserSettings.Services;
 using LightNap.DataProviders.Sqlite.Extensions;
 using LightNap.DataProviders.SqlServer.Extensions;
+using LightNap.Integrations.Microsoft;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Services;
@@ -209,58 +210,20 @@ public static class ApplicationServiceExtensions
     /// <param name="services">The service collection to which authentication services will be added. Must not be null.</param>
     /// <param name="authSettings">The authentication settings containing configuration for OAuth providers and Windows authentication.</param>
     /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
-    public static IServiceCollection AddOAuthLoginServices(this IServiceCollection services, AuthenticationSettings authSettings)
+    public static IServiceCollection AddOAuthLoginServices(this IServiceCollection services, WebApiAuthenticationSettings authSettings)
     {
         // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc. If in doubt, check the
         // default authentication scheme for the provider, which should be in a constant like GoogleDefaults.AuthenticationScheme.
 
         // To add more providers, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social.
-        var supportedExternalLogins = new List<SupportedExternalLoginDto>();
         var oAuthSettings = authSettings?.OAuth;
         if (oAuthSettings is not null)
         {
             // Add external authentication schemes
-            if (oAuthSettings.Google is not null)
-            {
-                services.AddAuthentication()
-                    .AddGoogle(options =>
-                    {
-                        options.ClientId = oAuthSettings.Google.ClientId;
-                        options.ClientSecret = oAuthSettings.Google.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto(GoogleDefaults.AuthenticationScheme, GoogleDefaults.DisplayName));
-            }
-
-            if (oAuthSettings.Microsoft is not null)
-            {
-                services.AddAuthentication()
-                    .AddMicrosoftAccount(options =>
-                    {
-                        options.ClientId = oAuthSettings.Microsoft.ClientId;
-                        options.ClientSecret = oAuthSettings.Microsoft.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto(MicrosoftAccountDefaults.AuthenticationScheme, MicrosoftAccountDefaults.DisplayName));
-            }
-
-            if (oAuthSettings.GitHub is not null)
-            {
-                services.AddAuthentication()
-                    .AddGitHub(options =>
-                    {
-                        options.ClientId = oAuthSettings.GitHub.ClientId;
-                        options.ClientSecret = oAuthSettings.GitHub.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto(GitHubAuthenticationDefaults.AuthenticationScheme, GitHubAuthenticationDefaults.DisplayName));
-            }
+            if (oAuthSettings.GitHub is not null) { services.AddGithubLogin(oAuthSettings.GitHub); }
+            if (oAuthSettings.Google is not null) { services.AddGoogleLogin(oAuthSettings.Google); }
+            if (oAuthSettings.Microsoft is not null) { services.AddMicrosoftLogin(oAuthSettings.Microsoft); }
         }
-
-        if (authSettings?.WindowsAuth?.Enabled == true)
-        {
-            services.AddAuthentication()
-                .AddNegotiate();
-        }
-
-        services.AddSingleton<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
 
         return services;
     }
@@ -273,32 +236,8 @@ public static class ApplicationServiceExtensions
     /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
     public static IServiceCollection AddOAuthIntegrationServices(this IServiceCollection services, IntegrationsSettings integrationsSettings)
     {
-        Dictionary<IntegrationProvider, IIntegrationProvider> providers = [];
-
-        // Add external authentication schemes
-        if (integrationsSettings.Gmail is not null)
-        {
-            var gmailProvider = new GmailIntegrationProvider();
-            providers.Add(gmailProvider.Provider, gmailProvider);
-
-            services.AddAuthentication()
-                .AddGoogle(
-                "Gmail",
-                options =>
-                {
-                    options.ClientId = integrationsSettings.Gmail.ClientId;
-                    options.ClientSecret = integrationsSettings.Gmail.ClientSecret;                    
-                    options.CallbackPath = "/signin-gmail";
-                    options.SaveTokens = true;
-
-                    options.AccessType = "offline";
-                    options.Scope.Add("https://www.googleapis.com/auth/gmail.readonly");
-                    options.Scope.Add("https://www.googleapis.com/auth/gmail.send");
-                    options.AdditionalAuthorizationParameters.Add("prompt", "consent");
-                });
-        }
-
-        services.AddSingleton<IDictionary<IntegrationProvider, IIntegrationProvider>>(providers);
+        // Configure the integrations from the provider libraries
+        if (integrationsSettings.Gmail is not null) { services.AddGmailIntegration(integrationsSettings.Gmail); }
 
         return services;
     }

@@ -12,7 +12,7 @@ namespace LightNap.Core.Integrations.Providers
     public class GmailIntegrationProvider : IIntegrationProvider
     {
         /// <inheritdoc/>
-        public IntegrationProvider Provider => IntegrationProvider.Gmail;
+        public string Key => "Gmail";
 
         /// <inheritdoc/>
         public string DisplayName => "Gmail";
@@ -27,7 +27,7 @@ namespace LightNap.Core.Integrations.Providers
                 RefreshToken = externalLoginInfo.RefreshToken,
                 Credentials = externalLoginInfo.AccessToken,
                 FriendlyName = this.DisplayName,
-                Provider = this.Provider,
+                ProviderKey = this.Key,
                 ShareWithClient = false,
             };
         }

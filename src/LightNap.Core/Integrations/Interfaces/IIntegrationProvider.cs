@@ -16,7 +16,7 @@ public interface IIntegrationProvider
     /// <summary>
     /// The integration provider key.
     /// </summary>
-    IntegrationProvider Provider { get; }
+    string Key { get; }
 
     /// <summary>
     /// The display name of the provider.
