@@ -36,7 +36,7 @@ export class ConnectComponent {
   readonly #fb = inject(FormBuilder);
   readonly #routeAlias = inject(RouteAliasService);
 
-  readonly provider = input.required<IntegrationProvider>();
+  readonly provider = input.required<string>();
 
   readonly form = this.#fb.nonNullable.group({
     friendlyName: this.#fb.nonNullable.control<string>("New Integration", [Validators.required]),
@@ -65,7 +65,7 @@ export class ConnectComponent {
     this.#integrationsService
       .createMyIntegration({
         ...this.form.getRawValue(),
-        provider: this.provider(),
+        providerKey: this.provider(),
       })
       .subscribe(integration => {
         if (!integration) {

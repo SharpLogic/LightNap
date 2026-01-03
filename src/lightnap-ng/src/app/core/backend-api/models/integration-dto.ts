@@ -4,7 +4,6 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { IntegrationProvider } from "./integration-provider";
 
 /**
  * DTO for a user integration.
@@ -14,7 +13,8 @@ export interface IntegrationDto {
   id: number;
   /** When the integration was created. */
   createdDate: Date;
-  provider: IntegrationProvider;
+  /** The external provider this integration is for. */
+  providerKey: string;
   /**
    * The expiration for integrations that can be automatically refreshed.
    * @nullable

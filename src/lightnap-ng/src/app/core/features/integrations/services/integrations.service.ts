@@ -42,7 +42,7 @@ export class IntegrationsService {
           integrationDto =>
             <Integration>{
               integration: integrationDto,
-              definition: supported.providers.find(definition => definition.provider === integrationDto.provider)!,
+              definition: supported.providers.find(definition => definition.provider === integrationDto.providerKey)!,
             }
         );
       })
@@ -63,7 +63,7 @@ export class IntegrationsService {
               adminIntegrationDto =>
                 <AdminIntegration>{
                   integration: adminIntegrationDto,
-                  definition: supported.providers.find(definition => definition.provider === adminIntegrationDto.provider)!,
+                  definition: supported.providers.find(definition => definition.provider === adminIntegrationDto.providerKey)!,
                 }
             ),
           }

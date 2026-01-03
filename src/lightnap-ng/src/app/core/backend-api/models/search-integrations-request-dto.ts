@@ -5,13 +5,16 @@
  * OpenAPI spec version: 1.0
  */
 import type { PagedRequestDtoBase } from "./paged-request-dto-base";
-import type { IntegrationProvider } from "./integration-provider";
 
 /**
  * DTO for searching integrations.
  */
 export type SearchIntegrationsRequestDto = PagedRequestDtoBase & {
-  provider?: IntegrationProvider;
+  /**
+   * The provider to filter by.
+   * @nullable
+   */
+  providerKey?: string | null;
   /**
    * The user ID to filter for.
    * @nullable

@@ -1890,7 +1890,7 @@ export const getSearchIntegrationsResponseMock = (
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
         credentialsExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
@@ -1925,7 +1925,7 @@ export const getConfirmIntegrationResponseIntegrationDtoMock = (overrideResponse
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
     credentialsExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
@@ -1950,7 +1950,7 @@ export const getConfirmIntegrationResponseAdminIntegrationDtoMock = (overrideRes
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
         credentialsExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
@@ -2141,7 +2141,7 @@ export const getGetMyIntegrationsResponseIntegrationDtoMock = (overrideResponse:
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
     credentialsExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
@@ -2166,7 +2166,7 @@ export const getGetMyIntegrationsResponseAdminIntegrationDtoMock = (overrideResp
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
         credentialsExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
@@ -2223,7 +2223,7 @@ export const getCreateMyIntegrationResponseIntegrationDtoMock = (overrideRespons
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
     credentialsExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
@@ -2248,7 +2248,7 @@ export const getCreateMyIntegrationResponseAdminIntegrationDtoMock = (overrideRe
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
         credentialsExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
@@ -2293,7 +2293,7 @@ export const getUpdateMyIntegrationResponseIntegrationDtoMock = (overrideRespons
   ...{
     id: faker.number.int({ min: undefined, max: undefined }),
     createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
     credentialsExpiration: faker.helpers.arrayElement([
       faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
       undefined,
@@ -2318,7 +2318,7 @@ export const getUpdateMyIntegrationResponseAdminIntegrationDtoMock = (overrideRe
       ...{
         id: faker.number.int({ min: undefined, max: undefined }),
         createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
-        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        providerKey: faker.string.alpha({ length: { min: 10, max: 20 } }),
         credentialsExpiration: faker.helpers.arrayElement([
           faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
           undefined,
