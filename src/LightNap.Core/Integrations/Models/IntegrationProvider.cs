@@ -14,5 +14,10 @@ namespace LightNap.Core.Integrations.Models
         /// Represents a provider used for manual testing scenarios.
         /// </summary>
         TestProviderManual,
+
+        /// <summary>
+        /// Represents the Gmail email service provider.
+        /// </summary>
+        Gmail,
     }
 }

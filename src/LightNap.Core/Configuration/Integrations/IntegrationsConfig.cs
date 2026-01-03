@@ -30,7 +30,16 @@ namespace LightNap.Core.Configuration.Integrations
                     Description = "This is a test integration provider for development and testing purposes that can be configured on the frontend.",
                     Features = [IntegrationFeature.TestFeature],
                     IsConfiguredManually = true
+                },
+                new IntegrationProviderDefinition()
+                {
+                    Provider = IntegrationProvider.Gmail,
+                    DisplayName = "Gmail",
+                    Description = "Integrate your Gmail account.",
+                    Features = [IntegrationFeature.Email, IntegrationFeature.TestFeature],
+                    IsConfiguredManually = false
                 }
+
             ];
 
         /// <summary>
@@ -43,6 +52,12 @@ namespace LightNap.Core.Configuration.Integrations
                     Category = IntegrationCategory.TestCategory,
                     DisplayName = "Test Category",
                     Features = [IntegrationFeature.TestFeature]
+                },
+                new IntegrationCategoryDefinition()
+                {
+                    Category = IntegrationCategory.Productivity,
+                    DisplayName = "Productivity",
+                    Features = [IntegrationFeature.Email]
                 }
             ];
 
@@ -55,7 +70,13 @@ namespace LightNap.Core.Configuration.Integrations
                 {
                     Feature = IntegrationFeature.TestFeature,
                     DisplayName = "Test Feature",
+                },
+                new IntegrationFeatureDefinition()
+                {
+                    Feature = IntegrationFeature.Email,
+                    DisplayName = "Email",
                 }
+
             ];
 
         /// <summary>

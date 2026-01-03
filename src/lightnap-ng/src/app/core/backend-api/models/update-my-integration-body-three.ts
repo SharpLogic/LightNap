@@ -5,9 +5,10 @@
  * OpenAPI spec version: 1.0
  */
 import type { UpdateIntegrationRequestDto } from "./update-integration-request-dto";
+import type { CreateIntegrationFromOAuthRequestDto } from "./create-integration-from-o-auth-request-dto";
 import type { CreateIntegrationRequestDto } from "./create-integration-request-dto";
 
 /**
  * DTO for updating an integration.
  */
-export type UpdateMyIntegrationBodyThree = UpdateIntegrationRequestDto | CreateIntegrationRequestDto;
+export type UpdateMyIntegrationBodyThree = UpdateIntegrationRequestDto | CreateIntegrationFromOAuthRequestDto | CreateIntegrationRequestDto;

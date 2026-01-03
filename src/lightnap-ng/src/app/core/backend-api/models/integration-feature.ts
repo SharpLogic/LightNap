@@ -13,4 +13,5 @@ export type IntegrationFeature = (typeof IntegrationFeature)[keyof typeof Integr
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IntegrationFeature = {
   TestFeature: "TestFeature",
+  Email: "Email",
 } as const;

@@ -3,6 +3,7 @@ using LightNap.Core.Api;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Database;
 using LightNap.Core.Configuration.Email;
+using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
@@ -141,9 +142,8 @@ public static class ApplicationServiceExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="jwtSettings">The JWT settings.</param>
-    /// <param name="authSettings">The authentication settings.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings)
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings)
     {
         services.AddIdentity<ApplicationUser, ApplicationRole>(
             (options) =>
@@ -190,8 +190,6 @@ public static class ApplicationServiceExtensions
             };
         });
 
-        services.AddOAuthServices(authSettings);
-
         services.AddAuthorizationBuilder()
            .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));
 
@@ -207,10 +205,9 @@ public static class ApplicationServiceExtensions
     /// Callback URLs for external providers will follow the pattern "/signin-{provider}" (e.g., "/signin-google"). To
     /// add additional providers, see the official ASP.NET Core documentation on social authentication.</remarks>
     /// <param name="services">The service collection to which authentication services will be added. Must not be null.</param>
-    /// <param name="authSettings">The authentication settings containing configuration for OAuth providers and Windows authentication. Must not be
-    /// null.</param>
+    /// <param name="authSettings">The authentication settings containing configuration for OAuth providers and Windows authentication.</param>
     /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
-    public static IServiceCollection AddOAuthServices(this IServiceCollection services, AuthenticationSettings authSettings)
+    public static IServiceCollection AddOAuthLoginServices(this IServiceCollection services, AuthenticationSettings authSettings)
     {
         // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc. If in doubt, check the
         // default authentication scheme for the provider, which should be in a constant like GoogleDefaults.AuthenticationScheme.
@@ -262,7 +259,37 @@ public static class ApplicationServiceExtensions
         }
 
         services.AddSingleton<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
-       
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds and configures external OAuth authentication providers for integrations.
+    /// </summary>
+    /// <param name="services">The service collection to which authentication services will be added. Must not be null.</param>
+    /// <param name="integrationsSettings">The authentication settings containing configuration for integrations.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> instance that was provided, to support method chaining.</returns>
+    public static IServiceCollection AddOAuthIntegrationServices(this IServiceCollection services, IntegrationsSettings integrationsSettings)
+    {
+        // Add external authentication schemes
+        if (integrationsSettings.Gmail is not null)
+        {
+            services.AddAuthentication()
+                .AddGoogle(
+                "Gmail",
+                options =>
+                {
+                    options.ClientId = integrationsSettings.Gmail.ClientId;
+                    options.ClientSecret = integrationsSettings.Gmail.ClientSecret;                    
+                    options.CallbackPath = "/signin-gmail";
+                    options.AccessType = "offline";
+                    options.Scope.Add("https://www.googleapis.com/auth/gmail.readonly");
+                    options.Scope.Add("https://www.googleapis.com/auth/gmail.send");
+                    options.SaveTokens = true;
+                    options.AdditionalAuthorizationParameters.Add("prompt", "consent");
+                });
+        }
+
         return services;
     }
 

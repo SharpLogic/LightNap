@@ -14,4 +14,5 @@ export type IntegrationProvider = (typeof IntegrationProvider)[keyof typeof Inte
 export const IntegrationProvider = {
   TestProvider: "TestProvider",
   TestProviderManual: "TestProviderManual",
+  Gmail: "Gmail",
 } as const;

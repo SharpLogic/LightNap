@@ -20,6 +20,12 @@ export const Routes: AppRoute[] = [
     loadComponent: () => import("./manage/manage.component").then(m => m.ManageComponent),
   },
   {
+    path: "confirm/:confirmationToken",
+    title: "Profile | Confirm Integration",
+    loadComponent: () => import("./confirm/confirm.component").then(m => m.ConfirmComponent),
+  },
+
+  {
     path: "connect/:provider",
     title: "Profile | Connect An Integration",
     data: { alias: "connect-integration", breadcrumb: "Connect" },

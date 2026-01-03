@@ -1,13 +1,17 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Data;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
+using LightNap.Core.Identity.Models;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using LightNap.Core.Integrations.Interfaces;
 using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using System.Collections.ObjectModel;
 
 namespace LightNap.Core.Integrations.Services;
@@ -15,7 +19,8 @@ namespace LightNap.Core.Integrations.Services;
 /// <summary>  
 /// Service for managing user integrations.
 /// </summary>  
-public class IntegrationsService(ApplicationDbContext db, IUserContext userContext, IDataProtectionProvider dataProtectionProvider) : IIntegrationsService
+public class IntegrationsService(ApplicationDbContext db, IUserContext userContext, IDataProtectionProvider dataProtectionProvider,
+    SignInManager<ApplicationUser> signInManager, HybridCache cache) : IIntegrationsService
 {
     private readonly IDataProtector _dataProtector = dataProtectionProvider.CreateProtector("IntegrationSecretsProtector");
 
@@ -104,5 +109,42 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
 
         db.Integrations.Remove(integration);
         await db.SaveChangesAsync();
+    }
+
+    /// <inheritdoc/>
+    public async Task<string> ConnectCallbackAsync()
+    {
+        var loginInfo = await signInManager.GetExternalLoginInfoAsync() ?? throw new UserFriendlyApiException("Unable to link your external login info");
+
+        CreateIntegrationRequestDto requestDto;
+
+        switch (loginInfo.LoginProvider)
+        {
+            case "Gmail":
+                GmailIntegrationService gmail = new GmailIntegrationService();
+                requestDto = await gmail.GetCreateIntegrationRequest(loginInfo);
+                break;
+            default:
+                throw new UserFriendlyApiException("Unsupported external provider");
+        }
+
+        // Generate a temporary token to store OAuth info. This is the token we'll give the frontend to complete the registration.
+        var confirmationToken = Guid.NewGuid().ToString();
+        
+        // Store details since we can't create the integration yet because we don't know who the user is in this context. Retrieval should happen almost immediately.
+        await cache.SetAsync(confirmationToken, requestDto, new HybridCacheEntryOptions() { Expiration = TimeSpan.FromMinutes(1) });
+
+        return confirmationToken;
+    }
+
+    /// <inheritdoc/>
+    public async Task<IntegrationDto> ConfirmIntegrationAsync(ConfirmIntegrationRequestDto confirmIntegrationRequestDto)
+    {
+        userContext.AssertAuthenticated();
+
+        var (_, value) = await cache.TryGetValueAsync<CreateIntegrationRequestDto>(confirmIntegrationRequestDto.ConfirmationToken);
+        var requestDto = value ?? throw new UserFriendlyApiException("OAuth session expired. Please try again.");
+
+        return await this.CreateMyIntegrationAsync(requestDto);
     }
 }

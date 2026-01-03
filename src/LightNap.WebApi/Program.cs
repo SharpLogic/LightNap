@@ -1,6 +1,7 @@
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Database;
 using LightNap.Core.Configuration.Email;
+using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Extensions;
 using LightNap.Core.Hubs;
 using LightNap.WebApi.Configuration;
@@ -15,7 +16,8 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
-AuthenticationSettings appSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
+AuthenticationSettings authSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
+IntegrationsSettings integrationsSettings = builder.Configuration.GetRequiredSection<IntegrationsSettings>("Integrations");
 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
@@ -25,6 +27,9 @@ RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSec
 // Register configuration sections with validation.
 builder.Services.AddOptions<AuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
+    .ValidateDataAnnotations();
+builder.Services.AddOptions<IntegrationsSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Integrations"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Jwt"))
@@ -63,7 +68,9 @@ builder.Services
     .AddDatabaseServices(builder.Configuration, databaseSettings)
     .AddEmailServices(emailSettings)
     .AddApplicationServices()
-    .AddIdentityServices(jwtSettings, appSettings)
+    .AddIdentityServices(jwtSettings)
+    .AddOAuthLoginServices(authSettings)
+    .AddOAuthIntegrationServices(integrationsSettings)
     .AddRateLimitingServices(rateLimitingSettings);
 
 // Configure HybridCache conditionally

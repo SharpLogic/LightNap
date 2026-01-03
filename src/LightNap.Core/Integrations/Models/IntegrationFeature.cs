@@ -8,6 +8,11 @@ namespace LightNap.Core.Integrations.Models
         /// <summary>
         /// Test integration feature for development and testing purposes.
         /// </summary>
-        TestFeature
+        TestFeature,
+
+        /// <summary>
+        /// Read and send emails.
+        /// </summary>
+        Email,
     }
 }

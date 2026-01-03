@@ -1,4 +1,6 @@
 using LightNap.Core.Api;
+using LightNap.Core.Identity.Dto.Request;
+using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 
@@ -58,4 +60,16 @@ public interface IIntegrationsService
     /// <returns>A task.</returns>
     Task DeleteIntegrationAsync(int integrationId);
 
+    /// <summary>
+    /// Called to complete the OAuth callback process and complete connection by creating a new integration entry.
+    /// </summary>
+    /// <returns>A confirmation code to be returned by an authenticated user.</returns>
+    Task<string> ConnectCallbackAsync();
+
+    /// <summary>
+    /// Completes the integration creation.
+    /// </summary>
+    /// <param name="confirmIntegrationRequestDto">The confirmation token for the login process.</param>
+    /// <returns>The created integration.</returns>
+    Task<IntegrationDto> ConfirmIntegrationAsync(ConfirmIntegrationRequestDto confirmIntegrationRequestDto);
 }

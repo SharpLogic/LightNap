@@ -31,6 +31,24 @@ namespace LightNap.Core.Extensions
         }
 
         /// <summary>
+        /// Maps an OAuth create DTO to an entity.
+        /// </summary>
+        /// <param name="createDto">The creation parameters.</param>
+        /// <param name="userId">The user this integration is for.</param>
+        /// <param name="dataProtector">A data protector.</param>
+        /// <returns></returns>
+        public static Integration ToEntity(this CreateIntegrationFromOAuthRequestDto createDto, string userId, IDataProtector dataProtector)
+        {
+            Integration integration = (createDto as CreateIntegrationRequestDto).ToEntity(userId, dataProtector);
+
+            integration.AuthorizationExpiration = createDto.AuthorizationExpiration;
+            integration.CredentialsExpiration = createDto.CredentialsExpiration;
+            integration.EncryptedRefreshCredentials = createDto.RefreshToken != null ? dataProtector.Protect(createDto.RefreshToken) : null;
+
+            return integration;
+        }
+
+        /// <summary>
         /// Updates an entity from the update DTO.
         /// </summary>
         /// <param name="updateDto">The update parameters.</param>

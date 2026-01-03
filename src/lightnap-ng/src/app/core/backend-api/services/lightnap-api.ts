@@ -26,10 +26,16 @@ import type {
   CompleteExternalLoginBodyThree,
   CompleteExternalLoginBodyTwo,
   ConfirmEmailChangeRequestDto,
-  CreateIntegrationRequestDto,
+  ConfirmIntegration200One,
+  ConfirmIntegration200Three,
+  ConfirmIntegration200Two,
+  ConfirmIntegrationRequestDto,
   CreateMyIntegration200One,
   CreateMyIntegration200Three,
   CreateMyIntegration200Two,
+  CreateMyIntegrationBodyOne,
+  CreateMyIntegrationBodyThree,
+  CreateMyIntegrationBodyTwo,
   CreateStaticContentDto,
   CreateStaticContentLanguageDto,
   DeviceDto,
@@ -863,6 +869,28 @@ export class LightNapWebApiService {
   }
 
   /**
+   * @summary Confirms an integration using the specified request data.
+   */
+  confirmIntegration<TData = ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>(
+    confirmIntegrationRequestDto: ConfirmIntegrationRequestDto,
+    options?: HttpClientOptions & { observe?: "body" }
+  ): Observable<TData>;
+  confirmIntegration<TData = ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>(
+    confirmIntegrationRequestDto: ConfirmIntegrationRequestDto,
+    options?: HttpClientOptions & { observe: "events" }
+  ): Observable<HttpEvent<TData>>;
+  confirmIntegration<TData = ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>(
+    confirmIntegrationRequestDto: ConfirmIntegrationRequestDto,
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  confirmIntegration<TData = ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>(
+    confirmIntegrationRequestDto: ConfirmIntegrationRequestDto,
+    options?: HttpClientOptions & { observe?: any }
+  ): Observable<any> {
+    return this.http.post<TData>(`/api/Integrations/confirm`, confirmIntegrationRequestDto, options);
+  }
+
+  /**
    * @summary Retrieves the profile of the current user.
    */
   getProfile<TData = ProfileDto>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
@@ -1065,22 +1093,22 @@ export class LightNapWebApiService {
    * @summary Creates a new integration for the current user.
    */
   createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
-    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    createMyIntegrationBody: CreateMyIntegrationBodyOne | CreateMyIntegrationBodyTwo | CreateMyIntegrationBodyThree,
     options?: HttpClientOptions & { observe?: "body" }
   ): Observable<TData>;
   createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
-    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    createMyIntegrationBody: CreateMyIntegrationBodyOne | CreateMyIntegrationBodyTwo | CreateMyIntegrationBodyThree,
     options?: HttpClientOptions & { observe: "events" }
   ): Observable<HttpEvent<TData>>;
   createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
-    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    createMyIntegrationBody: CreateMyIntegrationBodyOne | CreateMyIntegrationBodyTwo | CreateMyIntegrationBodyThree,
     options?: HttpClientOptions & { observe: "response" }
   ): Observable<AngularHttpResponse<TData>>;
   createMyIntegration<TData = CreateMyIntegration200One | CreateMyIntegration200Two | CreateMyIntegration200Three>(
-    createIntegrationRequestDto: CreateIntegrationRequestDto,
+    createMyIntegrationBody: CreateMyIntegrationBodyOne | CreateMyIntegrationBodyTwo | CreateMyIntegrationBodyThree,
     options?: HttpClientOptions & { observe?: any }
   ): Observable<any> {
-    return this.http.post<TData>(`/api/users/me/integrations`, createIntegrationRequestDto, options);
+    return this.http.post<TData>(`/api/users/me/integrations`, createMyIntegrationBody, options);
   }
 
   /**
@@ -1527,6 +1555,7 @@ export type RevokeDeviceClientResult = NonNullable<boolean>;
 export type GetSupportedIntegrationsClientResult = NonNullable<SupportedIntegrationsDto>;
 export type SearchIntegrationsClientResult = NonNullable<AdminIntegrationDtoPagedResponseDto>;
 export type DeleteIntegrationClientResult = NonNullable<boolean>;
+export type ConfirmIntegrationClientResult = NonNullable<ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>;
 export type GetProfileClientResult = NonNullable<ProfileDto>;
 export type UpdateMyProfileClientResult = NonNullable<ProfileDto>;
 export type SearchMyNotificationsClientResult = NonNullable<NotificationSearchResultsDto>;
@@ -1891,6 +1920,76 @@ export const getSearchIntegrationsResponseMock = (
 });
 
 export const getDeleteIntegrationResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getConfirmIntegrationResponseIntegrationDtoMock = (overrideResponse: Partial<IntegrationDto> = {}): IntegrationDto => ({
+  ...{
+    id: faker.number.int({ min: undefined, max: undefined }),
+    createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    credentialsExpiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    authorizationExpiration: faker.helpers.arrayElement([
+      faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+      undefined,
+    ]),
+    lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+    friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    shareWithClient: faker.datatype.boolean(),
+    credentials: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+    isExpired: faker.datatype.boolean(),
+    error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  },
+  ...overrideResponse,
+});
+
+export const getConfirmIntegrationResponseAdminIntegrationDtoMock = (overrideResponse: Partial<AdminIntegrationDto> = {}): AdminIntegrationDto => ({
+  ...{
+    ...{
+      ...{
+        id: faker.number.int({ min: undefined, max: undefined }),
+        createdDate: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+        credentialsExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        authorizationExpiration: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([new Date(`${faker.date.past().toISOString().split(".")[0]}Z`), null]),
+          undefined,
+        ]),
+        lastUpdated: new Date(`${faker.date.past().toISOString().split(".")[0]}Z`),
+        friendlyName: faker.string.alpha({ length: { min: 10, max: 20 } }),
+        shareWithClient: faker.datatype.boolean(),
+        credentials: faker.helpers.arrayElement([
+          faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]),
+          undefined,
+        ]),
+        isExpired: faker.datatype.boolean(),
+        error: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+      },
+    },
+    userId: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  },
+  ...overrideResponse,
+});
+
+export const getConfirmIntegrationResponseMock = (): ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three =>
+  faker.helpers.arrayElement([
+    faker.helpers.arrayElement([
+      { ...getConfirmIntegrationResponseIntegrationDtoMock() },
+      { ...getConfirmIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getConfirmIntegrationResponseIntegrationDtoMock() },
+      { ...getConfirmIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+    faker.helpers.arrayElement([
+      { ...getConfirmIntegrationResponseIntegrationDtoMock() },
+      { ...getConfirmIntegrationResponseAdminIntegrationDtoMock() },
+    ]),
+  ]);
 
 export const getGetProfileResponseMock = (overrideResponse: Partial<ProfileDto> = {}): ProfileDto => ({
   id: faker.string.alpha({ length: { min: 10, max: 20 } }),
@@ -3493,6 +3592,38 @@ export const getDeleteIntegrationMockHandler = (
   );
 };
 
+export const getConfirmIntegrationMockHandler = (
+  overrideResponse?:
+    | ConfirmIntegration200One
+    | ConfirmIntegration200Two
+    | ConfirmIntegration200Three
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0]
+      ) =>
+        | Promise<ConfirmIntegration200One | ConfirmIntegration200Two | ConfirmIntegration200Three>
+        | ConfirmIntegration200One
+        | ConfirmIntegration200Two
+        | ConfirmIntegration200Three),
+  options?: RequestHandlerOptions
+) => {
+  return http.post(
+    "*/api/Integrations/confirm",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getConfirmIntegrationResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
 export const getGetProfileMockHandler = (
   overrideResponse?: ProfileDto | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<ProfileDto> | ProfileDto),
   options?: RequestHandlerOptions
@@ -4382,6 +4513,7 @@ export const getLightNapWebApiMock = () => [
   getGetSupportedIntegrationsMockHandler(),
   getSearchIntegrationsMockHandler(),
   getDeleteIntegrationMockHandler(),
+  getConfirmIntegrationMockHandler(),
   getGetProfileMockHandler(),
   getUpdateMyProfileMockHandler(),
   getSearchMyNotificationsMockHandler(),

@@ -13,4 +13,5 @@ export type IntegrationCategory = (typeof IntegrationCategory)[keyof typeof Inte
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const IntegrationCategory = {
   TestCategory: "TestCategory",
+  Productivity: "Productivity",
 } as const;

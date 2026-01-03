@@ -1,5 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import {
+  ConfirmIntegrationRequestDto,
   CreateIntegrationRequestDto,
   PagedResponseDto,
   SearchIntegrationsRequestDto,
@@ -72,6 +73,10 @@ export class IntegrationsService {
 
   createMyIntegration(createIntegrationRequestDto: CreateIntegrationRequestDto) {
     return this.#webApiService.createMyIntegration(createIntegrationRequestDto);
+  }
+
+  confirmIntegration(confirmIntegrationRequestDto: ConfirmIntegrationRequestDto) {
+    return this.#webApiService.confirmIntegration(confirmIntegrationRequestDto);
   }
 
   updateMyIntegration(integrationId: number, updateIntegrationRequestDto: UpdateIntegrationRequestDto) {
