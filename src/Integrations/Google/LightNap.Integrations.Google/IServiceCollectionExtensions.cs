@@ -1,10 +1,11 @@
 ﻿using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Identity.Models;
 using LightNap.Core.Integrations.Interfaces;
-using LightNap.Core.Integrations.Providers;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LightNap.Integrations.Microsoft;
+namespace LightNap.Integrations.Google;
 
 /// <summary>
 /// Provides extension methods for configuring services like login.
@@ -22,6 +23,8 @@ public static class IServiceCollectionExtensions
                     options.ClientSecret = oAuthSettings.ClientSecret;
                 });
 
+            services.AddSingleton(new SupportedExternalLoginDto(GoogleDefaults.AuthenticationScheme, GoogleDefaults.DisplayName));
+
             return services;
         }
 
@@ -29,16 +32,16 @@ public static class IServiceCollectionExtensions
         {
             var provider = new GmailIntegrationProvider();
 
-            services.AddKeyedSingleton<IIntegrationProvider>(provider.Key, provider);
+            services.AddSingleton< IIntegrationProvider>(provider);
 
             services.AddAuthentication()
                 .AddGoogle(
-                provider.Key,
+                provider.Definition.Key,
                 options =>
                 {
                     options.ClientId = oAuthSettings.ClientId;
                     options.ClientSecret = oAuthSettings.ClientSecret;
-                    options.CallbackPath = "/signin-gmail";
+                    options.CallbackPath = $"/signin-{provider.Definition.Key}";
                     options.SaveTokens = true;
 
                     options.AccessType = "offline";

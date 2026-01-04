@@ -25,7 +25,7 @@ var databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings
 var rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
 // Register configuration sections with validation.
-builder.Services.AddOptions<WebApiAuthenticationSettings>()
+builder.Services.AddOptions<AuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
     .ValidateDataAnnotations();
 builder.Services.AddOptions<JwtSettings>()

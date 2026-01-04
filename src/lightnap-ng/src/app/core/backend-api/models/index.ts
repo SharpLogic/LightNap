@@ -83,7 +83,6 @@ export * from "./integration-dto-list-api-response-dto";
 export * from "./integration-dto-list-api-response-dto-result-item";
 export * from "./integration-feature";
 export * from "./integration-feature-definition";
-export * from "./integration-provider";
 export * from "./integration-provider-definition";
 export * from "./login-request-dto";
 export * from "./login-success-dto";

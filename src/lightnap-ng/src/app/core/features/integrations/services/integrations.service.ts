@@ -1,11 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import {
-  ConfirmIntegrationRequestDto,
-  CreateIntegrationRequestDto,
-  PagedResponseDto,
-  SearchIntegrationsRequestDto,
-  SupportedIntegrationsDto,
-  UpdateIntegrationRequestDto,
+    ConfirmIntegrationRequestDto,
+    CreateIntegrationRequestDto,
+    PagedResponseDto,
+    SearchIntegrationsRequestDto,
+    SupportedIntegrationsDto,
+    UpdateIntegrationRequestDto,
 } from "@core/backend-api";
 import { LightNapWebApiService } from "@core/backend-api/services/lightnap-api";
 import { forkJoin, map, Observable, shareReplay } from "rxjs";
@@ -42,7 +42,7 @@ export class IntegrationsService {
           integrationDto =>
             <Integration>{
               integration: integrationDto,
-              definition: supported.providers.find(definition => definition.provider === integrationDto.providerKey)!,
+              definition: supported.providers.find(definition => definition.key === integrationDto.providerKey)!,
             }
         );
       })
@@ -63,7 +63,7 @@ export class IntegrationsService {
               adminIntegrationDto =>
                 <AdminIntegration>{
                   integration: adminIntegrationDto,
-                  definition: supported.providers.find(definition => definition.provider === adminIntegrationDto.providerKey)!,
+                  definition: supported.providers.find(definition => definition.key === adminIntegrationDto.providerKey)!,
                 }
             ),
           }

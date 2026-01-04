@@ -6,7 +6,7 @@ namespace LightNap.Core.Extensions;
 /// <summary>
 /// Provides extension methods for easily accesing common ExternalLoginInfo data.
 /// </summary>
-internal static class ExternalLoginInfoExtensions
+public static class ExternalLoginInfoExtensions
 {
     extension(ExternalLoginInfo externalLoginInfo)
     {

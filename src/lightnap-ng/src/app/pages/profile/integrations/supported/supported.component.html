@@ -16,16 +16,10 @@
 
           <ng-template #footer>
             <div class="flex justify-end">
-              @if (provider.isConfiguredManually) {
-                <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'connect-integration' | route: provider.provider" />
+              @if (provider.requiresBackendConfiguration) {
+                <a pButton label="Connect" icon="pi pi-external-link" severity="success" [href]="`/api/integrations/connect/${provider.key}`"></a>
               } @else {
-                <a
-                  pButton
-                  label="Connect"
-                  icon="pi pi-external-link"
-                  severity="success"
-                  [href]="`/api/integrations/connect/${provider.provider}`"
-                ></a>
+                <p-button label="Connect" icon="pi pi-plus" severity="success" [routerLink]="'connect-integration' | route: provider.key" />
               }
             </div>
           </ng-template>

@@ -18,10 +18,5 @@ namespace LightNap.Core.Configuration.Authentication
         /// </summary>
         [Required]
         public required string ClientSecret { get; init; }
-
-        /// <summary>
-        /// Gets the space-delimited list of OAuth scopes associated with the current context.
-        /// </summary>
-        public virtual string Scopes => string.Empty;
     }
 }

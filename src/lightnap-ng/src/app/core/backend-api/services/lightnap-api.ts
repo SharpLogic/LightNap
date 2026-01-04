@@ -118,7 +118,6 @@ import {
   ExternalLoginSuccessType,
   IntegrationCategory,
   IntegrationFeature,
-  IntegrationProvider,
   LoginSuccessType,
   NotificationStatus,
   NotificationType,
@@ -1864,11 +1863,12 @@ export const getRevokeDeviceResponseMock = (): boolean => faker.datatype.boolean
 
 export const getGetSupportedIntegrationsResponseMock = (overrideResponse: Partial<SupportedIntegrationsDto> = {}): SupportedIntegrationsDto => ({
   providers: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
-    provider: faker.helpers.arrayElement(Object.values(IntegrationProvider)),
+    key: faker.string.alpha({ length: { min: 10, max: 20 } }),
+    organization: faker.string.alpha({ length: { min: 10, max: 20 } }),
     displayName: faker.string.alpha({ length: { min: 10, max: 20 } }),
     description: faker.string.alpha({ length: { min: 10, max: 20 } }),
     features: faker.helpers.arrayElements(Object.values(IntegrationFeature)),
-    isConfiguredManually: faker.datatype.boolean(),
+    requiresBackendConfiguration: faker.datatype.boolean(),
   })),
   categories: Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
     category: faker.helpers.arrayElement(Object.values(IntegrationCategory)),

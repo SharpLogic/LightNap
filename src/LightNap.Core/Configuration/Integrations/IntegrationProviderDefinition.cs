@@ -1,48 +1,42 @@
 using LightNap.Core.Integrations.Models;
 
-namespace LightNap.Core.Configuration.Integrations
+namespace LightNap.Core.Configuration.Integrations;
+
+/// <summary>
+/// Represents an integration definition.
+/// </summary>
+public record IntegrationProviderDefinition
 {
     /// <summary>
-    /// Represents an integration definition.
+    /// The integration provider key.
     /// </summary>
-    public record IntegrationProviderDefinition
-    {
-        /// <summary>
-        /// The integration provider.
-        /// </summary>
-        public required IntegrationProvider Provider { get; init; }
+    public required string Key { get; init; }
 
-        /// <summary>
-        /// The display name of the integration.
-        /// </summary>
-        public required string DisplayName { get; init; }
+    /// <summary>
+    /// The organization the provider functionality belongs to, such as Google, Microsoft, etc.
+    /// </summary>
+    public required string Organization { get; init; }
 
-        /// <summary>
-        /// The description of the integration.
-        /// </summary>
-        public required string Description { get; init; }
+    /// <summary>
+    /// The display name of the provider.
+    /// </summary>
+    public required string DisplayName { get; init; }
 
-        /// <summary>
-        /// The features this integration supports.
-        /// </summary>
-        public required HashSet<IntegrationFeature> Features { get; init; }
+    /// <summary>
+    /// The description of the provider.
+    /// </summary>
+    public required string Description { get; init; }
 
-        /// <summary>
-        /// True if the integration is configured manually by the user on the frontend. Otherwise the user will be sent to the backend for OAuth or similar flows.
-        /// </summary>
-        public required bool IsConfiguredManually { get; init; }
+    /// <summary>
+    /// Gets the collection of features supported by the integration.
+    /// </summary>
+    /// <remarks>The returned list provides information about the capabilities or options available for this
+    /// integration. The collection is read-only and reflects the current set of supported features.</remarks>
+    public required IReadOnlyList<IntegrationFeature> Features { get; init; }
 
-        /// <summary>
-        /// Verifies that the specified integration service is supported by the current integration type.
-        /// </summary>
-        /// <param name="service">The integration service to check for support.</param>
-        /// <exception cref="InvalidOperationException">Thrown if the specified service is not supported by the current integration type.</exception>
-        public void AssertServiceSupported(IntegrationFeature service)
-        {
-            if (!this.Features.Contains(service))
-            {
-                throw new InvalidOperationException($"Integration of type {Provider} does not support service {service}.");
-            }
-        }
-    }
+    /// <summary>
+    /// True if the user needs to be redirected to the backend for OAuth or similar flows. If false, the user can enter
+    /// credentials, such as API keys, directly on the frontend.
+    /// </summary>
+    public required bool RequiresBackendConfiguration { get; init; }
 }

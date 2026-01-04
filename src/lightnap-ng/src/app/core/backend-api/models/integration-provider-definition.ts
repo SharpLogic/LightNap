@@ -4,20 +4,23 @@
  * LightNap.WebApi
  * OpenAPI spec version: 1.0
  */
-import type { IntegrationProvider } from "./integration-provider";
 import type { IntegrationFeature } from "./integration-feature";
 
 /**
  * Represents an integration definition.
  */
 export interface IntegrationProviderDefinition {
-  provider: IntegrationProvider;
-  /** The display name of the integration. */
+  /** The integration provider key. */
+  key: string;
+  /** The organization the provider functionality belongs to, such as Google, Microsoft, etc. */
+  organization: string;
+  /** The display name of the provider. */
   displayName: string;
-  /** The description of the integration. */
+  /** The description of the provider. */
   description: string;
-  /** The features this integration supports. */
+  /** Gets the collection of features supported by the integration. */
   features: IntegrationFeature[];
-  /** True if the integration is configured manually by the user on the frontend. Otherwise the user will be sent to the backend for OAuth or similar flows. */
-  isConfiguredManually: boolean;
+  /** True if the user needs to be redirected to the backend for OAuth or similar flows. If false, the user can enter
+credentials, such as API keys, directly on the frontend. */
+  requiresBackendConfiguration: boolean;
 }

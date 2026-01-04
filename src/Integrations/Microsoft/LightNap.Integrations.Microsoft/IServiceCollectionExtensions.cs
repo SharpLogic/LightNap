@@ -1,4 +1,6 @@
 ﻿using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Identity.Models;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,9 @@ public static class IServiceCollectionExtensions
                     options.ClientId = oAuthSettings.ClientId;
                     options.ClientSecret = oAuthSettings.ClientSecret;
                 });
+
+            services.AddSingleton<SupportedExternalLoginDto>(
+                new SupportedExternalLoginDto(MicrosoftAccountDefaults.AuthenticationScheme, MicrosoftAccountDefaults.DisplayName));
 
             return services;
         }

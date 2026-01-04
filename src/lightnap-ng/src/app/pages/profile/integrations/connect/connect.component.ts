@@ -2,7 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, computed, inject, input } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { ErrorApiResponse, IntegrationProvider, IntegrationProviderDefinition, TypeHelpers } from "@core";
+import { ErrorApiResponse, IntegrationProviderDefinition, TypeHelpers } from "@core";
 import { ApiResponseComponent } from "@core/components/api-response/api-response.component";
 import { IntegrationsService } from "@core/features/integrations/services/integrations.service";
 import { RouteAliasService } from "@core/features/routing/services/route-alias-service";
@@ -46,13 +46,13 @@ export class ConnectComponent {
 
   readonly providerDefinition$ = computed(() => {
     return this.#integrationsService.getSupportedProviders().pipe(
-      map(providers => providers.find(p => p.provider === this.provider())),
+      map(providers => providers.find(p => p.key === this.provider())),
       tap(provider => {
         if (!provider) {
           throw new ErrorApiResponse([`Unsupported integration provider: ${this.provider()}`]);
         }
         this.form.controls.friendlyName.setValue(provider.displayName);
-        if (!provider.isConfiguredManually) {
+        if (provider.requiresBackendConfiguration) {
           this.#router.navigateByUrl(`/api/Integrations/connect/${this.provider()}`, { replaceUrl: true });
         }
       })

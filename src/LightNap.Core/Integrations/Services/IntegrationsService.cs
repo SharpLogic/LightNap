@@ -3,16 +3,15 @@ using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
-using LightNap.Core.Identity.Models;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Dto.Response;
 using LightNap.Core.Integrations.Interfaces;
-using LightNap.Core.Integrations.Providers;
 using LightNap.Core.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 
 namespace LightNap.Core.Integrations.Services;
@@ -21,7 +20,7 @@ namespace LightNap.Core.Integrations.Services;
 /// Service for managing user integrations.
 /// </summary>  
 public class IntegrationsService(ApplicationDbContext db, IUserContext userContext, IDataProtectionProvider dataProtectionProvider,
-    SignInManager<ApplicationUser> signInManager, HybridCache cache) : IIntegrationsService
+    SignInManager<ApplicationUser> signInManager, HybridCache cache, IEnumerable<IIntegrationProvider> integrationProviders) : IIntegrationsService
 {
     private readonly IDataProtector _dataProtector = dataProtectionProvider.CreateProtector("IntegrationSecretsProtector");
 
@@ -30,7 +29,7 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
     {
         return new SupportedIntegrationsDto
         {
-            Providers = new ReadOnlyCollection<IntegrationProviderDefinition>(IntegrationsConfig.Providers),
+            Providers = new ReadOnlyCollection<IntegrationProviderDefinition>([.. integrationProviders.Select(item => item.Definition)]),
             Categories = new ReadOnlyCollection<IntegrationCategoryDefinition>(IntegrationsConfig.Categories),
             Features = new ReadOnlyCollection<IntegrationFeatureDefinition>(IntegrationsConfig.Features)
         };
@@ -117,17 +116,10 @@ public class IntegrationsService(ApplicationDbContext db, IUserContext userConte
     {
         var loginInfo = await signInManager.GetExternalLoginInfoAsync() ?? throw new UserFriendlyApiException("Unable to link your external login info");
 
-        CreateIntegrationRequestDto requestDto;
+        var integrationProvider = integrationProviders.FirstOrDefault(p => p.Definition.Key == loginInfo.LoginProvider)
+            ?? throw new UserFriendlyApiException("Unsupported external provider");
 
-        switch (loginInfo.LoginProvider)
-        {
-            case "Gmail":
-                GmailIntegrationProvider gmail = new GmailIntegrationProvider();
-                requestDto = await gmail.BuildCreateIntegrationRequest(loginInfo);
-                break;
-            default:
-                throw new UserFriendlyApiException("Unsupported external provider");
-        }
+        CreateIntegrationRequestDto requestDto = await integrationProvider.BuildCreateIntegrationRequest(loginInfo);
 
         // Generate a temporary token to store OAuth info. This is the token we'll give the frontend to complete the registration.
         var confirmationToken = Guid.NewGuid().ToString();

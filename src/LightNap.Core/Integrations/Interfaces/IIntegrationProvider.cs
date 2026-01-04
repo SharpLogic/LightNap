@@ -1,3 +1,4 @@
+using LightNap.Core.Configuration.Integrations;
 using LightNap.Core.Integrations.Dto.Request;
 using LightNap.Core.Integrations.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,14 +15,9 @@ namespace LightNap.Core.Integrations.Interfaces;
 public interface IIntegrationProvider
 {
     /// <summary>
-    /// The integration provider key.
+    /// The definition details for the integration provider associated with this instance.
     /// </summary>
-    string Key { get; }
-
-    /// <summary>
-    /// The display name of the provider.
-    /// </summary>
-    string DisplayName { get; }
+    IntegrationProviderDefinition Definition { get; }
 
     /// <summary>
     /// Builds a request object for creating an integration using information from an external OAuth login.
