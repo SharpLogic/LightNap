@@ -1,6 +1,7 @@
+using LightNap.Configuration.Database;
+using LightNap.Configuration.DataProtection;
+using LightNap.Configuration.Extensions;
 using LightNap.Core.Api;
-using LightNap.Core.Configuration.Database;
-using LightNap.Core.Configuration.DataProtection;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;

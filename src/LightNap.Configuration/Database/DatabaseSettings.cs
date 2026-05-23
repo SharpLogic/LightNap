@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration.Database;
+namespace LightNap.Configuration.Database;
 
 /// <summary>
 /// Represents the database settings for the application.

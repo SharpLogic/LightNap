@@ -1,6 +1,8 @@
+using LightNap.Configuration.Cache;
+using LightNap.Configuration.Database;
+using LightNap.Configuration.DataProtection;
+using LightNap.Configuration.Extensions;
 using LightNap.Core.Configuration.Authentication;
-using LightNap.Core.Configuration.Database;
-using LightNap.Core.Configuration.DataProtection;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Extensions;
 using LightNap.Core.Hubs;

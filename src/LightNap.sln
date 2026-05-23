@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.Sqli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Core.Tests", "LightNap.Core.Tests\LightNap.Core.Tests.csproj", "{129FA762-2B43-4190-96C6-3D6065B273BE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Configuration", "LightNap.Configuration\LightNap.Configuration.csproj", "{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{129FA762-2B43-4190-96C6-3D6065B273BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

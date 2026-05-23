@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration.DataProtection
+namespace LightNap.Configuration.DataProtection
 {
     /// <summary>
     /// Configuration settings for local file-system data protection key persistence with

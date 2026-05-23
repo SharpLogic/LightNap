@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Extensions
+namespace LightNap.Configuration.Extensions
 {
     /// <summary>
     /// Extension methods for <see cref="IConfiguration"/>.

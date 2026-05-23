@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration.DataProtection
+namespace LightNap.Configuration.DataProtection
 {
     /// <summary>
     /// Configuration settings for ASP.NET Core data protection, including the provider and any

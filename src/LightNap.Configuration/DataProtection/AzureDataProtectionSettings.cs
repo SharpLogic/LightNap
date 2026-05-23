@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration.DataProtection
+namespace LightNap.Configuration.DataProtection
 {
     /// <summary>
     /// Configuration settings required to use Azure Blob Storage + Key Vault for ASP.NET Core data

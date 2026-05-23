@@ -1,4 +1,4 @@
-namespace LightNap.Core.Configuration.DataProtection
+namespace LightNap.Configuration.DataProtection
 {
     /// <summary>
     /// Specifies the available providers for data protection key storage and management.
