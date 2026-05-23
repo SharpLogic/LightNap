@@ -22,5 +22,10 @@ namespace LightNap.Core.Identity.Dto.Request
         [Required]
         [StringLength(Constants.Dto.MaxUserNameLength)]
         public required string UserName { get; set; }
+
+        /// <summary>
+        /// Whether the user is opting into marketing email at registration.
+        /// </summary>
+        public bool MarketingOptIn { get; set; }
     }
 }

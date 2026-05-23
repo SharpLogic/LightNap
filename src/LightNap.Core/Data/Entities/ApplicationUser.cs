@@ -21,6 +21,16 @@ namespace LightNap.Core.Data.Entities
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
 
         /// <summary>
+        /// Whether the user has opted into receiving marketing email.
+        /// </summary>
+        public bool MarketingOptIn { get; set; }
+
+        /// <summary>
+        /// When the user most recently opted into marketing email. Null when no opt-in has been recorded.
+        /// </summary>
+        public DateTime? MarketingOptInAt { get; set; }
+
+        /// <summary>
         /// The notifications associated with the user.
         /// </summary>
         public ICollection<Notification>? Notifications { get; set; }

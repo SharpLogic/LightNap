@@ -39,7 +39,9 @@ namespace LightNap.Core.Extensions
             {
                 Email = dto.Email,
                 TwoFactorEnabled = twoFactorEnabled,
-                UserName = dto.UserName
+                UserName = dto.UserName,
+                MarketingOptIn = dto.MarketingOptIn,
+                MarketingOptInAt = dto.MarketingOptIn ? DateTime.UtcNow : null,
             };
             return user;
         }
@@ -56,7 +58,9 @@ namespace LightNap.Core.Extensions
             {
                 Email = dto.Email,
                 TwoFactorEnabled = twoFactorEnabled,
-                UserName = dto.UserName
+                UserName = dto.UserName,
+                MarketingOptIn = dto.MarketingOptIn,
+                MarketingOptInAt = dto.MarketingOptIn ? DateTime.UtcNow : null,
             };
             return user;
         }
