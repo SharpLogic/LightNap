@@ -1,16 +1,16 @@
 /**
- * Represents an option with a key, display name, and description.
+ * Represents an option with a value, label, and description.
  */
 export interface OptionDto {
   /**
-   * The unique key for the option.
+   * The unique value for the option.
    */
-  key: string;
+  value: string;
 
   /**
-   * The display name of the option.
+   * The display label of the option.
    */
-  displayName: string;
+  label: string;
 
   /**
    * A brief description of the option.
