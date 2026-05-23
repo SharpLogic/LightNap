@@ -152,7 +152,7 @@ app.Use(async (context, next) =>
 app.MapControllers();
 
 // Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
-app.MapHub<NotificationsHub>("/api/hubs/notifications");
+app.MapHub<RealTimeHub>("/api/hubs/realtime");
 
 // We need the wwwroot folder so we can append the "browser" folder the Angular app deploys to. We then need to configure the app to serve the Angular deployment,
 // which includes appropriate deep links. However, if you're using a fresh clone then you won't have a wwwroot folder until you build the Angular app and WebRootPath
