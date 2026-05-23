@@ -4,6 +4,7 @@ using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Email.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LightNap.Core.Extensions
 {
@@ -17,9 +18,11 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="databaseName">The name of the in-memory database.</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddLightNapInMemoryDatabase(this IServiceCollection services, string databaseName = "LightNap")
+        public static IServiceCollection AddLightNapInMemoryDatabase(this IServiceCollection services, string databaseName = "LightNap", ILogger? logger = null)
         {
+            logger?.LogInformation("Configuring in-memory database with name: {DatabaseName}", databaseName);
             return services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase(databaseName));
         }
 
@@ -27,9 +30,11 @@ namespace LightNap.Core.Extensions
         /// Adds a log-to-console email service implementation to the service collection.
         /// </summary>
         /// <param name="services">The service collection.</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddLogToConsoleEmailSender(this IServiceCollection services)
+        public static IServiceCollection AddLogToConsoleEmailSender(this IServiceCollection services, ILogger? logger = null)
         {
+            logger?.LogInformation("Configuring log-to-console email sender");
             return services.AddSingleton<IEmailSender, LogToConsoleEmailSender>();
         }
 
@@ -38,9 +43,11 @@ namespace LightNap.Core.Extensions
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="smtpSettings">The SMPT settings.</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
         /// <returns>The updated service collection.</returns>
-        public static IServiceCollection AddSmtpEmailSender(this IServiceCollection services, SmtpSettings smtpSettings)
+        public static IServiceCollection AddSmtpEmailSender(this IServiceCollection services, SmtpSettings smtpSettings, ILogger? logger = null)
         {
+            logger?.LogInformation("Configuring SMTP email sender with host: {Host}:{Port}", smtpSettings.Host, smtpSettings.Port);
             return services.AddSingleton<IEmailSender>(_ => new SmtpEmailSender(smtpSettings));
         }
     }

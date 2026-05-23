@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace LightNap.MaintenanceService
 {
@@ -8,13 +9,15 @@ namespace LightNap.MaintenanceService
     internal class MainService(ILogger<MainService> logger, IEnumerable<IMaintenanceTask> tasks)
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainService"/> class.
+        /// Runs each registered maintenance task in turn, tracking success/failure counts and total duration.
         /// </summary>
-        /// <param name="logger">The logger instance.</param>
-        /// <param name="tasks">The collection of maintenance tasks to run.</param>
         public async Task RunAsync()
         {
+            var stopwatch = Stopwatch.StartNew();
             logger.LogInformation("Starting maintenance run");
+
+            int successCount = 0;
+            int failureCount = 0;
 
             foreach (var task in tasks)
             {
@@ -23,15 +26,20 @@ namespace LightNap.MaintenanceService
                 try
                 {
                     await task.RunAsync();
+                    successCount++;
                     logger.LogInformation("Completed '{task}'", task.Name);
                 }
                 catch (Exception e)
                 {
+                    failureCount++;
                     logger.LogError(e, "Error occurred during '{task}': {e}", task.Name, e);
                 }
             }
 
-            logger.LogInformation("Completed maintenance run");
+            stopwatch.Stop();
+
+            logger.LogInformation("Completed maintenance run. Success: {successCount}, Failures: {failureCount}, Duration: {durationMs}ms",
+                successCount, failureCount, stopwatch.ElapsedMilliseconds);
         }
     }
 }

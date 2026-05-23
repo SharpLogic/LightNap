@@ -58,13 +58,16 @@ builder.Services.AddControllers().AddJsonOptions((options) =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+using var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
+var bootstrapLogger = loggerFactory.CreateLogger("Startup");
+
 builder.Services
-    .AddSwaggerServices()
-    .AddDatabaseServices(builder.Configuration, databaseSettings)
-    .AddEmailServices(emailSettings)
-    .AddApplicationServices()
-    .AddIdentityServices(jwtSettings, appSettings)
-    .AddRateLimitingServices(rateLimitingSettings);
+    .AddSwaggerServices(bootstrapLogger)
+    .AddDatabaseServices(builder.Configuration, databaseSettings, bootstrapLogger)
+    .AddEmailServices(emailSettings, bootstrapLogger)
+    .AddApplicationServices(bootstrapLogger)
+    .AddIdentityServices(jwtSettings, appSettings, bootstrapLogger)
+    .AddRateLimitingServices(rateLimitingSettings, bootstrapLogger);
 
 // Configure HybridCache conditionally
 builder.Services.AddHybridCache(options =>
@@ -174,4 +177,14 @@ catch (Exception ex)
     throw;
 }
 
-app.Run();
+logger.LogInformation("Everything done, running app");
+
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "Application terminated unexpectedly");
+    throw;
+}

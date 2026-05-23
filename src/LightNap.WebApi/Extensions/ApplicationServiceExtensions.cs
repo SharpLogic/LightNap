@@ -56,9 +56,11 @@ public static class ApplicationServiceExtensions
     /// Adds application services to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>
+    /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, ILogger? logger = null)
     {
+        logger?.LogInformation("Configuring application services");
         services.AddCors();
         services.AddHttpContextAccessor();
         services.AddSingleton<IAuthorizationHandler, ClaimAuthorizationHandler>();
@@ -86,20 +88,21 @@ public static class ApplicationServiceExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="configuration">The configuration.</param>
     /// <param name="databaseSettings">The database settings.</param>
+    /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
     /// <exception cref="ArgumentException">Thrown when the database provider is unsupported.</exception>
-    public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration, DatabaseSettings databaseSettings)
+    public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration, DatabaseSettings databaseSettings, ILogger? logger = null)
     {
         switch (databaseSettings.Provider)
         {
             case DatabaseProvider.InMemory:
-                services.AddLightNapInMemoryDatabase();
+                services.AddLightNapInMemoryDatabase(logger: logger);
                 break;
             case DatabaseProvider.Sqlite:
-                services.AddLightNapSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
+                services.AddLightNapSqlite(configuration.GetRequiredConnectionString("DefaultConnection"), logger);
                 break;
             case DatabaseProvider.SqlServer:
-                services.AddLightNapSqlServer(configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
+                services.AddLightNapSqlServer(configuration.GetRequiredConnectionString("DefaultConnection"), logger);
                 break;
             default: throw new ArgumentException($"Unsupported 'Database:Provider' setting: '{databaseSettings.Provider}'");
         }
@@ -111,19 +114,20 @@ public static class ApplicationServiceExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="emailSettings">The email settings.</param>
+    /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
     /// <exception cref="ArgumentException">Thrown when the email provider is unsupported.</exception>
-    public static IServiceCollection AddEmailServices(this IServiceCollection services, EmailSettings emailSettings)
+    public static IServiceCollection AddEmailServices(this IServiceCollection services, EmailSettings emailSettings, ILogger? logger = null)
     {
         switch (emailSettings.Provider)
         {
             case EmailProvider.LogToConsole:
-                services.AddLogToConsoleEmailSender();
+                services.AddLogToConsoleEmailSender(logger);
                 break;
             case EmailProvider.Smtp:
                 if (emailSettings.Smtp is null) { throw new ArgumentNullException($"SMTP settings are required if '{emailSettings.Provider}' email option is set"); }
                 Validator.ValidateObject(emailSettings.Smtp, new ValidationContext(emailSettings.Smtp), validateAllProperties: true);
-                services.AddSmtpEmailSender(emailSettings.Smtp);
+                services.AddSmtpEmailSender(emailSettings.Smtp, logger);
                 break;
             default: throw new ArgumentException($"Unsupported email provider setting: '{emailSettings.Provider}'");
         }
@@ -139,9 +143,12 @@ public static class ApplicationServiceExtensions
     /// <param name="services">The service collection.</param>
     /// <param name="jwtSettings">The JWT settings.</param>
     /// <param name="authSettings">The authentication settings.</param>
+    /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings)
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings, ILogger? logger = null)
     {
+        logger?.LogInformation("Configuring identity services (JWT issuer: {Issuer})", jwtSettings.Issuer);
+
         services.AddIdentity<ApplicationUser, ApplicationRole>(
             (options) =>
             {
@@ -335,9 +342,15 @@ public static class ApplicationServiceExtensions
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="rateLimitingSettings">The rate limiting settings.</param>
+    /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddRateLimitingServices(this IServiceCollection services, RateLimitingSettings rateLimitingSettings)
+    public static IServiceCollection AddRateLimitingServices(this IServiceCollection services, RateLimitingSettings rateLimitingSettings, ILogger? logger = null)
     {
+        logger?.LogInformation("Configuring rate limiting (global={Global}, auth={Auth}, content={Content}, registration={Registration})",
+            rateLimitingSettings.GlobalPermitLimit,
+            rateLimitingSettings.AuthPermitLimit,
+            rateLimitingSettings.ContentPermitLimit,
+            rateLimitingSettings.RegistrationPermitLimit);
         services.AddRateLimiter(options =>
         {
             // Helper to get partition key (user ID or IP)
@@ -405,8 +418,9 @@ public static class ApplicationServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddSwaggerServices(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerServices(this IServiceCollection services, ILogger? logger = null)
     {
+        logger?.LogInformation("Configuring Swagger services");
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>

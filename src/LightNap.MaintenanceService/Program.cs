@@ -1,5 +1,4 @@
-﻿using LightNap.Core.Api;
-using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Api;
 using LightNap.Core.Configuration.Database;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
@@ -19,7 +18,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
+using var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
+var bootstrapLogger = loggerFactory.CreateLogger("Startup");
+
 var host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, config) =>
+    {
+        var env = context.HostingEnvironment;
+        config
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+    })
     .ConfigureServices((context, services) =>
     {
         services.AddLogging(configure => configure.AddConsole());
@@ -30,23 +40,16 @@ var host = Host.CreateDefaultBuilder(args)
         {
             case DatabaseProvider.InMemory:
                 Trace.TraceWarning($"The MaintenanceService is configured to use the '{databaseSettings.Provider}' database provider, so there won't be any DB data");
-                services.AddLightNapInMemoryDatabase();
+                services.AddLightNapInMemoryDatabase(logger: bootstrapLogger);
                 break;
             case DatabaseProvider.Sqlite:
-                services.AddLightNapSqlite(context.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
+                services.AddLightNapSqlite(context.Configuration.GetRequiredConnectionString("DefaultConnection"), bootstrapLogger);
                 break;
             case DatabaseProvider.SqlServer:
-                services.AddLightNapSqlServer(context.Configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentException($"A 'DefaultConnection' connection string is required for '{databaseSettings.Provider}'"));
+                services.AddLightNapSqlServer(context.Configuration.GetRequiredConnectionString("DefaultConnection"), bootstrapLogger);
                 break;
             default: throw new ArgumentException($"Unsupported 'DatabaseProvider' setting: '{databaseSettings.Provider}'");
         }
-
-        services.AddOptions<AuthenticationSettings>()
-            .Bind(context.Configuration.GetRequiredSection("Authentication"))
-            .ValidateDataAnnotations();
-        services.AddOptions<JwtSettings>()
-            .Bind(context.Configuration.GetRequiredSection("Jwt"))
-            .ValidateDataAnnotations();
 
         services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
