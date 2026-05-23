@@ -10,14 +10,23 @@
  * Add style customization here if you want to use Tailwind CSS.
  */
 a {
-  @apply no-underline;
+  @apply no-underline!;
   @apply text-primary;
 }
 
 a:hover {
-  @apply underline;
+  @apply underline cursor-pointer;
 }
 
 .p-panel-title {
   @apply text-2xl;
+}
+
+.p-breadcrumb-list {
+  flex-wrap: wrap !important;
+  display: flex !important;
+}
+
+.p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
+  padding: 0 !important;
 }

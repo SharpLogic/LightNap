@@ -11,7 +11,7 @@ export class PrependNameTitleStrategy extends TitleStrategy {
   override updateTitle(routerState: RouterStateSnapshot) {
     const title = this.buildTitle(routerState);
     if (title) {
-      if (this.#appName?.length) {
+      if (this.#appName?.length && !title.includes("|")) {
         document.title = `${this.#appName} | ${title}`;
       } else {
         document.title = title;
