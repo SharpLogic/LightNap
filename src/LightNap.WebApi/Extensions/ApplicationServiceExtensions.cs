@@ -64,6 +64,7 @@ public static class ApplicationServiceExtensions
         logger?.LogInformation("Configuring application services");
         services.AddCors();
         services.AddHttpContextAccessor();
+        services.AddSingleton<Ganss.Xss.IHtmlSanitizer>(_ => new Ganss.Xss.HtmlSanitizer());
         services.AddSingleton<IAuthorizationHandler, ClaimAuthorizationHandler>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserContext, WebUserContext>();

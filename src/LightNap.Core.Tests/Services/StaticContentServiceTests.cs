@@ -37,6 +37,7 @@ namespace LightNap.Core.Tests.Services
                 .AddDefaultTokenProviders();
 
             services.AddHybridCache();
+            services.AddSingleton<Ganss.Xss.IHtmlSanitizer>(_ => new Ganss.Xss.HtmlSanitizer());
 
             this._userContext = new TestUserContext();
             services.AddScoped<IUserContext>(sp => this._userContext);
