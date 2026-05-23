@@ -10,10 +10,10 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["LightNap.MaintenanceService/LightNap.MaintenanceService.csproj", "LightNap.MaintenanceService/"]
-RUN dotnet restore "./LightNap.MaintenanceService/LightNap.MaintenanceService.csproj"
+COPY ["WebJobs/LightNap.MaintenanceService/LightNap.MaintenanceService.csproj", "WebJobs/LightNap.MaintenanceService/"]
+RUN dotnet restore "./WebJobs/LightNap.MaintenanceService/LightNap.MaintenanceService.csproj"
 COPY . .
-WORKDIR "/src/LightNap.MaintenanceService"
+WORKDIR "/src/WebJobs/LightNap.MaintenanceService"
 RUN dotnet build "./LightNap.MaintenanceService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

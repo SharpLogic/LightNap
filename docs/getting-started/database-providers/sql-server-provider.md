@@ -49,13 +49,13 @@ For Azure SQL Database:
 
 ## Migrations
 
-SQL Server migrations are stored in `src/LightNap.DataProviders.SqlServer/Migrations/`.
+SQL Server migrations are stored in `src/DataProviders/LightNap.DataProviders.SqlServer/Migrations/`.
 
 To create a new migration:
 
 ```bash
 cd src
-dotnet ef migrations add MigrationName --project LightNap.DataProviders.SqlServer --startup-project LightNap.WebApi
+dotnet ef migrations add MigrationName --project DataProviders/LightNap.DataProviders.SqlServer --startup-project LightNap.WebApi
 ```
 
 ## Best Practices

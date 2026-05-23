@@ -35,13 +35,13 @@ Update `appsettings.json`:
 
 ## Migrations
 
-SQLite migrations are stored in `src/LightNap.DataProviders.Sqlite/Migrations/`.
+SQLite migrations are stored in `src/DataProviders/LightNap.DataProviders.Sqlite/Migrations/`.
 
 To create a new migration:
 
 ```bash
 cd src
-dotnet ef migrations add MigrationName --project LightNap.DataProviders.Sqlite --startup-project LightNap.WebApi
+dotnet ef migrations add MigrationName --project DataProviders/LightNap.DataProviders.Sqlite --startup-project LightNap.WebApi
 ```
 
 ## Best Practices

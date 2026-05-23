@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
+    <ProjectReference Include="..\..\LightNap.Core\LightNap.Core.csproj" />
   </ItemGroup>
 
 </Project>

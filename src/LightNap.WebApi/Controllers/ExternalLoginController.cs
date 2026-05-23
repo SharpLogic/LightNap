@@ -3,6 +3,7 @@ using LightNap.Core.Configuration;
 using LightNap.Core.Identity.Dto.Request;
 using LightNap.Core.Identity.Dto.Response;
 using LightNap.Core.Identity.Interfaces;
+using LightNap.Core.Identity.Models;
 using LightNap.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -13,12 +13,9 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="10.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.22.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="10.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -33,8 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\LightNap.Configuration\LightNap.Configuration.csproj" />
     <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
-    <ProjectReference Include="..\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
-    <ProjectReference Include="..\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />
+    <ProjectReference Include="..\DataProviders\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
+    <ProjectReference Include="..\DataProviders\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />

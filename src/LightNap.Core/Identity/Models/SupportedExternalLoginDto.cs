@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace LightNap.WebApi.Configuration;
+namespace LightNap.Core.Identity.Models;
 /// <summary>
 /// Represents an external authentication provider supported by the application, including its identifier and
 /// display name.

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
@@ -7,15 +7,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.WebApi", "LightNap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Core", "LightNap.Core\LightNap.Core.csproj", "{34811103-29EA-45E2-AB72-8E36F3531C27}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.SqlServer", "LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj", "{EED4671C-FA21-49AB-9612-33AA7AA54066}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.SqlServer", "DataProviders\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj", "{EED4671C-FA21-49AB-9612-33AA7AA54066}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.MaintenanceService", "LightNap.MaintenanceService\LightNap.MaintenanceService.csproj", "{BFE9336E-F171-40B7-8887-1BC7A0242E2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.MaintenanceService", "WebJobs\LightNap.MaintenanceService\LightNap.MaintenanceService.csproj", "{BFE9336E-F171-40B7-8887-1BC7A0242E2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.Sqlite", "LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.DataProviders.Sqlite", "DataProviders\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj", "{2346CF84-901E-40EC-8970-318CA75D6B83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightNap.Core.Tests", "LightNap.Core.Tests\LightNap.Core.Tests.csproj", "{129FA762-2B43-4190-96C6-3D6065B273BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Configuration", "LightNap.Configuration\LightNap.Configuration.csproj", "{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Integrations.GitHub", "Integrations\GitHub\LightNap.Integrations.GitHub\LightNap.Integrations.GitHub.csproj", "{A1B2C3D4-0011-4011-8011-000000000011}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Integrations.Google", "Integrations\Google\LightNap.Integrations.Google\LightNap.Integrations.Google.csproj", "{A1B2C3D4-0012-4012-8012-000000000012}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LightNap.Integrations.Microsoft", "Integrations\Microsoft\LightNap.Integrations.Microsoft\LightNap.Integrations.Microsoft.csproj", "{A1B2C3D4-0013-4013-8013-000000000013}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataProviders", "DataProviders", "{A1B2C3D4-0001-4001-8001-000000000001}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebJobs", "WebJobs", "{A1B2C3D4-0002-4002-8002-000000000002}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{A1B2C3D4-0003-4003-8003-000000000003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +63,29 @@ Global
 		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F4E4B85-3DC1-4A8C-9E2F-7E8C9F0A1B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-0011-4011-8011-000000000011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-0011-4011-8011-000000000011}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-0011-4011-8011-000000000011}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-0011-4011-8011-000000000011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-0012-4012-8012-000000000012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-0012-4012-8012-000000000012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-0012-4012-8012-000000000012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-0012-4012-8012-000000000012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1B2C3D4-0013-4013-8013-000000000013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1B2C3D4-0013-4013-8013-000000000013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1B2C3D4-0013-4013-8013-000000000013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1B2C3D4-0013-4013-8013-000000000013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EED4671C-FA21-49AB-9612-33AA7AA54066} = {A1B2C3D4-0001-4001-8001-000000000001}
+		{2346CF84-901E-40EC-8970-318CA75D6B83} = {A1B2C3D4-0001-4001-8001-000000000001}
+		{BFE9336E-F171-40B7-8887-1BC7A0242E2D} = {A1B2C3D4-0002-4002-8002-000000000002}
+		{A1B2C3D4-0011-4011-8011-000000000011} = {A1B2C3D4-0003-4003-8003-000000000003}
+		{A1B2C3D4-0012-4012-8012-000000000012} = {A1B2C3D4-0003-4003-8003-000000000003}
+		{A1B2C3D4-0013-4013-8013-000000000013} = {A1B2C3D4-0003-4003-8003-000000000003}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {178DA7E1-816E-4AA8-81A2-FA25000CA784}

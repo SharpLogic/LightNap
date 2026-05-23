@@ -62,14 +62,21 @@ LightNap provides a complete foundation for building secure, scalable web applic
 
 ```text
 src/
-├── lightnap-ng/                  # Angular frontend (PrimeNG + Tailwind)
-├── LightNap.WebApi/              # ASP.NET Core Web API
-├── LightNap.Core/                # Business logic & data access
-├── LightNap.DataProviders.Sqlite/  # SQLite data provider
-├── LightNap.DataProviders.SqlServer/  # SQL Server data provider
-├── LightNap.MaintenanceService/  # Background tasks web job
-├── LightNap.Core.Tests/          # Backend init tests
-└── Scaffolding/                  # Code generation templates
+├── lightnap-ng/                          # Angular frontend (PrimeNG + Tailwind)
+├── LightNap.WebApi/                      # ASP.NET Core Web API
+├── LightNap.Core/                        # Business logic & data access
+├── LightNap.Configuration/               # Strongly-typed settings + bootstrap hub
+├── LightNap.Core.Tests/                  # Backend tests
+├── DataProviders/
+│   ├── LightNap.DataProviders.Sqlite/    # SQLite data provider
+│   └── LightNap.DataProviders.SqlServer/ # SQL Server data provider
+├── WebJobs/
+│   └── LightNap.MaintenanceService/      # Background tasks web job
+├── Integrations/
+│   ├── GitHub/LightNap.Integrations.GitHub/        # GitHub OAuth
+│   ├── Google/LightNap.Integrations.Google/        # Google OAuth
+│   └── Microsoft/LightNap.Integrations.Microsoft/  # Microsoft OAuth
+└── Scaffolding/                          # Code generation templates
 ```
 
 ---

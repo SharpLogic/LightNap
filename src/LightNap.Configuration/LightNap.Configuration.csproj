@@ -11,6 +11,12 @@
     <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup Label="Integrations">
+    <ProjectReference Include="..\Integrations\GitHub\LightNap.Integrations.GitHub\LightNap.Integrations.GitHub.csproj" />
+    <ProjectReference Include="..\Integrations\Google\LightNap.Integrations.Google\LightNap.Integrations.Google.csproj" />
+    <ProjectReference Include="..\Integrations\Microsoft\LightNap.Integrations.Microsoft\LightNap.Integrations.Microsoft.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.5.1" />
     <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.6.1" />

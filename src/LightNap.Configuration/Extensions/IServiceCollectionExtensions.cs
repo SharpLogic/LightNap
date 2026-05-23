@@ -1,5 +1,9 @@
 using Azure.Identity;
+using LightNap.Configuration.Authentication;
 using LightNap.Configuration.DataProtection;
+using LightNap.Integrations.GitHub;
+using LightNap.Integrations.Google;
+using LightNap.Integrations.Microsoft;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +16,39 @@ namespace LightNap.Configuration.Extensions
     /// </summary>
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        /// Wires up the configured OAuth providers by delegating to each vendor's integration library.
+        /// This is the hub that lets the host project (WebApi) avoid referencing vendor NuGets directly:
+        /// only <c>LightNap.Configuration</c> references the <c>LightNap.Integrations.*</c> projects.
+        /// </summary>
+        /// <param name="services">The service collection.</param>
+        /// <param name="oAuthSettings">The configured OAuth providers. If <c>null</c>, no providers are wired up.</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
+        /// <returns>The updated service collection.</returns>
+        public static IServiceCollection AddLightNapOAuthProviders(this IServiceCollection services, SupportedOAuthProviderSettings? oAuthSettings, ILogger? logger = null)
+        {
+            if (oAuthSettings is null)
+            {
+                logger?.LogInformation("No OAuth providers configured");
+                return services;
+            }
+
+            if (oAuthSettings.Google is not null)
+            {
+                services.AddGoogleLogin(oAuthSettings.Google, logger);
+            }
+            if (oAuthSettings.Microsoft is not null)
+            {
+                services.AddMicrosoftLogin(oAuthSettings.Microsoft, logger);
+            }
+            if (oAuthSettings.GitHub is not null)
+            {
+                services.AddGitHubLogin(oAuthSettings.GitHub, logger);
+            }
+
+            return services;
+        }
+
         /// <summary>
         /// Configures ASP.NET Core data protection key storage based on the selected provider.
         /// </summary>

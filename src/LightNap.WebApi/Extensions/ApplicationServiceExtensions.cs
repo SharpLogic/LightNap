@@ -1,6 +1,7 @@
 ﻿using LightNap.Configuration.Database;
 using LightNap.Configuration.Extensions;
 using LightNap.Core.Api;
+using LightNap.Core.Identity.Models;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Data;
@@ -34,9 +35,7 @@ using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Filters;
 using LightNap.WebApi.Services;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -199,56 +198,16 @@ public static class ApplicationServiceExtensions
             };
         });
 
-        // Callback URLs to register on partner site will be /signin-{provider} like /signin-google, /signin-microsoft, etc.
-        // To add more providers, see https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social.
-        var supportedExternalLogins = new List<SupportedExternalLoginDto>();
-        var oAuthSettings = authSettings?.OAuth;
-        if (oAuthSettings is not null)
-        {
-            // Add external authentication schemes
-            if (oAuthSettings.Google is not null)
-            {
-                services.AddAuthentication()
-                    .AddGoogle(options =>
-                    {
-                        options.ClientId = oAuthSettings.Google.ClientId;
-                        options.ClientSecret = oAuthSettings.Google.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("Google", GoogleDefaults.DisplayName));
-            }
-
-            if (oAuthSettings.Microsoft is not null)
-            {
-                services.AddAuthentication()
-                    .AddMicrosoftAccount(options =>
-                    {
-                        options.ClientId = oAuthSettings.Microsoft.ClientId;
-                        options.ClientSecret = oAuthSettings.Microsoft.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("Microsoft", MicrosoftAccountDefaults.DisplayName));
-            }
-
-            if (oAuthSettings.GitHub is not null)
-            {
-                // You must install the NuGet package: AspNet.Security.OAuth.GitHub
-                // And add: using AspNet.Security.OAuth.GitHub;
-                services.AddAuthentication()
-                    .AddGitHub(options =>
-                    {
-                        options.ClientId = oAuthSettings.GitHub.ClientId;
-                        options.ClientSecret = oAuthSettings.GitHub.ClientSecret;
-                    });
-                supportedExternalLogins.Add(new SupportedExternalLoginDto("GitHub", "GitHub"));
-            }
-        }
+        // OAuth providers are wired up through LightNap.Configuration so the WebApi project does not
+        // need to reference vendor NuGets directly. Each enabled provider also registers its own
+        // SupportedExternalLoginDto, which the controller picks up via IEnumerable<SupportedExternalLoginDto>.
+        services.AddLightNapOAuthProviders(authSettings?.OAuth, logger);
 
         if (authSettings?.WindowsAuth?.Enabled == true)
         {
             services.AddAuthentication()
                 .AddNegotiate();
         }
-
-        services.AddSingleton<IEnumerable<SupportedExternalLoginDto>>(supportedExternalLogins);
 
         services.AddAuthorizationBuilder()
             .AddPolicy(nameof(ClaimAuthorizationRequirement), policy => policy.Requirements.Add(new ClaimAuthorizationRequirement()));

@@ -35,10 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LightNap.Configuration\LightNap.Configuration.csproj" />
-    <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
-    <ProjectReference Include="..\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
-    <ProjectReference Include="..\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />
+    <ProjectReference Include="..\..\LightNap.Configuration\LightNap.Configuration.csproj" />
+    <ProjectReference Include="..\..\LightNap.Core\LightNap.Core.csproj" />
+    <ProjectReference Include="..\..\DataProviders\LightNap.DataProviders.Sqlite\LightNap.DataProviders.Sqlite.csproj" />
+    <ProjectReference Include="..\..\DataProviders\LightNap.DataProviders.SqlServer\LightNap.DataProviders.SqlServer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

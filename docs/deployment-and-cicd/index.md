@@ -90,7 +90,7 @@ Both `LightNap.WebApi` and `LightNap.MaintenanceService` use the standard `Host.
 
 To override settings for a production deployment without committing secrets:
 
-1. Drop a gitignored `appsettings.Production.json` into the target project (e.g. `src/LightNap.WebApi/` or `src/LightNap.MaintenanceService/`) containing only the keys that differ — for example a different `Database:Provider`, a Key Vault URL for `DataProtection:Azure:KeyVaultUrl`, or production SMTP credentials.
+1. Drop a gitignored `appsettings.Production.json` into the target project (e.g. `src/LightNap.WebApi/` or `src/WebJobs/LightNap.MaintenanceService/`) containing only the keys that differ — for example a different `Database:Provider`, a Key Vault URL for `DataProtection:Azure:KeyVaultUrl`, or production SMTP credentials.
 2. Set `ASPNETCORE_ENVIRONMENT=Production` for the WebApi process and `DOTNET_ENVIRONMENT=Production` for the MaintenanceService process so each host picks up the matching `appsettings.Production.json`.
 3. For values that should never live in a file even on the production host (passwords, connection strings, signing keys), prefer environment variables — they have the highest precedence and bypass the file entirely. Use the standard double-underscore syntax to address nested keys (`ConnectionStrings__DefaultConnection`, `DataProtection__Azure__KeyVaultUrl`).
 
