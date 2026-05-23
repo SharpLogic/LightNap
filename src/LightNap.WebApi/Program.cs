@@ -72,7 +72,8 @@ builder.Services
     .AddEmailServices(emailSettings, bootstrapLogger)
     .AddApplicationServices(bootstrapLogger)
     .AddIdentityServices(jwtSettings, appSettings, bootstrapLogger)
-    .AddRateLimitingServices(rateLimitingSettings, bootstrapLogger);
+    .AddRateLimitingServices(rateLimitingSettings, bootstrapLogger)
+    .AddLightNapTelemetryServices(builder.Configuration.GetValue<bool>("ApplicationInsights:Enabled"), bootstrapLogger);
 
 // Configure HybridCache conditionally
 builder.Services.AddHybridCache(options =>

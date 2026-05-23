@@ -4,6 +4,9 @@ using LightNap.Core.Api;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Data;
+using LightNap.Core.Telemetry;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Email.Interfaces;
 using LightNap.Core.Email.Services;
@@ -468,6 +471,28 @@ public static class ApplicationServiceExtensions
             options.UseOneOfForPolymorphism();
         });
 
+        return services;
+    }
+
+    /// <summary>
+    /// Wires up the generic <see cref="ITelemetryClient"/> seam. When <paramref name="enabled"/> is
+    /// true, also registers the Application Insights collectors so the AI <see cref="TelemetryClient"/>
+    /// is available for the production implementation. When false, only a no-op client is registered.
+    /// </summary>
+    public static IServiceCollection AddLightNapTelemetryServices(this IServiceCollection services, bool enabled, ILogger? logger = null)
+    {
+        if (enabled)
+        {
+            logger?.LogInformation("Configuring Application Insights telemetry");
+            services.AddApplicationInsightsTelemetry();
+            services.AddSingleton<ITelemetryClient>(sp =>
+                new ApplicationInsightsTelemetryClient(sp.GetRequiredService<TelemetryClient>()));
+        }
+        else
+        {
+            logger?.LogInformation("Telemetry disabled — using NoOpTelemetryClient");
+            services.AddSingleton<ITelemetryClient, NoOpTelemetryClient>();
+        }
         return services;
     }
 }
