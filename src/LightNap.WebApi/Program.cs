@@ -1,5 +1,6 @@
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Database;
+using LightNap.Core.Configuration.DataProtection;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Extensions;
 using LightNap.Core.Hubs;
@@ -20,6 +21,7 @@ JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>(
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");
 DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+DataProtectionSettings dataProtectionSettings = builder.Configuration.GetRequiredSection<DataProtectionSettings>("DataProtection");
 RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
 // Register configuration sections with validation.
@@ -64,6 +66,7 @@ var bootstrapLogger = loggerFactory.CreateLogger("Startup");
 builder.Services
     .AddSwaggerServices(bootstrapLogger)
     .AddDatabaseServices(builder.Configuration, databaseSettings, bootstrapLogger)
+    .AddLightNapDataProtectionServices(dataProtectionSettings, logger: bootstrapLogger)
     .AddEmailServices(emailSettings, bootstrapLogger)
     .AddApplicationServices(bootstrapLogger)
     .AddIdentityServices(jwtSettings, appSettings, bootstrapLogger)

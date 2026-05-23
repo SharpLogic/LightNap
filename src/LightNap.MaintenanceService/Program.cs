@@ -1,5 +1,6 @@
 using LightNap.Core.Api;
 using LightNap.Core.Configuration.Database;
+using LightNap.Core.Configuration.DataProtection;
 using LightNap.Core.Data;
 using LightNap.Core.Data.Entities;
 using LightNap.Core.Extensions;
@@ -35,6 +36,9 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddLogging(configure => configure.AddConsole());
 
         var databaseSettings = context.Configuration.GetRequiredSection<DatabaseSettings>("Database");
+        var dataProtectionSettings = context.Configuration.GetRequiredSection<DataProtectionSettings>("DataProtection");
+
+        services.AddLightNapDataProtectionServices(dataProtectionSettings, logger: bootstrapLogger);
 
         switch (databaseSettings.Provider)
         {
