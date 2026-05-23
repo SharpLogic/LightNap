@@ -88,7 +88,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low / ~5 minutes; minor rebuild and test run.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-02 — Bump test packages
 
@@ -102,7 +102,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low / verify test run; coverlet major bump warrants spot-checking coverage report output.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-03 — Bump `Microsoft.Extensions.Caching.Hybrid` `10.0.0` → `10.4.0`
 
@@ -116,7 +116,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low / coupled to BE-07's source changes — bump alone is fine, but if you also adopt BE-07, do them together.
 - **Depends on:** BE-07.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-04 — Bump `Microsoft.IdentityModel.JsonWebTokens` `8.15.0` → `8.17.0`
 
@@ -130,7 +130,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-05 — Add `HtmlSanitizer 9.0.892`
 
@@ -144,7 +144,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium; depends on whether you also adopt a sanitization pass on static-content/HTML email render.
 - **Depends on:** none — but pairs naturally with any future CMS HTML sanitization story.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-06 — Add `Markdig 0.38.0`
 
@@ -158,7 +158,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low (package); medium (finding a generic seam to consume it).
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-07 — Add `Microsoft.ApplicationInsights` family
 
@@ -172,7 +172,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium.
 - **Depends on:** BE-17 (bootstrap logger pattern) for context.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-08 — Add `Azure.Identity 1.19.0` + `Azure.Storage.Blobs 12.27.0`
 
@@ -186,7 +186,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** BE-03.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 ### Frontend npm deltas
 
@@ -202,7 +202,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low / re-run `npm install` and the test/build suite.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-10 — Bump PrimeNG `21.0.1` → `21.1.3` and `@primeng/themes` `21.0.1` → `21.0.4`
 
@@ -215,7 +215,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low (style/regression visual check recommended).
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-11 — Bump Orval `7.17.0` → `8.5.3` (major)
 
@@ -229,7 +229,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium / regenerate and review diff in `backend-api/`.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] defer`
 
 #### DEP-12 — Bump dev tooling (cypress, vitest, faker, eslint, prettier, postcss, tailwind, msw, ncu, happy-dom, autoprefixer)
 
@@ -243,7 +243,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### DEP-13 — Add `@angular/cdk ^21.2.3`
 
@@ -257,7 +257,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] skip`
 
 #### DEP-14 — Add `marked ^17.0.5`
 
@@ -271,7 +271,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** FE-18.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 ---
 
@@ -289,7 +289,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium-high; touches sln + project refs in WebApi, MaintenanceService, Tests.
 - **Depends on:** BE-02, BE-03, BE-07, BE-08, BE-10, BE-19, DEP-08.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-02 — Builder-style `AddXxxServices(...)` with optional `ILogger` for startup diagnostics
 
@@ -303,7 +303,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low-medium; non-breaking if `logger` is optional.
 - **Depends on:** BE-16.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-03 — Add extensible `DataProtection` services (Azure Key Vault / Local cert / Ephemeral)
 
@@ -317,7 +317,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium; new NuGets (`Azure.Identity`, `Azure.Storage.Blobs` — see DEP-08), new appsettings section, optional cert/Vault per environment.
 - **Depends on:** DEP-08, BE-02.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-04 — Mask connection strings in startup logs
 
@@ -331,7 +331,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** BE-02 (paired with the `ILogger?` parameter).
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-05 — Switch `NotificationsHub` to a strongly-typed SignalR client (`RealTimeHub` / `IRealTimeClient`)
 
@@ -345,7 +345,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low-medium; coordinate with frontend `NotificationHubService`.
 - **Depends on:** none (but frontend `NotificationHubService` URL is the paired change).
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-06 — Bug fix: always set `MailMessage.IsBodyHtml = true` in `DefaultEmailService`
 
@@ -359,7 +359,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-07 — Modernize `HybridCacheExtensions` (C# 14 extension blocks + `GetOrCreateAsync<T>` overload)
 
@@ -373,7 +373,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low; requires .NET 10 SDK already in use.
 - **Depends on:** DEP-03.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-08 — Add `GetRequiredConnectionString` and `GetOptionalSection<T>` to `IConfigurationExtensions`
 
@@ -387,7 +387,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-09 — `set` → `init` on settings records
 
@@ -401,7 +401,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-10 — Add `DatabaseProvider.Unconfigured` as the default enum value
 
@@ -415,7 +415,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-11 — Generic `Constants.Dto.Max*Length` set
 
@@ -429,7 +429,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-12 — `OptionDto`: rename `Key`/`DisplayName` → `Value`/`Label`
 
@@ -443,7 +443,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low for the rename itself; medium across the codebase to find call sites.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-13 — Tune default logging filters
 
@@ -457,7 +457,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-14 — Static-file cache-control headers (no-cache for `index.html`/`ngsw*`, immutable for hashed assets, no-cache for StaticContent)
 
@@ -474,7 +474,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-15 — `X-Robots-Tag: noindex` on `/api/*` responses
 
@@ -488,7 +488,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-16 — Bootstrap-logger pattern in `Program.cs`
 
@@ -502,7 +502,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** BE-02 (logger param on `AddXxxServices`).
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-17 — Try/catch around `app.Run()` with fatal-error logging
 
@@ -516,7 +516,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** BE-16.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-18 — `ApplicationUser.MarketingOptIn` + `MarketingOptInAt`
 
@@ -530,7 +530,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium (migrations on both providers required).
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-19 — `SupportedOAuthProviderSettings` (extensible OAuth provider config)
 
@@ -544,7 +544,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium.
 - **Depends on:** BE-01.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-20 — MaintenanceService: explicit `appsettings.{Environment}.json` loading
 
@@ -558,7 +558,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-21 — MaintenanceService: per-run stopwatch + success/failure counters
 
@@ -572,7 +572,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-22 — MaintenanceService: drop unused `Authentication` / `Jwt` config sections
 
@@ -586,7 +586,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low; just removes config binds — verify your existing tasks don't quietly depend on them.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-23 — Dockerfile bump `8.0` → `10.0`
 
@@ -600,7 +600,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-24 — `UserSettingsConfig`: expose `AllSettings` publicly
 
@@ -614,7 +614,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-25 — File-scoped-namespace + indent cleanup across Configuration / Seeder files
 
@@ -628,7 +628,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low / pure cosmetic.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### BE-26 — Default `appsettings.Production.json` pattern
 
@@ -642,7 +642,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** BE-03 if upstreaming with DataProtection.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] skip`
 
 ---
 
@@ -660,7 +660,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-02 — Version-check: silent activate-and-reload (vs. user-prompted drawer)
 
@@ -674,7 +674,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** FE-01.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-03 — `ToastService.show(...)` gains optional `clickHandler`
 
@@ -688,7 +688,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** FE-04.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-04 — Clickable toast template in `app.component.html`
 
@@ -702,7 +702,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** FE-03.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-05 — `<ln-api-response>` improvements (null-result fallback message + centered loading)
 
@@ -716,7 +716,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-06 — `<ln-confirm-popup>` polish
 
@@ -730,7 +730,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-07 — Breadcrumb component wrap + leading-icon fix
 
@@ -744,7 +744,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-08 — `app-layout` page-actions slot (sticky floating actions on md+, collapsible on sm)
 
@@ -758,7 +758,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium.
 - **Depends on:** FE-09.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-09 — Modernize `AppLayoutComponent` DI (use `inject()` + `viewChild.required()`)
 
@@ -772,7 +772,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-10 — `TypeHelpers` gains `objectsEqual`, `stripUndefined`, `rowTrackBy`
 
@@ -791,7 +791,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-11 — `PrependNameTitleStrategy` skips prepend if page title already contains `|`
 
@@ -805,7 +805,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-12 — Add `@features` / `@integrations` path aliases in `tsconfig.json`
 
@@ -819,7 +819,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-13 — Exclude `/sitemap*`, `/sitemaps/**`, `/robots.txt` from PWA navigation routes
 
@@ -833,7 +833,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-14 — Barrel-import migration (`@core` → specific paths)
 
@@ -847,7 +847,7 @@ Open question for the maintainer:
 - **Risk & effort:** Medium effort (many files); low risk (mechanical).
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] defer`
 
 #### FE-15 — `styles.css`: breadcrumb wrap fix + datatable header padding
 
@@ -866,7 +866,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-16 — `_common.css`: add `.text-color`, `.text-color-secondary`, `.surface-border-color` utility classes
 
@@ -885,7 +885,7 @@ Open question for the maintainer:
 - **Risk & effort:** Very low.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-17 — `_main.css`: layout overflow strategy (fixed header + scrolling main area)
 
@@ -899,7 +899,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low (CSS); but visual regression review needed.
 - **Depends on:** none.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 #### FE-18 — `externalLinksMarkedExtension`: open markdown external links in a new window
 
@@ -913,7 +913,7 @@ Open question for the maintainer:
 - **Risk & effort:** Low.
 - **Depends on:** DEP-14.
 
-**DECISION:** `[ ] upstream   [ ] skip   [ ] defer`
+**DECISION:** `[x] upstream`
 
 ---
 
