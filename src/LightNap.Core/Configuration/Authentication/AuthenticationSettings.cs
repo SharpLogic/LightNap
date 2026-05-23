@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations;
 namespace LightNap.Core.Configuration.Authentication
 {
     /// <summary>
-    /// Represents the site settings for the web API.
+    /// Represents the site authentication settings shared by all LightNap hosts. Web-specific
+    /// concerns (OAuth, Windows auth) live in <c>WebApiAuthenticationSettings</c> in the WebApi
+    /// project.
     /// </summary>
     public record AuthenticationSettings
     {
@@ -22,15 +24,5 @@ namespace LightNap.Core.Configuration.Authentication
         /// True to require email verification before a user can log in.
         /// </summary>
         public bool RequireEmailVerification { get; set; }
-
-        /// <summary>
-        /// OAuth provider settings.
-        /// </summary>
-        public OAuthSettings? OAuth { get; init; }
-
-        /// <summary>
-        /// Windows authentication settings.
-        /// </summary>
-        public WindowsAuthSettings? WindowsAuth { get; init; }
     }
 }

@@ -18,7 +18,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Get and validate required configuration sections so we can confirm them immediately (fail fast) and use them in setup.
-AuthenticationSettings appSettings = builder.Configuration.GetRequiredSection<AuthenticationSettings>("Authentication");
+WebApiAuthenticationSettings appSettings = builder.Configuration.GetRequiredSection<WebApiAuthenticationSettings>("Authentication");
 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection<JwtSettings>("Jwt");
 EmailSettings emailSettings = builder.Configuration.GetRequiredSection<EmailSettings>("Email");
 CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSettings>("Cache");

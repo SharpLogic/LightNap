@@ -146,7 +146,7 @@ public static class ApplicationServiceExtensions
     /// <param name="authSettings">The authentication settings.</param>
     /// <param name="logger">An optional logger used to report what was wired up.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, AuthenticationSettings authSettings, ILogger? logger = null)
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, JwtSettings jwtSettings, WebApiAuthenticationSettings authSettings, ILogger? logger = null)
     {
         logger?.LogInformation("Configuring identity services (JWT issuer: {Issuer})", jwtSettings.Issuer);
 

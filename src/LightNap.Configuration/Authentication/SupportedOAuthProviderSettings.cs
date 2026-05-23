@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations;
+using LightNap.Core.Configuration.Authentication;
 
-namespace LightNap.Core.Configuration.Authentication
+namespace LightNap.Configuration.Authentication
 {
     /// <summary>
-    /// Settings for OAuth providers.
+    /// Settings for the OAuth providers supported by the current instance.
     /// </summary>
-    public record OAuthSettings
+    public record SupportedOAuthProviderSettings
     {
         /// <summary>
         /// Google OAuth settings.
