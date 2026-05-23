@@ -12,26 +12,26 @@ namespace LightNap.Core.Configuration.Authentication
         /// </summary>
         [Required(ErrorMessage = "JWT key is required")]
         [StringLength(100, MinimumLength = 32)]
-        public required string Key { get; set; }
+        public required string Key { get; init; }
 
         /// <summary>
         /// Gets or sets the JWT issuer URL.
         /// </summary>
         [Required(ErrorMessage = "JWT issuer is required")]
         [MinLength(1)]
-        public required string Issuer { get; set; }
+        public required string Issuer { get; init; }
 
         /// <summary>
         /// Gets or sets the JWT audience URL.
         /// </summary>
         [Required(ErrorMessage = "JWT audience is required")]
         [MinLength(1)]
-        public required string Audience { get; set; }
+        public required string Audience { get; init; }
 
         /// <summary>
         /// Gets or sets the expiration time in minutes for the JWT token. Must be between 1 and 1440.
         /// </summary>
         [Range(5, 1440)]
-        public int ExpirationMinutes { get; set; }
+        public int ExpirationMinutes { get; init; }
     }
 }

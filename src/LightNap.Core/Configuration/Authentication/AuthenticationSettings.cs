@@ -11,7 +11,7 @@ namespace LightNap.Core.Configuration.Authentication
         /// How long a device can stay logged in without refreshing an access token. In other words, how far out we push refresh token expirations.
         /// </summary>
         [Range(1, 365)]
-        public int LogOutInactiveDeviceDays { get; set; }
+        public int LogOutInactiveDeviceDays { get; init; }
 
         /// <summary>
         /// True to require two-factor authentication for new users. This does not affect existing users.
@@ -26,11 +26,11 @@ namespace LightNap.Core.Configuration.Authentication
         /// <summary>
         /// OAuth provider settings.
         /// </summary>
-        public OAuthSettings? OAuth { get; set; }
+        public OAuthSettings? OAuth { get; init; }
 
         /// <summary>
         /// Windows authentication settings.
         /// </summary>
-        public WindowsAuthSettings? WindowsAuth { get; set; }
+        public WindowsAuthSettings? WindowsAuth { get; init; }
     }
 }

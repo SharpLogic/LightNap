@@ -12,29 +12,29 @@ namespace LightNap.Core.Configuration.Email
         /// </summary>
         [Required(ErrorMessage = "SMTP host is required")]
         [MinLength(1)]
-        public required string Host { get; set; }
+        public required string Host { get; init; }
 
         /// <summary>
         /// Gets or sets the SMTP port number.
         /// </summary>
         [Range(1, 65535)]
-        public int Port { get; set; }
+        public int Port { get; init; }
 
         /// <summary>
         /// Gets or sets a value indicating whether SSL is enabled for SMTP.
         /// </summary>
-        public bool EnableSsl { get; set; }
+        public bool EnableSsl { get; init; }
 
         /// <summary>
         /// Gets or sets the SMTP user name.
         /// </summary>
         [Required]
-        public required string User { get; set; }
+        public required string User { get; init; }
 
         /// <summary>
         /// Gets or sets the SMTP password.
         /// </summary>
         [Required]
-        public required string Password { get; set; }
+        public required string Password { get; init; }
     }
 }
