@@ -133,6 +133,17 @@ app.UseAuthorization();
 
 app.UseWebSockets();
 
+// Tell crawlers not to index JSON API responses, even though /api/* remains crawlable
+// (so JS-rendering bots like Googlebot can complete client-side hydration).
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api"))
+    {
+        context.Response.Headers.Append("X-Robots-Tag", "noindex");
+    }
+    await next();
+});
+
 app.MapControllers();
 
 // Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
@@ -151,14 +162,48 @@ if (Directory.Exists(angularAppPath))
         DefaultFileNames = ["index.html"],
         FileProvider = fileProvider
     });
-    app.UseStaticFiles(new StaticFileOptions
+
+    // Configure cache headers for Angular assets so PWA updates aren't stalled by stale
+    // index.html / ngsw.json and hashed bundles can be cached forever.
+    var staticFileOptions = new StaticFileOptions
     {
-        FileProvider = fileProvider
-    });
+        FileProvider = fileProvider,
+        OnPrepareResponse = context =>
+        {
+            var path = context.File.Name;
+
+            // Don't cache index.html or ngsw.json (service worker manifest)
+            if (path.Equals("index.html", StringComparison.OrdinalIgnoreCase) ||
+                path.Equals("ngsw.json", StringComparison.OrdinalIgnoreCase) ||
+                path.StartsWith("ngsw-", StringComparison.OrdinalIgnoreCase))
+            {
+                context.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+                context.Context.Response.Headers.Pragma = "no-cache";
+                context.Context.Response.Headers.Expires = "0";
+            }
+            // Cache hashed assets (main.abc123.js, etc.) aggressively
+            else if (path.Contains('.') &&
+                     (path.EndsWith(".js", StringComparison.OrdinalIgnoreCase) ||
+                      path.EndsWith(".css", StringComparison.OrdinalIgnoreCase) ||
+                      path.EndsWith(".woff2", StringComparison.OrdinalIgnoreCase) ||
+                      path.EndsWith(".woff", StringComparison.OrdinalIgnoreCase)))
+            {
+                context.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+            }
+        }
+    };
+
+    app.UseStaticFiles(staticFileOptions);
     app.MapFallbackToFile("index.html", new StaticFileOptions
     {
         FileProvider = fileProvider,
-        RequestPath = ""
+        RequestPath = "",
+        OnPrepareResponse = context =>
+        {
+            context.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+            context.Context.Response.Headers.Pragma = "no-cache";
+            context.Context.Response.Headers.Expires = "0";
+        }
     });
 }
 

@@ -5,13 +5,12 @@ import { BlockUiService } from "@core/services/block-ui.service";
 import { VersionCheckService } from "@core/services/version-check.service";
 import { BlockUIModule } from "primeng/blockui";
 import { PrimeNG } from "primeng/config";
-import { DrawerModule } from "primeng/drawer";
 import { ToastModule } from "primeng/toast";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  imports: [RouterOutlet, BlockUIModule, DrawerModule, ToastModule],
+  imports: [RouterOutlet, BlockUIModule, ToastModule],
 })
 export class AppComponent implements OnInit {
   readonly #primengConfig = inject(PrimeNG);
@@ -21,7 +20,6 @@ export class AppComponent implements OnInit {
   readonly showBlockUi = signal(false);
   readonly blockUiIconClass = signal("pi pi-spin pi-spinner text-4xl");
   readonly blockUiMessage = signal("Processing...");
-  readonly showUpdateAvailable = signal(false);
 
   constructor() {
     this.#blockUiService.onShow$.pipe(takeUntilDestroyed()).subscribe(blockUiParams => {
@@ -34,18 +32,10 @@ export class AppComponent implements OnInit {
       next: () => this.showBlockUi.set(false),
     });
 
-    this.#versionCheckService.versionUpdated$.pipe(takeUntilDestroyed()).subscribe({
-      next: () => this.showUpdateAvailable.set(true),
-    });
-
     this.#versionCheckService.startUpdateCheck();
   }
 
   ngOnInit() {
     this.#primengConfig.ripple.set(true);
-  }
-
-  reloadPage() {
-    window.location.reload();
   }
 }
