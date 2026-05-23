@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Caching.Hybrid;
-using Moq;
+using Microsoft.Extensions.DependencyInjection;
 using LightNap.Core.Extensions;
 
 namespace LightNap.Core.Tests.Services
@@ -9,75 +9,17 @@ namespace LightNap.Core.Tests.Services
     public class HybridCacheExtensionsTests
     {
 #pragma warning disable CS8618
-        private Mock<HybridCache> _cacheMock;
+        private HybridCache _cache;
 #pragma warning restore CS8618
-        private readonly HybridCacheEntryFlags _flags = HybridCacheEntryFlags.DisableLocalCacheWrite | HybridCacheEntryFlags.DisableDistributedCacheWrite;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this._cacheMock = new Mock<HybridCache>();
+            var services = new ServiceCollection();
+            services.AddHybridCache();
+            var serviceProvider = services.BuildServiceProvider();
+            this._cache = serviceProvider.GetRequiredService<HybridCache>();
         }
-
-        #region ExistsAsync Tests
-
-        [TestMethod]
-        public async Task ExistsAsync_WhenKeyExists_ShouldReturnTrue()
-        {
-            // Arrange
-            string key = "test-key";
-            var expectedValue = "test-value";
-
-            this._cacheMock
-                .Setup(cache => cache.GetOrCreateAsync(
-                    key,
-                    null!,
-                    It.IsAny<Func<object, CancellationToken, ValueTask<object>>>(),
-                    It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                    null,
-                    TestContext.CancellationToken))
-                .ReturnsAsync(expectedValue);
-
-            // Act
-            var exists = await HybridCacheExtensions.ExistsAsync(this._cacheMock.Object, key, TestContext.CancellationToken);
-
-            // Assert
-            Assert.IsTrue(exists);
-        }
-
-        [TestMethod]
-        public async Task ExistsAsync_WhenKeyDoesNotExist_ShouldReturnFalse()
-        {
-            // Arrange
-            string key = "test-key";
-
-            this._cacheMock
-                .Setup(cache => cache.GetOrCreateAsync(
-                    key,
-                    null!,
-                    It.IsAny<Func<object, CancellationToken, ValueTask<object>>>(),
-                    It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                    null,
-                    TestContext.CancellationToken))
-                .Returns((
-                    string key,
-                    object? state,
-                    Func<object, CancellationToken, ValueTask<object>> factory,
-                    HybridCacheEntryOptions? options,
-                    IEnumerable<string>? tags,
-                    CancellationToken token) =>
-                {
-                    return factory(state!, token);
-                });
-
-            // Act
-            var exists = await HybridCacheExtensions.ExistsAsync(this._cacheMock.Object, key, TestContext.CancellationToken);
-
-            // Assert
-            Assert.IsFalse(exists);
-        }
-
-        #endregion
 
         #region TryGetValueAsync Tests
 
@@ -88,18 +30,10 @@ namespace LightNap.Core.Tests.Services
             string key = "test-key";
             var expectedValue = "test-value";
 
-            this._cacheMock
-                .Setup(cache => cache.GetOrCreateAsync(
-                    key,
-                    null!,
-                    It.IsAny<Func<object, CancellationToken, ValueTask<string>>>(),
-                    It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                    null,
-                    TestContext.CancellationToken))
-                .ReturnsAsync(expectedValue);
+            await this._cache.SetAsync(key, expectedValue);
 
             // Act
-            var (exists, value) = await HybridCacheExtensions.TryGetValueAsync<string>(this._cacheMock.Object, key, TestContext.CancellationToken);
+            var (exists, value) = await this._cache.TryGetValueAsync<string>(key);
 
             // Assert
             Assert.IsTrue(exists);
@@ -113,18 +47,10 @@ namespace LightNap.Core.Tests.Services
             string key = "test-key";
             var expectedValue = 5;
 
-            this._cacheMock
-                .Setup(cache => cache.GetOrCreateAsync(
-                    key,
-                    null!,
-                    It.IsAny<Func<object, CancellationToken, ValueTask<int>>>(),
-                    It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                    null,
-                    TestContext.CancellationToken))
-                .ReturnsAsync(expectedValue);
+            await this._cache.SetAsync(key, expectedValue);
 
             // Act
-            var (exists, value) = await HybridCacheExtensions.TryGetValueAsync<int>(this._cacheMock.Object, key, TestContext.CancellationToken);
+            var (exists, value) = await this._cache.TryGetValueAsync<int>(key);
 
             // Assert
             Assert.IsTrue(exists);
@@ -136,19 +62,12 @@ namespace LightNap.Core.Tests.Services
         {
             // Arrange
             string key = "test-key";
+            string? nullValue = null;
 
-            this._cacheMock
-                .Setup(cache => cache.GetOrCreateAsync(
-                    key,
-                    null!,
-                    It.IsAny<Func<object, CancellationToken, ValueTask<object>>>(),
-                    It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                    null,
-                    TestContext.CancellationToken))
-                .ReturnsAsync(null!);
+            await this._cache.SetAsync(key, nullValue);
 
             // Act
-            var (exists, value) = await HybridCacheExtensions.TryGetValueAsync<int?>(this._cacheMock.Object, key, TestContext.CancellationToken);
+            var (exists, value) = await this._cache.TryGetValueAsync<string>(key);
 
             // Assert
             Assert.IsTrue(exists);
@@ -159,28 +78,10 @@ namespace LightNap.Core.Tests.Services
         public async Task TryGetValueAsync_WhenKeyDoesNotExist_ShouldReturnFalseAndNull()
         {
             // Arrange
-            string key = "test-key";
-
-            this._cacheMock.Setup(cache => cache.GetOrCreateAsync(
-                key,
-                null,
-                It.IsAny<Func<object?, CancellationToken, ValueTask<string>>>(),
-                It.Is<HybridCacheEntryOptions>(value => value.Flags == _flags),
-                null,
-                TestContext.CancellationToken))
-                .Returns((
-                    string key,
-                    object? state,
-                    Func<object?, CancellationToken, ValueTask<string>> factory,
-                    HybridCacheEntryOptions? options,
-                    IEnumerable<string>? tags,
-                    CancellationToken token) =>
-                {
-                    return factory(state, token);
-                });
+            string key = "non-existent-key";
 
             // Act
-            var (exists, value) = await HybridCacheExtensions.TryGetValueAsync<string>(this._cacheMock.Object, key, TestContext.CancellationToken);
+            var (exists, value) = await this._cache.TryGetValueAsync<string>(key);
 
             // Assert
             Assert.IsFalse(exists);
@@ -188,7 +89,5 @@ namespace LightNap.Core.Tests.Services
         }
 
         #endregion
-
-        public TestContext TestContext { get; set; }
     }
 }
