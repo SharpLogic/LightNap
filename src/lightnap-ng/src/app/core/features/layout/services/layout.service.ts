@@ -1,4 +1,4 @@
-import { Injectable, computed, effect, inject, signal } from "@angular/core";
+import { Injectable, TemplateRef, computed, effect, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { LayoutConfigDto } from "@core/backend-api";
 import { APP_NAME } from "@core/helpers";
@@ -19,6 +19,12 @@ export class LayoutService {
   #identityService = inject(IdentityService);
   #profileService = inject(ProfileService);
   appName = inject(APP_NAME);
+
+  /**
+   * Template for the floating page-actions slot rendered by AppLayoutComponent. A child page sets
+   * this via the [pageActions] directive; null hides the slot.
+   */
+  readonly pageActionsTemplate = signal<TemplateRef<any> | null>(null);
 
   #config = this.#profileService.getDefaultStyleSettings();
 

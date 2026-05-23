@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Renderer2, ViewChild } from "@angular/core";
+import { Component, Renderer2, inject, signal, viewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router, RouterModule } from "@angular/router";
 import { LayoutService } from "@core/features/layout/services/layout.service";
@@ -15,21 +15,21 @@ import { BreadcrumbComponent } from "../../controls/breadcrumb/breadcrumb.compon
   imports: [CommonModule, AppTopBarComponent, AppSidebarComponent, RouterModule, AppFooterComponent, BreadcrumbComponent],
 })
 export class AppLayoutComponent {
+  readonly layoutService = inject(LayoutService);
+  readonly #renderer = inject(Renderer2);
+  readonly #router = inject(Router);
+
   menuOutsideClickListener: any;
+  readonly pageActionsVisible = signal(false);
 
-  @ViewChild(AppSidebarComponent) appSidebar!: AppSidebarComponent;
+  readonly appSidebar = viewChild.required(AppSidebarComponent);
+  readonly appTopBar = viewChild.required(AppTopBarComponent);
 
-  @ViewChild(AppTopBarComponent) appTopBar!: AppTopBarComponent;
-
-  constructor(
-    public layoutService: LayoutService,
-    public renderer: Renderer2,
-    public router: Router
-  ) {
+  constructor() {
     this.layoutService.overlayOpen$.pipe(takeUntilDestroyed()).subscribe({
       next: () => {
         if (!this.menuOutsideClickListener) {
-          this.menuOutsideClickListener = this.renderer.listen("document", "click", event => {
+          this.menuOutsideClickListener = this.#renderer.listen("document", "click", event => {
             if (this.isOutsideClicked(event)) {
               this.hideMenu();
             }
@@ -42,7 +42,7 @@ export class AppLayoutComponent {
       },
     });
 
-    this.router.events
+    this.#router.events
       .pipe(
         takeUntilDestroyed(),
         filter(event => event instanceof NavigationEnd)
@@ -50,6 +50,7 @@ export class AppLayoutComponent {
       .subscribe({
         next: () => {
           this.hideMenu();
+          this.pageActionsVisible.set(false);
         },
       });
   }
