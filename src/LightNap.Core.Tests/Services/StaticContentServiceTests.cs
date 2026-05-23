@@ -38,6 +38,8 @@ namespace LightNap.Core.Tests.Services
 
             services.AddHybridCache();
             services.AddSingleton<Ganss.Xss.IHtmlSanitizer>(_ => new Ganss.Xss.HtmlSanitizer());
+            services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(
+                new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
 
             this._userContext = new TestUserContext();
             services.AddScoped<IUserContext>(sp => this._userContext);

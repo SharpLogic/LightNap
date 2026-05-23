@@ -11,8 +11,10 @@ using LightNap.Core.StaticContents.Dto.Response;
 using LightNap.Core.StaticContents.Enums;
 using LightNap.Core.StaticContents.Interfaces;
 using LightNap.Core.StaticContents.Models;
+using Markdig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,8 +23,17 @@ namespace LightNap.Core.StaticContents.Services
     /// <summary>
     /// Service implementation for managing static content and language variants.
     /// </summary>
-    public class StaticContentService(ApplicationDbContext db, IUserContext userContext, ILogger<StaticContentService> logger, HybridCache cache, IHtmlSanitizer htmlSanitizer) : IStaticContentService
+    public class StaticContentService(
+        ApplicationDbContext db,
+        IUserContext userContext,
+        ILogger<StaticContentService> logger,
+        HybridCache cache,
+        IHtmlSanitizer htmlSanitizer,
+        IConfiguration configuration) : IStaticContentService
     {
+        private readonly bool _renderMarkdownServerSide = configuration.GetValue<bool>("StaticContent:RenderMarkdownServerSide");
+        private static readonly MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
         /// <summary>
         /// Tests if the current user is a global content administrator.
         /// </summary>
@@ -110,6 +121,12 @@ namespace LightNap.Core.StaticContents.Services
                 if (content is null && languageCode != StaticContentConfig.DefaultLanguageCode)
                 {
                     return await this.GetPublishedStaticContentInternalAsync(key, StaticContentConfig.DefaultLanguageCode);
+                }
+
+                if (content is not null && _renderMarkdownServerSide && content.Format == StaticContentFormat.Markdown)
+                {
+                    content.Content = Markdown.ToHtml(content.Content, _markdownPipeline);
+                    content.Format = StaticContentFormat.Html;
                 }
 
                 return content;
