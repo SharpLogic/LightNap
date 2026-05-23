@@ -6,6 +6,10 @@ namespace LightNap.Core.Configuration.Database
     public enum DatabaseProvider
     {
         /// <summary>
+        /// No database provider has been configured. This is the default value used to detect missing configuration.
+        /// </summary>
+        Unconfigured,
+        /// <summary>
         /// In-memory database provider.
         /// </summary>
         InMemory,

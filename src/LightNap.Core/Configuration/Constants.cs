@@ -59,11 +59,19 @@
         /// </summary>
         internal static class Dto
         {
+            // Generic settings just to have some level of limits for user-provided strings.
+            public const int MaxFriendlyNameLength = 64;
+            public const int MaxDescriptionLength = 256;
+            public const int MaxDictionaryKeyLength = 64;
+            public const int MaxDictionaryValueLength = 64;
+            public const int MaxMediumTextLength = 512;
+            public const int MaxJsonLength = 1024;
+            public const int MaxUrlLength = 256;
+
             public const int MaxLoginLength = 256;
             public const int MaxPasswordLength = 256;
             public const int MaxDeviceDetailsLength = 512;
             public const int MaxPasswordResetTokenLength = 512;
-            public const int MaxStaticContentKeyLength = 64;
             public const int MaxUserNameLength = 32;
             public const int MaxVerificationCodeLength = 512;
         }
