@@ -12,7 +12,7 @@ import { interval, Subject } from "rxjs";
  * The VersionCheckService class is responsible for checking and activating application updates using Angular Service Worker.
  */
 export class VersionCheckService {
-  readonly #updateCheckInterval = 5 * 1000 * 1000; // 5 minutes
+  readonly #updateCheckInterval = 5 * 60 * 1000; // 5 minutes
   readonly #swUpdate = inject(SwUpdate);
   readonly #destroyRef = inject(DestroyRef);
 
