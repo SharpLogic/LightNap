@@ -8,13 +8,14 @@ import { provideRouter, TitleStrategy, withComponentInputBinding, withInMemorySc
 import { provideServiceWorker } from "@angular/service-worker";
 import { APP_NAME } from "@core";
 import { CMS_ELEMENTS } from "@core/features/content/models/cms-elements";
+import { externalLinksMarkedExtension } from "@core/features/content/markdown-external-links-extension";
 import { apiResponseInterceptor } from "@core/interceptors/api-response-interceptor";
 import { dateInterceptor } from "@core/interceptors/date-interceptor";
 import { tokenInterceptor } from "@core/interceptors/token-interceptor";
 import { InitializationService } from "@core/services/initialization.service";
 import { PrependNameTitleStrategy } from "@core/strategies/prepend-name-title.strategy";
 import Aura from "@primeng/themes/aura";
-import { provideMarkdown } from "ngx-markdown";
+import { MARKED_EXTENSIONS, provideMarkdown } from "ngx-markdown";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { providePrimeNG } from "primeng/config";
 import { AppComponent } from "./app/app.component";
@@ -45,7 +46,9 @@ bootstrapApplication(AppComponent, {
         },
       },
     }),
-    provideMarkdown(),
+    provideMarkdown({
+      markedExtensions: [{ provide: MARKED_EXTENSIONS, useValue: externalLinksMarkedExtension, multi: true }],
+    }),
 
     // 5. Application initialization
     InitializationService,

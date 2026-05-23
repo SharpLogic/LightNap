@@ -46,6 +46,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@microsoft/signalr": "^10.0.0",
     "@primeng/themes": "^21.0.4",
+    "marked": "^17.0.5",
     "ngx-markdown": "^21.1.0",
     "primeicons": "^7.0.0",
     "primeng": "21.1.3",
