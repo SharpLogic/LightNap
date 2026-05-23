@@ -37,7 +37,6 @@ namespace LightNap.Core.Tests.Services
                 .AddDefaultTokenProviders();
 
             services.AddHybridCache();
-            services.AddSingleton<Ganss.Xss.IHtmlSanitizer>(_ => new Ganss.Xss.HtmlSanitizer());
             services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(
                 new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
 

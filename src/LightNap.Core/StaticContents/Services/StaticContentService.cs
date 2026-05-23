@@ -1,4 +1,3 @@
-using Ganss.Xss;
 using LightNap.Core.Api;
 using LightNap.Core.Configuration;
 using LightNap.Core.Configuration.StaticContents;
@@ -28,7 +27,6 @@ namespace LightNap.Core.StaticContents.Services
         IUserContext userContext,
         ILogger<StaticContentService> logger,
         HybridCache cache,
-        IHtmlSanitizer htmlSanitizer,
         IConfiguration configuration) : IStaticContentService
     {
         private readonly bool _renderMarkdownServerSide = configuration.GetValue<bool>("StaticContent:RenderMarkdownServerSide");
@@ -384,8 +382,6 @@ namespace LightNap.Core.StaticContents.Services
             var staticContent = await db.StaticContents.Where(sc => sc.Key == key).FirstOrDefaultAsync() ?? throw new UserFriendlyApiException($"Static content with key '{key}' not found.");
             this.AssertCanEdit(staticContent);
 
-            this.SanitizeIfHtml(createDto);
-
             var staticContentLanguage = createDto.ToEntity(staticContent.Id, languageCode);
             db.StaticContentLanguages.Add(staticContentLanguage);
             await db.SaveChangesAsync();
@@ -406,8 +402,6 @@ namespace LightNap.Core.StaticContents.Services
             var staticContentLanguage =
                 await db.StaticContentLanguages.FirstOrDefaultAsync(scl => scl.StaticContentId == staticContent.Id && scl.LanguageCode == languageCode)
                     ?? throw new UserFriendlyApiException($"Static content language with key '{key}' and language '{languageCode}' not found.");
-
-            this.SanitizeIfHtml(updateDto);
 
             updateDto.UpdateEntity(staticContentLanguage);
             db.StaticContentLanguages.Update(staticContentLanguage);
@@ -444,18 +438,6 @@ namespace LightNap.Core.StaticContents.Services
         public IReadOnlyList<StaticContentSupportedLanguageDto> GetSupportedLanguages()
         {
             return StaticContentConfig.SupportedLanguages;
-        }
-
-        /// <summary>
-        /// Defense-in-depth: scrub the supplied HTML on write before it lands in the DB.
-        /// Strips script tags, inline event handlers, and javascript: URLs.
-        /// </summary>
-        private void SanitizeIfHtml(UpdateStaticContentLanguageDto dto)
-        {
-            if (dto.Format == StaticContentFormat.Html && !string.IsNullOrEmpty(dto.Content))
-            {
-                dto.Content = htmlSanitizer.Sanitize(dto.Content);
-            }
         }
     }
 }

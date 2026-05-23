@@ -7,7 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
     <PackageReference Include="Markdig" Version="0.38.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.5" />
