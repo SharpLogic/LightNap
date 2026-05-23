@@ -11,26 +11,28 @@ namespace LightNap.Integrations.Microsoft;
 /// </summary>
 public static class IServiceCollectionExtensions
 {
-    /// <summary>
-    /// Adds Microsoft as an external authentication provider.
-    /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <param name="oAuthSettings">The OAuth provider settings (ClientId / ClientSecret).</param>
-    /// <param name="logger">An optional logger used to report what was wired up.</param>
-    /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddMicrosoftLogin(this IServiceCollection services, OAuthProviderSettings oAuthSettings, ILogger? logger = null)
+    extension(IServiceCollection services)
     {
-        logger?.LogInformation("Configuring Microsoft external login");
+        /// <summary>
+        /// Adds Microsoft as an external authentication provider.
+        /// </summary>
+        /// <param name="oAuthSettings">The OAuth provider settings (ClientId / ClientSecret).</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
+        /// <returns>The updated service collection.</returns>
+        public IServiceCollection AddMicrosoftLogin(OAuthProviderSettings oAuthSettings, ILogger? logger = null)
+        {
+            logger?.LogInformation("Configuring Microsoft external login");
 
-        services.AddAuthentication()
-            .AddMicrosoftAccount(options =>
-            {
-                options.ClientId = oAuthSettings.ClientId;
-                options.ClientSecret = oAuthSettings.ClientSecret;
-            });
+            services.AddAuthentication()
+                .AddMicrosoftAccount(options =>
+                {
+                    options.ClientId = oAuthSettings.ClientId;
+                    options.ClientSecret = oAuthSettings.ClientSecret;
+                });
 
-        services.AddSingleton(new SupportedExternalLoginDto(MicrosoftAccountDefaults.AuthenticationScheme, MicrosoftAccountDefaults.DisplayName));
+            services.AddSingleton(new SupportedExternalLoginDto(MicrosoftAccountDefaults.AuthenticationScheme, MicrosoftAccountDefaults.DisplayName));
 
-        return services;
+            return services;
+        }
     }
 }

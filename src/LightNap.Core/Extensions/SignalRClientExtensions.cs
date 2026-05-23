@@ -10,20 +10,26 @@ namespace LightNap.Core.Extensions
     /// </summary>
     public static class SignalRClientExtensions
     {
-        /// <summary>
-        /// Adds the specified connection to the SignalR group associated with the given user ID.
-        /// </summary>
-        public static async Task AddToUserGroupAsync(this Hub<IRealTimeClient> hub, string connectionId, string userId)
+        extension(Hub<IRealTimeClient> hub)
         {
-            await hub.Groups.AddToGroupAsync(connectionId, FormatUserGroupName(userId));
+            /// <summary>
+            /// Adds the specified connection to the SignalR group associated with the given user ID.
+            /// </summary>
+            public async Task AddToUserGroupAsync(string connectionId, string userId)
+            {
+                await hub.Groups.AddToGroupAsync(connectionId, FormatUserGroupName(userId));
+            }
         }
 
-        /// <summary>
-        /// Sends a notification to every active connection for the specified user.
-        /// </summary>
-        public static async Task SendNotificationToUserAsync(this IHubContext<RealTimeHub, IRealTimeClient> hub, string userId, NotificationDto notification)
+        extension(IHubContext<RealTimeHub, IRealTimeClient> hub)
         {
-            await hub.Clients.Group(FormatUserGroupName(userId)).ReceiveNotification(notification);
+            /// <summary>
+            /// Sends a notification to every active connection for the specified user.
+            /// </summary>
+            public async Task SendNotificationToUserAsync(string userId, NotificationDto notification)
+            {
+                await hub.Clients.Group(FormatUserGroupName(userId)).ReceiveNotification(notification);
+            }
         }
 
         private static string FormatUserGroupName(string userId) => $"user:{userId}";

@@ -11,26 +11,28 @@ namespace LightNap.Integrations.Google;
 /// </summary>
 public static class IServiceCollectionExtensions
 {
-    /// <summary>
-    /// Adds Google as an external authentication provider.
-    /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <param name="oAuthSettings">The OAuth provider settings (ClientId / ClientSecret).</param>
-    /// <param name="logger">An optional logger used to report what was wired up.</param>
-    /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddGoogleLogin(this IServiceCollection services, OAuthProviderSettings oAuthSettings, ILogger? logger = null)
+    extension(IServiceCollection services)
     {
-        logger?.LogInformation("Configuring Google external login");
+        /// <summary>
+        /// Adds Google as an external authentication provider.
+        /// </summary>
+        /// <param name="oAuthSettings">The OAuth provider settings (ClientId / ClientSecret).</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
+        /// <returns>The updated service collection.</returns>
+        public IServiceCollection AddGoogleLogin(OAuthProviderSettings oAuthSettings, ILogger? logger = null)
+        {
+            logger?.LogInformation("Configuring Google external login");
 
-        services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                options.ClientId = oAuthSettings.ClientId;
-                options.ClientSecret = oAuthSettings.ClientSecret;
-            });
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = oAuthSettings.ClientId;
+                    options.ClientSecret = oAuthSettings.ClientSecret;
+                });
 
-        services.AddSingleton(new SupportedExternalLoginDto(GoogleDefaults.AuthenticationScheme, GoogleDefaults.DisplayName));
+            services.AddSingleton(new SupportedExternalLoginDto(GoogleDefaults.AuthenticationScheme, GoogleDefaults.DisplayName));
 
-        return services;
+            return services;
+        }
     }
 }
