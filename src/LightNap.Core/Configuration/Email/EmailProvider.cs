@@ -1,18 +1,16 @@
-namespace LightNap.Core.Configuration.Email
+namespace LightNap.Core.Configuration.Email;
+/// <summary>
+/// Represents the email provider options.
+/// </summary>
+public enum EmailProvider
 {
     /// <summary>
-    /// Represents the email provider options.
+    /// Logs emails to the console instead of sending them.
     /// </summary>
-    public enum EmailProvider
-    {
-        /// <summary>
-        /// Logs emails to the console instead of sending them.
-        /// </summary>
-        LogToConsole,
+    LogToConsole,
 
-        /// <summary>
-        /// Sends emails using SMTP.
-        /// </summary>
-        Smtp
-    }
+    /// <summary>
+    /// Sends emails using SMTP.
+    /// </summary>
+    Smtp
 }

@@ -1,28 +1,26 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration.Authentication
+namespace LightNap.Core.Configuration.Authentication;
+/// <summary>
+/// Represents the site authentication settings shared by all LightNap hosts. Web-specific
+/// concerns (OAuth, Windows auth) live in <c>WebApiAuthenticationSettings</c> in the WebApi
+/// project.
+/// </summary>
+public record AuthenticationSettings
 {
     /// <summary>
-    /// Represents the site authentication settings shared by all LightNap hosts. Web-specific
-    /// concerns (OAuth, Windows auth) live in <c>WebApiAuthenticationSettings</c> in the WebApi
-    /// project.
+    /// How long a device can stay logged in without refreshing an access token. In other words, how far out we push refresh token expirations.
     /// </summary>
-    public record AuthenticationSettings
-    {
-        /// <summary>
-        /// How long a device can stay logged in without refreshing an access token. In other words, how far out we push refresh token expirations.
-        /// </summary>
-        [Range(1, 365)]
-        public int LogOutInactiveDeviceDays { get; init; }
+    [Range(1, 365)]
+    public int LogOutInactiveDeviceDays { get; init; }
 
-        /// <summary>
-        /// True to require two-factor authentication for new users. This does not affect existing users.
-        /// </summary>
-        public bool RequireTwoFactorForNewUsers { get; set; }
+    /// <summary>
+    /// True to require two-factor authentication for new users. This does not affect existing users.
+    /// </summary>
+    public bool RequireTwoFactorForNewUsers { get; set; }
 
-        /// <summary>
-        /// True to require email verification before a user can log in.
-        /// </summary>
-        public bool RequireEmailVerification { get; set; }
-    }
+    /// <summary>
+    /// True to require email verification before a user can log in.
+    /// </summary>
+    public bool RequireEmailVerification { get; set; }
 }
