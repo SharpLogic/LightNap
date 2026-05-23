@@ -83,3 +83,15 @@ graph LR
 - **Secure Your Secrets** - Always use GitHub secrets for sensitive data like connection strings and publish profiles
 - **Review Workflow Logs** - Check the Actions tab in GitHub for detailed execution logs
 - **Customize As Needed** - These workflows are templates; modify them to fit your deployment needs
+
+## Environment-Specific Configuration Overrides
+
+Both `LightNap.WebApi` and `LightNap.MaintenanceService` use the standard `Host.CreateApplicationBuilder` pipeline (via `WebApplication.CreateBuilder` for WebApi and an explicit `ConfigureAppConfiguration` for the MaintenanceService), which automatically loads `appsettings.{Environment}.json` on top of `appsettings.json` when a file with the current environment name is present in the output directory. Environment variables are layered last and win over both JSON files.
+
+To override settings for a production deployment without committing secrets:
+
+1. Drop a gitignored `appsettings.Production.json` into the target project (e.g. `src/LightNap.WebApi/` or `src/LightNap.MaintenanceService/`) containing only the keys that differ — for example a different `Database:Provider`, a Key Vault URL for `DataProtection:Azure:KeyVaultUrl`, or production SMTP credentials.
+2. Set `ASPNETCORE_ENVIRONMENT=Production` for the WebApi process and `DOTNET_ENVIRONMENT=Production` for the MaintenanceService process so each host picks up the matching `appsettings.Production.json`.
+3. For values that should never live in a file even on the production host (passwords, connection strings, signing keys), prefer environment variables — they have the highest precedence and bypass the file entirely. Use the standard double-underscore syntax to address nested keys (`ConnectionStrings__DefaultConnection`, `DataProtection__Azure__KeyVaultUrl`).
+
+The repo ships with `appsettings.E2e.json` as the only environment override checked in (used by the end-to-end test profile). All other `appsettings.*.json` files are gitignored.
