@@ -1,15 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LightNap.Core.Configuration.Authentication
-{    
+namespace LightNap.Core.Configuration.Authentication;
+/// <summary>
+/// Settings for Windows authentication.
+/// </summary>
+public record WindowsAuthSettings
+{
     /// <summary>
-    /// Settings for Windows authentication.
+    /// Whether Windows authentication is enabled.
     /// </summary>
-    public record WindowsAuthSettings
-    {
-        /// <summary>
-        /// Whether Windows authentication is enabled.
-        /// </summary>
-        public bool Enabled { get; set; }
-    }
+    public bool Enabled { get; init; }
 }

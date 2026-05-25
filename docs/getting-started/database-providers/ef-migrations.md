@@ -28,7 +28,7 @@ Before modifying the migrations for a given project, set the `Database:Provider`
 To add a migration for SQL Server, use the following command from the `/src` folder:
 
 ```bash
-dotnet ef migrations add <MigrationName> --context ApplicationDbContext --startup-project LightNap.WebApi --project LightNap.DataProviders.SqlServer
+dotnet ef migrations add <MigrationName> --context ApplicationDbContext --startup-project LightNap.WebApi --project DataProviders/LightNap.DataProviders.SqlServer
 ```
 
 ## Removing a Migration
@@ -36,7 +36,7 @@ dotnet ef migrations add <MigrationName> --context ApplicationDbContext --startu
 Similarly, you can remove the most recent migration using the following command:
 
 ```bash
-dotnet ef migrations remove --startup-project LightNap.WebApi --project LightNap.DataProviders.SqlServer
+dotnet ef migrations remove --startup-project LightNap.WebApi --project DataProviders/LightNap.DataProviders.SqlServer
 ```
 
 ## Updating the Database
@@ -44,7 +44,7 @@ dotnet ef migrations remove --startup-project LightNap.WebApi --project LightNap
 To apply changes to the database, use the following command:
 
 ```bash
-dotnet ef database update --startup-project LightNap.WebApi --project LightNap.DataProviders.SqlServer
+dotnet ef database update --startup-project LightNap.WebApi --project DataProviders/LightNap.DataProviders.SqlServer
 ```
 
 {: .note}

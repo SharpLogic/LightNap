@@ -21,18 +21,18 @@ namespace LightNap.Core.Email.Services
         /// <inheritdoc/>
         public async Task SendMailAsync(MailMessage message)
         {
+            message.IsBodyHtml = true;
             await emailSender.SendMailAsync(message);
         }
 
         /// <inheritdoc/>
         public async Task SendMailAsync(ApplicationUser user, string subject, string body)
         {
-            await emailSender.SendMailAsync(
+            await this.SendMailAsync(
                 new MailMessage(new MailAddress(emailSettings.Value.FromEmail, emailSettings.Value.FromDisplayName), new MailAddress(user.Email!, user.UserName))
                 {
                     Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true
+                    Body = body
                 });
         }
 
@@ -52,7 +52,7 @@ namespace LightNap.Core.Email.Services
         /// <inheritdoc/>
         public async Task SendChangeEmailAsync(ApplicationUser user, string newEmail, string token)
         {
-            await emailSender.SendMailAsync(
+            await this.SendMailAsync(
                 new MailMessage(emailSettings.Value.FromEmail, newEmail, "Confirm your email change",
                     new ChangeEmailTemplate()
                     {

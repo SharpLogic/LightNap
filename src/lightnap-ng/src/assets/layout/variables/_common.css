@@ -18,3 +18,16 @@
   --focus-ring-offset: var(--p-focus-ring-offset);
   --focus-ring-shadow: var(--p-focus-ring-shadow);
 }
+
+/* Text Color Utilities */
+.text-color {
+  color: var(--text-color);
+}
+
+.text-color-secondary {
+  color: var(--text-color-secondary);
+}
+
+.surface-border-color {
+  border-color: var(--surface-border);
+}

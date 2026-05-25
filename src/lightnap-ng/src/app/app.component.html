@@ -1,15 +1,26 @@
-<p-drawer header="Application Update Available" [(visible)]="showUpdateAvailable" position="top">
-  A new version of this application is available. Please
-  <a href="javascript:void(0)" (click)="reloadPage()">click here</a>
-  to refresh the page to update to the latest version.
-</p-drawer>
+<router-outlet />
 
-<router-outlet></router-outlet>
-<p-toast position="top-right" key="global" />
+<p-toast position="top-right" key="global">
+  <ng-template let-message #message>
+    @if (message.data?.clickHandler) {
+      <div class="w-full flex flex-col font-medium text-lg my-4 cursor-pointer" (click)="message.data.clickHandler()">
+        <span>{{ message.summary }}</span>
+        <span>{{ message.detail }}</span>
+      </div>
+    } @else {
+      <div class="w-full flex flex-col font-medium text-lg my-4">
+        <span>{{ message.summary }}</span>
+        <span>{{ message.detail }}</span>
+      </div>
+    }
+  </ng-template>
+</p-toast>
 
-<p-blockUI [blocked]="showBlockUi()">
-  <div class="text-white flex justify-center items-center gap-1 w-full">
-    <i class="{{ blockUiIconClass() }}"></i>
-    <span>{{ blockUiMessage() }}</span>
-  </div>
-</p-blockUI>
+@if (showBlockUi()) {
+  <p-blockUI [blocked]="showBlockUi()">
+    <div class="text-white flex justify-center items-center gap-1 w-full">
+      <i class="{{ blockUiIconClass() }}"></i>
+      <span>{{ blockUiMessage() }}</span>
+    </div>
+  </p-blockUI>
+}

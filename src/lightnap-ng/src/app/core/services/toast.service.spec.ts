@@ -37,6 +37,7 @@ describe("ToastService", () => {
         detail: message,
         severity: "success",
         summary: title,
+        data: { clickHandler: undefined },
       });
     });
 
@@ -51,6 +52,7 @@ describe("ToastService", () => {
         detail: message,
         severity: "info",
         summary: title,
+        data: { clickHandler: undefined },
       });
     });
 
@@ -65,6 +67,7 @@ describe("ToastService", () => {
         detail: message,
         severity: "error",
         summary: title,
+        data: { clickHandler: undefined },
       });
     });
 
@@ -79,6 +82,7 @@ describe("ToastService", () => {
         detail: message,
         severity: "warn",
         summary: title,
+        data: { clickHandler: undefined },
       });
     });
 
@@ -95,6 +99,21 @@ describe("ToastService", () => {
         detail: message,
         severity: severity,
         summary: title,
+        data: { clickHandler: undefined },
+      });
+    });
+
+    it("should call MessageService.add with the supplied click handler", () => {
+      const handler = vi.fn();
+
+      service.show("Click me", "Info", "info", "global", handler);
+
+      expect(messageServiceSpy.add).toHaveBeenCalledWith({
+        key: "global",
+        detail: "Click me",
+        severity: "info",
+        summary: "Info",
+        data: { clickHandler: handler },
       });
     });
   });

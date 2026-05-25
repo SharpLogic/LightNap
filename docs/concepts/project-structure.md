@@ -15,10 +15,16 @@ The backend is developed on .NET using C#. `LightNap.sln` includes the projects 
 
 - `LightNap.Core`: .NET shared library for common server-side components.
 - `LightNap.Core.Tests`: Test library for `LightNap.Core`.
-- `LightNap.DataProviders.Sqlite`: SQLite data provider implementation including migrations and utilities.
-- `LightNap.DataProviders.SqlServer`: SQL Server data provider implementation including migrations and utilities.
-- `LightNap.MaintenanceService`: .NET console project to run maintenance tasks.
+- `LightNap.Configuration`: Strongly-typed settings models (Database, Cache, DataProtection, OAuth) and the DI "hub" that wires up vendor integrations so the Web API doesn't have to reference vendor NuGets directly.
 - `LightNap.WebApi`: .NET Web API project.
+- `DataProviders/LightNap.DataProviders.Sqlite`: SQLite data provider implementation including migrations and utilities.
+- `DataProviders/LightNap.DataProviders.SqlServer`: SQL Server data provider implementation including migrations and utilities.
+- `WebJobs/LightNap.MaintenanceService`: .NET console project to run maintenance tasks.
+- `Integrations/GitHub/LightNap.Integrations.GitHub`, `Integrations/Google/LightNap.Integrations.Google`, `Integrations/Microsoft/LightNap.Integrations.Microsoft`: per-vendor OAuth login libraries. Add new vendors by creating a sibling project under `Integrations/{Vendor}/` and referencing it from `LightNap.Configuration`.
+
+### The Configuration Hub
+
+`LightNap.Configuration` references each `LightNap.Integrations.*` project so vendor NuGets (e.g. `Microsoft.AspNetCore.Authentication.Google`, `AspNet.Security.OAuth.GitHub`) never have to be listed in `LightNap.WebApi.csproj`. The Web API calls `services.AddLightNapOAuthProviders(authSettings.OAuth)` and the hub dispatches to each vendor's `Add{Vendor}Login` extension based on what's configured in `appsettings.json`. Core Azure plumbing that every production deployment needs — data protection, Azure Blob storage for keys, Redis caching — stays coupled into `LightNap.Configuration` and the host projects rather than living behind an integration boundary.
 
 LightNap supports distributed deployment with multiple backend instances. When `UseDistributedMode` is enabled in the configuration, Redis is used for distributed caching and SignalR backplane to coordinate between instances.
 

@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Data.Entities;
+using LightNap.Core.Data.Entities;
 using LightNap.Core.Identity.Dto.Response;
 
 namespace LightNap.Core.Extensions
@@ -8,29 +8,33 @@ namespace LightNap.Core.Extensions
     /// </summary>
     internal static class ApplicationRoleExtensions
     {
-        /// <summary>
-        /// Converts an ApplicationRole object to a RoleDto object.
-        /// </summary>
-        /// <param name="role">The ApplicationRole object to convert.</param>
-        /// <returns>A RoleDto object.</returns>
-        public static RoleDto ToDto(this ApplicationRole role)
+        extension(ApplicationRole role)
         {
-            return new RoleDto()
+            /// <summary>
+            /// Converts an ApplicationRole object to a RoleDto object.
+            /// </summary>
+            /// <returns>A RoleDto object.</returns>
+            public RoleDto ToDto()
             {
-                Description = role.Description,
-                DisplayName = role.DisplayName,
-                Name = role.Name!
-            };
+                return new RoleDto()
+                {
+                    Description = role.Description,
+                    DisplayName = role.DisplayName,
+                    Name = role.Name!
+                };
+            }
         }
 
-        /// <summary>
-        /// Converts a collection of ApplicationRole objects to a list of RoleDto objects.
-        /// </summary>
-        /// <param name="roles">The collection of ApplicationRole objects to convert.</param>
-        /// <returns>A list of RoleDto objects.</returns>
-        public static List<RoleDto> ToDtoList(this IEnumerable<ApplicationRole> roles)
+        extension(IEnumerable<ApplicationRole> roles)
         {
-            return [.. roles.Select(role => role.ToDto())];
+            /// <summary>
+            /// Converts a collection of ApplicationRole objects to a list of RoleDto objects.
+            /// </summary>
+            /// <returns>A list of RoleDto objects.</returns>
+            public List<RoleDto> ToDtoList()
+            {
+                return [.. roles.Select(role => role.ToDto())];
+            }
         }
     }
 }

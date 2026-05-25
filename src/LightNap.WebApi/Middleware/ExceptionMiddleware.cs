@@ -1,4 +1,5 @@
 ﻿using LightNap.Core.Api;
+using LightNap.Core.Telemetry;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -8,7 +9,7 @@ namespace LightNap.WebApi.Middleware
     /// <summary>
     /// Middleware to handle exceptions globally.
     /// </summary>
-    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment environment)
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment environment, ITelemetryClient telemetryClient)
     {
         private static readonly JsonSerializerOptions _jsonSerializerOptions =
             new()
@@ -52,6 +53,7 @@ namespace LightNap.WebApi.Middleware
             catch (Exception ex)
             {
                 logger.LogError(ex, "Unexpected error in Web API: {message}", ex.Message);
+                telemetryClient.TrackException(ex);
 
                 // To simplify client-side development, we convert all remaining errors to easily digestible ApiResponseDtos.
                 // We use string as the type because it doesn't matter since Result is going to be null anyway.

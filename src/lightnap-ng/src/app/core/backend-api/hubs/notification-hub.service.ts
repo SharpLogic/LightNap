@@ -10,7 +10,7 @@ import { IdentityService } from "@core/services/identity.service";
 export class NotificationHubService {
   #identityService = inject(IdentityService);
   #hubConnection: HubConnection = new HubConnectionBuilder()
-    .withUrl("/api/hubs/notifications", {
+    .withUrl("/api/hubs/realtime", {
       accessTokenFactory: () => this.#identityService.getToken() || "",
     })
     .withAutomaticReconnect()

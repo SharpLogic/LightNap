@@ -23,7 +23,7 @@ namespace LightNap.Core.Data.Entities
         /// <summary>
         /// Gets or sets the unique key for identifying the static content.
         /// </summary>
-        [MaxLength(Constants.Dto.MaxStaticContentKeyLength)]
+        [MaxLength(Constants.Dto.MaxDictionaryKeyLength)]
         public required string Key { get; set; }
 
         /// <summary>

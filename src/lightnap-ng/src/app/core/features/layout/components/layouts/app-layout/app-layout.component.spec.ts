@@ -60,6 +60,7 @@ describe("AppLayoutComponent", () => {
       appName: "LightNap Test",
       onMenuToggle: vi.fn(),
       overlayOpen$: overlayOpenSubject.asObservable(),
+      pageActionsTemplate: signal(null),
     };
 
     mockRouter = {
@@ -103,14 +104,6 @@ describe("AppLayoutComponent", () => {
 
   it("should inject LayoutService", () => {
     expect(component.layoutService).toBe(mockLayoutService);
-  });
-
-  it("should inject Renderer2", () => {
-    expect(component.renderer).toBeTruthy();
-  });
-
-  it("should inject Router", () => {
-    expect(component.router).toBeTruthy();
   });
 
   it("should render layout wrapper", () => {

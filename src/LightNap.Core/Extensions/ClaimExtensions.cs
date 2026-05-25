@@ -1,4 +1,4 @@
-﻿using LightNap.Core.Identity.Dto.Response;
+using LightNap.Core.Identity.Dto.Response;
 using System.Security.Claims;
 
 namespace LightNap.Core.Extensions
@@ -8,38 +8,44 @@ namespace LightNap.Core.Extensions
     /// </summary>
     internal static class ClaimExtensions
     {
-        /// <summary>
-        /// Converts a Claim object to a ClaimDto object.
-        /// </summary>
-        /// <param name="claim">The Claim object to convert.</param>
-        /// <returns>A ClaimDto object.</returns>
-        public static ClaimDto ToDto(this Claim claim)
+        extension(Claim claim)
         {
-            return new ClaimDto()
+            /// <summary>
+            /// Converts a Claim object to a ClaimDto object.
+            /// </summary>
+            /// <returns>A ClaimDto object.</returns>
+            public ClaimDto ToDto()
             {
-                Type = claim.Type,
-                Value = claim.Value,
-            };
+                return new ClaimDto()
+                {
+                    Type = claim.Type,
+                    Value = claim.Value,
+                };
+            }
         }
 
-        /// <summary>
-        /// Converts the current <see cref="ClaimDto"/> instance to a <see cref="Claim"/> object.
-        /// </summary>
-        /// <param name="claimDto">The <see cref="ClaimDto"/> instance to convert. Cannot be <see langword="null"/>.</param>
-        /// <returns>A <see cref="Claim"/> object with the same type and value as the <paramref name="claimDto"/>.</returns>
-        public static Claim ToClaim(this ClaimDto claimDto)
+        extension(ClaimDto claimDto)
         {
-            return new Claim(claimDto.Type, claimDto.Value);
+            /// <summary>
+            /// Converts the current <see cref="ClaimDto"/> instance to a <see cref="Claim"/> object.
+            /// </summary>
+            /// <returns>A <see cref="Claim"/> object with the same type and value as the <see cref="ClaimDto"/>.</returns>
+            public Claim ToClaim()
+            {
+                return new Claim(claimDto.Type, claimDto.Value);
+            }
         }
 
-        /// <summary>
-        /// Converts a collection of Claim objects to a list of ClaimDto objects.
-        /// </summary>
-        /// <param name="claims">The collection of Claim objects to convert.</param>
-        /// <returns>A list of ClaimDto objects.</returns>
-        public static List<ClaimDto> ToDtoList(this IEnumerable<Claim> claims)
+        extension(IEnumerable<Claim> claims)
         {
-            return claims.Select(claim => claim.ToDto()).ToList();
+            /// <summary>
+            /// Converts a collection of Claim objects to a list of ClaimDto objects.
+            /// </summary>
+            /// <returns>A list of ClaimDto objects.</returns>
+            public List<ClaimDto> ToDtoList()
+            {
+                return claims.Select(claim => claim.ToDto()).ToList();
+            }
         }
     }
 }

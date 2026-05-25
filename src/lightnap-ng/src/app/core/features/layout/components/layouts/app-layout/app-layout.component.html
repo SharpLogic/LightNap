@@ -5,10 +5,35 @@
   </div>
   <div class="layout-main-container">
     <div class="container">
-      <ln-breadcrumb />
+      <div class="flex items-center justify-content-between mb-2 gap-2" [style.background-color]="'var(--p-breadcrumb-background)'">
+        <ln-breadcrumb class="grow" />
+
+        @if (layoutService.pageActionsTemplate(); as pageActionsTemplate) {
+          <button class="md:hidden! layout-topbar-action" (click)="pageActionsVisible.set(!pageActionsVisible())">
+            <i class="pi" [ngClass]="pageActionsVisible() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+          </button>
+        }
+      </div>
+
+      @if (layoutService.pageActionsTemplate(); as pageActionsTemplate) {
+        @if (pageActionsVisible()) {
+          <div class="md:hidden flex justify-end p-2 mb-2 bg-white dark:bg-slate-800 rounded border border-gray-200 dark:border-slate-700">
+            <ng-container *ngTemplateOutlet="pageActionsTemplate" />
+          </div>
+        }
+      }
       <router-outlet />
     </div>
     <ln-app-footer />
   </div>
   <div class="layout-mask animate-fadein"></div>
+
+  <!-- Fixed Floating Page Actions (md+ only) -->
+  @if (layoutService.pageActionsTemplate(); as pageActionsTemplate) {
+    <div
+      class="hidden md:block fixed top-20 right-6 z-50 bg-white/10 dark:bg-slate-800/10 backdrop-blur-sm rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 p-4"
+    >
+      <ng-container *ngTemplateOutlet="pageActionsTemplate" />
+    </div>
+  }
 </div>

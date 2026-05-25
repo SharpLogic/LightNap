@@ -49,5 +49,10 @@ namespace LightNap.Core.Identity.Dto.Request
         [Required]
         [StringLength(Constants.Dto.MaxDeviceDetailsLength)]
         public required string DeviceDetails { get; set; }
+
+        /// <summary>
+        /// Whether the user is opting into marketing email at registration.
+        /// </summary>
+        public bool MarketingOptIn { get; set; }
     }
 }

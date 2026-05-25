@@ -13,6 +13,9 @@
 appsettings.*.json
 !appsettings.E2e.json
 
+# Claude Code local settings
+.claude/settings.local.json
+
 # User-specific files
 *.rsuser
 *.suo

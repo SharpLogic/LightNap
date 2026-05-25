@@ -37,6 +37,8 @@ namespace LightNap.Core.Tests.Services
                 .AddDefaultTokenProviders();
 
             services.AddHybridCache();
+            services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(
+                new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
 
             this._userContext = new TestUserContext();
             services.AddScoped<IUserContext>(sp => this._userContext);

@@ -28,7 +28,8 @@ describe("VersionCheckService", () => {
       configurable: true,
     });
 
-    swUpdateSpy.activateUpdate.mockReturnValue(Promise.resolve(true));
+    swUpdateSpy.checkForUpdate.mockResolvedValue(false);
+    swUpdateSpy.activateUpdate.mockResolvedValue(true);
 
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection(), VersionCheckService, { provide: SwUpdate, useValue: swUpdateSpy }],
@@ -44,57 +45,47 @@ describe("VersionCheckService", () => {
   describe("update detection", () => {
     it("should start update check when service worker is enabled", () => {
       service.startUpdateCheck();
+      expect(swUpdateSpy.checkForUpdate).toHaveBeenCalled();
       expect(swUpdateSpy.versionUpdates).toBeDefined();
     });
 
-    it("should emit when new version is ready", async () => {
-      service.versionUpdated$.subscribe(updated => {
-        expect(updated).toBe(true);
-      });
-
+    it("should activate update when a VERSION_READY event is received", async () => {
       service.startUpdateCheck();
 
-      // Simulate VERSION_READY event
       versionUpdatesSubject.next({
         type: "VERSION_READY",
         currentVersion: { hash: "old" },
         latestVersion: { hash: "new" },
       });
+
+      // Wait a microtask so the subscription handler runs.
+      await Promise.resolve();
+      expect(swUpdateSpy.activateUpdate).toHaveBeenCalled();
     });
 
-    it("should not emit for non-VERSION_READY events", async () => {
-      let emitted = false;
-
-      service.versionUpdated$.subscribe(() => {
-        emitted = true;
-      });
-
+    it("should ignore non-VERSION_READY events", async () => {
       service.startUpdateCheck();
+      swUpdateSpy.activateUpdate.mockClear();
 
-      // Simulate different event type
       versionUpdatesSubject.next({
         type: "VERSION_DETECTED",
         version: { hash: "new" },
       } as any);
 
-      setTimeout(() => {
-        expect(emitted).toBe(false);
-      }, 100);
+      await Promise.resolve();
+      expect(swUpdateSpy.activateUpdate).not.toHaveBeenCalled();
     });
   });
 
   describe("service worker handling", () => {
-    // Note: activateUpdate() calls location.reload() which cannot be tested without causing page reload
-    // This method is tested through integration testing
-
     it("should handle service worker disabled", () => {
       Object.defineProperty(swUpdateSpy, "isEnabled", {
         get: () => false,
         configurable: true,
       });
 
-      // Should not throw
       expect(() => service.startUpdateCheck()).not.toThrow();
+      expect(swUpdateSpy.checkForUpdate).not.toHaveBeenCalled();
     });
   });
 });

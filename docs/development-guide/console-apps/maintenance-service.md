@@ -35,7 +35,7 @@ Prerequisites:
 Clone the repository and build the project:
 
 ```bash
-dotnet build src/LightNap.MaintenanceService/LightNap.MaintenanceService.csproj
+dotnet build src/WebJobs/LightNap.MaintenanceService/LightNap.MaintenanceService.csproj
 ```
 
 The service depends on `LightNap.Core` for services like `IRefreshTokenService` and database context.
@@ -87,7 +87,7 @@ Keep task logic minimal; delegate to core services for complex operations.
 ### Locally
 
 ```bash
-dotnet run --project src/LightNap.MaintenanceService
+dotnet run --project src/WebJobs/LightNap.MaintenanceService
 ```
 
 ### As a WebJob
@@ -118,7 +118,7 @@ If you change the name of the build target or copy this project as a starting po
 Build and run the included Dockerfile:
 
 ```bash
-docker build -t maintenanceservice src/LightNap.MaintenanceService
+docker build -t maintenanceservice -f src/WebJobs/LightNap.MaintenanceService/Dockerfile src
 docker run --env-file .env maintenanceservice
 ```
 
