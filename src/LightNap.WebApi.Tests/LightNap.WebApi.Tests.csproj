@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
-    <ProjectReference Include="..\Integrations\Captcha\LightNap.Integrations.Captcha.Turnstile\LightNap.Integrations.Captcha.Turnstile.csproj" />
-    <ProjectReference Include="..\Integrations\Captcha\LightNap.Integrations.Captcha.Recaptcha\LightNap.Integrations.Captcha.Recaptcha.csproj" />
+    <ProjectReference Include="..\LightNap.Configuration\LightNap.Configuration.csproj" />
+    <ProjectReference Include="..\LightNap.WebApi\LightNap.WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

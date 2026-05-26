@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LightNap.Core.Tests.Captcha
+namespace LightNap.WebApi.Tests.Captcha
 {
     [TestClass]
     public class ValidateCaptchaAttributeTests
