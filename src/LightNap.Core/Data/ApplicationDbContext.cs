@@ -1,6 +1,7 @@
 ﻿using LightNap.Core.Data.Comparers;
 using LightNap.Core.Data.Converters;
 using LightNap.Core.Data.Entities;
+using LightNap.Core.Data.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -77,6 +78,8 @@ namespace LightNap.Core.Data
 
             builder.Entity<StaticContentLanguage>()
                 .HasIndex(scl => scl.LanguageCode);
+
+            builder.ApplyJsonValueConverters();
         }
 
         /// <inheritdoc />
