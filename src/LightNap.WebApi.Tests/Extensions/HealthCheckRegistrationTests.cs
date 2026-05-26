@@ -3,7 +3,7 @@ using LightNap.WebApi.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace LightNap.Core.Tests.Extensions
+namespace LightNap.WebApi.Tests.Extensions
 {
     [TestClass]
     public class HealthCheckRegistrationTests
