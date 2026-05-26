@@ -13,8 +13,7 @@ namespace LightNap.WebApi.Controllers
     /// Controller for handling identity-related actions such as login, registration, and password reset.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
-    [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
+    [Route("api/[controller]")]    
     public class IdentityController(IIdentityService identityService) : ControllerBase
     {
         /// <summary>
@@ -23,6 +22,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="loginRequest">The login request DTO.</param>
         /// <returns>The API response containing the login result.</returns>
         [HttpPost("login", Name = nameof(LogIn))]
+        [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
         public async Task<ApiResponseDto<LoginSuccessDto>> LogIn(LoginRequestDto loginRequest)
         {
             return new ApiResponseDto<LoginSuccessDto>(await identityService.LogInAsync(loginRequest));
@@ -110,6 +110,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="resetPasswordRequest">The reset password request DTO.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("reset-password", Name = nameof(ResetPassword))]
+        [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
         public async Task<ApiResponseDto<bool>> ResetPassword(ResetPasswordRequestDto resetPasswordRequest)
         {
             await identityService.ResetPasswordAsync(resetPasswordRequest);
@@ -154,6 +155,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="verificationEmailRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-verification-email", Name = nameof(RequestVerificationEmail))]
+        [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
         public async Task<ApiResponseDto<bool>> RequestVerificationEmail(SendVerificationEmailRequestDto verificationEmailRequest)
         {
             await identityService.RequestVerificationEmailAsync(verificationEmailRequest);
@@ -178,6 +180,7 @@ namespace LightNap.WebApi.Controllers
         /// <param name="magicLinkRequest">Contains the email address of the user.</param>
         /// <returns>The API response indicating the success of the operation.</returns>
         [HttpPost("request-magic-link", Name = nameof(RequestMagicLinkEmail))]
+        [EnableRateLimiting(WebConstants.RateLimiting.AuthPolicyName)]
         public async Task<ApiResponseDto<bool>> RequestMagicLinkEmail(SendMagicLinkRequestDto magicLinkRequest)
         {
             await identityService.RequestMagicLinkEmailAsync(magicLinkRequest);

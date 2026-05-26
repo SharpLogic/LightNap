@@ -3,6 +3,7 @@ using LightNap.Configuration.Captcha.Extensions;
 using LightNap.Configuration.Database;
 using LightNap.Configuration.DataProtection;
 using LightNap.Configuration.Extensions;
+using LightNap.Configuration.Idempotency;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Captcha;
 using LightNap.Core.Configuration.Email;
@@ -29,6 +30,14 @@ DataProtectionSettings dataProtectionSettings = builder.Configuration.GetRequire
 RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 CaptchaSettings captchaSettings = builder.Configuration.GetRequiredSection<CaptchaSettings>("Captcha");
 
+// To enable per-browser anonymous visitor tracking (useful for apps with anonymous UGC, public
+// submissions, or analytics correlation), uncomment the following, add a matching "AnonymousVisitor"
+// section to appsettings.json, and the corresponding app.UseLightNapAnonymousVisitorTracking() call
+// below after UseAuthentication and before endpoint mapping.
+//
+// var anonymousVisitorSettings = builder.Configuration.GetRequiredSection<AnonymousVisitorSettings>("AnonymousVisitor");
+// builder.Services.AddLightNapAnonymousVisitorTracking(anonymousVisitorSettings, bootstrapLogger);
+
 // Register configuration sections with validation.
 builder.Services.AddOptions<AuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
@@ -48,6 +57,7 @@ builder.Services.AddOptions<RateLimitingSettings>()
 builder.Services.AddOptions<DatabaseSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Database"))
     .ValidateDataAnnotations();
+builder.Services.Configure<IdempotencySettings>(builder.Configuration.GetSection("Idempotency"));
 builder.Services.Configure<CaptchaSettings>(builder.Configuration.GetRequiredSection("Captcha"));
 
 // Check if the SeededUsers section exists before configuring and validating it
@@ -91,9 +101,11 @@ builder.Services.AddHybridCache(options =>
 
 // Configure distributed services and SignalR if in distributed mode
 bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
+string? redisConnectionForHealth = null;
 if (useDistributed)
 {
     string redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    redisConnectionForHealth = redisConnection;
     builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnection));
     builder.Services.AddStackExchangeRedisCache(options =>
     {
@@ -119,6 +131,8 @@ else
         });
 }
 
+builder.Services.AddLightNapHealthChecks(useDistributed, redisConnectionForHealth, bootstrapLogger);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -139,6 +153,12 @@ app.UseCors(policy =>
         .AllowCredentials());
 
 app.UseAuthentication();
+
+// Uncomment together with the AddLightNapAnonymousVisitorTracking registration above to enable
+// the per-browser visitor cookie. Placed after UseAuthentication so HttpContext.Items is populated
+// for the rate limiter and downstream services.
+// app.UseLightNapAnonymousVisitorTracking();
+
 app.UseRateLimiter();
 app.UseAuthorization();
 
@@ -156,6 +176,18 @@ app.Use(async (context, next) =>
 });
 
 app.MapControllers();
+
+// Liveness probe: the process being able to respond is enough. No dependency checks.
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => false
+}).AllowAnonymous().DisableRateLimiting();
+
+// Readiness probe: only checks tagged with "ready" are evaluated (database, plus Redis in distributed mode).
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = r => r.Tags.Contains("ready")
+}).AllowAnonymous().DisableRateLimiting();
 
 // Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
 app.MapHub<RealTimeHub>("/api/hubs/realtime");

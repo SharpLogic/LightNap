@@ -1,6 +1,8 @@
 using LightNap.Configuration.Database;
 using LightNap.Configuration.Extensions;
 using LightNap.Core.Api;
+using LightNap.Core.Audit.Interfaces;
+using LightNap.Core.Audit.Services;
 using LightNap.Core.Identity.Models;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
@@ -34,6 +36,7 @@ using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Filters;
+using LightNap.WebApi.Middleware;
 using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -82,6 +85,7 @@ public static class ApplicationServiceExtensions
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IStaticContentService, StaticContentService>();
+            services.AddScoped<IAuditLogger, AuditLogger>();
 
             return services;
         }
@@ -227,11 +231,20 @@ public static class ApplicationServiceExtensions
                 rateLimitingSettings.RegistrationPermitLimit);
             services.AddRateLimiter(options =>
             {
-                // Helper to get partition key (user ID or IP)
+                // Helper to get partition key.
+                // Preference order: authenticated user > anonymous visitor cookie > remote IP fallback.
                 string GetPartitionKey(HttpContext httpContext)
                 {
                     string? userId = httpContext.User.TryGetUserId();
-                    return userId ?? (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+                    if (!string.IsNullOrEmpty(userId)) { return userId; }
+
+                    if (httpContext.Items[AnonymousVisitorIdMiddleware.ItemKey] is string visitorId
+                        && !string.IsNullOrEmpty(visitorId))
+                    {
+                        return visitorId;
+                    }
+
+                    return httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
                 }
 
                 options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
@@ -339,6 +352,36 @@ public static class ApplicationServiceExtensions
                 // an easier time working with polymorphic types, such as when searching users as admin vs. regular user
                 options.UseOneOfForPolymorphism();
             });
+
+            return services;
+        }
+
+        /// <summary>
+        /// Registers liveness and readiness health checks. Liveness is always-on (the process
+        /// being able to respond is enough); readiness checks the database (and Redis when
+        /// distributed mode is enabled) so orchestrators do not route traffic to an instance
+        /// that cannot serve real requests.
+        /// </summary>
+        /// <param name="useDistributed">True if running in distributed mode (Redis present).</param>
+        /// <param name="redisConnectionString">Redis connection string, used only when <paramref name="useDistributed"/> is true.</param>
+        /// <param name="logger">An optional logger used to report what was wired up.</param>
+        /// <returns>The updated service collection.</returns>
+        public IServiceCollection AddLightNapHealthChecks(bool useDistributed, string? redisConnectionString = null, ILogger? logger = null)
+        {
+            logger?.LogInformation("Configuring health checks (distributed: {Distributed})", useDistributed);
+            var builder = services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>("database", tags: ["ready"]);
+
+            if (useDistributed)
+            {
+                if (string.IsNullOrEmpty(redisConnectionString))
+                {
+                    throw new ArgumentException(
+                        "A Redis connection string is required for the readiness check when distributed mode is enabled.",
+                        nameof(redisConnectionString));
+                }
+                builder.AddRedis(redisConnectionString, name: "redis", tags: ["ready"]);
+            }
 
             return services;
         }
