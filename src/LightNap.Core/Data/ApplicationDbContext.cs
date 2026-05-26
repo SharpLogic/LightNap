@@ -1,6 +1,7 @@
 ﻿using LightNap.Core.Data.Comparers;
 using LightNap.Core.Data.Converters;
 using LightNap.Core.Data.Entities;
+using LightNap.Core.Data.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,11 @@ namespace LightNap.Core.Data
         /// User settings in the DB.
         /// </summary>
         public DbSet<UserSetting> UserSettings { get; set; } = null!;
+
+        /// <summary>
+        /// Administrative audit log entries in the DB.
+        /// </summary>
+        public DbSet<AdminAuditLog> AdminAuditLogs { get; set; } = null!;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -77,6 +83,8 @@ namespace LightNap.Core.Data
 
             builder.Entity<StaticContentLanguage>()
                 .HasIndex(scl => scl.LanguageCode);
+
+            builder.ApplyJsonValueConverters();
         }
 
         /// <inheritdoc />

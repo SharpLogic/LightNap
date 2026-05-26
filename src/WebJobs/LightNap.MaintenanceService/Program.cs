@@ -1,3 +1,4 @@
+using LightNap.Configuration.Audit;
 using LightNap.Configuration.Database;
 using LightNap.Configuration.DataProtection;
 using LightNap.Configuration.Extensions;
@@ -64,10 +65,14 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IUserSettingsService, UserSettingsService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
 
+        services.Configure<AuditLogRetentionSettings>(
+            context.Configuration.GetSection("Audit:Retention"));
+
         // Manage the tasks to run here. All transient dependencies added for IMaintenanceTask will be in the collection passed to MainService.
         services.AddTransient<IMaintenanceTask, CountUsersMaintenanceTask>();
         services.AddTransient<IMaintenanceTask, PurgeExpiredRefreshTokensMaintenanceTask>();
         services.AddTransient<IMaintenanceTask, PurgeUnusedUserSettingsMaintenanceTask>();
+        services.AddTransient<IMaintenanceTask, PurgeExpiredAuditLogsMaintenanceTask>();
 
         services.AddTransient<MainService>();
     })

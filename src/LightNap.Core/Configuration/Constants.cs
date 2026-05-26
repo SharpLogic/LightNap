@@ -7,7 +7,7 @@ public static class Constants
     /// <summary>
     /// Contains constant values related to the Identity service.
     /// </summary>
-    internal static class Identity
+    public static class Identity
     {
         /// <summary>
         /// The purpose string used to create and validate magic link tokens.
