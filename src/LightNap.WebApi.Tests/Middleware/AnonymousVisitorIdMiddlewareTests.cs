@@ -3,7 +3,7 @@ using LightNap.WebApi.Middleware;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace LightNap.Core.Tests.Middleware
+namespace LightNap.WebApi.Tests.Middleware
 {
     [TestClass]
     public class AnonymousVisitorIdMiddlewareTests

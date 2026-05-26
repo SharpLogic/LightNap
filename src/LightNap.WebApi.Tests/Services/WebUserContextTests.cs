@@ -1,15 +1,13 @@
 using System.Security.Claims;
-using LightNap.Core.Api;
-using LightNap.Core.Configuration;
 using LightNap.Core.Interfaces;
 using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
-namespace LightNap.Core.Tests.Services
+namespace LightNap.WebApi.Tests.Services
 {
     [TestClass]
-    public class UserContextTests
+    public class WebUserContextTests
     {
         private static WebUserContext CreateWebUserContext(HttpContext httpContext)
         {
@@ -72,16 +70,6 @@ namespace LightNap.Core.Tests.Services
             var context = CreateWebUserContext(httpContext);
 
             Assert.AreEqual(UserContextKind.Anonymous, context.Kind);
-        }
-
-        [TestMethod]
-        public void SystemUserContext_KindIsSystem()
-        {
-            var context = new SystemUserContext();
-
-            Assert.AreEqual(UserContextKind.System, context.Kind);
-            Assert.AreEqual(Constants.Identity.SystemUserId, context.GetActorId());
-            Assert.AreEqual("system", context.GetActorId());
         }
     }
 }
