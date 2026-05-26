@@ -3,7 +3,7 @@ using LightNap.WebApi.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LightNap.Core.Tests.Extensions
+namespace LightNap.WebApi.Tests.Extensions
 {
     [TestClass]
     public class DatabaseProviderUnconfiguredTests
