@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LightNap.Core\LightNap.Core.csproj" />
+    <ProjectReference Include="..\LightNap.Configuration\LightNap.Configuration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
