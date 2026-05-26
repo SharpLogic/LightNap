@@ -3,7 +3,6 @@ using LightNap.Core.Audit.Services;
 using LightNap.Core.Data;
 using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
-using LightNap.Core.Tests.Utilities;
 using LightNap.WebApi.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,20 +11,29 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
-namespace LightNap.Core.Tests.Audit
+namespace LightNap.WebApi.Tests.Audit
 {
     [TestClass]
     public class AuditLogAttributeTests
     {
+        private static IUserContext CreateUserContext(string userId)
+        {
+            var mock = new Mock<IUserContext>();
+            mock.Setup(c => c.GetUserId()).Returns(userId);
+            mock.Setup(c => c.IsAuthenticated).Returns(true);
+            return mock.Object;
+        }
+
         private static (ActionExecutingContext context, ApplicationDbContext db) BuildContext(
-            TestUserContext userContext,
+            IUserContext userContext,
             Dictionary<string, object?>? arguments = null)
         {
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddLightNapInMemoryDatabase($"AuditDb_{Guid.NewGuid()}");
-            services.AddSingleton<IUserContext>(userContext);
+            services.AddSingleton(userContext);
             services.AddScoped<IAuditLogger, AuditLogger>();
 
             var provider = services.BuildServiceProvider();
@@ -41,9 +49,7 @@ namespace LightNap.Core.Tests.Audit
         [TestMethod]
         public async Task OnSuccess_WritesAuditEntry_WithActionArguments()
         {
-            var user = new TestUserContext();
-            user.LogIn("admin-1");
-            var (context, db) = BuildContext(user, new Dictionary<string, object?> { ["id"] = 42 });
+            var (context, db) = BuildContext(CreateUserContext("admin-1"), new Dictionary<string, object?> { ["id"] = 42 });
 
             var filter = new AuditLogAttribute("test.action");
             await filter.OnActionExecutionAsync(context, () =>
@@ -64,9 +70,7 @@ namespace LightNap.Core.Tests.Audit
         [TestMethod]
         public async Task OnBadRequest_DoesNotWriteEntry()
         {
-            var user = new TestUserContext();
-            user.LogIn("admin-1");
-            var (context, db) = BuildContext(user);
+            var (context, db) = BuildContext(CreateUserContext("admin-1"));
 
             var filter = new AuditLogAttribute("test.action");
             await filter.OnActionExecutionAsync(context, () =>
@@ -84,9 +88,7 @@ namespace LightNap.Core.Tests.Audit
         [TestMethod]
         public async Task OnException_DoesNotWriteEntry()
         {
-            var user = new TestUserContext();
-            user.LogIn("admin-1");
-            var (context, db) = BuildContext(user);
+            var (context, db) = BuildContext(CreateUserContext("admin-1"));
 
             var filter = new AuditLogAttribute("test.action");
             await filter.OnActionExecutionAsync(context, () =>
