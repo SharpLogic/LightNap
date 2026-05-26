@@ -36,6 +36,12 @@ Learn how `[StoredAsJson]` lets you persist strongly-typed POCO properties as JS
 
 Pick between the one-shot `LightNap.MaintenanceService` model (nightly cron-style maintenance) and an in-process `IHostedService` with `PeriodicTimer` (continuous work while the WebApi is up). Covers when an external scheduler like Quartz or Hangfire is actually warranted.
 
+## Operations
+
+### [Health Check Endpoints](./health-checks)
+
+`/health/live` and `/health/ready` for container orchestrators and uptime monitors. Readiness covers the database and Redis (in distributed mode); liveness is dependency-free.
+
 ## Core Features
 
 ### [Content Management System](./content-management)
