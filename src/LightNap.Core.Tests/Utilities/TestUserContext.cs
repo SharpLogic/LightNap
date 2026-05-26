@@ -16,6 +16,23 @@ namespace LightNap.Core.Tests.Utilities
         public bool IsAuthenticated => this.UserId is not null;
 
         /// <summary>
+        /// Gets or sets the anonymous visitor identifier used when <see cref="Kind"/> resolves
+        /// to <see cref="UserContextKind.AnonymousVisitor"/>. Ignored when a user is logged in.
+        /// </summary>
+        public string? AnonymousVisitorId { get; set; }
+
+        /// <inheritdoc />
+        public UserContextKind Kind
+        {
+            get
+            {
+                if (this.IsAuthenticated) { return UserContextKind.Authenticated; }
+                if (!string.IsNullOrEmpty(this.AnonymousVisitorId)) { return UserContextKind.AnonymousVisitor; }
+                return UserContextKind.Anonymous;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the IP address of the user.
         /// </summary>
         public string? IpAddress { get; set; }
@@ -48,6 +65,20 @@ namespace LightNap.Core.Tests.Utilities
         {
             if (this.UserId is null) { throw new InvalidOperationException("GetUserId was called without having UserId set first"); }
             return this.UserId;
+        }
+
+        /// <inheritdoc />
+        public string GetActorId()
+        {
+            return this.Kind switch
+            {
+                UserContextKind.Authenticated => this.GetUserId(),
+                UserContextKind.AnonymousVisitor => this.AnonymousVisitorId!,
+                UserContextKind.System => Constants.Identity.SystemUserId,
+                UserContextKind.Anonymous => throw new InvalidOperationException(
+                    "Cannot get actor ID for an Anonymous context."),
+                _ => throw new InvalidOperationException($"Unknown UserContextKind: {this.Kind}")
+            };
         }
 
         /// <inheritdoc />
