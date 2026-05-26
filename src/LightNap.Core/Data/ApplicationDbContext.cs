@@ -37,6 +37,11 @@ namespace LightNap.Core.Data
         public DbSet<UserSetting> UserSettings { get; set; } = null!;
 
         /// <summary>
+        /// Administrative audit log entries in the DB.
+        /// </summary>
+        public DbSet<AdminAuditLog> AdminAuditLogs { get; set; } = null!;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
         /// </summary>
         /// <param name="options">The DbContext options.</param>
