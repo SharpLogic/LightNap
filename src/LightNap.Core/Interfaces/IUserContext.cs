@@ -16,10 +16,28 @@ namespace LightNap.Core.Interfaces
         bool IsAuthenticated { get; }
 
         /// <summary>
+        /// The kind of actor this context represents.
+        /// </summary>
+        UserContextKind Kind { get; }
+
+        /// <summary>
         /// Gets the user ID associated with the current request.
         /// </summary>
         /// <returns>The user ID.</returns>
         string GetUserId();
+
+        /// <summary>
+        /// Returns a stable identifier for the current actor regardless of kind.
+        /// For <see cref="UserContextKind.Authenticated"/>, returns the user ID.
+        /// For <see cref="UserContextKind.AnonymousVisitor"/>, returns the visitor identifier.
+        /// For <see cref="UserContextKind.System"/>, returns a stable system sentinel.
+        /// For <see cref="UserContextKind.Anonymous"/>, throws.
+        /// </summary>
+        /// <returns>A stable identifier for the actor.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="Kind"/> is <see cref="UserContextKind.Anonymous"/>.
+        /// </exception>
+        string GetActorId();
 
         /// <summary>
         /// Gets the IP address associated with the current request, if available.
