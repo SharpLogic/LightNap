@@ -12,7 +12,7 @@ namespace LightNap.Core.Extensions
     /// <see cref="UserFriendlyApiException"/> when a user does not meet the required criteria. Use these extensions to
     /// ensure that users are properly authenticated and authorized before performing sensitive operations. All methods
     /// throw exceptions with descriptive messages suitable for displaying to end users.</remarks>
-    internal static class IUserContextExtensions
+    public static class IUserContextExtensions
     {
         extension(IUserContext userContext)
         {

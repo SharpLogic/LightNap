@@ -1,6 +1,8 @@
 using LightNap.Configuration.Database;
 using LightNap.Configuration.Extensions;
 using LightNap.Core.Api;
+using LightNap.Core.Audit.Interfaces;
+using LightNap.Core.Audit.Services;
 using LightNap.Core.Identity.Models;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
@@ -82,6 +84,7 @@ public static class ApplicationServiceExtensions
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IStaticContentService, StaticContentService>();
+            services.AddScoped<IAuditLogger, AuditLogger>();
 
             return services;
         }

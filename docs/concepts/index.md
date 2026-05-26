@@ -42,6 +42,12 @@ Pick between the one-shot `LightNap.MaintenanceService` model (nightly cron-styl
 
 `/health/live` and `/health/ready` for container orchestrators and uptime monitors. Readiness covers the database and Redis (in distributed mode); liveness is dependency-free.
 
+## Compliance & Audit
+
+### [Administrative Audit Log](./audit-log)
+
+`AdminAuditLog` entity plus `IAuditLogger` and `[AuditLog]` filter make it a one-line addition to record who did what on any admin endpoint. Retention is configurable, with a scheduled maintenance task that purges expired entries.
+
 ## Core Features
 
 ### [Content Management System](./content-management)
