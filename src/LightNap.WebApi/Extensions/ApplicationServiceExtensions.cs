@@ -36,6 +36,7 @@ using LightNap.DataProviders.SqlServer.Extensions;
 using LightNap.WebApi.Authorization;
 using LightNap.WebApi.Configuration;
 using LightNap.WebApi.Filters;
+using LightNap.WebApi.Middleware;
 using LightNap.WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -230,11 +231,20 @@ public static class ApplicationServiceExtensions
                 rateLimitingSettings.RegistrationPermitLimit);
             services.AddRateLimiter(options =>
             {
-                // Helper to get partition key (user ID or IP)
+                // Helper to get partition key.
+                // Preference order: authenticated user > anonymous visitor cookie > remote IP fallback.
                 string GetPartitionKey(HttpContext httpContext)
                 {
                     string? userId = httpContext.User.TryGetUserId();
-                    return userId ?? (httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+                    if (!string.IsNullOrEmpty(userId)) { return userId; }
+
+                    if (httpContext.Items[AnonymousVisitorIdMiddleware.ItemKey] is string visitorId
+                        && !string.IsNullOrEmpty(visitorId))
+                    {
+                        return visitorId;
+                    }
+
+                    return httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
                 }
 
                 options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>

@@ -48,6 +48,12 @@ Pick between the one-shot `LightNap.MaintenanceService` model (nightly cron-styl
 
 `/health/live` and `/health/ready` for container orchestrators and uptime monitors. Readiness covers the database and Redis (in distributed mode); liveness is dependency-free.
 
+## Identity & Visitors
+
+### [Anonymous Visitor Tracking](./anonymous-visitor)
+
+Opt-in middleware that mints and reads a per-browser visitor cookie so unauthenticated users have a stable identifier for audit, anonymous UGC attribution, and per-visitor rate limiting that survives NAT and VPN hops.
+
 ## Compliance & Audit
 
 ### [Administrative Audit Log](./audit-log)

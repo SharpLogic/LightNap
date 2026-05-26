@@ -27,6 +27,14 @@ DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<Dat
 DataProtectionSettings dataProtectionSettings = builder.Configuration.GetRequiredSection<DataProtectionSettings>("DataProtection");
 RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
 
+// To enable per-browser anonymous visitor tracking (useful for apps with anonymous UGC, public
+// submissions, or analytics correlation), uncomment the following, add a matching "AnonymousVisitor"
+// section to appsettings.json, and the corresponding app.UseLightNapAnonymousVisitorTracking() call
+// below after UseAuthentication and before endpoint mapping.
+//
+// var anonymousVisitorSettings = builder.Configuration.GetRequiredSection<AnonymousVisitorSettings>("AnonymousVisitor");
+// builder.Services.AddLightNapAnonymousVisitorTracking(anonymousVisitorSettings, bootstrapLogger);
+
 // Register configuration sections with validation.
 builder.Services.AddOptions<AuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Authentication"))
@@ -140,6 +148,12 @@ app.UseCors(policy =>
         .AllowCredentials());
 
 app.UseAuthentication();
+
+// Uncomment together with the AddLightNapAnonymousVisitorTracking registration above to enable
+// the per-browser visitor cookie. Placed after UseAuthentication so HttpContext.Items is populated
+// for the rate limiter and downstream services.
+// app.UseLightNapAnonymousVisitorTracking();
+
 app.UseRateLimiter();
 app.UseAuthorization();
 
