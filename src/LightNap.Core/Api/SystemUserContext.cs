@@ -21,6 +21,9 @@ namespace LightNap.Core.Api
         /// </summary>
         public bool IsAuthenticated => true;
 
+        /// <inheritdoc />
+        public UserContextKind Kind => UserContextKind.System;
+
         /// <summary>
         /// Gets the IP address associated with the current request.
         /// Always returns null for the system user.
@@ -34,6 +37,9 @@ namespace LightNap.Core.Api
         /// </summary>
         /// <returns>The string "system".</returns>
         public string GetUserId() => Constants.Identity.SystemUserId;
+
+        /// <inheritdoc />
+        public string GetActorId() => Constants.Identity.SystemUserId;
 
         /// <summary>
         /// Determines whether the user has the specified claim.

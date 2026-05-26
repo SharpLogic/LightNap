@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.10.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.17.0" />
     <PackageReference Include="System.CodeDom" Version="10.0.5" />
   </ItemGroup>
