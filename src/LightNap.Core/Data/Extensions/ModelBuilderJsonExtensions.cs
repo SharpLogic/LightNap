@@ -31,7 +31,9 @@ namespace LightNap.Core.Data.Extensions
                         if (!propertyType.IsClass || propertyType == typeof(string)) { continue; }
 
                         var converterType = typeof(JsonValueConverter<>).MakeGenericType(propertyType);
-                        var converter = (ValueConverter)Activator.CreateInstance(converterType)!;
+                        // JsonValueConverter<T> has a single optional ctor parameter (JsonSerializerOptions).
+                        // Pass null explicitly so Activator binds to that ctor.
+                        var converter = (ValueConverter)Activator.CreateInstance(converterType, [null])!;
 
                         modelBuilder.Entity(entityType.ClrType)
                             .Property(property.Name)
