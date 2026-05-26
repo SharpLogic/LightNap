@@ -2,6 +2,7 @@ using LightNap.Configuration.Cache;
 using LightNap.Configuration.Database;
 using LightNap.Configuration.DataProtection;
 using LightNap.Configuration.Extensions;
+using LightNap.Configuration.Idempotency;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Extensions;
@@ -53,6 +54,7 @@ builder.Services.AddOptions<RateLimitingSettings>()
 builder.Services.AddOptions<DatabaseSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Database"))
     .ValidateDataAnnotations();
+builder.Services.Configure<IdempotencySettings>(builder.Configuration.GetSection("Idempotency"));
 
 // Check if the SeededUsers section exists before configuring and validating it
 var seededUsersSection = builder.Configuration.GetSection("SeededUsers");
@@ -94,9 +96,11 @@ builder.Services.AddHybridCache(options =>
 
 // Configure distributed services and SignalR if in distributed mode
 bool useDistributed = builder.Configuration.GetValue<bool>("UseDistributedMode");
+string? redisConnectionForHealth = null;
 if (useDistributed)
 {
     string redisConnection = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+    redisConnectionForHealth = redisConnection;
     builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnection));
     builder.Services.AddStackExchangeRedisCache(options =>
     {
@@ -121,6 +125,8 @@ else
             jsonOptions.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
 }
+
+builder.Services.AddLightNapHealthChecks(useDistributed, redisConnectionForHealth, bootstrapLogger);
 
 var app = builder.Build();
 
@@ -165,6 +171,18 @@ app.Use(async (context, next) =>
 });
 
 app.MapControllers();
+
+// Liveness probe: the process being able to respond is enough. No dependency checks.
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => false
+}).AllowAnonymous().DisableRateLimiting();
+
+// Readiness probe: only checks tagged with "ready" are evaluated (database, plus Redis in distributed mode).
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = r => r.Tags.Contains("ready")
+}).AllowAnonymous().DisableRateLimiting();
 
 // Configure SignalR hubs under /api/hubs/ since this will work with the configured frontend proxy and backend token transfer.
 app.MapHub<RealTimeHub>("/api/hubs/realtime");
