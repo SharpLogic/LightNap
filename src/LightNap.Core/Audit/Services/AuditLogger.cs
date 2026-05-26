@@ -30,7 +30,7 @@ namespace LightNap.Core.Audit.Services
             db.AdminAuditLogs.Add(new AdminAuditLog
             {
                 Id = Guid.NewGuid(),
-                ActorId = userContext.GetUserId(),
+                ActorId = userContext.GetActorId(),
                 Action = action,
                 TargetType = targetType,
                 TargetId = targetId,

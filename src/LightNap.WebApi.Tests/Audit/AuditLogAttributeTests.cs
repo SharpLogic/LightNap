@@ -22,6 +22,8 @@ namespace LightNap.WebApi.Tests.Audit
         {
             var mock = new Mock<IUserContext>();
             mock.Setup(c => c.GetUserId()).Returns(userId);
+            mock.Setup(c => c.GetActorId()).Returns(userId);
+            mock.Setup(c => c.Kind).Returns(UserContextKind.Authenticated);
             mock.Setup(c => c.IsAuthenticated).Returns(true);
             return mock.Object;
         }
