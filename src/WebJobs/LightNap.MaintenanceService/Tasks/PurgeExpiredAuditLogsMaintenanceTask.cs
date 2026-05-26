@@ -1,5 +1,6 @@
 using LightNap.Configuration.Audit;
 using LightNap.Core.Data;
+using LightNap.Core.Extensions;
 using LightNap.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -30,10 +31,7 @@ namespace LightNap.MaintenanceService.Tasks
         /// </summary>
         public async Task RunAsync()
         {
-            if (!userContext.IsAdministrator)
-            {
-                throw new InvalidOperationException("Purge task must run under an administrator context (typically SystemUserContext).");
-            }
+            userContext.AssertAdministrator();
 
             var cutoff = DateTime.UtcNow.AddDays(-options.Value.RetentionDays);
             const int batchSize = 100;
