@@ -24,6 +24,12 @@ Learn about LightNap's standardized REST API response format, including how erro
 
 Wire outbound `HttpClient`s with retry, timeouts, circuit breaker, and a concurrency limiter in one line. Use for every outbound call to a service LightNap doesn't own.
 
+## Data Persistence
+
+### [JSON Property Storage](./json-storage)
+
+Learn how `[StoredAsJson]` lets you persist strongly-typed POCO properties as JSON on entity columns with one attribute and no per-entity wiring. Behavior is identical across SQLite, SQL Server, and InMemory.
+
 ## Background Work
 
 ### [Periodic and Background Tasks](./periodic-tasks)
