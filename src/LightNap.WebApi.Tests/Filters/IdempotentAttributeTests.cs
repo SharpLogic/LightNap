@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace LightNap.Core.Tests.Filters
+namespace LightNap.WebApi.Tests.Filters
 {
     [TestClass]
     public class IdempotentAttributeTests
