@@ -2,6 +2,7 @@ using LightNap.Configuration.Cache;
 using LightNap.Configuration.Database;
 using LightNap.Configuration.DataProtection;
 using LightNap.Configuration.Extensions;
+using LightNap.Configuration.Idempotency;
 using LightNap.Core.Configuration.Authentication;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Extensions;
@@ -45,6 +46,7 @@ builder.Services.AddOptions<RateLimitingSettings>()
 builder.Services.AddOptions<DatabaseSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Database"))
     .ValidateDataAnnotations();
+builder.Services.Configure<IdempotencySettings>(builder.Configuration.GetSection("Idempotency"));
 
 // Check if the SeededUsers section exists before configuring and validating it
 var seededUsersSection = builder.Configuration.GetSection("SeededUsers");

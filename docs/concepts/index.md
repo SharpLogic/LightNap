@@ -24,6 +24,12 @@ Learn about LightNap's standardized REST API response format, including how erro
 
 Wire outbound `HttpClient`s with retry, timeouts, circuit breaker, and a concurrency limiter in one line. Use for every outbound call to a service LightNap doesn't own.
 
+## Reliability
+
+### [Idempotency-Key Filter](./idempotency)
+
+`[Idempotent]` on a mutating endpoint caches the first successful response keyed by the client-supplied `Idempotency-Key` header and replays it on retry within a configurable TTL. Prevents double-click and retry-after-drop duplicates without changes to your action body.
+
 ## Data Persistence
 
 ### [JSON Property Storage](./json-storage)
