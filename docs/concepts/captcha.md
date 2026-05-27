@@ -59,11 +59,37 @@ public async Task<IActionResult> SubmitContactForm([FromBody] ContactDto body)
 
 The filter:
 
-1. Reads the token from the `X-Captcha-Token` request header.
-2. If the header is missing, returns `400` with `{ "error": "captcha_required" }`.
-3. Calls `ICaptchaService.ValidateAsync`. If the result is unsuccessful, returns `400` with `{ "error": "captcha_invalid", "errorCodes": [...] }`.
-4. Otherwise calls the next handler.
+1. If the configured provider is `None`, calls the next handler immediately. No header is required — this is what makes the filter a no-op in dev/test environments without forcing callers to synthesize a fake token.
+2. Otherwise reads the token from the `X-Captcha-Token` request header.
+3. If the header is missing, returns `400` with `{ "error": "captcha_required" }`.
+4. Calls `ICaptchaService.ValidateAsync`. If the result is unsuccessful, returns `400` with `{ "error": "captcha_invalid", "errorCodes": [...] }`.
+5. Otherwise calls the next handler.
+
+## Client-side discovery
+
+The widget render and token submission happen in the SPA. The backend exposes a small public endpoint so the SPA can discover the active provider and obtain the (browser-safe) site key at runtime, without baking either into the SPA build:
+
+```http
+GET /api/public/captcha-config
+```
+
+```json
+{
+  "provider": "Turnstile",
+  "siteKey": "1x00000000000000000000AA"
+}
+```
+
+`provider` is one of `None`, `Turnstile`, `RecaptchaV2`, `RecaptchaV3`. When `provider` is `None`, `siteKey` is `null` and the SPA should skip both the widget render and the `X-Captcha-Token` header on subsequent requests. The endpoint never exposes `SecretKey` — that lives server-side and the response DTO has no field for it.
+
+A typical SPA pattern is to call this endpoint once on app bootstrap, cache the result, and use it both to render the right widget and to conditionally attach the token header.
 
 ## Client-side wiring
 
-The widget render and token submission happen in the SPA. Expose the `SiteKey` to the browser through your existing client-config endpoint (LightNap already has a `PublicService` for this kind of data), and have the SPA send the resulting token in the `X-Captcha-Token` header on submission.
+LightNap ships the backend half: the configuration, the four `ICaptchaService` implementations, the `[ValidateCaptcha]` filter, and the `/api/public/captcha-config` discovery endpoint. The SPA side is consumer-specific because each provider has a different widget shape:
+
+- **Turnstile**: load `https://challenges.cloudflare.com/turnstile/v0/api.js` and render a `<div data-sitekey="...">` placeholder; the widget exposes the token via a callback.
+- **reCAPTCHA v2**: load `https://www.google.com/recaptcha/api.js` and render `<div class="g-recaptcha" data-sitekey="...">`; same callback shape.
+- **reCAPTCHA v3**: load the same script with `?render=<siteKey>`, then invoke `grecaptcha.execute(siteKey, { action: 'submit' })` programmatically right before submitting the protected form. No visible widget.
+
+Once the token is captured, send it in the `X-Captcha-Token` request header on the protected call.
