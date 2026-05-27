@@ -24,13 +24,20 @@ LightNap provides a complete foundation for building secure, scalable web applic
 - **ASP.NET Core Web API** - RESTful API with best practices
 - **ASP.NET Identity** - Complete authentication & authorization framework
 - **JWT Token Management** - Secure token-based authentication with refresh tokens
-- **Rate Limiting** - Built-in API rate limiting with configurable policies per endpoint
+- **Rate Limiting** - Built-in API rate limiting with configurable per-endpoint policies; partitioned by user, then visitor cookie, then IP fallback
 - **Multiple Database Providers** - SQL Server, SQLite, and In-Memory options
 - **Redis Caching** - Distributed caching with hybrid cache support
 - **SignalR** - Real-time communication for notifications and live updates
 - **Email Integration** - Templated email system for authentication flows
 - **User Management** - Full CRUD operations for users, roles, and permissions
 - **Device Tracking** - Monitor and manage user sessions across devices
+- **Anonymous Visitor Tracking** - Opt-in first-party cookie that gives unauthenticated users a stable identifier for audit, anonymous UGC attribution, and per-visitor rate limiting
+- **CAPTCHA Verification** - Pluggable bot protection (Cloudflare Turnstile, Google reCAPTCHA v2/v3) wired up via configuration; opt endpoints in with `[ValidateCaptcha]`
+- **Administrative Audit Log** - `AdminAuditLog` entity, `IAuditLogger`, and `[AuditLog]` filter for one-line audit trails on admin endpoints, with a scheduled retention purge
+- **Idempotency-Key Filter** - Replay-safe mutating endpoints; one-line `[Idempotent]` decorator backed by HybridCache
+- **Health Checks** - `/health/live` and `/health/ready` for container orchestrators and uptime monitors; readiness covers the database and Redis in distributed mode
+- **HTTP Resilience** - One-line `AddLightNapResilientHttpClient` wraps outbound clients with retry, timeouts, circuit breaker, and a concurrency limiter
+- **JSON Property Storage** - `[StoredAsJson]` attribute persists POCO properties as JSON columns without per-entity wiring; identical behavior across all providers
 - **Maintenance Service** - Background task processing with Azure WebJobs support
 
 ### Frontend (Angular 21)
