@@ -53,15 +53,14 @@ describe("AdminUsersService", () => {
     it("should map role names to role objects correctly", async () => {
       const userId = "user-id";
 
-      // Generate realistic role data
-      const allRoles = getGetRolesResponseMock() || [];
-
-      // Pick specific role names from the generated roles to ensure they exist
+      // Use explicit role data rather than the faker-driven mock, which returns a random
+      // count (min:1, max:10) and produces flaky failures when the count is < 2.
+      const allRoles: RoleDto[] = [
+        { name: "Administrator", displayName: "Administrator", description: "Admin role" },
+        { name: "ContentEditor", displayName: "Content Editor", description: "Content editor role" },
+        { name: "Member", displayName: "Member", description: "Member role" },
+      ];
       const userRoleNames = allRoles.slice(0, 2).map(role => role.name || "");
-
-      if (userRoleNames.length < 2) {
-        throw new Error("Not enough roles generated for testing.");
-      }
 
       webApiServiceSpy.getRoles.mockReturnValue(of(allRoles) as any);
       webApiServiceSpy.getRolesForUser.mockReturnValue(of(userRoleNames) as any);

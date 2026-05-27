@@ -41,6 +41,4 @@ export interface RegisterRequestDto {
    * @maxLength 512
    */
   deviceDetails: string;
-  /** Whether the user is opting into marketing email at registration. */
-  marketingOptIn: boolean;
 }
