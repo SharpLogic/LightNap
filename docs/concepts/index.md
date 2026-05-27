@@ -30,6 +30,12 @@ Wire outbound `HttpClient`s with retry, timeouts, circuit breaker, and a concurr
 
 `[Idempotent]` on a mutating endpoint caches the first successful response keyed by the client-supplied `Idempotency-Key` header and replays it on retry within a configurable TTL. Prevents double-click and retry-after-drop duplicates without changes to your action body.
 
+## Security
+
+### [CAPTCHA Verification](./captcha)
+
+Protect public-write endpoints from bots. Pick from NoOp (dev), Cloudflare Turnstile, Google reCAPTCHA v2, or reCAPTCHA v3 via configuration; opt endpoints in with the `[ValidateCaptcha]` filter.
+
 ## Data Persistence
 
 ### [JSON Property Storage](./json-storage)

@@ -22,6 +22,8 @@ export type ExternalLoginRegisterRequestDto = ExternalLoginRequestDto & {
    * @maxLength 32
    */
   userName: string;
+  /** Whether the user is opting into marketing email at registration. */
+  marketingOptIn: boolean;
 } & Required<
     Pick<
       ExternalLoginRequestDto & {
@@ -37,7 +39,9 @@ export type ExternalLoginRegisterRequestDto = ExternalLoginRequestDto & {
          * @maxLength 32
          */
         userName: string;
+        /** Whether the user is opting into marketing email at registration. */
+        marketingOptIn: boolean;
       },
-      "email" | "userName"
+      "email" | "marketingOptIn" | "userName"
     >
   >;

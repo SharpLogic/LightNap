@@ -1,9 +1,11 @@
 using LightNap.Configuration.Cache;
+using LightNap.Configuration.Captcha.Extensions;
 using LightNap.Configuration.Database;
 using LightNap.Configuration.DataProtection;
 using LightNap.Configuration.Extensions;
 using LightNap.Configuration.Idempotency;
 using LightNap.Core.Configuration.Authentication;
+using LightNap.Core.Configuration.Captcha;
 using LightNap.Core.Configuration.Email;
 using LightNap.Core.Extensions;
 using LightNap.Core.Hubs;
@@ -26,6 +28,7 @@ CacheSettings cacheSettings = builder.Configuration.GetRequiredSection<CacheSett
 DatabaseSettings databaseSettings = builder.Configuration.GetRequiredSection<DatabaseSettings>("Database");
 DataProtectionSettings dataProtectionSettings = builder.Configuration.GetRequiredSection<DataProtectionSettings>("DataProtection");
 RateLimitingSettings rateLimitingSettings = builder.Configuration.GetRequiredSection<RateLimitingSettings>("RateLimiting");
+CaptchaSettings captchaSettings = builder.Configuration.GetRequiredSection<CaptchaSettings>("Captcha");
 
 // To enable per-browser anonymous visitor tracking (useful for apps with anonymous UGC, public
 // submissions, or analytics correlation), uncomment the following, add a matching "AnonymousVisitor"
@@ -55,6 +58,7 @@ builder.Services.AddOptions<DatabaseSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Database"))
     .ValidateDataAnnotations();
 builder.Services.Configure<IdempotencySettings>(builder.Configuration.GetSection("Idempotency"));
+builder.Services.Configure<CaptchaSettings>(builder.Configuration.GetRequiredSection("Captcha"));
 
 // Check if the SeededUsers section exists before configuring and validating it
 var seededUsersSection = builder.Configuration.GetSection("SeededUsers");
@@ -83,6 +87,7 @@ builder.Services
     .AddApplicationServices(bootstrapLogger)
     .AddIdentityServices(jwtSettings, appSettings, bootstrapLogger)
     .AddRateLimitingServices(rateLimitingSettings, bootstrapLogger)
+    .AddLightNapCaptchaService(captchaSettings, bootstrapLogger)
     .AddLightNapTelemetryServices(builder.Configuration.GetValue<bool>("ApplicationInsights:Enabled"), bootstrapLogger);
 
 // Configure HybridCache conditionally

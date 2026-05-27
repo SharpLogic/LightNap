@@ -15,6 +15,8 @@
     <ProjectReference Include="..\Integrations\GitHub\LightNap.Integrations.GitHub\LightNap.Integrations.GitHub.csproj" />
     <ProjectReference Include="..\Integrations\Google\LightNap.Integrations.Google\LightNap.Integrations.Google.csproj" />
     <ProjectReference Include="..\Integrations\Microsoft\LightNap.Integrations.Microsoft\LightNap.Integrations.Microsoft.csproj" />
+    <ProjectReference Include="..\Integrations\Captcha\LightNap.Integrations.Captcha.Turnstile\LightNap.Integrations.Captcha.Turnstile.csproj" />
+    <ProjectReference Include="..\Integrations\Captcha\LightNap.Integrations.Captcha.Recaptcha\LightNap.Integrations.Captcha.Recaptcha.csproj" />
   </ItemGroup>
 
   <ItemGroup>
