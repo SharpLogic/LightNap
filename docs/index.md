@@ -56,9 +56,6 @@ Tip: The demo site runs at [https://lightnap.azurewebsites.net](https://lightnap
 - **Authentication & Authorization:** Roles, claims, and user management ready in the admin UI.
 - **APIs & OpenAPI (Swagger):** Quickly inspect and test backend endpoints during development.
 - **Notifications:** Real-time in-app notifications with SignalR and a backend notification service for system alerts.
-- **CAPTCHA Verification:** Pluggable bot protection (Cloudflare Turnstile, Google reCAPTCHA v2/v3) wired up with one configuration switch and a `[ValidateCaptcha]` action filter.
-- **Administrative Audit Log:** First-class audit primitive — entity, `IAuditLogger` service, `[AuditLog]` filter, and a scheduled retention task.
-- **Health Checks:** `/health/live` and `/health/ready` endpoints ready for container orchestrators and uptime monitors.
 - **Scaffolder:** Auto-generate backend entities and front-end UI from a single entity definition.
 - **Maintenance Service:** Background task processing with Azure WebJobs support for scheduled maintenance.
 - **E2E & CI/CD:** Cypress-based end-to-end tests with guidance for workflows and GitHub Actions.
