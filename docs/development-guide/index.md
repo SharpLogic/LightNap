@@ -36,6 +36,10 @@ Add and manage application roles for authorization. Learn how to define roles, a
 
 Implement fine-grained permissions using ASP.NET claims. This guide covers claim-based authorization for dynamic, record-level security.
 
+### [CAPTCHA Verification](./security-authorization/captcha)
+
+Add bot protection to public-write endpoints. Configure Cloudflare Turnstile or Google reCAPTCHA v2/v3, then opt endpoints in with the `[ValidateCaptcha]` filter.
+
 ## Features
 
 ### [Managing Content](./features/managing-content)
