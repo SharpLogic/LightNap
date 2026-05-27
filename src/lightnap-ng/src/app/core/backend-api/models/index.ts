@@ -19,6 +19,8 @@ export * from "./admin-user-dto-i-list-api-response-dto";
 export * from "./api-response-type";
 export * from "./application-user-sort-by";
 export * from "./boolean-api-response-dto";
+export * from "./captcha-client-config-dto";
+export * from "./captcha-provider";
 export * from "./change-email-request-dto";
 export * from "./change-password-request-dto";
 export * from "./claim-dto";

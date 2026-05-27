@@ -18,6 +18,7 @@ import type {
   AdminExternalLoginDtoPagedResponseDto,
   AdminSearchUsersRequestDto,
   AdminUpdateUserRequestDto,
+  CaptchaClientConfigDto,
   ChangeEmailRequestDto,
   ChangePasswordRequestDto,
   ClaimDtoPagedResponseDto,
@@ -93,6 +94,7 @@ import { HttpResponse, delay, http } from "msw";
 import type { RequestHandlerOptions } from "msw";
 
 import {
+  CaptchaProvider,
   ExternalLoginSuccessType,
   LoginSuccessType,
   NotificationStatus,
@@ -976,6 +978,20 @@ export class LightNapWebApiService {
   }
 
   /**
+ * @summary Returns the browser-safe CAPTCHA configuration. SPAs call this once on bootstrap
+(or lazily before rendering a protected form) to learn which provider is active and
+to obtain the public site key for widget rendering.
+ */
+  getApiPublicCaptchaConfig<TData = CaptchaClientConfigDto>(options?: HttpClientOptions & { observe?: "body" }): Observable<TData>;
+  getApiPublicCaptchaConfig<TData = CaptchaClientConfigDto>(options?: HttpClientOptions & { observe: "events" }): Observable<HttpEvent<TData>>;
+  getApiPublicCaptchaConfig<TData = CaptchaClientConfigDto>(
+    options?: HttpClientOptions & { observe: "response" }
+  ): Observable<AngularHttpResponse<TData>>;
+  getApiPublicCaptchaConfig<TData = CaptchaClientConfigDto>(options?: HttpClientOptions & { observe?: any }): Observable<any> {
+    return this.http.get<TData>(`/api/Public/captcha-config`, options);
+  }
+
+  /**
    * @summary Retrieves a user by ID.
    */
   getUser<TData = GetUser200One | GetUser200Two | GetUser200Three>(
@@ -1389,6 +1405,7 @@ export type GetMyExternalLoginsClientResult = NonNullable<
   GetMyExternalLogins200OneItem[] | null | GetMyExternalLogins200TwoItem[] | null | GetMyExternalLogins200ThreeItem[] | null
 >;
 export type RemoveMyExternalLoginClientResult = NonNullable<boolean>;
+export type GetApiPublicCaptchaConfigClientResult = NonNullable<CaptchaClientConfigDto>;
 export type GetUserClientResult = NonNullable<GetUser200One | GetUser200Two | GetUser200Three>;
 export type UpdateUserClientResult = NonNullable<AdminUserDto>;
 export type DeleteUserClientResult = NonNullable<boolean>;
@@ -1822,6 +1839,12 @@ export const getGetMyExternalLoginsResponseMock = ():
   ]);
 
 export const getRemoveMyExternalLoginResponseMock = (): boolean => faker.datatype.boolean();
+
+export const getGetApiPublicCaptchaConfigResponseMock = (overrideResponse: Partial<CaptchaClientConfigDto> = {}): CaptchaClientConfigDto => ({
+  provider: faker.helpers.arrayElement(Object.values(CaptchaProvider)),
+  siteKey: faker.helpers.arrayElement([faker.helpers.arrayElement([faker.string.alpha({ length: { min: 10, max: 20 } }), null]), undefined]),
+  ...overrideResponse,
+});
 
 export const getGetUserResponsePublicUserDtoMock = (overrideResponse: Partial<PublicUserDto> = {}): PublicUserDto => ({
   ...{
@@ -3227,6 +3250,30 @@ export const getRemoveMyExternalLoginMockHandler = (
   );
 };
 
+export const getGetApiPublicCaptchaConfigMockHandler = (
+  overrideResponse?:
+    | CaptchaClientConfigDto
+    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<CaptchaClientConfigDto> | CaptchaClientConfigDto),
+  options?: RequestHandlerOptions
+) => {
+  return http.get(
+    "*/api/Public/captcha-config",
+    async info => {
+      await delay(1000);
+
+      return new HttpResponse(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === "function"
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetApiPublicCaptchaConfigResponseMock(),
+        { status: 200, headers: { "Content-Type": "text/plain" } }
+      );
+    },
+    options
+  );
+};
+
 export const getGetUserMockHandler = (
   overrideResponse?:
     | GetUser200One
@@ -3756,6 +3803,7 @@ export const getLightNapWebApiMock = () => [
   getSetMyUserSettingMockHandler(),
   getGetMyExternalLoginsMockHandler(),
   getRemoveMyExternalLoginMockHandler(),
+  getGetApiPublicCaptchaConfigMockHandler(),
   getGetUserMockHandler(),
   getUpdateUserMockHandler(),
   getDeleteUserMockHandler(),
