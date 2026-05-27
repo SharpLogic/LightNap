@@ -2,7 +2,7 @@
 title: Periodic and Background Tasks
 layout: home
 parent: Concepts
-nav_order: 1200
+nav_order: 900
 ---
 
 # {{ page.title }}

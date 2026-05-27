@@ -2,7 +2,7 @@
 title: HTTP Resilience
 layout: home
 parent: Concepts
-nav_order: 600
+nav_order: 700
 ---
 
 # {{ page.title }}

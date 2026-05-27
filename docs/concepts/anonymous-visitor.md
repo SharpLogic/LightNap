@@ -2,7 +2,7 @@
 title: Anonymous Visitor Tracking
 layout: home
 parent: Concepts
-nav_order: 800
+nav_order: 500
 ---
 
 # {{ page.title }}
