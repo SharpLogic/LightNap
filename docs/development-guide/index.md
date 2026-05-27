@@ -62,6 +62,10 @@ Implement user-specific settings and preferences that persist across sessions. T
 
 Learn the architectural pattern for creating reusable form components in LightNap. This guide explores the layered component approach using SelectListItemComponent, UserSettingSelectComponent, and domain-specific wrappers to build type-safe, composable UI elements with minimal boilerplate.
 
+### [Idempotency-Key Filter](./features/idempotency)
+
+Make mutating endpoints replay-safe by decorating them with `[Idempotent]`. The first successful response is cached and replayed for subsequent calls carrying the same `Idempotency-Key` header — the convention's a one-liner per endpoint.
+
 ## Console Apps
 
 ### [Maintenance Service](./console-apps/maintenance-service)

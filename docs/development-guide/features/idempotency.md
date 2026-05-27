@@ -1,8 +1,8 @@
 ---
 title: Idempotency-Key Filter
 layout: home
-parent: Concepts
-nav_order: 1100
+parent: Features
+nav_order: 60
 ---
 
 # {{ page.title }}
