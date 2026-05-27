@@ -125,12 +125,6 @@ namespace LightNap.DataProviders.SqlServer.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("MarketingOptIn")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("MarketingOptInAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");

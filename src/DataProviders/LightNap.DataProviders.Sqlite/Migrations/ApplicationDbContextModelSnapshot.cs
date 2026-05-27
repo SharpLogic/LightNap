@@ -116,12 +116,6 @@ namespace LightNap.DataProviders.Sqlite.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("MarketingOptIn")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("MarketingOptInAt")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
