@@ -59,6 +59,7 @@ export class RegisterComponent {
         deviceDetails: navigator.userAgent,
         rememberMe: this.form.value.rememberMe!,
         userName: this.form.value.userName!,
+        marketingOptIn: false,
       })
       .pipe(finalize(() => this.#blockUi.hide()))
       .subscribe({

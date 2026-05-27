@@ -176,6 +176,7 @@ describe("RegisterComponent", () => {
       userName: "testuser",
       rememberMe: false,
       deviceDetails: expect.any(String),
+      marketingOptIn: false,
     });
   });
 
