@@ -24,7 +24,7 @@ LightNap provides a complete foundation for building secure, scalable web applic
 - **ASP.NET Core Web API** - RESTful API with best practices
 - **ASP.NET Identity** - Complete authentication & authorization framework
 - **JWT Token Management** - Secure token-based authentication with refresh tokens
-- **Rate Limiting** - Built-in API rate limiting with configurable policies per endpoint
+- **Rate Limiting** - Built-in API rate limiting with configurable per-endpoint policies; partitioned by user, then visitor cookie, then IP fallback
 - **Multiple Database Providers** - SQL Server, SQLite, and In-Memory options
 - **Redis Caching** - Distributed caching with hybrid cache support
 - **SignalR** - Real-time communication for notifications and live updates
@@ -32,6 +32,8 @@ LightNap provides a complete foundation for building secure, scalable web applic
 - **User Management** - Full CRUD operations for users, roles, and permissions
 - **Device Tracking** - Monitor and manage user sessions across devices
 - **Maintenance Service** - Background task processing with Azure WebJobs support
+
+Also included as opt-in backend primitives: anonymous visitor tracking, CAPTCHA verification, an administrative audit log, an `Idempotency-Key` filter, `/health/live` and `/health/ready` endpoints, an HTTP resilience helper for outbound clients, and JSON property storage. See the [documentation](https://lightnap.sharplogic.com) for each.
 
 ### Frontend (Angular 21)
 

@@ -2,17 +2,17 @@
 title: Health Check Endpoints
 layout: home
 parent: Concepts
-nav_order: 900
+nav_order: 800
 ---
 
 # {{ page.title }}
 
 LightNap exposes two HTTP endpoints intended for container orchestrators, load balancers, and uptime monitors:
 
-| Endpoint        | Purpose      | What it checks                                                  |
-|-----------------|--------------|------------------------------------------------------------------|
-| `/health/live`  | Liveness     | Nothing. Responding is enough — the process is up.               |
-| `/health/ready` | Readiness    | The database (and Redis when distributed mode is enabled).       |
+| Endpoint        | Purpose   | What it checks                                            |
+|-----------------|-----------|-----------------------------------------------------------|
+| `/health/live`  | Liveness  | Nothing. Responding is enough — the process is up.        |
+| `/health/ready` | Readiness | The database (and Redis when distributed mode is enabled).|
 
 Both endpoints are anonymous and bypass rate limiting, so probes can not be throttled or pushed to the auth flow.
 

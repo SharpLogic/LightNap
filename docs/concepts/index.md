@@ -6,75 +6,71 @@ nav_order: 250
 
 # {{ page.title }}
 
-This section explains the core concepts and architectural patterns used throughout LightNap. Understanding these concepts will help you work more effectively with the framework and make informed decisions when extending it.
+This section explains the core concepts and architectural patterns used throughout LightNap. Each page covers what something is and why it exists; for step-by-step "how do I wire this up" guides, see the [Development Guide](../development-guide).
 
 ## Architecture & Design
 
 ### [Solution & Project Structure](./project-structure)
 
-Understand how LightNap is organized, including the .NET backend projects, Angular frontend structure, and the data flow pattern that connects them. This is the foundation for understanding how all the pieces fit together.
+Understand how LightNap is organized: the .NET backend projects, the Angular frontend, and the data flow pattern that connects them. The foundation for everything else.
 
 ### [API Response Model](./api-response-model)
 
-Learn about LightNap's standardized REST API response format, including how errors are handled, HTTP status codes are used, and how the frontend automatically processes API responses.
+LightNap's standardized REST response shape, error handling, and how the Angular client automatically processes responses.
 
-## Infrastructure
+## Identity & Sessions
 
-### [HTTP Resilience](./http-resilience)
+### [Authentication & Tokens](./authentication)
 
-Wire outbound `HttpClient`s with retry, timeouts, circuit breaker, and a concurrency limiter in one line. Use for every outbound call to a service LightNap doesn't own.
+The JWT-plus-refresh-token model, session lifetime, and how the framework verifies and issues credentials.
 
-## Reliability
+### [Devices](./devices)
 
-### [Idempotency-Key Filter](./idempotency)
+Per-device session tracking — what's recorded, how stale sessions age out, and how users see and revoke them.
 
-`[Idempotent]` on a mutating endpoint caches the first successful response keyed by the client-supplied `Idempotency-Key` header and replays it on retry within a configurable TTL. Prevents double-click and retry-after-drop duplicates without changes to your action body.
+### [Anonymous Visitor Tracking](./anonymous-visitor)
 
-## Security
-
-### [CAPTCHA Verification](./captcha)
-
-Protect public-write endpoints from bots. Pick from NoOp (dev), Cloudflare Turnstile, Google reCAPTCHA v2, or reCAPTCHA v3 via configuration; opt endpoints in with the `[ValidateCaptcha]` filter.
+Opt-in middleware that mints a per-browser visitor cookie so unauthenticated users have a stable identifier for audit, anonymous UGC, and per-visitor rate limiting that survives NAT and VPN hops.
 
 ## Data Persistence
 
 ### [JSON Property Storage](./json-storage)
 
-Learn how `[StoredAsJson]` lets you persist strongly-typed POCO properties as JSON on entity columns with one attribute and no per-entity wiring. Behavior is identical across SQLite, SQL Server, and InMemory.
+`[StoredAsJson]` persists strongly-typed POCO properties as JSON on entity columns with no per-entity wiring. Behavior is identical across SQLite, SQL Server, and InMemory.
 
-## Background Work
+## Infrastructure
 
-### [Periodic and Background Tasks](./periodic-tasks)
+### [HTTP Resilience](./http-resilience)
 
-Pick between the one-shot `LightNap.MaintenanceService` model (nightly cron-style maintenance) and an in-process `IHostedService` with `PeriodicTimer` (continuous work while the WebApi is up). Covers when an external scheduler like Quartz or Hangfire is actually warranted.
+Wire outbound `HttpClient`s with retry, timeouts, circuit breaker, and a concurrency limiter in one call. Use for every outbound call to a service LightNap doesn't own.
 
 ## Operations
 
 ### [Health Check Endpoints](./health-checks)
 
-`/health/live` and `/health/ready` for container orchestrators and uptime monitors. Readiness covers the database and Redis (in distributed mode); liveness is dependency-free.
+`/health/live` and `/health/ready` for container orchestrators and uptime monitors. Readiness covers the database and Redis in distributed mode; liveness is dependency-free.
 
-## Identity & Visitors
+## Background Work
 
-### [Anonymous Visitor Tracking](./anonymous-visitor)
+### [Periodic and Background Tasks](./periodic-tasks)
 
-Opt-in middleware that mints and reads a per-browser visitor cookie so unauthenticated users have a stable identifier for audit, anonymous UGC attribution, and per-visitor rate limiting that survives NAT and VPN hops.
+When to use the one-shot `LightNap.MaintenanceService` model vs an in-process `IHostedService` with `PeriodicTimer`. Covers when an external scheduler like Quartz or Hangfire is actually warranted.
 
 ## Compliance & Audit
 
 ### [Administrative Audit Log](./audit-log)
 
-`AdminAuditLog` entity plus `IAuditLogger` and `[AuditLog]` filter make it a one-line addition to record who did what on any admin endpoint. Retention is configurable, with a scheduled maintenance task that purges expired entries.
+`AdminAuditLog` entity, `IAuditLogger` service, and `[AuditLog]` filter make recording who-did-what on admin endpoints a one-line addition. Retention is configurable; a scheduled maintenance task purges expired entries.
 
 ## Core Features
 
 ### [Content Management System](./content-management)
 
-Explore LightNap's built-in CMS that enables administrators and content editors to create, manage, and publish multilingual static content. Learn about pages, zones, access control, and frontend integration.
+LightNap's built-in CMS — zones, pages, multilingual content, access control, and frontend integration.
 
 ### [Breadcrumb Navigation](./breadcrumb-navigation)
 
-Learn about LightNap's breadcrumb navigation system that automatically generates navigation trails based on route configuration, supporting both static labels and dynamic content from route parameters.
+Breadcrumb generation from route configuration, including dynamic content from route parameters.
 
 ## Testing Fundamentals
 
@@ -94,10 +90,8 @@ Complete guide for end-to-end testing with Cypress to validate user workflows.
 
 New to LightNap? Start with:
 
-1. **[Solution & Project Structure](./project-structure)** - Get oriented with the codebase
-2. **[Authentication & Tokens](./authentication)** - Understand the security model
-3. **[API Response Model](./api-response-model)** - Learn the API patterns
+1. **[Solution & Project Structure](./project-structure)** — get oriented with the codebase.
+2. **[Authentication & Tokens](./authentication)** — understand the security model.
+3. **[API Response Model](./api-response-model)** — learn the API patterns.
 
-Then explore the [Development Guide](../development-guide) section for practical implementation guides.
- 
- 
+Then explore the [Development Guide](../development-guide) for practical implementation guides.

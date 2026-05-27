@@ -2,7 +2,7 @@
 title: HTTP Resilience
 layout: home
 parent: Concepts
-nav_order: 600
+nav_order: 700
 ---
 
 # {{ page.title }}
@@ -64,4 +64,4 @@ Mixing styles is fine — `AddLightNapResilientHttpClient` is just a one-line sh
 
 ## Idempotency caveat
 
-The standard resilience handler retries 5xx responses by default for all verbs. The Microsoft default is conservative about which verbs are retried; if your downstream service treats POSTs as non-idempotent, supply an idempotency key (see the [Idempotency-Key](./idempotency) docs) or constrain retries in the per-client configuration.
+The standard resilience handler retries 5xx responses by default for all verbs. The Microsoft default is conservative about which verbs are retried; if your downstream service treats POSTs as non-idempotent, supply an idempotency key (see the [Idempotency-Key Filter](../development-guide/features/idempotency) docs) or constrain retries in the per-client configuration.

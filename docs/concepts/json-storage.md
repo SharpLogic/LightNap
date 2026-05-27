@@ -2,7 +2,7 @@
 title: JSON Property Storage
 layout: home
 parent: Concepts
-nav_order: 500
+nav_order: 600
 ---
 
 # {{ page.title }}

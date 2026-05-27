@@ -15,6 +15,10 @@ Guides for implementing authentication, authorization, and security features in 
 
 Configure and understand rate limiting to protect your API from abuse and ensure fair usage.
 
+### [CAPTCHA Verification](./captcha)
+
+Protect public-write endpoints from bots. Pick from NoOp (dev), Cloudflare Turnstile, Google reCAPTCHA v2, or reCAPTCHA v3 via configuration and opt endpoints in with the `[ValidateCaptcha]` filter.
+
 ### [Working With Roles](./working-with-roles)
 
 Add and manage application roles for authorization. Learn how to define roles, apply them to endpoints, and use them in the frontend.

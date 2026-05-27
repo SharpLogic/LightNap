@@ -36,6 +36,10 @@ Add and manage application roles for authorization. Learn how to define roles, a
 
 Implement fine-grained permissions using ASP.NET claims. This guide covers claim-based authorization for dynamic, record-level security.
 
+### [CAPTCHA Verification](./security-authorization/captcha)
+
+Add bot protection to public-write endpoints. Configure Cloudflare Turnstile or Google reCAPTCHA v2/v3, then opt endpoints in with the `[ValidateCaptcha]` filter.
+
 ## Features
 
 ### [Managing Content](./features/managing-content)
@@ -57,6 +61,10 @@ Implement user-specific settings and preferences that persist across sessions. T
 ### [Reusable Form Components](./features/reusable-form-components)
 
 Learn the architectural pattern for creating reusable form components in LightNap. This guide explores the layered component approach using SelectListItemComponent, UserSettingSelectComponent, and domain-specific wrappers to build type-safe, composable UI elements with minimal boilerplate.
+
+### [Idempotency-Key Filter](./features/idempotency)
+
+Make mutating endpoints replay-safe by decorating them with `[Idempotent]`. The first successful response is cached and replayed for subsequent calls carrying the same `Idempotency-Key` header — the convention's a one-liner per endpoint.
 
 ## Console Apps
 

@@ -1,8 +1,8 @@
 ---
 title: CAPTCHA Verification
 layout: home
-parent: Concepts
-nav_order: 700
+parent: Security & Authorization
+nav_order: 150
 ---
 
 # {{ page.title }}

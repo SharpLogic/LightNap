@@ -30,3 +30,7 @@ Implement user-specific settings and preferences that persist across sessions.
 ### [Reusable Form Components](./reusable-form-components)
 
 Create reusable form components with validation, error handling, and consistent styling.
+
+### [Idempotency-Key Filter](./idempotency)
+
+Make mutating endpoints replay-safe with the `[Idempotent]` action filter and a client-supplied `Idempotency-Key` header. Prevents double-click and retry-after-drop duplicates without changes to your action body.
