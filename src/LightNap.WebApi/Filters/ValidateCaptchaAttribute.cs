@@ -1,7 +1,9 @@
 using LightNap.Core.Captcha.Interfaces;
+using LightNap.Core.Configuration.Captcha;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LightNap.WebApi.Filters
 {
@@ -20,6 +22,16 @@ namespace LightNap.WebApi.Filters
         /// <inheritdoc />
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            // When the configured provider is None, the registered ICaptchaService is a NoOp
+            // that always succeeds. Skip the header requirement entirely so dev/test environments
+            // can call decorated endpoints without synthesizing a fake token.
+            var captchaOptions = context.HttpContext.RequestServices.GetRequiredService<IOptions<CaptchaSettings>>();
+            if (captchaOptions.Value.Provider == CaptchaProvider.None)
+            {
+                await next();
+                return;
+            }
+
             var token = context.HttpContext.Request.Headers[TokenHeaderName].ToString();
             if (string.IsNullOrEmpty(token))
             {
